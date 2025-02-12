@@ -1,0 +1,11 @@
+framework module flutter_dtmf {
+  umbrella header "flutter_dtmf-umbrella.h"
+
+  export *
+  module * { export * }
+}
+
+module flutter_dtmf.Swift {
+  header "flutter_dtmf-Swift.h"
+  requires objc
+}

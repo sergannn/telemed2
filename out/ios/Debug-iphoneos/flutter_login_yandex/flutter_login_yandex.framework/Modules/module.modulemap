@@ -1,0 +1,11 @@
+framework module flutter_login_yandex {
+  umbrella header "flutter_login_yandex-umbrella.h"
+
+  export *
+  module * { export * }
+}
+
+module flutter_login_yandex.Swift {
+  header "flutter_login_yandex-Swift.h"
+  requires objc
+}
