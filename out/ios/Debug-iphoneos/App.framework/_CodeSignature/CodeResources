@@ -10,11 +10,11 @@
 		</data>
 		<key>flutter_assets/AssetManifest.bin</key>
 		<data>
-		hOgOY0cusFx3dnmFxVtoSTxWWAA=
+		S29sFcBOYMnrADxQ07NPQ4RbBwc=
 		</data>
 		<key>flutter_assets/AssetManifest.json</key>
 		<data>
-		zikkI0GrVwRUYDsiImY8aX5y4hg=
+		c9VvE/+9//O4plJv0Nrvq8DUvNM=
 		</data>
 		<key>flutter_assets/FontManifest.json</key>
 		<data>
@@ -87,6 +87,10 @@
 		<key>flutter_assets/assets/images/call.png</key>
 		<data>
 		OBTLBIifN9WnF8FQ981dTsKnhvE=
+		</data>
+		<key>flutter_assets/assets/images/chats.svg</key>
+		<data>
+		TIQetCYc7PPg2FVQtNcME1AnsCM=
 		</data>
 		<key>flutter_assets/assets/images/doctor1.png</key>
 		<data>
@@ -187,6 +191,10 @@
 		<key>flutter_assets/assets/images/friend6.png</key>
 		<data>
 		EsjnzxqqaPz3EfJJhayRubNlCsk=
+		</data>
+		<key>flutter_assets/assets/images/health.svg</key>
+		<data>
+		jtx9wgiKYmgm7oyj5c7AVJDvW/I=
 		</data>
 		<key>flutter_assets/assets/images/healthcare.jpg</key>
 		<data>
@@ -600,6 +608,10 @@
 		<data>
 		i1aCsRYJ9m5bmthojysDgig1k7Q=
 		</data>
+		<key>flutter_assets/assets/images/medkarta.svg</key>
+		<data>
+		yWc9a8Yum2ghpfB9kHXSxRuB+wc=
+		</data>
 		<key>flutter_assets/assets/images/morning.png</key>
 		<data>
 		i4WHYhZumO0y5aNDBYQeTqfqNAM=
@@ -752,6 +764,10 @@
 		<data>
 		onE+LjJTcuM24R7n1rjDhcN2Hsc=
 		</data>
+		<key>flutter_assets/assets/images/zapisi.svg</key>
+		<data>
+		TWK1W6IPA6PPUQuFQMKYlKDTTIE=
+		</data>
 		<key>flutter_assets/assets/translations/ar.json</key>
 		<data>
 		A3spZKlqXCvkrRvcJGBdhiW8B/I=
@@ -770,7 +786,7 @@
 		</data>
 		<key>flutter_assets/kernel_blob.bin</key>
 		<data>
-		CVhap60LTg48+jReWBwJK9ZXL24=
+		U3DZe2aWJyS5pcrd20+JP+pwveY=
 		</data>
 		<key>flutter_assets/packages/cupertino_icons/assets/CupertinoIcons.ttf</key>
 		<data>
@@ -819,14 +835,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			CABSQGKJPiu3F25fxvedVd2Dqd2IV8p7u3OtXD/TKHk=
+			QVCNhr2KNtksl4DNlrUjfQ8+P24oD0thjv1MOgCD9Rk=
 			</data>
 		</dict>
 		<key>flutter_assets/AssetManifest.json</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			3MPs4W+CjrKia3K4AfhHG+YxParuufUiMw8T1OapkZc=
+			8WKX7t6RkARGL7Rxh073mVmOhGAyrK+xb10Hkt4DQWc=
 			</data>
 		</dict>
 		<key>flutter_assets/FontManifest.json</key>
@@ -946,6 +962,13 @@
 			<key>hash2</key>
 			<data>
 			NgNJ7lHMzDiuMnbwJkyNLrHiQoMT+SyEB4NvQChJHxA=
+			</data>
+		</dict>
+		<key>flutter_assets/assets/images/chats.svg</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			eU9+LN6/AYqen/TLFgaPoT1Fk/yva/S/XtOYudgghXk=
 			</data>
 		</dict>
 		<key>flutter_assets/assets/images/doctor1.png</key>
@@ -1121,6 +1144,13 @@
 			<key>hash2</key>
 			<data>
 			D/jt9P74X+1Ym3Tmi9Ts5YlywR3MR706QJwWW/2GRAU=
+			</data>
+		</dict>
+		<key>flutter_assets/assets/images/health.svg</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			5Na06FCMIkxEMMflb8VLa7Bj9h+5k5sLiviPm/AfCJg=
 			</data>
 		</dict>
 		<key>flutter_assets/assets/images/healthcare.jpg</key>
@@ -1844,6 +1874,13 @@
 			FX69g4A0qfZUgOr3Mn6Yv4zGKB96YoydYwioms0vCbY=
 			</data>
 		</dict>
+		<key>flutter_assets/assets/images/medkarta.svg</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			adz7rq9JHV+rvt5D2TyXwzWsZAI3/Xpc6aWsqvwXtQw=
+			</data>
+		</dict>
 		<key>flutter_assets/assets/images/morning.png</key>
 		<dict>
 			<key>hash2</key>
@@ -2110,6 +2147,13 @@
 			IIA2XMpNu1visrz15yALPBxZyE3rW82pviPCZa3zPB8=
 			</data>
 		</dict>
+		<key>flutter_assets/assets/images/zapisi.svg</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			RPuwGG1/GGR2fRRN4v2enKMdWLHCAVjOJbT9sa0iWaA=
+			</data>
+		</dict>
 		<key>flutter_assets/assets/translations/ar.json</key>
 		<dict>
 			<key>hash2</key>
@@ -2142,7 +2186,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			jURrYqwqCRPtxIjKOhXN8WJcPzS/WbcqKVcNaetAIaI=
+			uIhVf5pJHsUnTCC+R+vYqcCsagEMLC1KT2Ov3JoQ334=
 			</data>
 		</dict>
 		<key>flutter_assets/packages/cupertino_icons/assets/CupertinoIcons.ttf</key>

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_notification_listener/flutter_notification_listener.dart';
+//import 'package:flutter_notification_listener/flutter_notification_listener.dart';
 import 'dart:isolate';
 import 'dart:ui';
 import 'dart:convert';
 import '../proactivity/proactivity_manager.dart';
-
+/*
 class NotificationTrigger {
   static const String isolateName = "NotificationIsolate";
 
@@ -105,4 +105,4 @@ class NotificationTrigger {
       ProactivityManager().addTrigger(trigger);
     }
   }
-}
+}*/

@@ -4,7 +4,8 @@ import 'package:doctorq/screens/auth/sign_in_blank_screen/sign_in_blank_screen.d
 import 'package:doctorq/widgets/custom_button.dart';
 import 'package:doctorq/widgets/spacing.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_login_yandex/flutter_login_yandex.dart';
+//import 'package:flutter_login_yandex/flutter_login_yandex.dart';
+import 'package:flutter_login_yandex_updated/flutter_login_yandex.dart';
 
 // ignore_for_file: must_be_immutable
 class ProfileSettingsLogoutModalBottomsheet extends StatelessWidget {

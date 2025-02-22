@@ -3,8 +3,10 @@ import 'package:doctorq/extensions.dart';
 import 'package:doctorq/screens/appointments/past_appointments/past_appointments.dart';
 import 'package:doctorq/screens/appointments/review_screen/review_screen.dart';
 import 'package:doctorq/screens/appointments/steps/step_2_filled_screen/step_2_filled_screen.dart';
+import 'package:doctorq/theme/svg_constant.dart';
 import 'package:doctorq/widgets/bkBtn.dart';
 import 'package:doctorq/widgets/spacing.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../../../widgets/custom_icon_button.dart';
 import 'package:doctorq/app_export.dart';
 import 'package:doctorq/widgets/custom_button.dart';
@@ -86,7 +88,8 @@ class _AppointmentsBookScreenState extends State<AppointmentsBookScreen> {
                         const BkBtn(),
                         HorizontalSpace(width: 20),
                         Text(
-                          doctor["username"],
+                          "Запись к врачу",
+                          // doctor["username"],
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.start,
                           style: TextStyle(
@@ -114,9 +117,11 @@ class _AppointmentsBookScreenState extends State<AppointmentsBookScreen> {
                             width: getHorizontalSize(44),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12),
-                              color: ColorConstant.blueA400.withOpacity(0.1),
+                              color: Colors.white,
+//                              color: ColorConstant.blueA400.withOpacity(0.1),
                             ),
                             child: CommonImageView(
+                              color: Colors.red,
                               imagePath: isFav
                                   ? ImageConstant.favorite
                                   : ImageConstant.favoriteBorder,
@@ -124,7 +129,7 @@ class _AppointmentsBookScreenState extends State<AppointmentsBookScreen> {
                           ),
                         ),
                         HorizontalSpace(width: 16),
-                        Container(
+                        /* Container(
                           padding: getPadding(all: 10),
                           height: getVerticalSize(44),
                           width: getHorizontalSize(44),
@@ -135,7 +140,7 @@ class _AppointmentsBookScreenState extends State<AppointmentsBookScreen> {
                           child: CommonImageView(
                             imagePath: ImageConstant.share,
                           ),
-                        ),
+                        ),*/
                       ],
                     )
                   ],
@@ -156,7 +161,7 @@ class _AppointmentsBookScreenState extends State<AppointmentsBookScreen> {
                     ),
                     color: isDark
                         ? ColorConstant.darkTextField
-                        : ColorConstant.whiteA700,
+                        : Colors.white, //ColorConstant.whiteA700,
                     border: Border.all(
                       color: ColorConstant.bluegray50,
                       width: getHorizontalSize(
@@ -250,25 +255,8 @@ class _AppointmentsBookScreenState extends State<AppointmentsBookScreen> {
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
-                              Padding(
-                                padding: getPadding(
-                                  top: 3,
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    CommonImageView(
-                                      imagePath: ImageConstant.starHalf,
-                                      height: getSize(
-                                        16.00,
-                                      ),
-                                      width: getSize(
-                                        16.00,
-                                      ),
-                                    ),
-                                    HorizontalSpace(width: 4),
+
+                              /*  HorizontalSpace(width: 4),
                                     Text(
                                       "4.7 (4692 reviews)",
                                       overflow: TextOverflow.ellipsis,
@@ -280,10 +268,8 @@ class _AppointmentsBookScreenState extends State<AppointmentsBookScreen> {
                                         fontFamily: 'Source Sans Pro',
                                         fontWeight: FontWeight.w400,
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                                    ),*/
+
                               Container(
                                 margin: getMargin(top: 3),
                                 child: Text(
@@ -308,190 +294,15 @@ class _AppointmentsBookScreenState extends State<AppointmentsBookScreen> {
                     ],
                   ),
                 ),
-                Container(
-                    margin: getMargin(left: 20, right: 20, top: 20),
-                    padding: getPadding(left: 30, right: 30),
-                    height: getVerticalSize(
-                      157.00,
-                    ),
-                    width: size.width,
-                    decoration: BoxDecoration(
-                      color: isDark
-                          ? ColorConstant.darkContainer
-                          : ColorConstant.whiteA700,
-                      border: Border.all(
-                        color: ColorConstant.blueA400,
-                      ),
-                      borderRadius: BorderRadius.circular(
-                        getHorizontalSize(
-                          20.00,
-                        ),
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            CustomIconButton(
-                              isRtl: isRtl,
-                              height: 44,
-                              width: 44,
-                              variant: IconButtonVariant.FillBlueA40019,
-                              shape: IconButtonShape.CircleBorder22,
-                              child: CommonImageView(
-                                imagePath: ImageConstant.patients,
-                              ),
-                            ),
-                            Padding(
-                              padding: getPadding(
-                                top: 14,
-                              ),
-                              child: Text(
-                                "5000+",
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.start,
-                                style: TextStyle(
-                                  color: ColorConstant.blueA400,
-                                  fontSize: getFontSize(
-                                    16,
-                                  ),
-                                  fontFamily: 'Source Sans Pro',
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: getPadding(
-                                top: 8,
-                                bottom: 3,
-                              ),
-                              child: Text(
-                                "Patients",
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.start,
-                                style: TextStyle(
-                                  fontSize: getFontSize(
-                                    14,
-                                  ),
-                                  fontFamily: 'Source Sans Pro',
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            CustomIconButton(
-                              isRtl: isRtl,
-                              height: 44,
-                              width: 44,
-                              variant: IconButtonVariant.FillBlueA40019,
-                              shape: IconButtonShape.CircleBorder22,
-                              child: CommonImageView(
-                                imagePath: ImageConstant.person,
-                              ),
-                            ),
-                            Padding(
-                              padding: getPadding(
-                                top: 14,
-                              ),
-                              child: Text(
-                                "15+",
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.start,
-                                style: TextStyle(
-                                  color: ColorConstant.blueA400,
-                                  fontSize: getFontSize(
-                                    16,
-                                  ),
-                                  fontFamily: 'Source Sans Pro',
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: getPadding(
-                                top: 8,
-                                bottom: 3,
-                              ),
-                              child: Text(
-                                "Years experiences",
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.start,
-                                style: TextStyle(
-                                  fontSize: getFontSize(
-                                    14,
-                                  ),
-                                  fontFamily: 'Source Sans Pro',
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            CustomIconButton(
-                              isRtl: isRtl,
-                              height: 44,
-                              width: 44,
-                              variant: IconButtonVariant.FillBlueA40019,
-                              shape: IconButtonShape.CircleBorder22,
-                              child: CommonImageView(
-                                imagePath: ImageConstant.reviews,
-                              ),
-                            ),
-                            Padding(
-                              padding: getPadding(
-                                top: 14,
-                              ),
-                              child: Text(
-                                "3800+",
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.start,
-                                style: TextStyle(
-                                  color: ColorConstant.blueA400,
-                                  fontSize: getFontSize(
-                                    16,
-                                  ),
-                                  fontFamily: 'Source Sans Pro',
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: getPadding(
-                                top: 8,
-                                bottom: 3,
-                              ),
-                              child: Text(
-                                "Reviews",
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.start,
-                                style: TextStyle(
-                                  fontSize: getFontSize(
-                                    14,
-                                  ),
-                                  fontFamily: 'Source Sans Pro',
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    )),
+                Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                        child: doctorDetails(isRtl, isDark),
+                        padding: getPadding(
+                          left: 24,
+                          top: 16,
+                          right: 24,
+                        ))),
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Padding(
@@ -501,7 +312,7 @@ class _AppointmentsBookScreenState extends State<AppointmentsBookScreen> {
                       right: 24,
                     ),
                     child: Text(
-                      "About Doctor",
+                      "О враче",
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.start,
                       style: TextStyle(
@@ -538,165 +349,55 @@ class _AppointmentsBookScreenState extends State<AppointmentsBookScreen> {
                     ),
                   ),
                 ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: getPadding(
-                      left: 24,
-                      top: 16,
-                      right: 24,
-                    ),
-                    child: Text(
-                      "Working Time",
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                        color:
-                            isDark ? Colors.white : ColorConstant.bluegray800,
-                        fontSize: getFontSize(
-                          16,
-                        ),
-                        fontFamily: 'Source Sans Pro',
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: getPadding(
-                      left: 24,
-                      top: 10,
-                      right: 24,
-                    ),
-                    child: Text(
-                      "Mon - Fri, 09.00 AM - 20.00 PM",
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                        fontSize: getFontSize(
-                          14,
-                        ),
-                        fontFamily: 'Source Sans Pro',
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: getPadding(
-                    left: 24,
-                    top: 18,
-                    right: 24,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Text(
-                        "Reviews",
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                          color:
-                              isDark ? Colors.white : ColorConstant.bluegray800,
-                          fontSize: getFontSize(
-                            16,
-                          ),
-                          fontFamily: 'Source Sans Pro',
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const AppointmentsReviewScreen()),
-                          );
-                        },
-                        child: Text(
-                          "See reviews",
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            color: ColorConstant.blueA400,
-                            fontSize: getFontSize(
-                              16,
-                            ),
-                            fontFamily: 'Source Sans Pro',
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: getPadding(
-                      left: 24,
-                      top: 16,
-                      right: 24,
-                    ),
-                    child: Text(
-                      "Расписание",
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                        color:
-                            isDark ? Colors.white : ColorConstant.bluegray800,
-                        fontSize: getFontSize(
-                          16,
-                        ),
-                        fontFamily: 'Source Sans Pro',
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ),
+                //workingTime(),
+                //reviewsWidget(),
+
                 VerticalSpace(height: 5),
                 Align(
-                  //                  padding: getPadding(right: 20, left: 20),
-                  child: SingleChildScrollView(
-                      child: DatePicker(
-                    //activeDates: [],
-                    inactiveDates: _generateInactiveDates(),
-                    DateTime.now(),
-                    deactivatedColor: Colors.grey,
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: getPadding(
+                        left: 24,
+                        top: 16,
+                        right: 24,
+                      ),
+                      child: SingleChildScrollView(
+                          child: DatePicker(
+                        //activeDates: [],
+                        inactiveDates: _generateInactiveDates(),
+                        DateTime.now(),
+                        deactivatedColor: Colors.grey,
 
-                    initialSelectedDate: DateTime.now(),
-                    selectionColor: ColorConstant.blueA400,
-                    height: MediaQuery.of(context).size.height * 0.15,
-                    dateTextStyle: TextStyle(
-                        fontFamily: 'Source Sans Pro',
-                        color: ColorConstant.blueA400,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 23),
-                    dayTextStyle: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14,
-                        fontFamily: 'Source Sans Pro',
-                        color: ColorConstant.blueA400),
-                    monthTextStyle: TextStyle(
-                      fontFamily: 'Source Sans Pro',
-                      color: ColorConstant.blueA400,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 14,
-                    ),
-                    selectedTextColor: Colors.white,
-                    onDateChange: (date) {
-                      // New date selected
-                      setState(() {
-                        selectedDate = date;
-                      });
-                    },
-                  )),
-                ),
+                        initialSelectedDate: DateTime.now(),
+                        selectionColor: ColorConstant.fromHex(
+                            "C8E0FF"), // ColorConstant.blueA400,
+                        height: MediaQuery.of(context).size.height * 0.15,
+                        dateTextStyle: TextStyle(
+                            fontFamily: 'Source Sans Pro',
+                            color: ColorConstant.black900,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 23),
+                        dayTextStyle: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                          fontFamily: 'Source Sans Pro',
+                          color: ColorConstant.black900,
+                        ),
+                        monthTextStyle: TextStyle(
+                          fontFamily: 'Source Sans Pro',
+                          color: ColorConstant.black900,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                        ),
+                        selectedTextColor: Colors.white,
+                        onDateChange: (date) {
+                          // New date selected
+                          setState(() {
+                            selectedDate = date;
+                          });
+                        },
+                      )),
+                    )),
                 CustomButton(
                   isDark: isDark,
                   width: size.width,
@@ -723,6 +424,294 @@ class _AppointmentsBookScreenState extends State<AppointmentsBookScreen> {
           ],
         ),
       )),
+    );
+  }
+
+  Widget doctorDetails(isRtl, isDark) {
+    return SvgPicture.string(
+        width: MediaQuery.of(context).size.width, SvgConstant.star_svg);
+    return Container(
+        margin: getMargin(left: 20, right: 20, top: 20),
+        padding: getPadding(left: 30, right: 30),
+        //height: getVerticalSize(
+        //  57.00,
+        //),
+        width: size.width,
+        decoration: BoxDecoration(
+          color: Colors
+              .white, //isDark ? ColorConstant.darkContainer : ColorConstant.whiteA700,
+          border: Border.all(
+            color: Colors.white, //ColorConstant.white,
+          ),
+          borderRadius: BorderRadius.circular(
+            getHorizontalSize(
+              20.00,
+            ),
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            ...List.generate(4, (int index) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        CommonImageView(
+                          imagePath: ImageConstant.starHalf,
+                          height: getSize(
+                            16.00,
+                          ),
+                          width: getSize(
+                            16.00,
+                          ),
+                        ),
+                        HorizontalSpace(width: 4),
+                        Text(
+                          "5000+",
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                            color: ColorConstant.blueA400,
+                            fontSize: getFontSize(
+                              16,
+                            ),
+                            fontFamily: 'Source Sans Pro',
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ]),
+                  Text(
+                    "Patients",
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      fontSize: getFontSize(
+                        14,
+                      ),
+                      fontFamily: 'Source Sans Pro',
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ],
+              );
+            }),
+            /*   Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                CustomIconButton(
+                  isRtl: isRtl,
+                  height: 44,
+                  width: 44,
+                  variant: IconButtonVariant.FillBlueA40019,
+                  shape: IconButtonShape.CircleBorder22,
+                  child: CommonImageView(
+                    imagePath: ImageConstant.person,
+                  ),
+                ),
+                Padding(
+                  padding: getPadding(
+                    top: 14,
+                  ),
+                  child: Text(
+                    "15+",
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      color: ColorConstant.blueA400,
+                      fontSize: getFontSize(
+                        16,
+                      ),
+                      fontFamily: 'Source Sans Pro',
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: getPadding(
+                    top: 8,
+                    bottom: 3,
+                  ),
+                  child: Text(
+                    "Years experiences",
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      fontSize: getFontSize(
+                        14,
+                      ),
+                      fontFamily: 'Source Sans Pro',
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                CustomIconButton(
+                  isRtl: isRtl,
+                  height: 44,
+                  width: 44,
+                  variant: IconButtonVariant.FillBlueA40019,
+                  shape: IconButtonShape.CircleBorder22,
+                  child: CommonImageView(
+                    imagePath: ImageConstant.reviews,
+                  ),
+                ),
+                Padding(
+                  padding: getPadding(
+                    top: 14,
+                  ),
+                  child: Text(
+                    "3800+",
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      color: ColorConstant.blueA400,
+                      fontSize: getFontSize(
+                        16,
+                      ),
+                      fontFamily: 'Source Sans Pro',
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: getPadding(
+                    top: 8,
+                    bottom: 3,
+                  ),
+                  child: Text(
+                    "Reviews",
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      fontSize: getFontSize(
+                        14,
+                      ),
+                      fontFamily: 'Source Sans Pro',
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ),
+              ],
+            ),*/
+          ],
+        ));
+  }
+
+  List<Widget> workingTime() {
+    return [
+      Align(
+        alignment: Alignment.centerLeft,
+        child: Padding(
+          padding: getPadding(
+            left: 24,
+            top: 16,
+            right: 24,
+          ),
+          child: Text(
+            "Working Time",
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.start,
+            style: TextStyle(
+              color: Colors.white,
+              //isDark ? Colors.white : ColorConstant.bluegray800,
+              fontSize: getFontSize(
+                16,
+              ),
+              fontFamily: 'Source Sans Pro',
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      ),
+      Align(
+        alignment: Alignment.centerLeft,
+        child: Padding(
+          padding: getPadding(
+            left: 24,
+            top: 10,
+            right: 24,
+          ),
+          child: Text(
+            "Mon - Fri, 09.00 AM - 20.00 PM",
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.start,
+            style: TextStyle(
+              fontSize: getFontSize(
+                14,
+              ),
+              fontFamily: 'Source Sans Pro',
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+        ),
+      )
+    ];
+  }
+
+  Widget reviewsWidget() {
+    return Padding(
+      padding: getPadding(
+        left: 24,
+        top: 18,
+        right: 24,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Text(
+            "Reviews",
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.start,
+            style: TextStyle(
+              color: Colors
+                  .white, //isDark ? Colors.white : ColorConstant.bluegray800,
+              fontSize: getFontSize(
+                16,
+              ),
+              fontFamily: 'Source Sans Pro',
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const AppointmentsReviewScreen()),
+              );
+            },
+            child: Text(
+              "See reviews",
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.start,
+              style: TextStyle(
+                color: ColorConstant.blueA400,
+                fontSize: getFontSize(
+                  16,
+                ),
+                fontFamily: 'Source Sans Pro',
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

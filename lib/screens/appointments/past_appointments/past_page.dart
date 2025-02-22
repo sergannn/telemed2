@@ -8,7 +8,7 @@ import 'widgets/listreply_two_item_widget.dart';
 import 'package:doctorq/app_export.dart';
 import 'package:doctorq/widgets/custom_search_view.dart';
 import 'package:flutter/material.dart';
-
+/*
 // ignore_for_file: must_be_immutable
 class PastAppointments extends StatelessWidget {
  
@@ -171,3 +171,4 @@ class PastAppointments extends StatelessWidget {
     );
   }
 }
+*/

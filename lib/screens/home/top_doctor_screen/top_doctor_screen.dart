@@ -97,7 +97,7 @@ class _TopDoctorScreenState extends State<TopDoctorScreen>
                         const BkBtn(),
                         HorizontalSpace(width: 20),
                         Text(
-                          "Top Doctor",
+                          "Запись к врачу",
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.start,
                           style: TextStyle(

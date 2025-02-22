@@ -14,6 +14,7 @@ class CustomButton extends StatelessWidget {
     this.fontStyle,
     this.alignment,
     this.onTap,
+    this.onDoubleTap,
     this.width,
     this.isDark = false,
     this.margin,
@@ -36,6 +37,7 @@ class CustomButton extends StatelessWidget {
   bool isDark;
 
   VoidCallback? onTap;
+  VoidCallback? onDoubleTap;
 
   double? width;
 
@@ -61,6 +63,7 @@ class CustomButton extends StatelessWidget {
 
   _buildButtonWidget() {
     return GestureDetector(
+      onDoubleTap: onDoubleTap,
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
       child: Container(

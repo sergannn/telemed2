@@ -23,8 +23,8 @@ import '../../../widgets/boxshadow.dart';
 import '../../../widgets/spacing.dart';
 import '../sign_up_blank_screen/sign_up_blank_screen.dart';
 import 'doctor_screen.dart';
-
-import 'package:flutter_login_yandex/flutter_login_yandex.dart';
+import 'package:flutter_login_yandex_updated/flutter_login_yandex.dart';
+//import 'package:flutter_login_yandex/flutter_login_yandex.dart';
 
 class SignInBlankScreen extends StatefulWidget {
   SignInBlankScreen({Key? key}) : super(key: key);
@@ -88,7 +88,7 @@ class _SignInBlankScreenState extends State<SignInBlankScreen> {
   }
 
   forceLog() async {
-    var authRes = await authUser(context, "john@example.com", "123456");
+    var authRes = await authUser(context, "ak@ak.ru", "123");
     if (authRes == true) {
       gogo(false);
 /*      showDialog(
@@ -497,6 +497,9 @@ class _SignInBlankScreenState extends State<SignInBlankScreen> {
                 valueListenable: _isFormValid,
                 builder: (context, isValid, child) {
                   return CustomButton(
+                      onDoubleTap: () async {
+                        await forceLog();
+                      },
                       isDark: isDark,
                       width: size.width,
                       text: "Войти в систему",
@@ -574,7 +577,7 @@ class _SignInBlankScreenState extends State<SignInBlankScreen> {
                                 ? 'pan_' + userData['login']
                                 : 'pan_' + userData['login'] + '@fake.ru',
                             'tanya' + userData['id'],
-                            'doctor');
+                            'patient');
                         print(yaRegRes);
                         print("<<");
                         if (yaRegRes == true) {

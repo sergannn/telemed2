@@ -1,0 +1,2 @@
+/Users/ser/Downloads/doctor-F/doctorQ/ttest/android/app/.cxx/Debug/605863h8/x86/CMakeFiles/edit_cache.dir
+/Users/ser/Downloads/doctor-F/doctorQ/ttest/android/app/.cxx/Debug/605863h8/x86/CMakeFiles/rebuild_cache.dir

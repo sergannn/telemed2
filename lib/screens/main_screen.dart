@@ -6,7 +6,9 @@ import 'package:doctorq/screens/home/home_screen/home_screen.dart';
 import 'package:doctorq/screens/profile/blank_screen/blank_screen.dart';
 import 'package:doctorq/screens/profile/settings_screen.dart';
 import 'package:doctorq/stores/user_store.dart';
+import 'package:doctorq/theme/svg_constant.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 //import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 import 'package:doctorq/chat/main.dart';
@@ -61,13 +63,17 @@ class Main extends StatelessWidget {
       PersistentTabConfig(
           screen: _buildScreens()[1],
           item: ItemConfig(
-            icon: Image.asset(
-              ImageConstant.person,
-            ),
-            inactiveIcon: Image.asset(
-              ImageConstant.inActiveHome,
+            icon: SvgPicture.string(
+              SvgConstant.zapisi,
               width: getHorizontalSize(30),
               height: getVerticalSize(30),
+            ),
+            inactiveIcon: SvgPicture.string(
+              SvgConstant.zapisi,
+              width: getHorizontalSize(30),
+              height: getVerticalSize(30),
+              colorFilter:
+                  const ColorFilter.mode(Colors.white, BlendMode.overlay),
             ),
             title: ("Профиль"),
             activeColorSecondary: ColorConstant.blueA400,
@@ -77,34 +83,34 @@ class Main extends StatelessWidget {
       PersistentTabConfig(
           screen: _buildScreens()[2],
           item: ItemConfig(
-            icon: Image.asset(
-              ImageConstant.home,
-            ),
-            inactiveIcon: Image.asset(
-              ImageConstant.inActiveHome,
-              width: getHorizontalSize(30),
-              height: getVerticalSize(30),
-            ),
-            title: ("Сеансы"),
-            activeColorSecondary: ColorConstant.blueA400,
-            //activeColorPrimary: ColorConstant.blueA400.withOpacity(0.1),
-            //inactiveColorPrimary: ColorConstant.blueA400,
-          )),
+              icon: SvgPicture.string(
+                SvgConstant.medkarta,
+                width: getHorizontalSize(30),
+                height: getVerticalSize(30),
+              ),
+              inactiveIcon: SvgPicture.string(SvgConstant.medkarta,
+                  width: getHorizontalSize(30),
+                  height: getVerticalSize(30),
+                  colorFilter: const ColorFilter.mode(
+                      Colors.white, BlendMode.overlay)))),
+      //activeColorPrimary: ColorConstant.blueA400.withOpacity(0.1),
+      //inactiveColorPrimary: ColorConstant.blueA400,
+
       PersistentTabConfig(
           screen: _buildScreens()[0],
           item: ItemConfig(
-            icon: Icon(Icons.newspaper) //Image.asset(ImageConstant.home,
-            ,
-            inactiveIcon: Image.asset(
-              ImageConstant.inActiveHome,
-              width: getHorizontalSize(30),
-              height: getVerticalSize(30),
-            ),
-            title: ("Новости"),
-            activeColorSecondary: ColorConstant.blueA400,
-            //activeColorPrimary: ColorConstant.blueA400.withOpacity(0.1),
-            //inactiveColorPrimary: ColorConstant.blueA400,
-          )),
+              icon: SvgPicture.string(
+                SvgConstant.health,
+                width: getHorizontalSize(30),
+                height: getVerticalSize(30),
+              ),
+              inactiveIcon: SvgPicture.string(SvgConstant.health,
+                  width: getHorizontalSize(30),
+                  height: getVerticalSize(30),
+                  colorFilter: const ColorFilter.mode(
+                      Colors.white, BlendMode.overlay)))),
+      //activeColorPrimary: ColorConstant.blueA400.withOpacity(0.1),
+      //inactiveColorPrimary: ColorConstant.blueA400,
 
       /* PersistentTabConfig(
           screen: _buildScreens()[3],
@@ -179,13 +185,13 @@ class Main extends StatelessWidget {
       PersistentTabConfig(
           screen: _buildScreens()[0],
           item: ItemConfig(
-            icon: Image.asset(
-              ImageConstant.home,
+            icon: SvgPicture.string(
+              SvgConstant.chats,
               width: getHorizontalSize(30),
               height: getVerticalSize(30),
             ),
-            inactiveIcon: Image.asset(
-              ImageConstant.inActiveHome,
+            inactiveIcon: SvgPicture.string(
+              SvgConstant.chats,
               width: getHorizontalSize(30),
               height: getVerticalSize(30),
             ),
@@ -197,11 +203,13 @@ class Main extends StatelessWidget {
       PersistentTabConfig(
           screen: _buildScreens()[1],
           item: ItemConfig(
-            icon: Image.asset(
-              ImageConstant.person,
+            icon: SvgPicture.string(
+              SvgConstant.chats,
+              width: getHorizontalSize(30),
+              height: getVerticalSize(30),
             ),
-            inactiveIcon: Image.asset(
-              ImageConstant.inActiveHome,
+            inactiveIcon: SvgPicture.string(
+              SvgConstant.chats,
               width: getHorizontalSize(30),
               height: getVerticalSize(30),
             ),
@@ -213,14 +221,11 @@ class Main extends StatelessWidget {
       PersistentTabConfig(
           screen: _buildScreens()[2],
           item: ItemConfig(
-            icon: Image.asset(
-              ImageConstant.home,
+            icon: Icon(
+              Icons.add,
+              color: Colors.black,
             ),
-            inactiveIcon: Image.asset(
-              ImageConstant.inActiveHome,
-              width: getHorizontalSize(30),
-              height: getVerticalSize(30),
-            ),
+
             title: ("Сеансы"),
             activeColorSecondary: ColorConstant.blueA400,
             //activeColorPrimary: ColorConstant.blueA400.withOpacity(0.1),
@@ -311,13 +316,40 @@ class Main extends StatelessWidget {
     tabs.add(PersistentTabConfig(
         screen: ChatScreen(),
         item: ItemConfig(
+          title: "Чаты",
+          icon: SvgPicture.string(
+            SvgConstant.chats,
+            width: getHorizontalSize(30),
+            height: getVerticalSize(30),
+          ),
+          inactiveIcon: SvgPicture.string(
+            SvgConstant.chats,
+            width: getHorizontalSize(30),
+            height: getVerticalSize(30),
+            colorFilter:
+                const ColorFilter.mode(Colors.white, BlendMode.overlay),
+          ),
+
+          //   title: ("Помощник"),
+          activeColorSecondary: ColorConstant.blueA400,
+          // activeColorPrimary: ColorConstant.blueA400.withOpacity(0.1),
+          // inactiveColorPrimary: ColorConstant.blueA400,
+        )));
+    tabs.add(PersistentTabConfig(
+        screen: ChatScreen(),
+        item: ItemConfig(
+          iconSize: 50,
           title: "Помощник",
           icon: Icon(
             Icons.chat,
             semanticLabel: "aa",
+            //size: 15.0,
           ), // Image.asset(
-          inactiveIcon: Image.asset(ImageConstant.inActiveHome,
-              width: getHorizontalSize(30), height: getVerticalSize(30)),
+          inactiveIcon: Icon(
+            Icons.chat,
+            semanticLabel: "aa",
+          ),
+//              width: getHorizontalSize(30), height: getVerticalSize(30)),
 
           //   title: ("Помощник"),
           activeColorSecondary: ColorConstant.blueA400,
@@ -329,7 +361,7 @@ class Main extends StatelessWidget {
       controller: _controller,
       //screens: _buildScreens(),
       tabs: tabs,
-      navBarBuilder: (navBarConfig) => Style1BottomNavBar(
+      navBarBuilder: (navBarConfig) => CustomBottomNavBar(
         navBarConfig: navBarConfig,
       ),
 
@@ -371,6 +403,106 @@ class Main extends StatelessWidget {
       //navBarStyle:
       //    NavBarStyle.style9, // Choose the nav bar style with this property.
       navBarHeight: getVerticalSize(70),
+    );
+  }
+}
+//part of "../persistent_bottom_nav_bar_v2.dart";
+
+class CustomBottomNavBar extends StatelessWidget {
+  CustomBottomNavBar({
+    required this.navBarConfig,
+    this.navBarDecoration = const NavBarDecoration(),
+    super.key,
+  }) : assert(
+          navBarConfig.items.length.isOdd,
+          "The number of items must be odd for this style",
+        );
+
+  final NavBarConfig navBarConfig;
+  final NavBarDecoration navBarDecoration;
+
+  Widget _buildItem(ItemConfig item, bool isSelected) => Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Expanded(
+            child: IconTheme(
+              data: IconThemeData(
+                size: item.iconSize,
+                color: isSelected
+                    ? item.activeForegroundColor
+                    : item.inactiveForegroundColor,
+              ),
+              child: isSelected ? item.icon : item.inactiveIcon,
+            ),
+          ),
+          if (item.title != null)
+            FittedBox(
+              child: Text(
+                item.title! + '',
+                style: item.textStyle.apply(
+                  color: isSelected
+                      ? item.activeForegroundColor
+                      : item.inactiveForegroundColor,
+                ),
+              ),
+            ),
+        ],
+      );
+
+  Widget _buildMiddleItem(ItemConfig item, bool isSelected) => Container(
+        margin: const EdgeInsets.only(left: 5, right: 5),
+        decoration: BoxDecoration(
+            shape: BoxShape.circle,
+//          color: item.activeForegroundColor,
+            color: ColorConstant.fromHex("C8E0FF")),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Expanded(
+              child: IconTheme(
+                data: IconThemeData(
+                  size: item.iconSize,
+                  color: isSelected
+                      ? item.activeForegroundColor
+                      : item.inactiveForegroundColor,
+                ),
+                child: isSelected ? item.icon : item.inactiveIcon,
+              ),
+            ),
+          ],
+        ),
+      );
+
+  @override
+  Widget build(BuildContext context) {
+    final midIndex = (navBarConfig.items.length / 2).floor();
+    return DecoratedNavBar(
+      decoration: navBarDecoration,
+      filter: navBarConfig.selectedItem.filter,
+      opacity: navBarConfig.selectedItem.opacity,
+      height: navBarConfig.navBarHeight,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: navBarConfig.items.map((item) {
+          final int index = navBarConfig.items.indexOf(item);
+          return Expanded(
+            child: InkWell(
+              onTap: () {
+                navBarConfig.onItemSelected(index);
+              },
+              child: index == midIndex
+                  ? _buildMiddleItem(
+                      item,
+                      navBarConfig.selectedIndex == index,
+                    )
+                  : _buildItem(
+                      item,
+                      navBarConfig.selectedIndex == index,
+                    ),
+            ),
+          );
+        }).toList(),
+      ),
     );
   }
 }

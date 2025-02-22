@@ -1,4 +1,8 @@
 import 'dart:convert';
+//import 'package:date_picker_timeline /date_picker_widget.dart';
+import 'package:doctorq/date_picker_timeline-1.2.6/lib/date_picker_widget.dart';
+import 'package:doctorq/screens/home/home_screen/widgets/autolayouthor_item_widget_tasks.dart';
+import 'package:doctorq/screens/home/home_screen/widgets/autolayouthor_item_widget_zapisi.dart';
 import 'package:doctorq/screens/home/home_screen/widgets/story_item_widget.dart';
 import 'package:doctorq/screens/profile/settings/appearance_screen/appearance_screen.dart';
 import 'package:doctorq/screens/stories/story_scren.dart';
@@ -146,34 +150,46 @@ class HomeScreen extends StatelessWidget {
                         bottom: 4,
                       ),
                       child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          CommonImageView(
-                            imagePath: ImageConstant.appLogo,
-                            height: getVerticalSize(36),
-                            width: getHorizontalSize(36),
+                          CircleAvatar(
+                            radius: getVerticalSize(25),
+                            backgroundImage:
+                                NetworkImage(context.userData['photo']),
                           ),
+
                           HorizontalSpace(width: 20),
-                          Padding(
-                            padding: getPadding(
-                              left: 0,
-                              top: 8,
-                              bottom: 1,
-                            ),
-                            child: Text(
-                              "Телемедицина",
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.start,
+
+                          //child: FittedBox(
+
+                          RichText(
+                            text: TextSpan(
+                              text: context.userData['first_name'] +
+                                  ' ' +
+                                  context.userData['last_name'] +
+                                  '\n',
                               style: TextStyle(
-                                fontSize: getFontSize(
-                                  26,
-                                ),
+                                fontSize: 16,
+                                color: Colors.black,
                                 fontFamily: 'Source Sans Pro',
                                 fontWeight: FontWeight.w600,
                               ),
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text: '3 близких' +
+                                      // context.userData['patient_id'] +
+                                      "",
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontFamily: 'Source Sans Pro',
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
+                          )
                         ],
                       ),
                     ),
@@ -190,20 +206,18 @@ class HomeScreen extends StatelessWidget {
                             );
                           },
                           child: Container(
-                            padding: getPadding(all: 10),
-                            height: getVerticalSize(44),
-                            width: getHorizontalSize(44),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              color: ColorConstant.blueA400.withOpacity(0.1),
-                            ),
-                            child: CommonImageView(
-                              imagePath: ImageConstant.notifications,
-                            ),
-                          ),
+                              padding: getPadding(all: 10),
+                              height: getVerticalSize(44),
+                              width: getHorizontalSize(44),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                                color: Colors
+                                    .white, //ColorConstant.blueA400.withOpacity(0.1),
+                              ),
+                              child: Icon(Icons.notifications)),
                         ),
-                        HorizontalSpace(width: 16),
-                        InkWell(
+                        //  HorizontalSpace(width: 16),
+                        /*InkWell(
                           borderRadius: BorderRadius.circular(12),
                           onTap: () {
                             Navigator.push(
@@ -225,7 +239,7 @@ class HomeScreen extends StatelessWidget {
                               imagePath: ImageConstant.favorite,
                             ),
                           ),
-                        ),
+                        ),*/
                       ],
                     )
                   ],
@@ -253,9 +267,96 @@ class HomeScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      SingleChildScrollView(child: NewsSlider()),
+                      // VerticalSpace(height: 5),
+                      Align(
+                          alignment: Alignment.center,
+                          child: Padding(
+                              padding: getPadding(
+                                left: 20,
+                                //top: 30,
+                                right: 20,
+                              ),
+                              child: SingleChildScrollView(
+                                  child: Container(
+                                      //color: Colors.red,
+                                      child: DatePicker(
+                                //activeDates: [],
+                                //inactiveDates: _generateInactiveDates(),
+                                DateTime.now(),
 
-                      /*
+                                deactivatedColor: Colors.grey,
+
+                                initialSelectedDate: DateTime.now(),
+                                selectionColor: ColorConstant.fromHex("81AEEA"),
+                                height: 100,
+                                dateTextStyle: TextStyle(
+                                    fontFamily: 'Source Sans Pro',
+                                    color: ColorConstant.blueA400,
+                                    // fontWeight: FontWeight.w600,
+                                    fontSize: 23),
+                                dayTextStyle: TextStyle(
+                                    // fontWeight: FontWeight.w400,
+                                    fontSize: 15,
+                                    fontFamily: 'Source Sans Pro',
+                                    color: ColorConstant.blueA400),
+                                monthTextStyle: TextStyle(
+                                  fontFamily: 'Source Sans Pro',
+                                  color: ColorConstant.blueA400,
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 14,
+                                ),
+                                selectedTextColor: Colors.white,
+                                onDateChange: (date) {
+                                  //setState(() {});
+                                  // New date selected
+                                  //setState(() {
+                                  //  selectedDate = date;
+                                  //});
+                                },
+                              ))))),
+
+                      Obx(() {
+                        //print(itemController.storyItems.length);
+                        return FadeInUp(
+                          delay: const Duration(milliseconds: 300),
+                          onFinish: (direction) =>
+                              printLog('Direction $direction'),
+                          child: SizedBox(
+                            height: getVerticalSize(
+                              180.00,
+                            ),
+                            width: getHorizontalSize(
+                              528.00,
+                            ),
+                            //  child: NotificationListener<ScrollNotification>(
+
+                            child: ListView.separated(
+                              padding: getPadding(
+                                left: 20,
+                                right: 20,
+                                top: 27,
+                              ),
+                              scrollDirection: Axis.horizontal,
+                              physics: const BouncingScrollPhysics(),
+                              itemCount: itemController.cats.length,
+                              separatorBuilder: (context, index) {
+                                return HorizontalSpace(width: 16);
+                              },
+                              itemBuilder: (context, index) {
+                                var cats = itemController.cats;
+                                //return Text("a");
+
+                                return AutolayouthorItemWidgetTasks(
+                                  item: cats[index],
+                                  index: index,
+                                );
+                              },
+                            ),
+                          ),
+                        );
+                      }),
+                      //  Frame2087326464(),
+
                       CustomSearchView(
                         isDark: isDark,
                         width: size.width,
@@ -270,10 +371,7 @@ class HomeScreen extends StatelessWidget {
                         },
                         controller: autoLayoutVerController,
                         hintText: "Поиск",
-                        margin: getMargin(
-                          left: 24,
-                          right: 24,
-                        ),
+                        margin: getMargin(left: 24, right: 24, top: 20),
                         alignment: Alignment.center,
                         suffix: Padding(
                             padding: EdgeInsets.only(
@@ -281,10 +379,9 @@ class HomeScreen extends StatelessWidget {
                                   15.00,
                                 ),
                                 left: getHorizontalSize(15)),
-                            child: Text("a")), //CommonImageView(
-                        //imagePath: ImageConstant.search,
-                        //)
-                        //),
+                            child: CommonImageView(
+                              imagePath: ImageConstant.search,
+                            )),
                         suffixConstraints: BoxConstraints(
                           maxWidth: getHorizontalSize(
                             50.00,
@@ -293,7 +390,93 @@ class HomeScreen extends StatelessWidget {
                             50.00,
                           ),
                         ),
-                      ),*/
+                      ),
+                      GestureDetector(
+                          onTap: () async {
+                            // Handle double tap action
+                            Navigator.of(context, rootNavigator: true).push(
+                              MaterialPageRoute(
+                                  builder: (context) => TopDoctorScreen()),
+                            );
+                            print('Image double tapped');
+                          },
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Padding(
+                              padding: getPadding(
+                                left: 20,
+                                top: 15,
+                                right: 20,
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Text(
+                                    "Запись к врачу",
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.start,
+                                    style: TextStyle(
+                                      color: isDark
+                                          ? ColorConstant.whiteA700
+                                          : ColorConstant.bluegray800,
+                                      fontSize: getFontSize(
+                                        15,
+                                      ),
+                                      fontFamily: 'Source Sans Pro',
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  )
+                                      .animate()
+                                      .fade(delay: Duration(milliseconds: 200))
+                                      .scale(),
+                                ],
+                              ),
+                            ),
+                          )),
+                      Obx(() {
+                        //print(itemController.storyItems.length);
+                        return FadeInUp(
+                          delay: const Duration(milliseconds: 300),
+                          onFinish: (direction) =>
+                              printLog('Direction $direction'),
+                          child: SizedBox(
+                            height: getVerticalSize(
+                              180.00,
+                            ),
+                            width: getHorizontalSize(
+                              528.00,
+                            ),
+                            //  child: NotificationListener<ScrollNotification>(
+
+                            child: ListView.separated(
+                              padding: getPadding(
+                                left: 20,
+                                right: 20,
+                                top: 17,
+                              ),
+                              scrollDirection: Axis.horizontal,
+                              physics: const BouncingScrollPhysics(),
+                              itemCount: itemController.cats.length,
+                              separatorBuilder: (context, index) {
+                                return HorizontalSpace(width: 16);
+                              },
+                              itemBuilder: (context, index) {
+                                var cats = itemController.cats;
+                                //return Text("a");
+
+                                return AutolayouthorItemWidgetZapisi(
+                                  item: cats[index],
+                                  index: index,
+                                );
+                              },
+                            ),
+                          ),
+                        );
+                      }),
+                      //SingleChildScrollView(child: NewsSlider()),
+
                       Align(
                         alignment: Alignment.center,
                         child: Padding(
@@ -308,7 +491,7 @@ class HomeScreen extends StatelessWidget {
                             mainAxisSize: MainAxisSize.max,
                             children: [
                               Text(
-                                "Статьи",
+                                "Избранное",
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
@@ -316,7 +499,7 @@ class HomeScreen extends StatelessWidget {
                                       ? ColorConstant.whiteA700
                                       : ColorConstant.bluegray800,
                                   fontSize: getFontSize(
-                                    25,
+                                    15,
                                   ),
                                   fontFamily: 'Source Sans Pro',
                                   fontWeight: FontWeight.w600,
@@ -325,90 +508,64 @@ class HomeScreen extends StatelessWidget {
                                   .animate()
                                   .fade(delay: Duration(milliseconds: 200))
                                   .scale(),
-                              /*  Padding(
-                                padding: getPadding(
-                                  top: 1,
-                                  bottom: 3,
-                                ),
-                                child: InkWell(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const HomeSpecialistDoctorScreen()),
-                                    );
-                                  },
-                                  child: GestureDetector(
-                                      child: Text(
-                                        "Все",
-                                        overflow: TextOverflow.ellipsis,
-                                        textAlign: TextAlign.start,
-                                        style: TextStyle(
-                                          color: ColorConstant.blueA400,
-                                          fontSize: getFontSize(
-                                            16,
-                                          ),
-                                          fontFamily: 'Source Sans Pro',
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                      onTap: () {}),
-                                ),
-                              ),*/
                             ],
                           ),
                         ),
                       ),
-                      Obx(() {
-                        //print(itemController.storyItems.length);
-                        return FadeInUp(
-                          delay: const Duration(milliseconds: 300),
-                          onFinish: (direction) =>
-                              printLog('Direction $direction'),
-                          child: SizedBox(
-                            height: getVerticalSize(
-                              220.00,
-                            ),
-                            width: //getHorizontalSize(
-                                MediaQuery.of(context).size.width, //),
-                            //  child: NotificationListener<ScrollNotification>(
-
-                            child: ListView.separated(
+                      // someObxList(context, itemController), фотки докторов - сторисы
+                      Align(
+                          alignment: Alignment.center,
+                          child: Padding(
                               padding: getPadding(
                                 left: 20,
+                                top: 30,
                                 right: 20,
-                                top: 27,
                               ),
-                              scrollDirection: Axis.horizontal,
-                              physics: const BouncingScrollPhysics(),
-                              itemCount: itemController.articles.length,
-                              separatorBuilder: (context, index) {
-                                return HorizontalSpace(width: 16);
-                              },
-                              itemBuilder: (context, index) {
-                                var stories = itemController.articles;
-
-                                return GestureDetector(
-                                    onTap: () async {
-                                      // Handle double tap action
-                                      Navigator.of(context, rootNavigator: true)
-                                          .push(
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                StoryScreen()),
-                                      );
-                                      print('Image double tapped');
-                                    },
-                                    child: StoryItemWidget(
-                                      item: stories[index],
-                                      index: index,
-                                    ));
-                              },
-                            ),
-                          ),
-                        );
-                      }),
+                              child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  // mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    Column(children: [
+                                      CircleAvatar(
+                                          backgroundColor:
+                                              ColorConstant.fromHex("C8E0FF"),
+                                          radius: 50,
+                                          child: IconButton(
+                                              onPressed: null,
+                                              icon: Icon(Icons.person))),
+                                      Text("Врачи")
+                                    ]),
+                                    Column(children: [
+                                      CircleAvatar(
+                                          backgroundColor:
+                                              ColorConstant.fromHex("FFFCBB"),
+                                          radius: 50,
+                                          child: IconButton(
+                                              onPressed: null,
+                                              icon: Icon(Icons.person))),
+                                      Text("Лекарства")
+                                    ]),
+                                    Column(children: [
+                                      CircleAvatar(
+                                          backgroundColor:
+                                              ColorConstant.fromHex("C8E0FF"),
+                                          radius: 50,
+                                          child: IconButton(
+                                              onPressed: null,
+                                              icon: Icon(Icons.person))),
+                                      Text("Полезное")
+                                    ]),
+                                    Column(children: [
+                                      CircleAvatar(
+                                          radius: 50,
+                                          child: IconButton(
+                                              onPressed: null,
+                                              icon: Icon(Icons.person))),
+                                      Text("Статьи")
+                                    ]),
+                                  ]))),
                       Align(
                         alignment: Alignment.center,
                         child: Padding(
@@ -473,6 +630,7 @@ class HomeScreen extends StatelessWidget {
                           ),
                         ),
                       ),
+
                       Obx(() {
                         //print(itemController.storyItems.length);
                         return FadeInUp(
@@ -511,6 +669,7 @@ class HomeScreen extends StatelessWidget {
                           ),
                         );
                       }),
+                      //  Text(context.userData['doctor_id']),
                       //  Text(context.userData['patient_id']),
                       if (context.userData['patient_id'] != null)
                         DoctorsSliderHeader(isDark: isDark),
@@ -649,7 +808,10 @@ class DoctorsSliderHeader extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const TopDoctorScreen()),
+                        builder: (context) =>
+                            //  const HomeSpecialistDoctorScreen()
+                            TopDoctorScreen()),
+                    // TopDoctorScreen()),
                   );
                 },
                 child: Text(
@@ -682,6 +844,7 @@ class DoctorsSilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print("doctors");
+    print(context.doctorsData.length);
     //print(context.doctorsData);
     return FadeInUp(
       child: SizedBox(
@@ -713,6 +876,54 @@ class DoctorsSilder extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget someObxList(context, itemController) {
+  return Obx(() {
+    //print(itemController.storyItems.length);
+    return FadeInUp(
+      delay: const Duration(milliseconds: 300),
+      onFinish: (direction) => printLog('Direction $direction'),
+      child: SizedBox(
+        height: getVerticalSize(
+          220.00,
+        ),
+        width: //getHorizontalSize(
+            MediaQuery.of(context).size.width, //),
+        //  child: NotificationListener<ScrollNotification>(
+
+        child: ListView.separated(
+          padding: getPadding(
+            left: 20,
+            right: 20,
+            top: 27,
+          ),
+          scrollDirection: Axis.horizontal,
+          physics: const BouncingScrollPhysics(),
+          itemCount: itemController.articles.length,
+          separatorBuilder: (context, index) {
+            return HorizontalSpace(width: 16);
+          },
+          itemBuilder: (context, index) {
+            var stories = itemController.articles;
+
+            return GestureDetector(
+                onTap: () async {
+                  // Handle double tap action
+                  Navigator.of(context, rootNavigator: true).push(
+                    MaterialPageRoute(builder: (context) => StoryScreen()),
+                  );
+                  print('Image double tapped');
+                },
+                child: StoryItemWidget(
+                  item: stories[index],
+                  index: index,
+                ));
+          },
+        ),
+      ),
+    );
+  });
 }
 
 class NewsSlider extends StatelessWidget {

@@ -1,4 +1,4 @@
-import 'dart:async';
+/*import 'dart:async';
 import 'dart:convert';
 
 import 'package:doctorq/models/appointments_model.dart';
@@ -913,3 +913,4 @@ class AppointmentsListVideoCallScreen extends StatelessWidget {
     );
   }
 }
+*/
