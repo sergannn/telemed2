@@ -273,7 +273,7 @@ class HomeScreen extends StatelessWidget {
                 physics: const AlwaysScrollableScrollPhysics(),
                 child: Padding(
                   padding: getPadding(
-                    top: 26,
+                    top: 12,
                   ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -301,7 +301,7 @@ class HomeScreen extends StatelessWidget {
 
                                 initialSelectedDate: DateTime.now(),
                                 selectionColor: ColorConstant.fromHex("81AEEA"),
-                                height: 80,
+                                height: 56,
                                 dateTextStyle: TextStyle(
                                     fontFamily: 'Source Sans Pro',
                                     color: ColorConstant.blueA400,
@@ -449,7 +449,7 @@ class HomeScreen extends StatelessWidget {
                               printLog('Direction $direction'),
                           child: SizedBox(
                             height: getVerticalSize(
-                              180.00,
+                              190.00,
                             ),
                             width: getHorizontalSize(
                               528.00,
@@ -475,21 +475,34 @@ class HomeScreen extends StatelessWidget {
                                     onTap: () async {
                                       print("tap tap");
                                       // Handle double tap action
-                                      if(index==1) {
-                                      Navigator.of(context, rootNavigator: true)
-                                          .push(
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                ChooseSpecsScreen()),
+                                      if (index == 1) {
+                                        Navigator.of(context,
+                                                rootNavigator: true)
+                                            .push(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ChooseSpecsScreen()),
 //                                  TopDoctorScreen()),
-                                      );
-                                      print('Image double tapped');
+                                        );
+                                        print('Image double tapped');
                                       }
                                     },
-                                    child: AutolayouthorItemWidgetZapisi(
-                                      item: cats[index],
-                                      index: index,
-                                    ));
+                                    child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          AutolayouthorItemWidgetZapisi(
+                                            item: cats[index],
+                                            index: index,
+                                          ),
+                                          Text(
+                                            "Специализации",
+                                            style: TextStyle(
+                                              fontSize:
+                                                  12.0, // размер в пикселях
+                                            ),
+                                          )
+                                        ]));
                               },
                             ),
                           ),

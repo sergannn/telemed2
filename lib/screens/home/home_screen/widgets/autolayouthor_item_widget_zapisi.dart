@@ -118,7 +118,8 @@ class AutolayouthorItemWidgetZapisi extends StatelessWidget {
                 ),
               );
             }))
-          ]),
+        
+          ])
     );
   }
 }
