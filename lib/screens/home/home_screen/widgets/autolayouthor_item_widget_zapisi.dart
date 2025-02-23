@@ -83,7 +83,7 @@ class AutolayouthorItemWidgetZapisi extends StatelessWidget {
                     ),
                     children: <TextSpan>[
                       TextSpan(
-                        text: '3 близких',
+                        text: 'Предварительный диагноз',
                         style: TextStyle(
                           fontSize: 10,
                           color: Colors.grey,

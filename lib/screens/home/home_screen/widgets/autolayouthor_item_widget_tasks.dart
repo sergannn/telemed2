@@ -62,7 +62,7 @@ class AutolayouthorItemWidgetTasks extends StatelessWidget {
                   ),
                   children: <TextSpan>[
                     TextSpan(
-                      text: '3 близких',
+                      text: 'Врач аллерголог',
                       style: TextStyle(
                         fontSize: 10,
                         color: Colors.black,

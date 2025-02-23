@@ -185,17 +185,13 @@ class Main extends StatelessWidget {
       PersistentTabConfig(
           screen: _buildScreens()[0],
           item: ItemConfig(
-            icon: SvgPicture.string(
-              SvgConstant.chats,
-              width: getHorizontalSize(30),
-              height: getVerticalSize(30),
-            ),
-            inactiveIcon: SvgPicture.string(
-              SvgConstant.chats,
-              width: getHorizontalSize(30),
-              height: getVerticalSize(30),
-            ),
-            title: ("Домой"),
+            icon: Icon(Icons.medical_information,
+             size: 28,
+      color: const Color.fromARGB(255, 92, 92, 92)),
+            inactiveIcon: Icon(Icons.medical_information,
+             size: 28,
+      color: const Color.fromARGB(255, 36, 36, 36),),
+            title: ("Записи"),
             activeColorSecondary: ColorConstant.blueA400,
             //activeColorPrimary: ColorConstant.blueA400.withOpacity(0.1),
             //inactiveColorPrimary: ColorConstant.blueA400,
@@ -203,17 +199,13 @@ class Main extends StatelessWidget {
       PersistentTabConfig(
           screen: _buildScreens()[1],
           item: ItemConfig(
-            icon: SvgPicture.string(
-              SvgConstant.chats,
-              width: getHorizontalSize(30),
-              height: getVerticalSize(30),
-            ),
-            inactiveIcon: SvgPicture.string(
-              SvgConstant.chats,
-              width: getHorizontalSize(30),
-              height: getVerticalSize(30),
-            ),
-            title: ("Профиль"),
+             icon: Icon(Icons.healing,
+             size: 28,
+      color: const Color.fromARGB(255, 92, 92, 92)),
+            inactiveIcon: Icon(Icons.healing,
+             size: 28,
+      color: const Color.fromARGB(255, 36, 36, 36),),
+            title: ("Мед карта"),
             activeColorSecondary: ColorConstant.blueA400,
             //activeColorPrimary: ColorConstant.blueA400.withOpacity(0.1),
             //inactiveColorPrimary: ColorConstant.blueA400,
@@ -316,19 +308,17 @@ class Main extends StatelessWidget {
     tabs.add(PersistentTabConfig(
         screen: ChatScreen(),
         item: ItemConfig(
-          title: "Чаты",
-          icon: SvgPicture.string(
-            SvgConstant.chats,
-            width: getHorizontalSize(30),
-            height: getVerticalSize(30),
-          ),
-          inactiveIcon: SvgPicture.string(
-            SvgConstant.chats,
-            width: getHorizontalSize(30),
-            height: getVerticalSize(30),
-            colorFilter:
-                const ColorFilter.mode(Colors.white, BlendMode.overlay),
-          ),
+          title: "Здоровье",
+          icon: Icon(
+      Icons.health_and_safety,
+      size: 28,
+      color: const Color.fromARGB(255, 92, 92, 92),
+    ),
+    inactiveIcon: Icon(
+      Icons.health_and_safety,
+      size: 28,
+      color: const Color.fromARGB(255, 36, 36, 36),
+    ),
 
           //   title: ("Помощник"),
           activeColorSecondary: ColorConstant.blueA400,
@@ -338,16 +328,19 @@ class Main extends StatelessWidget {
     tabs.add(PersistentTabConfig(
         screen: ChatScreen(),
         item: ItemConfig(
-          iconSize: 50,
-          title: "Помощник",
+          title: "Чаты",
           icon: Icon(
             Icons.chat,
+            size: 28,
             semanticLabel: "aa",
+            color: const Color.fromARGB(255, 92, 92, 92)
             //size: 15.0,
           ), // Image.asset(
           inactiveIcon: Icon(
             Icons.chat,
+            size: 28,
             semanticLabel: "aa",
+            color: const Color.fromARGB(255, 36, 36, 36)
           ),
 //              width: getHorizontalSize(30), height: getVerticalSize(30)),
 

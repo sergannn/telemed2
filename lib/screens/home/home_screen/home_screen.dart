@@ -119,8 +119,7 @@ class HomeScreen extends StatelessWidget {
   HomeScreen({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-
-var titles = [
+    var titles = [
       "Путеводитель",
       "Ваши симптомы",
       "Синдром-чокер",
@@ -132,8 +131,6 @@ var titles = [
       'assets/images/13.png', // Синдром-чокер
       'assets/images/11.png', // Статус здоровья
     ];
-
-
 
     bool isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
@@ -187,7 +184,7 @@ var titles = [
                                   context.userData['last_name'] +
                                   '\n',
                               style: TextStyle(
-                                fontSize: 16,
+                                fontSize: 14,
                                 color: Colors.black,
                                 fontFamily: 'Source Sans Pro',
                                 fontWeight: FontWeight.w600,
@@ -339,7 +336,7 @@ var titles = [
                               printLog('Direction $direction'),
                           child: SizedBox(
                             height: getVerticalSize(
-                              120.00,
+                              160.00,
                             ),
                             width: getHorizontalSize(
                               528.00,
@@ -409,51 +406,41 @@ var titles = [
                           ),
                         ),
                       ),
-                      GestureDetector(
-                          onTap: () async {
-                            // Handle double tap action
-                            Navigator.of(context, rootNavigator: true).push(
-                              MaterialPageRoute(
-                                  builder: (context) => ChooseSpecsScreen()),
-//                                  TopDoctorScreen()),
-                            );
-                            print('Image double tapped');
-                          },
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: Padding(
-                              padding: getPadding(
-                                left: 20,
-                                top: 15,
-                                right: 20,
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Text(
-                                    "Запись к врачу",
-                                    overflow: TextOverflow.ellipsis,
-                                    textAlign: TextAlign.start,
-                                    style: TextStyle(
-                                      color: isDark
-                                          ? ColorConstant.whiteA700
-                                          : ColorConstant.bluegray800,
-                                      fontSize: getFontSize(
-                                        15,
-                                      ),
-                                      fontFamily: 'Source Sans Pro',
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  )
-                                      .animate()
-                                      .fade(delay: Duration(milliseconds: 200))
-                                      .scale(),
-                                ],
-                              ),
-                            ),
-                          )),
+                      Align(
+                        alignment: Alignment.center,
+                        child: Padding(
+                          padding: getPadding(
+                            left: 20,
+                            top: 15,
+                            right: 20,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Text(
+                                "Запись к врачу",
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.start,
+                                style: TextStyle(
+                                  color: isDark
+                                      ? ColorConstant.whiteA700
+                                      : ColorConstant.bluegray800,
+                                  fontSize: getFontSize(
+                                    15,
+                                  ),
+                                  fontFamily: 'Source Sans Pro',
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              )
+                                  .animate()
+                                  .fade(delay: Duration(milliseconds: 200))
+                                  .scale(),
+                            ],
+                          ),
+                        ),
+                      ),
                       Obx(() {
                         //print(itemController.storyItems.length);
                         return FadeInUp(
@@ -484,11 +471,25 @@ var titles = [
                               itemBuilder: (context, index) {
                                 var cats = itemController.cats;
                                 //return Text("a");
-
-                                return AutolayouthorItemWidgetZapisi(
-                                  item: cats[index],
-                                  index: index,
-                                );
+                                return GestureDetector(
+                                    onTap: () async {
+                                      print("tap tap");
+                                      // Handle double tap action
+                                      if(index==1) {
+                                      Navigator.of(context, rootNavigator: true)
+                                          .push(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ChooseSpecsScreen()),
+//                                  TopDoctorScreen()),
+                                      );
+                                      print('Image double tapped');
+                                      }
+                                    },
+                                    child: AutolayouthorItemWidgetZapisi(
+                                      item: cats[index],
+                                      index: index,
+                                    ));
                               },
                             ),
                           ),
@@ -550,7 +551,10 @@ var titles = [
                                       CircleAvatar(
                                           backgroundColor:
                                               ColorConstant.fromHex("C8E0FF"),
-                                          radius: 50,
+                                          radius: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              10,
                                           child: IconButton(
                                               onPressed: null,
                                               icon: Icon(Icons.person))),
@@ -560,32 +564,41 @@ var titles = [
                                       CircleAvatar(
                                           backgroundColor:
                                               ColorConstant.fromHex("FFFCBB"),
-                                          radius: 50,
+                                          radius: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              10,
                                           child: IconButton(
                                               onPressed: null,
-                                              icon: Icon(Icons.person))),
+                                              icon: Icon(Icons.medication))),
                                       Text("Лекарства")
                                     ]),
                                     Column(children: [
                                       CircleAvatar(
                                           backgroundColor:
                                               ColorConstant.fromHex("C8E0FF"),
-                                          radius: 50,
+                                          radius: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              10,
                                           child: IconButton(
                                               onPressed: null,
-                                              icon: Icon(Icons.person))),
+                                              icon: Icon(Icons.info))),
                                       Text("Полезное")
                                     ]),
                                     Column(children: [
                                       CircleAvatar(
-                                          radius: 50,
+                                          radius: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              10,
                                           child: IconButton(
                                               onPressed: null,
-                                              icon: Icon(Icons.person))),
+                                              icon: Icon(Icons.article))),
                                       Text("Статьи")
                                     ]),
                                   ]))),
-                                   // Раздел "Рекомендуем вам"
+                      // Раздел "Рекомендуем вам"
                       Align(
                         alignment: Alignment.center,
                         child: Padding(
@@ -611,7 +624,7 @@ var titles = [
                                 ),
                               ),
                               SizedBox(height: 16),
-                             fourThings(titles,images)
+                              fourThings(titles, images)
                             ],
                           ),
                         ),
@@ -786,81 +799,76 @@ class DoctorsSliderHeader extends StatelessWidget {
     );
   }
 }
-Widget fourThings(titles,images) {
 
+Widget fourThings(titles, images) {
   return SizedBox(
-                                height: getVerticalSize(120.00),
-                                width: getHorizontalSize(528.00),
-                                child: ListView.separated(
-                                  padding: getPadding(
-                                    left: 20,
-                                    right: 20,
-                                    top: 17,
-                                  ),
-                                  scrollDirection: Axis.horizontal,
-                                  physics: const BouncingScrollPhysics(),
-                                  itemCount: 4,
-                                  separatorBuilder: (context, index) {
-                                    return HorizontalSpace(width: 16);
-                                  },
-                                  itemBuilder: (context, index) {
-                                  
-                                    return Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(16),
-                                        color: Colors.white,
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color:
-                                                Colors.black.withOpacity(0.1),
-                                            blurRadius: 8,
-                                            offset: Offset(0, 2),
-                                          ),
-                                        ],
-                                      ),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Expanded(
-                                            child: Container(
-                                              width:getHorizontalSize(160),
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(16),
-                                                image: DecorationImage(
-                                                  image:
-                                                      AssetImage(images[index]),
-                                                  fit: BoxFit.cover,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: getPadding(
-                                              left: 16,
-                                              top: 12,
-                                              bottom: 16,
-                                              right: 16,
-                                            ),
-                                            child: Text(
-                                              titles[index],
-                                              style: TextStyle(
-                                                fontSize: getFontSize(14),
-                                                fontFamily: 'Source Sans Pro',
-                                                fontWeight: FontWeight.w600,
-                                                color:
-                                                    ColorConstant.bluegray800,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                ),
-                              );
+    height: getVerticalSize(120.00),
+    width: getHorizontalSize(528.00),
+    child: ListView.separated(
+      padding: getPadding(
+        left: 20,
+        right: 20,
+        top: 17,
+      ),
+      scrollDirection: Axis.horizontal,
+      physics: const BouncingScrollPhysics(),
+      itemCount: 4,
+      separatorBuilder: (context, index) {
+        return HorizontalSpace(width: 16);
+      },
+      itemBuilder: (context, index) {
+        return Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 8,
+                offset: Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Container(
+                  width: getHorizontalSize(160),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    image: DecorationImage(
+                      image: AssetImage(images[index]),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: getPadding(
+                  left: 16,
+                  top: 12,
+                  bottom: 16,
+                  right: 16,
+                ),
+                child: Text(
+                  titles[index],
+                  style: TextStyle(
+                    fontSize: getFontSize(14),
+                    fontFamily: 'Source Sans Pro',
+                    fontWeight: FontWeight.w600,
+                    color: ColorConstant.bluegray800,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    ),
+  );
 }
+
 class DoctorsSilder extends StatelessWidget {
   const DoctorsSilder({
     Key? key,
