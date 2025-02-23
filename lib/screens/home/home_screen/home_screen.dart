@@ -119,6 +119,22 @@ class HomeScreen extends StatelessWidget {
   HomeScreen({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+
+var titles = [
+      "Путеводитель",
+      "Ваши симптомы",
+      "Синдром-чокер",
+      "Статус здоровья"
+    ];
+    var images = [
+      'assets/images/11.png', // Путеводитель
+      'assets/images/12.png', // Симптомы здоровья
+      'assets/images/13.png', // Синдром-чокер
+      'assets/images/11.png', // Статус здоровья
+    ];
+
+
+
     bool isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       extendBody: true,
@@ -569,6 +585,37 @@ class HomeScreen extends StatelessWidget {
                                       Text("Статьи")
                                     ]),
                                   ]))),
+                                   // Раздел "Рекомендуем вам"
+                      Align(
+                        alignment: Alignment.center,
+                        child: Padding(
+                          padding: getPadding(
+                            left: 20,
+                            top: 30,
+                            right: 20,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Рекомендуем вам",
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.start,
+                                style: TextStyle(
+                                  color: isDark
+                                      ? ColorConstant.whiteA700
+                                      : ColorConstant.bluegray800,
+                                  fontSize: getFontSize(15),
+                                  fontFamily: 'Source Sans Pro',
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              SizedBox(height: 16),
+                             fourThings(titles,images)
+                            ],
+                          ),
+                        ),
+                      ),
                       //specsHeader(context, isDark),
                       //specsBody(context, isDark, itemController),
                       //  Text(context.userData['doctor_id']),
@@ -739,7 +786,81 @@ class DoctorsSliderHeader extends StatelessWidget {
     );
   }
 }
+Widget fourThings(titles,images) {
 
+  return SizedBox(
+                                height: getVerticalSize(120.00),
+                                width: getHorizontalSize(528.00),
+                                child: ListView.separated(
+                                  padding: getPadding(
+                                    left: 20,
+                                    right: 20,
+                                    top: 17,
+                                  ),
+                                  scrollDirection: Axis.horizontal,
+                                  physics: const BouncingScrollPhysics(),
+                                  itemCount: 4,
+                                  separatorBuilder: (context, index) {
+                                    return HorizontalSpace(width: 16);
+                                  },
+                                  itemBuilder: (context, index) {
+                                  
+                                    return Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(16),
+                                        color: Colors.white,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color:
+                                                Colors.black.withOpacity(0.1),
+                                            blurRadius: 8,
+                                            offset: Offset(0, 2),
+                                          ),
+                                        ],
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Expanded(
+                                            child: Container(
+                                              width:getHorizontalSize(160),
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(16),
+                                                image: DecorationImage(
+                                                  image:
+                                                      AssetImage(images[index]),
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: getPadding(
+                                              left: 16,
+                                              top: 12,
+                                              bottom: 16,
+                                              right: 16,
+                                            ),
+                                            child: Text(
+                                              titles[index],
+                                              style: TextStyle(
+                                                fontSize: getFontSize(14),
+                                                fontFamily: 'Source Sans Pro',
+                                                fontWeight: FontWeight.w600,
+                                                color:
+                                                    ColorConstant.bluegray800,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                ),
+                              );
+}
 class DoctorsSilder extends StatelessWidget {
   const DoctorsSilder({
     Key? key,
