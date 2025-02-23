@@ -30,7 +30,7 @@ class AutolayouthorItemWidgetTasks extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Container(
             margin: EdgeInsets.all(8.0), // Отступы
@@ -51,7 +51,7 @@ class AutolayouthorItemWidgetTasks extends StatelessWidget {
           Container(
               padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
               child: RichText(
-                text: TextSpan(
+                text: const TextSpan(
                   //item['name'] +
                   text: "Онлайн прием" + '\n',
                   style: TextStyle(
@@ -65,9 +65,9 @@ class AutolayouthorItemWidgetTasks extends StatelessWidget {
                       text: '3 близких',
                       style: TextStyle(
                         fontSize: 10,
-                        color: Colors.grey,
+                        color: Colors.black,
                         fontFamily: 'Source Sans Pro',
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                   ],

@@ -27,7 +27,7 @@ void main() async {
   await EasyLocalization.ensureInitialized();
 
   SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
+//    DeviceOrientation.portraitUp,
   ]);
   await Session.init();
 

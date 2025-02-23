@@ -3,6 +3,7 @@ import 'package:doctorq/data_files/doctors_list.dart';
 import 'package:doctorq/extensions.dart';
 import 'package:doctorq/models/doctors_model.dart';
 import 'package:doctorq/screens/appointments/book_screen/book_screen.dart';
+import 'package:doctorq/screens/home/top_doctor_screen/top_doctor_screen_step_2.dart';
 import 'package:flutter/material.dart';
 
 class DoctorsSliderItem extends StatelessWidget {
@@ -23,6 +24,7 @@ class DoctorsSliderItem extends StatelessWidget {
             Navigator.of(context, rootNavigator: true)
                 .push(MaterialPageRoute(builder: (context) {
               context.setSelectedDoctorByIndex(index);
+
               return AppointmentsBookScreen();
             }));
           },

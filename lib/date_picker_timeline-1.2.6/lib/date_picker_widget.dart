@@ -149,6 +149,7 @@ class _DatePickerState extends State<DatePicker> {
               ? TextDirection.rtl
               : TextDirection.ltr),
       child: Container(
+        //  decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
         height: widget.height,
         child: ListView.builder(
           itemCount: widget.daysCount,

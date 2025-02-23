@@ -512,15 +512,17 @@ class _SignInBlankScreenState extends State<SignInBlankScreen> {
                       fontStyle: ButtonFontStyle.SourceSansProSemiBold18,
                       alignment: Alignment.center,
                       onTap: () async {
+                        print("tap");
                         /*if (forceUserLogin) {
                       emailController.text = testUserLogin;
                       passwordController.text = testUserPassword;
-                    }*/
+                    }
                         var authRes = await authUser(context,
                             emailController.text, passwordController.text);
                         if (authRes == true) {
                           gogo(isDark);
                         }
+                        */
                       });
                 }),
             Align(

@@ -95,7 +95,10 @@ class AutolayouthorItemWidgetZapisi extends StatelessWidget {
                   ),
                 )),
             SvgPicture.string(
-                width: MediaQuery.of(context).size.width, SvgConstant.star_svg),
+                //     colorFilter:
+                //         ColorFilter.mode(Colors.white, BlendMode.saturation),
+                width: MediaQuery.of(context).size.width,
+                SvgConstant.star_svg),
             Row(
                 children: List.generate(0, (inex) {
               return Container(
