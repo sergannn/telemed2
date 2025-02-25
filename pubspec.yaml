@@ -96,13 +96,13 @@ dependencies:
   audioplayers: ^6.1.0
   audioplayers_darwin: ^6.0.0
   another_flutter_splash_screen: ^1.2.1
-  flutter_login_yandex_updated: ^0.0.9
+#flutter_login_yandex_updated: ^0.0.9
   flutter_screenutil: ^5.9.3
-  dartdoc: ^8.3.2
+#  dartdoc: ^8.3.2
 #  flutter_dtmf: ^2.0.2
 #  flutter_dialpad: ^1.0.5
 dependency_overrides:
-  video_player_android: ^2.7.16
+  #video_player_android: ^2.7.16
 dev_dependencies:
   flutter_test:
     sdk: flutter

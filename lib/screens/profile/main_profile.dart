@@ -1,13 +1,13 @@
 import 'dart:convert';
 //import 'package:date_picker_timeline /date_picker_widget.dart';
 import 'package:doctorq/date_picker_timeline-1.2.6/lib/date_picker_widget.dart';
+import 'package:doctorq/screens/home/home_screen/home_screen.dart';
 import 'package:doctorq/screens/home/home_screen/widgets/autolayouthor_item_widget_tasks.dart';
 import 'package:doctorq/screens/home/home_screen/widgets/autolayouthor_item_widget_zapisi.dart';
 import 'package:doctorq/screens/home/home_screen/widgets/story_item_widget.dart';
 import 'package:doctorq/screens/profile/main_notification.dart';
-import 'package:doctorq/screens/profile/main_profile.dart';
-import 'package:doctorq/screens/profile/popular_doctors.dart';
 import 'package:doctorq/screens/profile/settings/appearance_screen/appearance_screen.dart';
+import 'package:doctorq/screens/profile/widgets/autolayouthor_item_widget_profile_tasks.dart';
 import 'package:doctorq/screens/stories/story_scren.dart';
 import "package:story_view/story_view.dart";
 import 'package:animate_do/animate_do.dart';
@@ -20,8 +20,8 @@ import 'package:doctorq/screens/home/top_doctor_screen/choose_specs_screen_step_
 import 'package:doctorq/services/api_service.dart';
 import 'package:doctorq/utils/utility.dart';
 import 'package:doctorq/widgets/spacing.dart';
-import 'widgets/autolayouthor1_item_widget.dart';
-import 'widgets/autolayouthor_item_widget.dart';
+//import 'widgets/autolayouthor1_item_widget.dart';
+//import 'widgets/autolayouthor_item_widget.dart';
 import 'package:doctorq/app_export.dart';
 import 'package:doctorq/widgets/custom_search_view.dart';
 import 'package:flutter/material.dart';
@@ -35,91 +35,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 //final GlobalKey<RandomTextRevealState> globalKey = GlobalKey();
 
-class ItemController extends GetxController {
-  var cats = [].obs; // Reactive list to store fetched items
-  var users = [].obs; // Reactive list to store fetched items
-  var articles = [].obs;
-  final storyItems = <StoryItem>[].obs;
-  @override
-  void onInit() {
-    super.onInit();
-    refreshData();
-    fetchStories();
-    fetchArticles();
-  }
-
-  Future<void> fetchArticles() async {
-    print('fetching articles');
-    var response = await http.get(Uri.parse(
-      'https://admin.onlinedoctor.su/api/articles',
-    ));
-
-    if (response.statusCode == 200) {
-      List jsonResponse = json.decode(response.body)['data'];
-      // items = jsonResponse;
-      articles.value = jsonResponse;
-//      jsonResponse.map((item) => SpecialistModel.fromJson(item)).toList();
-    }
-  }
-
-  Future<void> fetchStories() async {
-    final response =
-        await http.get(Uri.parse('https://admin.onlinedoctor.su/api/stories'));
-
-    if (response.statusCode == 200) {
-      final jsonData = json.decode(response.body);
-      print('https://admin.onlinedoctor.su/storage/' +
-          jsonData['data'][0]['image']);
-      // Extract data from JSON
-      final data = (jsonData['data'] as List<dynamic>)
-          .map((e) => StoryItem.inlineImage(
-                imageFit: BoxFit.cover,
-                url: 'https://admin.onlinedoctor.su/storage/' + e['image'],
-                controller: StoryController(),
-                caption: Text(
-                  e['title'],
-                  style: const TextStyle(
-                    color: Colors.white,
-                    backgroundColor: Colors.black,
-                    fontSize: 17,
-                  ),
-                ),
-              ))
-          .toList();
-      //print(data);
-      //storyItems.value = data;
-      storyItems.value = data;
-    } else {
-      // Handle error
-      print('Failed to load stories');
-    }
-  }
-
-  Future<void> refreshData() async {
-    // fetchDoctors();
-    fetchStories();
-    fetchArticles();
-    getDoctors();
-    // Simulating fetching data from an API
-    var response = await http.get(Uri.parse(
-      'https://www.onlinedoctor.su/api/specializations',
-    ));
-
-    if (response.statusCode == 200) {
-      List jsonResponse = json.decode(response.body)['data'];
-      // items = jsonResponse;
-      cats.value = jsonResponse;
-//      jsonResponse.map((item) => SpecialistModel.fromJson(item)).toList();
-    }
-  }
-}
-
 // ignore: must_be_immutable
-class HomeScreen extends StatelessWidget {
+class MainProfileScreen extends StatelessWidget {
   TextEditingController autoLayoutVerController = TextEditingController();
   final ItemController itemController = Get.put(ItemController());
 
-  HomeScreen({Key? key}) : super(key: key);
+  MainProfileScreen({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     var titles = [
@@ -179,41 +100,33 @@ class HomeScreen extends StatelessWidget {
                           HorizontalSpace(width: 20),
 
                           //child: FittedBox(
-                          GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          MainProfileScreen()),
-                                );
-                              },
-                              child: RichText(
-                                text: TextSpan(
-                                  text: context.userData['first_name'] +
-                                      ' ' +
-                                      context.userData['last_name'] +
-                                      '\n',
+
+                          RichText(
+                            text: TextSpan(
+                              text: context.userData['first_name'] +
+                                  ' ' +
+                                  context.userData['last_name'] +
+                                  '\n',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.black,
+                                fontFamily: 'Source Sans Pro',
+                                fontWeight: FontWeight.w600,
+                              ),
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text: '3 близких' +
+                                      // context.userData['patient_id'] +
+                                      "",
                                   style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.black,
+                                    color: Colors.grey,
                                     fontFamily: 'Source Sans Pro',
                                     fontWeight: FontWeight.w600,
                                   ),
-                                  children: <TextSpan>[
-                                    TextSpan(
-                                      text: '3 близких' +
-                                          // context.userData['patient_id'] +
-                                          "",
-                                      style: TextStyle(
-                                        color: Colors.grey,
-                                        fontFamily: 'Source Sans Pro',
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ],
                                 ),
-                              ))
+                              ],
+                            ),
+                          )
                         ],
                       ),
                     ),
@@ -226,7 +139,9 @@ class HomeScreen extends StatelessWidget {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      MainNotificationScreen()),
+                                      MainNotificationScreen())
+                                      //HomeNotificationScreen()
+                                      //),
                             );
                           },
                           child: Container(
@@ -240,30 +155,6 @@ class HomeScreen extends StatelessWidget {
                               ),
                               child: Icon(Icons.notifications)),
                         ),
-                        //  HorizontalSpace(width: 16),
-                        /*InkWell(
-                          borderRadius: BorderRadius.circular(12),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const HomeFavoriteDoctorScreen()),
-                            );
-                          },
-                          child: Container(
-                            padding: getPadding(all: 10),
-                            height: getVerticalSize(44),
-                            width: getHorizontalSize(44),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              color: ColorConstant.blueA400.withOpacity(0.1),
-                            ),
-                            child: CommonImageView(
-                              imagePath: ImageConstant.favorite,
-                            ),
-                          ),
-                        ),*/
                       ],
                     )
                   ],
@@ -347,7 +238,7 @@ class HomeScreen extends StatelessWidget {
                               printLog('Direction $direction'),
                           child: SizedBox(
                             height: getVerticalSize(
-                              160.00,
+                              100.00,
                             ),
                             width: getHorizontalSize(
                               528.00,
@@ -370,7 +261,7 @@ class HomeScreen extends StatelessWidget {
                                 var cats = itemController.cats;
                                 //return Text("a");
 
-                                return AutolayouthorItemWidgetTasks(
+                                return AutolayouthorItemWidgetProfileTasks(
                                   item: cats[index],
                                   index: index,
                                 );
@@ -380,78 +271,117 @@ class HomeScreen extends StatelessWidget {
                         );
                       }),
                       //  Frame2087326464(),
-
-                      CustomSearchView(
-                        isDark: isDark,
-                        width: size.width,
-                        focusNode: FocusNode(),
-                        readOnly: true,
-                        onTap: () {
-                          /*
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const HomeSearchDoctorScreen()));
-                                      */
-                        },
-                        controller: autoLayoutVerController,
-                        hintText: "Поиск",
-                        margin: getMargin(left: 24, right: 24, top: 20),
-                        alignment: Alignment.center,
-                        suffix: Padding(
-                            padding: EdgeInsets.only(
-                                right: getHorizontalSize(
-                                  15.00,
-                                ),
-                                left: getHorizontalSize(15)),
-                            child: CommonImageView(
-                              imagePath: ImageConstant.search,
-                            )),
-                        suffixConstraints: BoxConstraints(
-                          maxWidth: getHorizontalSize(
-                            50.00,
-                          ),
-                          maxHeight: getVerticalSize(
-                            50.00,
-                          ),
-                        ),
-                      ),
+// Код разделов меню профиля
                       Align(
                         alignment: Alignment.center,
                         child: Padding(
                           padding: getPadding(
                             left: 20,
-                            top: 15,
                             right: 20,
+                            top: 20,
                           ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.max,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                "Запись к врачу",
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.start,
-                                style: TextStyle(
-                                  color: isDark
-                                      ? ColorConstant.whiteA700
-                                      : ColorConstant.bluegray800,
-                                  fontSize: getFontSize(
-                                    15,
+                              Row(
+                                children: [
+                                  Icon(Icons.wallet,
+                                      color: ColorConstant.bluegray800),
+                                  HorizontalSpace(width: 16),
+                                  Text(
+                                    "Мой кошелек",
+                                    style: TextStyle(
+                                      fontSize: getFontSize(14),
+                                      fontFamily: 'Source Sans Pro',
+                                      color: ColorConstant.bluegray800,
+                                    ),
                                   ),
-                                  fontFamily: 'Source Sans Pro',
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              )
-                                  .animate()
-                                  .fade(delay: Duration(milliseconds: 200))
-                                  .scale(),
+                                  Expanded(child: Container()),
+                                  Icon(Icons.chevron_right,
+                                      color: ColorConstant.bluegray800),
+                                ],
+                              ),
+                              VerticalSpace(height: 16),
+                              Row(
+                                children: [
+                                  Icon(Icons.card_giftcard,
+                                      color: ColorConstant.bluegray800),
+                                  HorizontalSpace(width: 16),
+                                  Text(
+                                    "Промокоды и Сертификаты",
+                                    style: TextStyle(
+                                      fontSize: getFontSize(14),
+                                      fontFamily: 'Source Sans Pro',
+                                      color: ColorConstant.bluegray800,
+                                    ),
+                                  ),
+                                  Expanded(child: Container()), //пустое место
+                                  Icon(Icons.chevron_right,
+                                      color: ColorConstant.bluegray800),
+                                ],
+                              ),
+                              VerticalSpace(height: 16),
+                              Row(
+                                children: [
+                                  Icon(Icons.archive,
+                                      color: ColorConstant.bluegray800),
+                                  HorizontalSpace(width: 16),
+                                  Text(
+                                    "Архив записей",
+                                    style: TextStyle(
+                                      fontSize: getFontSize(14),
+                                      fontFamily: 'Source Sans Pro',
+                                      color: ColorConstant.bluegray800,
+                                    ),
+                                  ),
+                                  Expanded(child: Container()),
+                                  Icon(Icons.chevron_right,
+                                      color: ColorConstant.bluegray800),
+                                ],
+                              ),
+                              VerticalSpace(height: 16),
+                              Row(
+                                children: [
+                                  Icon(Icons.support,
+                                      color: ColorConstant.bluegray800),
+                                  HorizontalSpace(width: 16),
+                                  Text(
+                                    "Чат с поддержкой",
+                                    style: TextStyle(
+                                      fontSize: getFontSize(14),
+                                      fontFamily: 'Source Sans Pro',
+                                      color: ColorConstant.bluegray800,
+                                    ),
+                                  ),
+                                  Expanded(child: Container()),
+                                  Icon(Icons.chevron_right,
+                                      color: ColorConstant.bluegray800),
+                                ],
+                              ),
+                              VerticalSpace(height: 16),
+                              Row(
+                                children: [
+                                  Icon(Icons.feedback,
+                                      color: ColorConstant.bluegray800),
+                                  HorizontalSpace(width: 16),
+                                  Text(
+                                    "Вопросы и предложения",
+                                    style: TextStyle(
+                                      fontSize: getFontSize(14),
+                                      fontFamily: 'Source Sans Pro',
+                                      color: ColorConstant.bluegray800,
+                                    ),
+                                  ),
+                                  Expanded(child: Container()),
+                                  Icon(Icons.chevron_right,
+                                      color: ColorConstant.bluegray800),
+                                ],
+                              ),
                             ],
                           ),
                         ),
                       ),
+
                       Obx(() {
                         //print(itemController.storyItems.length);
                         return FadeInUp(
@@ -460,7 +390,7 @@ class HomeScreen extends StatelessWidget {
                               printLog('Direction $direction'),
                           child: SizedBox(
                             height: getVerticalSize(
-                              190.00,
+                              220.00,
                             ),
                             width: getHorizontalSize(
                               528.00,
@@ -471,7 +401,7 @@ class HomeScreen extends StatelessWidget {
                               padding: getPadding(
                                 left: 20,
                                 right: 20,
-                                top: 17,
+                                top: 28,
                               ),
                               scrollDirection: Axis.horizontal,
                               physics: const BouncingScrollPhysics(),
@@ -485,16 +415,6 @@ class HomeScreen extends StatelessWidget {
                                 return GestureDetector(
                                     onTap: () async {
                                       print("tap tap");
-                                      if (index == 0) {
-                                        Navigator.of(context,
-                                                rootNavigator: true)
-                                            .push(
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  PopularDoctors()),
-//                                  TopDoctorScreen()),
-                                        );
-                                      }
                                       // Handle double tap action
                                       if (index == 1) {
                                         Navigator.of(context,
@@ -512,18 +432,23 @@ class HomeScreen extends StatelessWidget {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          AutolayouthorItemWidgetZapisi(
-                                            item: cats[index],
-                                            index: index,
-                                          ),
-                                          Text(
+                                          const Text(
                                             "Специализации",
                                             style: TextStyle(
-                                              fontSize:
-                                                  12.0, // размер в пикселях
+                                              fontSize: 16.0,
+                                              fontFamily: 'Source Sans Pro',
+                                              fontWeight: FontWeight
+                                                  .w600, // размер в пикселях
                                             ),
-                                          )
-                                        ]));
+                                          ),
+                                           Padding(
+                  padding: EdgeInsets.only(top: 12.0), // Увеличен отступ сверху
+                  child: AutolayouthorItemWidgetZapisi(
+                    item: cats[index],
+                    index: index,
+                  ),
+                ),
+              ],));
                               },
                             ),
                           ),
@@ -531,128 +456,27 @@ class HomeScreen extends StatelessWidget {
                       }),
                       //SingleChildScrollView(child: NewsSlider()),
 
-                      Align(
-                        alignment: Alignment.center,
-                        child: Padding(
-                          padding: getPadding(
-                            left: 20,
-                            top: 30,
-                            right: 20,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Text(
-                                "Избранное",
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.start,
-                                style: TextStyle(
-                                  color: isDark
-                                      ? ColorConstant.whiteA700
-                                      : ColorConstant.bluegray800,
-                                  fontSize: getFontSize(
-                                    15,
-                                  ),
-                                  fontFamily: 'Source Sans Pro',
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              )
-                                  .animate()
-                                  .fade(delay: Duration(milliseconds: 200))
-                                  .scale(),
-                            ],
-                          ),
-                        ),
-                      ),
-                      // someObxList(context, itemController), фотки докторов - сторисы
-                      Align(
-                          alignment: Alignment.center,
-                          child: Padding(
-                              padding: getPadding(
-                                left: 20,
-                                top: 30,
-                                right: 20,
-                              ),
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  // mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Column(children: [
-                                      CircleAvatar(
-                                          backgroundColor:
-                                              ColorConstant.fromHex("C8E0FF"),
-                                          radius: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              10,
-                                          child: IconButton(
-                                              onPressed: null,
-                                              icon: Icon(Icons.person))),
-                                      Text("Врачи")
-                                    ]),
-                                    Column(children: [
-                                      CircleAvatar(
-                                          backgroundColor:
-                                              ColorConstant.fromHex("FFFCBB"),
-                                          radius: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              10,
-                                          child: IconButton(
-                                              onPressed: null,
-                                              icon: Icon(Icons.medication))),
-                                      Text("Лекарства")
-                                    ]),
-                                    Column(children: [
-                                      CircleAvatar(
-                                          backgroundColor:
-                                              ColorConstant.fromHex("C8E0FF"),
-                                          radius: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              10,
-                                          child: IconButton(
-                                              onPressed: null,
-                                              icon: Icon(Icons.info))),
-                                      Text("Полезное")
-                                    ]),
-                                    Column(children: [
-                                      CircleAvatar(
-                                          radius: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              10,
-                                          child: IconButton(
-                                              onPressed: null,
-                                              icon: Icon(Icons.article))),
-                                      Text("Статьи")
-                                    ]),
-                                  ]))),
                       // Раздел "Рекомендуем вам"
                       Align(
                         alignment: Alignment.center,
                         child: Padding(
                           padding: getPadding(
                             left: 20,
-                            top: 30,
+                            top: 14,
                             right: 20,
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "Рекомендуем вам",
+                                "Выгодные предложения для вас",
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
                                   color: isDark
                                       ? ColorConstant.whiteA700
                                       : ColorConstant.bluegray800,
-                                  fontSize: getFontSize(15),
+                                  fontSize: getFontSize(16),
                                   fontFamily: 'Source Sans Pro',
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -668,10 +492,43 @@ class HomeScreen extends StatelessWidget {
                       //  Text(context.userData['doctor_id']),
                       //  Text(context.userData['patient_id']),
                       //if (context.userData['patient_id'] != null)
-                      DoctorsSliderHeader(isDark: isDark),
-                      //if (context.userData['patient_id'] != null)
-                      SingleChildScrollView(child: DoctorsSilder()),
+
                       //  NewsHeader(isDark: isDark),
+                    Padding(
+  padding: getPadding(
+    left: 20,
+    right: 20,
+    bottom: 20,
+    top: 30,
+  ),
+  child: Row(
+    children: [
+      Container(
+        width: 24,
+        height: 24,
+        decoration: BoxDecoration(
+          color: ColorConstant.bluegray800,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Icon(
+          Icons.logout_rounded,
+          color: Colors.white,
+          size: 16,
+        ),
+      ),
+      HorizontalSpace(width: 26),
+      Text(
+        "Выход из аккаунта",
+        style: TextStyle(
+          fontSize: getFontSize(16),
+          fontFamily: 'Source Sans Pro',
+          fontWeight: FontWeight.w800,
+          color: ColorConstant.bluegray800,
+        ),
+      ),
+    ],
+  ),
+)
                     ],
                   ),
                 ),
@@ -757,83 +614,6 @@ class NewsHeader extends StatelessWidget {
   }
 }
 
-class DoctorsSliderHeader extends StatelessWidget {
-  const DoctorsSliderHeader({
-    Key? key,
-    required this.isDark,
-  }) : super(key: key);
-
-  final bool isDark;
-
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.center,
-      child: Padding(
-        padding: getPadding(
-          left: 20,
-          top: 31,
-          right: 20,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Text(
-              "Врачи",
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.start,
-              style: TextStyle(
-                color: isDark
-                    ? ColorConstant.whiteA700
-                    : ColorConstant.bluegray800,
-                fontSize: getFontSize(
-                  25,
-                ),
-                fontFamily: 'Source Sans Pro',
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            Padding(
-              padding: getPadding(
-                top: 1,
-                bottom: 3,
-              ),
-              child: InkWell(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              const HomeSpecialistDoctorScreen()
-                          //TopDoctorScreen()
-
-                          // TopDoctorScreen()),
-                          ));
-                },
-                child: Text(
-                  "Все",
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.start,
-                  style: TextStyle(
-                    color: ColorConstant.blueA400,
-                    fontSize: getFontSize(
-                      20,
-                    ),
-                    fontFamily: 'Source Sans Pro',
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 Widget fourThings(titles, images) {
   return SizedBox(
     height: getVerticalSize(120.00),
@@ -842,7 +622,7 @@ Widget fourThings(titles, images) {
       padding: getPadding(
         left: 20,
         right: 20,
-        top: 17,
+        top: 6,
       ),
       scrollDirection: Axis.horizontal,
       physics: const BouncingScrollPhysics(),
@@ -868,7 +648,7 @@ Widget fourThings(titles, images) {
             children: [
               Expanded(
                 child: Container(
-                  width: getHorizontalSize(160),
+                  width: getHorizontalSize(140),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(16),
                     image: DecorationImage(
@@ -901,48 +681,6 @@ Widget fourThings(titles, images) {
       },
     ),
   );
-}
-
-class DoctorsSilder extends StatelessWidget {
-  const DoctorsSilder({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    print("doctors");
-    print(context.doctorsData.length);
-    //print(context.doctorsData);
-    return FadeInUp(
-      child: SizedBox(
-        height: getVerticalSize(
-          266.00,
-        ),
-        width: getHorizontalSize(
-          512.00,
-        ),
-        child: ListView.separated(
-          padding: getPadding(
-            left: 20,
-            right: 20,
-            top: 26,
-          ),
-          scrollDirection: Axis.horizontal,
-          physics: const BouncingScrollPhysics(),
-          itemCount: context.doctorsData.length,
-          separatorBuilder: (context, index) {
-            return HorizontalSpace(width: 16);
-          },
-          itemBuilder: (context, index) {
-            return DoctorsSliderItem(
-              item: context.doctorsData[index],
-              index: index,
-            );
-          },
-        ),
-      ),
-    );
-  }
 }
 
 Widget someObxList(context, itemController) {
@@ -1131,7 +869,8 @@ Widget specsHeader(context, isDark) {
               fontFamily: 'Source Sans Pro',
               fontWeight: FontWeight.w600,
             ),
-          ).animate().fade(delay: Duration(milliseconds: 200)).scale(),
+          )
+          .animate().fade(delay: Duration(milliseconds: 200)).scale(),
           Padding(
             padding: getPadding(
               top: 1,
@@ -1164,44 +903,4 @@ Widget specsHeader(context, isDark) {
       ),
     ),
   );
-}
-
-Widget specsBody(context, isDark, itemController) {
-  return Obx(() {
-    //print(itemController.storyItems.length);
-    return FadeInUp(
-      delay: const Duration(milliseconds: 300),
-      onFinish: (direction) => printLog('Direction $direction'),
-      child: SizedBox(
-        height: getVerticalSize(
-          220.00,
-        ),
-        width: getHorizontalSize(
-          528.00,
-        ),
-        //  child: NotificationListener<ScrollNotification>(
-
-        child: ListView.separated(
-          padding: getPadding(
-            left: 20,
-            right: 20,
-            top: 27,
-          ),
-          scrollDirection: Axis.horizontal,
-          physics: const BouncingScrollPhysics(),
-          itemCount: itemController.cats.length,
-          separatorBuilder: (context, index) {
-            return HorizontalSpace(width: 16);
-          },
-          itemBuilder: (context, index) {
-            var cats = itemController.cats;
-            return AutolayouthorItemWidget(
-              item: cats[index],
-              index: index,
-            );
-          },
-        ),
-      ),
-    );
-  });
 }

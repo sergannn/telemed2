@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:doctorq/screens/auth/sign_in_blank_screen/doctor_screen.dart';
 import 'package:doctorq/screens/auth/sign_in_blank_screen/sign_in_blank_screen.dart';
 import 'package:doctorq/screens/first/figmasample.dart';
+import 'package:doctorq/screens/first/first.dart';
 import 'package:doctorq/services/api_service.dart';
 import 'package:doctorq/services/session.dart';
 import 'package:doctorq/services/startup_service.dart';
@@ -125,8 +126,8 @@ class _MyAppState extends State<MyApp> {
                     //onPressed: null, child: Text(snapshot.data.toString()));
                   } else {
                     //return FigmaToCodeApp();
-                    return SignInBlankScreen();
-                    //const firstScreen();
+                    //return SignInBlankScreen();
+                    return firstScreen();
                     // return const SignInBlankScreen();
                   }
                 }), /*MessagesDetailScreen(

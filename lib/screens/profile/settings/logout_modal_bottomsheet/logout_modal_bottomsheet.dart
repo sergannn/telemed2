@@ -5,7 +5,7 @@ import 'package:doctorq/widgets/custom_button.dart';
 import 'package:doctorq/widgets/spacing.dart';
 import 'package:flutter/material.dart';
 //import 'package:flutter_login_yandex/flutter_login_yandex.dart';
-import 'package:flutter_login_yandex_updated/flutter_login_yandex.dart';
+//import 'package:flutter_login_yandex_updated/flutter_login_yandex.dart';
 
 // ignore_for_file: must_be_immutable
 class ProfileSettingsLogoutModalBottomsheet extends StatelessWidget {
@@ -13,7 +13,7 @@ class ProfileSettingsLogoutModalBottomsheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _flutterLoginYandexPlugin = FlutterLoginYandex();
+   // final _flutterLoginYandexPlugin = FlutterLoginYandex();
     bool isDark = Theme.of(context).brightness == Brightness.dark;
     return SingleChildScrollView(
       child: Container(
@@ -116,10 +116,6 @@ class ProfileSettingsLogoutModalBottomsheet extends StatelessWidget {
                     width: 184,
                     text: "Yes, Logout",
                     onTap: () async {
-                      final response =
-                          await _flutterLoginYandexPlugin.signOut();
-                      print(response);
-
                       Navigator.of(context, rootNavigator: true)
                           .pushAndRemoveUntil(
                               MaterialPageRoute(

@@ -23,7 +23,7 @@ import '../../../widgets/boxshadow.dart';
 import '../../../widgets/spacing.dart';
 import '../sign_up_blank_screen/sign_up_blank_screen.dart';
 import 'doctor_screen.dart';
-import 'package:flutter_login_yandex_updated/flutter_login_yandex.dart';
+//import 'package:flutter_login_yandex_updated/flutter_login_yandex.dart';
 //import 'package:flutter_login_yandex/flutter_login_yandex.dart';
 
 class SignInBlankScreen extends StatefulWidget {
@@ -565,57 +565,8 @@ class _SignInBlankScreenState extends State<SignInBlankScreen> {
                           ?.startOnceAnimation(); // Use _flipKey here
                       // currentState?.startAnimation();
                       //return null;
-                      final flutterLoginYandexPlugin = FlutterLoginYandex();
-                      final response = await flutterLoginYandexPlugin.signIn();
-                      print(response);
-
-                      if (response!['token'] != null) {
-                        _token = response['token'] as String;
-                        var userData = await fetchYaUserData(_token);
-                        print(userData);
-                        var yaRegRes = await regUser(
-                            context,
-                            userData['login'].contains("@")
-                                ? 'pan_' + userData['login']
-                                : 'pan_' + userData['login'] + '@fake.ru',
-                            'tanya' + userData['id'],
-                            'patient');
-                        print(yaRegRes);
-                        print("<<");
-                        if (yaRegRes == true) {
-                          print("updating fields");
-                          var yaAuthRes = await authUser(
-                              context,
-                              userData['login'].contains("@")
-                                  ? 'pan_' + userData['login']
-                                  : 'pan_' + userData['login'] + '@fake.ru',
-                              'tanya' + userData['id']);
-
-                          var yaupdate = await updateProfileFields(context,
-                              email: userData['login'].contains("@")
-                                  ? 'pan_' + userData['login']
-                                  : 'pan_' + userData['login'] + '@fake.ru',
-                              first_name: userData['first_name'],
-                              last_name: userData['last_name'],
-                              phone: userData['default_phone'] != null
-                                  ? userData['default_phone']['number']
-                                  : '');
-
-                          print("trying to auth yandex user one more time");
-                          var yaAuthRes2 = await authUser(
-                              context,
-                              userData['login'].contains("@")
-                                  ? 'pan_' + userData['login']
-                                  : 'pan_' + userData['login'] + '@fake.ru',
-                              'tanya' + userData['id']);
-
-                          if (yaAuthRes2 == true) {
-                            gogo(isDark);
-                          }
-                        }
-                      } else {
-                        _token = response!['error'] as String;
-                      }
+                //      final flutterLoginYandexPlugin = FlutterLoginYandex();
+                //      final response = await flutterLoginYandexPlugin.signIn();
                     },
                     label: Container(
                       decoration: BoxDecoration(

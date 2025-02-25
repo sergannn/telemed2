@@ -9,7 +9,7 @@ import 'package:doctorq/screens/home/favorite_doctor_screen/favorite_doctor_scre
 import 'package:doctorq/screens/home/notification_screen/notification_screen.dart';
 import 'package:doctorq/screens/home/search_doctor_screen/search_doctor_screen.dart';
 import 'package:doctorq/screens/home/specialist_doctor_screen/specialist_doctor_screen.dart';
-import 'package:doctorq/screens/home/top_doctor_screen/top_doctor_screen.dart';
+//import 'package:doctorq/screens/home/top_doctor_screen/top_doctor_screen.dart';
 import 'package:doctorq/services/api_service.dart';
 import 'package:doctorq/utils/utility.dart';
 import 'package:doctorq/widgets/spacing.dart';
@@ -577,11 +577,12 @@ class NewsHeader extends StatelessWidget {
               ),
               child: InkWell(
                 onTap: () {
+                  /*
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => const TopDoctorScreen()),
-                  );
+                  );*/
                 },
                 child: Text(
                   "Все",
@@ -649,12 +650,12 @@ class DoctorsSliderHeader extends StatelessWidget {
                 bottom: 3,
               ),
               child: InkWell(
-                onTap: () {
+                onTap: () {/*
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => const TopDoctorScreen()),
-                  );
+                  );*/
                 },
                 child: Text(
                   "Все",
