@@ -35,23 +35,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 //final GlobalKey<RandomTextRevealState> globalKey = GlobalKey();
 
-// ignore: must_be_immutable
-class MainNotificationScreen extends StatelessWidget {
-  TextEditingController autoLayoutVerController = TextEditingController();
-  final ItemController itemController = Get.put(ItemController());
-
-  MainNotificationScreen({Key? key}) : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(),
-      home: const NotificationsScreen(),
-    );
-  }
-}
-
-class NotificationsScreen extends StatelessWidget {
-  const NotificationsScreen({Key? key}) : super(key: key);
+class MainNotificationsScreen extends StatelessWidget {
+  const MainNotificationsScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

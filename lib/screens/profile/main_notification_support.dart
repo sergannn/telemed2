@@ -14,10 +14,9 @@ class SupportNotification extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(),
-      home: Scaffold(
-      body: Column(
-        children: [
+        theme: ThemeData(),
+        home: Scaffold(
+            body: Column(children: [
           const SizedBox(height: 40), // фиксированный отступ
           Container(
             width: double.infinity,
@@ -43,7 +42,8 @@ class SupportNotification extends StatelessWidget {
           Expanded(
             child: Container(
               decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 236, 236, 236).withOpacity(0.95),
+                color:
+                    const Color.fromARGB(255, 236, 236, 236).withOpacity(0.95),
                 border: Border(top: BorderSide(color: Colors.grey.shade300)),
               ),
               child: ListView(
@@ -54,7 +54,8 @@ class SupportNotification extends StatelessWidget {
                     margin: const EdgeInsets.only(bottom: 16),
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 255, 255, 255).withOpacity(0.8),
+                      color: const Color.fromARGB(255, 255, 255, 255)
+                          .withOpacity(0.8),
                       borderRadius: BorderRadius.circular(22),
                     ),
                     child: Column(
@@ -79,7 +80,8 @@ class SupportNotification extends StatelessWidget {
                                   Text(
                                     'Суббота 18.02.2025',
                                     style: TextStyle(
-                                       color: const Color.fromARGB(255, 157, 157, 157),
+                                      color: const Color.fromARGB(
+                                          255, 157, 157, 157),
                                       fontFamily: 'Source Sans Pro',
                                       fontWeight: FontWeight.w400,
                                       fontSize: 14,
@@ -102,7 +104,9 @@ class SupportNotification extends StatelessWidget {
                                 margin: const EdgeInsets.only(top: 8),
                                 padding: const EdgeInsets.all(8),
                                 decoration: BoxDecoration(
-                                  color: const Color.fromARGB(255, 238, 238, 238).withOpacity(0.8),
+                                  color:
+                                      const Color.fromARGB(255, 238, 238, 238)
+                                          .withOpacity(0.8),
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: Column(
@@ -113,7 +117,8 @@ class SupportNotification extends StatelessWidget {
                                     Text(
                                       'Пройдите наш тест на важные показатели для здоровья',
                                       style: TextStyle(
-                                        color: const Color.fromARGB(255, 17, 17, 17),
+                                        color: const Color.fromARGB(
+                                            255, 17, 17, 17),
                                         fontWeight: FontWeight.bold,
                                         fontSize: 12,
                                       ),
@@ -125,8 +130,9 @@ class SupportNotification extends StatelessWidget {
                                       child: Text(
                                         'Наш тест на важные показатели здоровья покажет вам , на что обратить свое внимание и носит рекомендательный характер. Пройдите по ссылке, чтобы ознакомиться и уже сейчас сделать свой организм выносливее и крепче',
                                         style: TextStyle(
-                                          color: const Color.fromARGB(255, 17, 17, 17),
-                                        fontSize: 12,
+                                          color: const Color.fromARGB(
+                                              255, 17, 17, 17),
+                                          fontSize: 12,
                                         ),
                                       ),
                                     ),
@@ -140,13 +146,12 @@ class SupportNotification extends StatelessWidget {
                                         // Кнопка
                                         ElevatedButton(
                                           onPressed: () {
-                                                Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      
-                                       NotificationsSupportTests()),
-                            );
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      NotificationsSupportTestsScreen()),
+                                            );
 //                                            NotificationsSupportTests
                                             // Здесь будет код для перехода к препаратам
                                           },
@@ -174,10 +179,11 @@ class SupportNotification extends StatelessWidget {
                                         Text(
                                           '10:45',
                                           style: TextStyle(
-                                            color: const Color.fromARGB(255, 157, 157, 157),
-                                      fontFamily: 'Source Sans Pro',
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 14,
+                                            color: const Color.fromARGB(
+                                                255, 157, 157, 157),
+                                            fontFamily: 'Source Sans Pro',
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 14,
                                           ),
                                         ),
                                       ],
@@ -207,7 +213,8 @@ class SupportNotification extends StatelessWidget {
                                   Text(
                                     'Пятница 12.01.2025',
                                     style: TextStyle(
-                                      color: const Color.fromARGB(255, 157, 157, 157),
+                                      color: const Color.fromARGB(
+                                          255, 157, 157, 157),
                                       fontFamily: 'Source Sans Pro',
                                       fontWeight: FontWeight.w400,
                                       fontSize: 14,
@@ -230,7 +237,9 @@ class SupportNotification extends StatelessWidget {
                                 margin: const EdgeInsets.only(top: 8),
                                 padding: const EdgeInsets.all(8),
                                 decoration: BoxDecoration(
-                                  color: const Color.fromARGB(255, 238, 238, 238).withOpacity(0.8),
+                                  color:
+                                      const Color.fromARGB(255, 238, 238, 238)
+                                          .withOpacity(0.8),
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: Column(
@@ -241,7 +250,8 @@ class SupportNotification extends StatelessWidget {
                                     Text(
                                       'Подняли цену на препарат , который вы часто заказываете',
                                       style: TextStyle(
-                                        color: const Color.fromARGB(255, 17, 17, 17),
+                                        color: const Color.fromARGB(
+                                            255, 17, 17, 17),
                                         fontWeight: FontWeight.bold,
                                         fontSize: 12,
                                       ),
@@ -253,7 +263,8 @@ class SupportNotification extends StatelessWidget {
                                       child: Text(
                                         'В связи с тем, что данный препарат относится к санкционным лекарствам, бренд выпускающий данный препарат больше не может держать предыдущую цену. Но спешим вас обрадовать, что через наше приложение вы можете получить скидку в размере 20% на данный препарат',
                                         style: TextStyle(
-                                          color: const Color.fromARGB(255, 17, 17, 17),
+                                          color: const Color.fromARGB(
+                                              255, 17, 17, 17),
                                           fontSize: 12,
                                         ),
                                       ),
@@ -294,10 +305,11 @@ class SupportNotification extends StatelessWidget {
                                         Text(
                                           '19:45',
                                           style: TextStyle(
-                                            color: const Color.fromARGB(255, 157, 157, 157),
-                                      fontFamily: 'Source Sans Pro',
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 14,
+                                            color: const Color.fromARGB(
+                                                255, 157, 157, 157),
+                                            fontFamily: 'Source Sans Pro',
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 14,
                                           ),
                                         ),
                                       ],
@@ -308,20 +320,13 @@ class SupportNotification extends StatelessWidget {
                             ],
                           ),
                         ),
-
-                        
-
                       ],
                     ),
-
-
-                    
                   ),
                 ],
               ),
             ),
           ),
         ])));
-      
   }
 }

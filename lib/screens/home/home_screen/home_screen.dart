@@ -226,7 +226,7 @@ class HomeScreen extends StatelessWidget {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      MainNotificationScreen()),
+                                      MainNotificationsScreen()),
                             );
                           },
                           child: Container(
@@ -480,6 +480,7 @@ class HomeScreen extends StatelessWidget {
                                 return HorizontalSpace(width: 16);
                               },
                               itemBuilder: (context, index) {
+                                if (index > 1) return Container();
                                 var cats = itemController.cats;
                                 //return Text("a");
                                 return GestureDetector(
@@ -491,7 +492,7 @@ class HomeScreen extends StatelessWidget {
                                             .push(
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  PopularDoctors()),
+                                                  PopularDoctorsScreen()),
 //                                  TopDoctorScreen()),
                                         );
                                       }
@@ -500,9 +501,9 @@ class HomeScreen extends StatelessWidget {
                                         Navigator.of(context,
                                                 rootNavigator: true)
                                             .push(
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ChooseSpecsScreen()),
+                                          MaterialPageRoute(builder: (context) {
+                                            return ChooseSpecsScreen();
+                                          }),
 //                                  TopDoctorScreen()),
                                         );
                                         print('Image double tapped');
@@ -517,7 +518,9 @@ class HomeScreen extends StatelessWidget {
                                             index: index,
                                           ),
                                           Text(
-                                            "Специализации",
+                                            index == 0
+                                                ? "Популярные врачи"
+                                                : "Специализации",
                                             style: TextStyle(
                                               fontSize:
                                                   12.0, // размер в пикселях
@@ -668,9 +671,13 @@ class HomeScreen extends StatelessWidget {
                       //  Text(context.userData['doctor_id']),
                       //  Text(context.userData['patient_id']),
                       //if (context.userData['patient_id'] != null)
-                      DoctorsSliderHeader(isDark: isDark),
+                      Visibility(
+                          child: DoctorsSliderHeader(isDark: isDark),
+                          visible: false),
                       //if (context.userData['patient_id'] != null)
-                      SingleChildScrollView(child: DoctorsSilder()),
+                      Visibility(
+                          child: SingleChildScrollView(child: DoctorsSilder()),
+                          visible: false),
                       //  NewsHeader(isDark: isDark),
                     ],
                   ),

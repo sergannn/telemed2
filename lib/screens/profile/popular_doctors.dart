@@ -1,22 +1,4 @@
-//import 'package:date_picker_timeline /date_picker_widget.dart';
-import 'package:doctorq/screens/home/home_screen/home_screen.dart';
-
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-// ignore: must_be_immutable
-class PopularDoctors extends StatelessWidget {
-  TextEditingController autoLayoutVerController = TextEditingController();
-  final ItemController itemController = Get.put(ItemController());
-
-  PopularDoctors({Key? key}) : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(),
-      home: const PopularDoctorsScreen(),
-    );
-  }
-}
 
 class PopularDoctorsScreen extends StatelessWidget {
   const PopularDoctorsScreen({Key? key}) : super(key: key);
@@ -257,15 +239,13 @@ class PopularDoctorsScreen extends StatelessWidget {
                                         image: DecorationImage(
                                           image: AssetImage(
                                               'assets/images/icons.png'),
-                                          fit: BoxFit.cover,
+                                          fit: BoxFit.contain,
                                         ),
                                       ),
                                     ),
                                   ],
                                 ),
                               )
-
-
                             ],
                           ),
                         ),
@@ -393,14 +373,13 @@ class PopularDoctorsScreen extends StatelessWidget {
                                         image: DecorationImage(
                                           image: AssetImage(
                                               'assets/images/icons.png'),
-                                          fit: BoxFit.cover,
+                                          fit: BoxFit.contain,
                                         ),
                                       ),
                                     ),
                                   ],
                                 ),
                               )
-
                             ],
                           ),
                         ),
@@ -528,7 +507,7 @@ class PopularDoctorsScreen extends StatelessWidget {
                                         image: DecorationImage(
                                           image: AssetImage(
                                               'assets/images/icons.png'),
-                                          fit: BoxFit.cover,
+                                          fit: BoxFit.contain,
                                         ),
                                       ),
                                     ),
@@ -662,7 +641,7 @@ class PopularDoctorsScreen extends StatelessWidget {
                                         image: DecorationImage(
                                           image: AssetImage(
                                               'assets/images/icons.png'),
-                                          fit: BoxFit.cover,
+                                          fit: BoxFit.contain,
                                         ),
                                       ),
                                     ),

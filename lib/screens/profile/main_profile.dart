@@ -136,13 +136,13 @@ class MainProfileScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(12),
                           onTap: () {
                             Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      MainNotificationScreen())
-                                      //HomeNotificationScreen()
-                                      //),
-                            );
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        MainNotificationsScreen())
+                                //HomeNotificationScreen()
+                                //),
+                                );
                           },
                           child: Container(
                               padding: getPadding(all: 10),
@@ -429,26 +429,29 @@ class MainProfileScreen extends StatelessWidget {
                                       }
                                     },
                                     child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          const Text(
-                                            "Специализации",
-                                            style: TextStyle(
-                                              fontSize: 16.0,
-                                              fontFamily: 'Source Sans Pro',
-                                              fontWeight: FontWeight
-                                                  .w600, // размер в пикселях
-                                            ),
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Text(
+                                          "Специализации",
+                                          style: TextStyle(
+                                            fontSize: 16.0,
+                                            fontFamily: 'Source Sans Pro',
+                                            fontWeight: FontWeight
+                                                .w600, // размер в пикселях
                                           ),
-                                           Padding(
-                  padding: EdgeInsets.only(top: 12.0), // Увеличен отступ сверху
-                  child: AutolayouthorItemWidgetZapisi(
-                    item: cats[index],
-                    index: index,
-                  ),
-                ),
-              ],));
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              top:
+                                                  12.0), // Увеличен отступ сверху
+                                          child: AutolayouthorItemWidgetZapisi(
+                                            item: cats[index],
+                                            index: index,
+                                          ),
+                                        ),
+                                      ],
+                                    ));
                               },
                             ),
                           ),
@@ -494,41 +497,41 @@ class MainProfileScreen extends StatelessWidget {
                       //if (context.userData['patient_id'] != null)
 
                       //  NewsHeader(isDark: isDark),
-                    Padding(
-  padding: getPadding(
-    left: 20,
-    right: 20,
-    bottom: 20,
-    top: 30,
-  ),
-  child: Row(
-    children: [
-      Container(
-        width: 24,
-        height: 24,
-        decoration: BoxDecoration(
-          color: ColorConstant.bluegray800,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Icon(
-          Icons.logout_rounded,
-          color: Colors.white,
-          size: 16,
-        ),
-      ),
-      HorizontalSpace(width: 26),
-      Text(
-        "Выход из аккаунта",
-        style: TextStyle(
-          fontSize: getFontSize(16),
-          fontFamily: 'Source Sans Pro',
-          fontWeight: FontWeight.w800,
-          color: ColorConstant.bluegray800,
-        ),
-      ),
-    ],
-  ),
-)
+                      Padding(
+                        padding: getPadding(
+                          left: 20,
+                          right: 20,
+                          bottom: 20,
+                          top: 30,
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 24,
+                              height: 24,
+                              decoration: BoxDecoration(
+                                color: ColorConstant.bluegray800,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Icon(
+                                Icons.logout_rounded,
+                                color: Colors.white,
+                                size: 16,
+                              ),
+                            ),
+                            HorizontalSpace(width: 26),
+                            Text(
+                              "Выход из аккаунта",
+                              style: TextStyle(
+                                fontSize: getFontSize(16),
+                                fontFamily: 'Source Sans Pro',
+                                fontWeight: FontWeight.w800,
+                                color: ColorConstant.bluegray800,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
                     ],
                   ),
                 ),
@@ -869,8 +872,7 @@ Widget specsHeader(context, isDark) {
               fontFamily: 'Source Sans Pro',
               fontWeight: FontWeight.w600,
             ),
-          )
-          .animate().fade(delay: Duration(milliseconds: 200)).scale(),
+          ).animate().fade(delay: Duration(milliseconds: 200)).scale(),
           Padding(
             padding: getPadding(
               top: 1,

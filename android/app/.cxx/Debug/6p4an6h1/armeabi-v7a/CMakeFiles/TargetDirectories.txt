@@ -1,0 +1,2 @@
+/Users/ser/telemed3/telemed2/android/app/.cxx/Debug/6p4an6h1/armeabi-v7a/CMakeFiles/edit_cache.dir
+/Users/ser/telemed3/telemed2/android/app/.cxx/Debug/6p4an6h1/armeabi-v7a/CMakeFiles/rebuild_cache.dir

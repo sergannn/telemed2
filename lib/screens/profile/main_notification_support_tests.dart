@@ -34,21 +34,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 //final GlobalKey<RandomTextRevealState> globalKey = GlobalKey();
 
-// ignore: must_be_immutable
-class NotificationsSupportTests extends StatelessWidget {
-  TextEditingController autoLayoutVerController = TextEditingController();
-  final ItemController itemController = Get.put(ItemController());
-
-  NotificationsSupportTests({Key? key}) : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(),
-      home:  NotificationsSupportTests(),
-    );
-  }
-}
-
 class NotificationsSupportTestsScreen extends StatelessWidget {
   const NotificationsSupportTestsScreen({Key? key}) : super(key: key);
   @override
@@ -81,7 +66,8 @@ class NotificationsSupportTestsScreen extends StatelessWidget {
           Expanded(
             child: Container(
               decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 236, 236, 236).withOpacity(0.95),
+                color:
+                    const Color.fromARGB(255, 236, 236, 236).withOpacity(0.95),
                 border: Border(top: BorderSide(color: Colors.grey.shade300)),
               ),
               child: ListView(
@@ -92,7 +78,8 @@ class NotificationsSupportTestsScreen extends StatelessWidget {
                     margin: const EdgeInsets.only(bottom: 16),
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 255, 255, 255).withOpacity(0.8),
+                      color: const Color.fromARGB(255, 255, 255, 255)
+                          .withOpacity(0.8),
                       borderRadius: BorderRadius.circular(22),
                     ),
                     child: Column(
@@ -117,7 +104,8 @@ class NotificationsSupportTestsScreen extends StatelessWidget {
                                   Text(
                                     'Пятница 12.01.2025',
                                     style: TextStyle(
-                                      color: const Color.fromARGB(255, 157, 157, 157),
+                                      color: const Color.fromARGB(
+                                          255, 157, 157, 157),
                                       fontFamily: 'Source Sans Pro',
                                       fontWeight: FontWeight.w400,
                                       fontSize: 14,
@@ -140,7 +128,9 @@ class NotificationsSupportTestsScreen extends StatelessWidget {
                                 margin: const EdgeInsets.only(top: 8),
                                 padding: const EdgeInsets.all(8),
                                 decoration: BoxDecoration(
-                                  color: const Color.fromARGB(255, 238, 238, 238).withOpacity(0.8),
+                                  color:
+                                      const Color.fromARGB(255, 238, 238, 238)
+                                          .withOpacity(0.8),
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: Column(
@@ -151,7 +141,8 @@ class NotificationsSupportTestsScreen extends StatelessWidget {
                                     Text(
                                       'Пройдите наш тест на важные показатели для здоровья',
                                       style: TextStyle(
-                                        color: const Color.fromARGB(255, 17, 17, 17),
+                                        color: const Color.fromARGB(
+                                            255, 17, 17, 17),
                                         fontWeight: FontWeight.bold,
                                         fontSize: 12,
                                       ),
@@ -163,7 +154,8 @@ class NotificationsSupportTestsScreen extends StatelessWidget {
                                       child: Text(
                                         'Наш тест на важные показатели здоровья покажет вам , на что обратить свое внимание и носит рекомендательный характер. Пройдите по ссылке, чтобы ознакомиться и уже сейчас сделать свой организм выносливее и крепче',
                                         style: TextStyle(
-                                          color: const Color.fromARGB(255, 17, 17, 17),
+                                          color: const Color.fromARGB(
+                                              255, 17, 17, 17),
                                           fontSize: 12,
                                         ),
                                       ),
@@ -204,10 +196,11 @@ class NotificationsSupportTestsScreen extends StatelessWidget {
                                         Text(
                                           '19:45',
                                           style: TextStyle(
-                                            color: const Color.fromARGB(255, 157, 157, 157),
-                                      fontFamily: 'Source Sans Pro',
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 14,
+                                            color: const Color.fromARGB(
+                                                255, 157, 157, 157),
+                                            fontFamily: 'Source Sans Pro',
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 14,
                                           ),
                                         ),
                                       ],
@@ -218,12 +211,8 @@ class NotificationsSupportTestsScreen extends StatelessWidget {
                             ],
                           ),
                         ),
-
-                        
-
                       ],
                     ),
-
                   ),
                 ],
               ),
