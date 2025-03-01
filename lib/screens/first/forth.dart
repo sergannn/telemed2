@@ -16,6 +16,13 @@ class forthScreen extends StatelessWidget {
         if (details.primaryVelocity! > 0) {
           // User swiped left
           Navigator.pop(context);
+        } else {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SignInBlankScreen(),
+            ),
+          );
         }
       },
       child: Scaffold(

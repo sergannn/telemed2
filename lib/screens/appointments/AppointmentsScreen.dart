@@ -10,6 +10,7 @@ import 'package:doctorq/stores/user_store.dart';
 import 'package:doctorq/utils/utility.dart';
 import 'package:doctorq/widgets/loading_overlay.dart';
 import 'package:doctorq/widgets/spacing.dart';
+import 'package:doctorq/widgets/top_back.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql/client.dart';
 //import 'package:flutter_inappwebview/flutter_inappwebview.dart';
@@ -54,11 +55,11 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
 
     UserStore storeUserStore = getIt.get<UserStore>();
     Map<dynamic, dynamic> userData = storeUserStore.userData;
-
+    print(userData);
     // пример того как грузить много данных
     List<bool> resultOfRequests = await Future.wait([
       userData['patient_id'] != null
-          ? getAppointments(patientId: userData['patient_id'])
+          ? getAppointments(patientId: '1') //userData['patient_id'])
           : getAppointmentsD(doctorId: userData['doctor_id'])
     ]);
 
@@ -77,20 +78,13 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // floatingActionButton: FloatingActionButton(
-      //     heroTag: "a",
-      //     child: Text(context.userData['user_id']),
-      //     onPressed: () async {
-      //       getRole();
-      //       setState(() {});
-      //       //   print("a");
-      //     }),
       body: SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            const HeaderNavBar(),
+            ...topBack("Записи", context),
+            //  const HeaderNavBar(),
             HeaderFilterButtons(),
             VerticalSpace(height: 24),
             Expanded(
@@ -119,10 +113,19 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
 
   Container HeaderFilterButtons() {
     return Container(
+      decoration: BoxDecoration(
+        color: ColorConstant.fromHex("E4F0FF"),
+        borderRadius: BorderRadius.circular(
+          getHorizontalSize(
+            24.0,
+          ),
+        ),
+      ),
+      // color: ColorConstant.fromHex("E4F0FF"),
       height: getVerticalSize(
         45.00,
       ),
-      margin: getMargin(left: 24, right: 24, top: 24),
+      margin: getMargin(left: 20, top: 24),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -134,22 +137,21 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                 });
               },
               child: Container(
-                padding: getPadding(top: 8, bottom: 8),
+                // padding: getPadding(top: 8, bottom: 8),
+                padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: showUpcomming
-                      ? ColorConstant.blueA400
-                      : Colors.transparent,
+                  color: showUpcomming ? Colors.white : Colors.transparent,
                   borderRadius: BorderRadius.circular(
                     getHorizontalSize(
                       24.0,
                     ),
                   ),
-                  border: Border.all(
+                  /* border: Border.all(
                     color: ColorConstant.blueA400,
                     width: getHorizontalSize(
-                      1.00,
+                      0.00,
                     ),
-                  ),
+                  ),*/
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -159,10 +161,10 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                       'Предстоящие',
                       style: TextStyle(
                           fontFamily: 'Source Sans Pro',
-                          fontSize: getFontSize(18),
+                          fontSize: getFontSize(12),
                           fontWeight: FontWeight.w600,
                           color: showUpcomming
-                              ? Colors.white
+                              ? Colors.black
                               : ColorConstant.blueA400),
                     ),
                   ],
@@ -181,18 +183,10 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
               child: Container(
                 padding: getPadding(top: 8, bottom: 8),
                 decoration: BoxDecoration(
-                  color: !showUpcomming
-                      ? ColorConstant.blueA400
-                      : Colors.transparent,
+                  color: !showUpcomming ? Colors.white : Colors.transparent,
                   borderRadius: BorderRadius.circular(
                     getHorizontalSize(
                       24.0,
-                    ),
-                  ),
-                  border: Border.all(
-                    color: ColorConstant.blueA400,
-                    width: getHorizontalSize(
-                      1.00,
                     ),
                   ),
                 ),
@@ -204,10 +198,10 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                       'Прошедшие',
                       style: TextStyle(
                           fontFamily: 'Source Sans Pro',
-                          fontSize: getFontSize(18),
+                          fontSize: getFontSize(12),
                           fontWeight: FontWeight.w600,
-                          color: !showUpcomming
-                              ? Colors.white
+                          color: showUpcomming
+                              ? Colors.black
                               : ColorConstant.blueA400),
                     ),
                   ],

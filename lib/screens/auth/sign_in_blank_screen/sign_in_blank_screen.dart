@@ -88,7 +88,7 @@ class _SignInBlankScreenState extends State<SignInBlankScreen> {
   }
 
   forceLog() async {
-    var authRes = await authUser(context, "ak@ak.ru", "123");
+    var authRes = await authUser(context, "s@s.ru", "123456");
     if (authRes == true) {
       gogo(false);
 /*      showDialog(
@@ -565,8 +565,8 @@ class _SignInBlankScreenState extends State<SignInBlankScreen> {
                           ?.startOnceAnimation(); // Use _flipKey here
                       // currentState?.startAnimation();
                       //return null;
-                //      final flutterLoginYandexPlugin = FlutterLoginYandex();
-                //      final response = await flutterLoginYandexPlugin.signIn();
+                      //      final flutterLoginYandexPlugin = FlutterLoginYandex();
+                      //      final response = await flutterLoginYandexPlugin.signIn();
                     },
                     label: Container(
                       decoration: BoxDecoration(

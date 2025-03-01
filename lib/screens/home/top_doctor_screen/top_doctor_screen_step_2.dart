@@ -1,9 +1,12 @@
 import 'dart:math';
 
 import 'package:animate_do/animate_do.dart';
+import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:doctorq/data_files/doctors_list.dart';
 import 'package:doctorq/extensions.dart';
+import 'package:doctorq/screens/home/home_screen/widgets/autolayouthor1_item_widget.dart';
 import 'package:doctorq/screens/home/home_screen/widgets/autolayouthor_item_widget.dart';
+import 'package:doctorq/screens/home/top_doctor_screen/choose_specs_screen_step_1.dart';
 import 'package:doctorq/utils/utility.dart';
 import 'package:doctorq/widgets/bkBtn.dart';
 import 'package:doctorq/widgets/custom_search_view.dart';
@@ -13,14 +16,14 @@ import 'package:doctorq/app_export.dart';
 import 'package:flutter/material.dart';
 import 'package:doctorq/services/api_service.dart';
 
-class TopDoctorScreen2 extends StatefulWidget {
-  const TopDoctorScreen2({Key? key}) : super(key: key);
+class ChooseSpecScreen2 extends StatefulWidget {
+  const ChooseSpecScreen2({Key? key}) : super(key: key);
 
   @override
-  State<TopDoctorScreen2> createState() => _TopDoctorScreenState();
+  State<ChooseSpecScreen2> createState() => _TopDoctorScreenState();
 }
 
-class _TopDoctorScreenState extends State<TopDoctorScreen2>
+class _TopDoctorScreenState extends State<ChooseSpecScreen2>
     with SingleTickerProviderStateMixin {
   TabController? tabController;
   @override
@@ -150,21 +153,16 @@ class _TopDoctorScreenState extends State<TopDoctorScreen2>
               ),
             ),
             VerticalSpace(height: 24),
-            Padding(
-              padding: EdgeInsets.only(left: 16),
-              child: Text(
-                'Специализации врача',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            specsList(),
+
             //Text(context.specsData.length.toString()),
-            //   SpecsTabBar(context.specsData, tabController),
-            //   CatDoctorsList(context.specsData, tabController,
-            //        MediaQuery.of(context).size.height),
+            //DatePicker(height: 100, DateTime.now()),
+            Container(
+                width: double.infinity, // Makes the container full width
+                margin:
+                    EdgeInsets.symmetric(horizontal: 16), // Adds side margins
+                child: SpecsTabBar(context.specsData, tabController)),
+            CatDoctorsList(context.specsData, tabController,
+                MediaQuery.of(context).size.height),
             VerticalSpace(height: 24),
           ],
         ),
@@ -189,10 +187,12 @@ class _TopDoctorScreenState extends State<TopDoctorScreen2>
           int randomNumber = random.nextInt(context.doctorsData.length);
           return InkWell(
             onTap: () {
-              tabController!.animateTo(index);
-              setState(() {
-                // selectedTime = index;
-              });
+              print("1");
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const ChooseSpecsScreen()),
+              );
             },
             child: Container(
               margin: EdgeInsets.only(bottom: 10),
@@ -367,7 +367,12 @@ class _TopDoctorScreenState extends State<TopDoctorScreen2>
                         .map((e) => e['name'])
                         .toList()
                         .contains(spec.name)) {
-                      return Listfullname3ItemWidget(index: index);
+                      return DoctorsSliderItem(
+                        item: context.doctorsData[index],
+                        index: index,
+                      );
+                      return GestureDetector(
+                          child: Listfullname3ItemWidget(index: index));
                     }
                   } else {
                     print(context.doctorsData[index]['specializations']
@@ -383,32 +388,50 @@ class _TopDoctorScreenState extends State<TopDoctorScreen2>
   }
 
   Widget SpecsTabBar(specData, tabController) {
-    return TabBar(
-      controller: tabController,
-      tabs: [
-        //  Row(children: [
-        ...specData.map((tab) => Tab(text: tab.name)),
-        //    ]),
-        //   Row(children: [
-        /* Tab(
+    return Container(
+        // color: ColorConstant.fromHex("E4F0FF"),
+        decoration: BoxDecoration(
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(120), bottomLeft: Radius.circular(120)),
+          color: ColorConstant.fromHex("E4F0FF"),
+        ),
+        child: TabBar(
+          //dividerHeight: 10,
+          controller: tabController,
+          tabs: [
+            //  Row(children: [
+            ...specData.map((tab) => Tab(
+                child: Container(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: 12, vertical: 6), // Отступы вокруг текста
+                    decoration: BoxDecoration(
+                      //color: Colors.white,
+                      borderRadius: BorderRadius.circular(120),
+                    ),
+                    child: Text(tab.name)))), //, text: tab.name)),
+            //    ]),
+            //   Row(children: [
+            /* Tab(
                     text: 'Все',
                   )*/
-      ],
-      isScrollable: true,
-      padding: getPadding(left: 25, right: 25),
-      indicator: BoxDecoration(
-          borderRadius: BorderRadius.circular(50),
-          color: ColorConstant.blueA400),
-      unselectedLabelColor: ColorConstant.blueA400,
-      unselectedLabelStyle: TextStyle(
-          fontSize: getFontSize(16),
-          fontWeight: FontWeight.w600,
-          fontFamily: 'Source Sans Pro'),
-      labelColor: Colors.white,
-      labelStyle: TextStyle(
-          fontSize: getFontSize(16),
-          fontWeight: FontWeight.w600,
-          fontFamily: 'Source Sans Pro'),
-    );
+          ],
+          isScrollable: true,
+          padding: getPadding(top: 10, bottom: 10),
+          indicator: BoxDecoration(
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.circular(120),
+              color: Colors.white),
+          unselectedLabelColor: ColorConstant.blueA400,
+          unselectedLabelStyle: TextStyle(
+              fontSize: getFontSize(12),
+              fontWeight: FontWeight.w600,
+              fontFamily: 'Source Sans Pro'),
+          labelColor: Colors.black,
+          labelStyle: TextStyle(
+              fontSize: getFontSize(12),
+              fontWeight: FontWeight.w600,
+              fontFamily: 'Source Sans Pro'),
+        ));
   }
 }

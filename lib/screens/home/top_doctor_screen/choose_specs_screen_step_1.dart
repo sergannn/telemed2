@@ -4,6 +4,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:doctorq/data_files/doctors_list.dart';
 import 'package:doctorq/extensions.dart';
 import 'package:doctorq/screens/home/home_screen/widgets/autolayouthor_item_widget.dart';
+import 'package:doctorq/screens/home/top_doctor_screen/top_doctor_screen_step_2.dart';
 import 'package:doctorq/utils/utility.dart';
 import 'package:doctorq/widgets/bkBtn.dart';
 import 'package:doctorq/widgets/custom_search_view.dart';
@@ -153,7 +154,7 @@ class _TopDoctorScreenState extends State<ChooseSpecsScreen>
             Padding(
               padding: EdgeInsets.only(left: 16),
               child: Text(
-                'Специализации врача',
+                'Специализации врача...',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -162,10 +163,10 @@ class _TopDoctorScreenState extends State<ChooseSpecsScreen>
             ),
             specsList(),
             //Text(context.specsData.length.toString()),
-            //   SpecsTabBar(context.specsData, tabController),
-            //   CatDoctorsList(context.specsData, tabController,
-            //        MediaQuery.of(context).size.height),
-            VerticalSpace(height: 24),
+            //SpecsTabBar(context.specsData, tabController),
+            //CatDoctorsList(context.specsData, tabController,
+            //     MediaQuery.of(context).size.height),
+            // VerticalSpace(height: 24),
           ],
         ),
       ),
@@ -189,10 +190,13 @@ class _TopDoctorScreenState extends State<ChooseSpecsScreen>
           int randomNumber = random.nextInt(context.doctorsData.length);
           return InkWell(
             onTap: () {
+              print("1");
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const ChooseSpecScreen2()),
+              );
               tabController!.animateTo(index);
-              setState(() {
-                // selectedTime = index;
-              });
             },
             child: Container(
               margin: EdgeInsets.only(bottom: 10),

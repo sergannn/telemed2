@@ -110,7 +110,7 @@ class CustomContainer extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const secondScreen(),
+                            builder: (context) => const thirdScreen(),
                           ),
                         );
                       },

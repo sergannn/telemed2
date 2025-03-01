@@ -1,0 +1,2 @@
+/Users/ser/telemed3/telemed2/android/app/.cxx/RelWithDebInfo/5c6a3z4r/x86_64/CMakeFiles/edit_cache.dir
+/Users/ser/telemed3/telemed2/android/app/.cxx/RelWithDebInfo/5c6a3z4r/x86_64/CMakeFiles/rebuild_cache.dir

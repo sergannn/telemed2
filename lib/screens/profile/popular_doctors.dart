@@ -1,3 +1,4 @@
+import 'package:doctorq/widgets/top_back.dart';
 import 'package:flutter/material.dart';
 
 class PopularDoctorsScreen extends StatelessWidget {
@@ -7,40 +8,7 @@ class PopularDoctorsScreen extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: [
-          const SizedBox(height: 40), // фиксированный отступ
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 236, 236, 236).withOpacity(0.95),
-              border: Border(bottom: BorderSide(color: Colors.grey.shade300)),
-            ),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 255, 255, 255),
-                borderRadius: BorderRadius.circular(20.0),
-              ),
-              child: Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.arrow_back_ios),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                  const Text(
-                    'Запись к врачу',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                  const Spacer(), // раздвигает элементы
-                  IconButton(
-                    icon: const Icon(Icons.settings_input_component, size: 20),
-                    onPressed: () {}, //обработчик нажатия
-                  ),
-                ],
-              ),
-            ),
-          ),
-
+          ...topBack("Запись к врачу", context),
           Expanded(
             child: Container(
               margin: const EdgeInsets.only(bottom: 6),

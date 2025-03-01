@@ -1,0 +1,20 @@
+{
+  "buildFiles": [
+    "/Users/ser/development/flutter/flutter/packages/flutter_tools/gradle/src/main/groovy/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/Users/ser/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+      "-C",
+      "/Users/ser/telemed3/telemed2/android/app/.cxx/RelWithDebInfo/5c6a3z4r/armeabi-v7a",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/Users/ser/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+    "-C",
+    "/Users/ser/telemed3/telemed2/android/app/.cxx/RelWithDebInfo/5c6a3z4r/armeabi-v7a",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {}
+}
