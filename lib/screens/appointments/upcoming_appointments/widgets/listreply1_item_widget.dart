@@ -4,8 +4,11 @@ import 'dart:io';
 
 import 'package:doctorq/app_export.dart';
 import 'package:doctorq/extensions.dart';
+import 'package:doctorq/models/appointment_model.dart';
+import 'package:doctorq/models/appointments_model.dart';
 import 'package:doctorq/screens/appointments/list/messaging_screen/messaging_screen.dart';
 import 'package:doctorq/screens/appointments/list/video_call_screen/video_call_screen.dart';
+import 'package:doctorq/screens/appointments/list/voice_call_ringing_screen/voice_call_ringing_screen.dart';
 import 'package:doctorq/screens/appointments/list/voice_call_screen/voice_call_screen.dart';
 import 'package:doctorq/screens/ser_view.dart';
 import 'package:doctorq/widgets/custom_icon_button.dart';
@@ -56,6 +59,19 @@ class AppointmentListItem extends StatelessWidget {
       //await prefs.setString(
       //    item['d21ec1e9-8004-11ef-a4b8-02420a000404'], room_url);
       Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => AppointmentsListVoiceCallScreen(
+                    appointment: AppointmentsModel(
+                        img: '',
+                        id: '',
+                        name: 'Запись',
+                        contactMethodIcon: '',
+                        status: '',
+                        time: '13-00'),
+                    user: '{"user_id":"1"}',
+                  )));
+      /*Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => DailyApp(
@@ -65,7 +81,7 @@ class AppointmentListItem extends StatelessWidget {
             callClient: client,
           ),
         ),
-      );
+      );*/
     } else {
       var prefs = await SharedPreferences.getInstance();
       final client = await CallClient.create();
@@ -277,6 +293,7 @@ class AppointmentListItem extends StatelessWidget {
                         ],
                       ),
                     ),
+                    //      Text(item['date']),
                     Container(
                         child: Text(
                       getAppointmentTime(item),

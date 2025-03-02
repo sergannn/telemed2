@@ -2,26 +2,16 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:animate_do/animate_do.dart';
+import 'package:basic_utils/basic_utils.dart';
 
 import 'package:doctorq/extensions.dart';
-import 'package:doctorq/screens/profile/settings_screen.dart';
-import 'package:doctorq/services/api_service.dart';
-import 'package:doctorq/stores/appointments_store.dart';
-import 'package:doctorq/stores/user_store.dart';
-import 'package:doctorq/utils/utility.dart';
-import 'package:doctorq/widgets/loading_overlay.dart';
 import 'package:doctorq/widgets/spacing.dart';
-import '../list/messaging_screen/messaging_screen.dart';
 import 'widgets/listreply1_item_widget.dart';
 import 'package:doctorq/app_export.dart';
-import 'package:doctorq/widgets/custom_icon_button.dart';
 import 'package:doctorq/widgets/custom_search_view.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../list/voice_call_screen/voice_call_screen.dart';
-import '../../ser_view.dart';
-
-import '../../../utils/pub.dart';
 
 import 'package:get_it/get_it.dart';
 
@@ -36,11 +26,121 @@ class PastAppointments extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("its past??");
     // loadData();
     bool isDark = Theme.of(context).brightness == Brightness.dark;
 
     List<Map<dynamic, dynamic>> appointmentsList = context.appointmentsData;
 
+    Map<String, List<Map<dynamic, dynamic>>> groupedAppointments = {};
+    final formatter = DateFormat('EEEE', 'ru_RU');
+    for (var appointment in appointmentsList) {
+      String ad = appointment['date'];
+      String at = appointment['from_time'];
+      DateTime appDateTime =
+          DateFormat('yyyy-MM-dd HH:mm').parse(ad + " " + at);
+      print(appDateTime);
+      bool isPast = appDateTime.isBefore(DateTime.now());
+      print(
+          "Is ${DateFormat('yyyy-MM-dd HH:mm').format(appDateTime)} past? ${isPast ? 'Yes' : 'No'}");
+
+      if (isPast) {
+        String date = appointment['date'];
+        if (!groupedAppointments.containsKey(date)) {
+          groupedAppointments[date] = [];
+        }
+        groupedAppointments[date]!.add(appointment);
+      }
+    }
+
+    return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          //  SearchBar(
+          //     isDark: isDark, autoLayoutVerController: autoLayoutVerController),
+          // InfoBar(isDark: isDark),
+          Align(
+              alignment: Alignment.center,
+              child: FadeInUp(
+                  child: Padding(
+                      padding: getPadding(
+                        left: 24,
+                        top: 18,
+                        right: 24,
+                      ),
+                      child: ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: groupedAppointments.length,
+                          itemBuilder: (context, index) {
+                            String date =
+                                groupedAppointments.keys.elementAt(index);
+
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // Заголовок даты
+                                Padding(
+                                  padding: getPadding(
+                                    left: 24,
+                                    top: 18,
+                                    right: 24,
+                                  ),
+                                  child: Text(
+                                    StringUtils.capitalize(formatter
+                                            .format(DateTime.parse(date))) +
+                                        ', ' +
+                                        date,
+                                    style: TextStyle(
+                                      fontSize: getFontSize(16),
+                                      fontFamily: 'Source Sans Pro',
+                                      fontWeight: FontWeight.w600,
+                                      color: isDark
+                                          ? Colors.white
+                                          : ColorConstant.bluegray700,
+                                    ),
+                                  ),
+                                ),
+                                // Список встреч за эту дату
+                                ListView.builder(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  itemCount: appointmentsList.length,
+                                  itemBuilder: (context, index) {
+                                    //print(appointmentsList[index]);
+                                    String ad = appointmentsList[index]['date'];
+                                    String at =
+                                        appointmentsList[index]['from_time'];
+                                    DateTime appDateTime =
+                                        DateFormat('yyyy-MM-dd HH:mm')
+                                            .parse(ad + " " + at);
+                                    print(appDateTime);
+                                    bool isPast =
+                                        appDateTime.isBefore(DateTime.now());
+                                    print(
+                                        "Is ${DateFormat('yyyy-MM-dd HH:mm').format(appDateTime)} past? ${isPast ? 'Yes' : 'No'}");
+
+                                    if (isPast &&
+                                        appointmentsList[index]['date'] == date)
+                                      return AppointmentListItem(
+                                        index: index,
+                                        item: appointmentsList[index],
+                                      );
+                                    return const SizedBox.shrink();
+                                  },
+                                )
+                              ],
+                            );
+                          })))),
+
+          VerticalSpace(height: 40),
+        ],
+      ),
+    );
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       child: Column(

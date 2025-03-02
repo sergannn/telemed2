@@ -16,8 +16,8 @@ class AppointmentsListVoiceCallScreen extends StatelessWidget {
   late String uId;
   String user;
   AppointmentsListVoiceCallScreen(
-      {Key? key, required this.user, required this.appointment}) : super(key: key) {
-
+      {Key? key, required this.user, required this.appointment})
+      : super(key: key) {
     Map<String, dynamic> userData = jsonDecode(user);
     uId = userData[
         'user_id']; // Assuming 'user_Id' is the correct key in your JSON
@@ -289,8 +289,10 @@ class AppointmentsListVoiceCallScreen extends StatelessWidget {
                                                             .indigo601
                                                         : appointment.status ==
                                                                 'Completed'
-                                                            ? const Color(0xFF23A757)
-                                                            : const Color(0xFFDA1414),
+                                                            ? const Color(
+                                                                0xFF23A757)
+                                                            : const Color(
+                                                                0xFFDA1414),
                                                     fontSize: getFontSize(
                                                       11,
                                                     ),
@@ -346,190 +348,6 @@ class AppointmentsListVoiceCallScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                    Container(
-                        margin: getMargin(left: 20, right: 20, top: 20),
-                        padding: getPadding(left: 30, right: 30),
-                        height: getVerticalSize(
-                          157.00,
-                        ),
-                        width: size.width,
-                        decoration: BoxDecoration(
-                          color: isDark
-                              ? ColorConstant.darkContainer
-                              : ColorConstant.whiteA700,
-                          border: Border.all(
-                            color: ColorConstant.blueA400,
-                          ),
-                          borderRadius: BorderRadius.circular(
-                            getHorizontalSize(
-                              20.00,
-                            ),
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                CustomIconButton(
-                                  isRtl: isRtl,
-                                  height: 44,
-                                  width: 44,
-                                  variant: IconButtonVariant.FillBlueA40019,
-                                  shape: IconButtonShape.CircleBorder22,
-                                  child: CommonImageView(
-                                    imagePath: ImageConstant.patients,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: getPadding(
-                                    top: 14,
-                                  ),
-                                  child: Text(
-                                    "5000+",
-                                    overflow: TextOverflow.ellipsis,
-                                    textAlign: TextAlign.start,
-                                    style: TextStyle(
-                                      color: ColorConstant.blueA400,
-                                      fontSize: getFontSize(
-                                        16,
-                                      ),
-                                      fontFamily: 'Source Sans Pro',
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: getPadding(
-                                    top: 8,
-                                    bottom: 3,
-                                  ),
-                                  child: Text(
-                                    "Patients",
-                                    overflow: TextOverflow.ellipsis,
-                                    textAlign: TextAlign.start,
-                                    style: TextStyle(
-                                      fontSize: getFontSize(
-                                        14,
-                                      ),
-                                      fontFamily: 'Source Sans Pro',
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                CustomIconButton(
-                                  isRtl: isRtl,
-                                  height: 44,
-                                  width: 44,
-                                  variant: IconButtonVariant.FillBlueA40019,
-                                  shape: IconButtonShape.CircleBorder22,
-                                  child: CommonImageView(
-                                    imagePath: ImageConstant.person,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: getPadding(
-                                    top: 14,
-                                  ),
-                                  child: Text(
-                                    "15+",
-                                    overflow: TextOverflow.ellipsis,
-                                    textAlign: TextAlign.start,
-                                    style: TextStyle(
-                                      color: ColorConstant.blueA400,
-                                      fontSize: getFontSize(
-                                        16,
-                                      ),
-                                      fontFamily: 'Source Sans Pro',
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: getPadding(
-                                    top: 8,
-                                    bottom: 3,
-                                  ),
-                                  child: Text(
-                                    "Years experiences",
-                                    overflow: TextOverflow.ellipsis,
-                                    textAlign: TextAlign.start,
-                                    style: TextStyle(
-                                      fontSize: getFontSize(
-                                        14,
-                                      ),
-                                      fontFamily: 'Source Sans Pro',
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                CustomIconButton(
-                                  isRtl: isRtl,
-                                  height: 44,
-                                  width: 44,
-                                  variant: IconButtonVariant.FillBlueA40019,
-                                  shape: IconButtonShape.CircleBorder22,
-                                  child: CommonImageView(
-                                    imagePath: ImageConstant.reviews,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: getPadding(
-                                    top: 14,
-                                  ),
-                                  child: Text(
-                                    "3800+",
-                                    overflow: TextOverflow.ellipsis,
-                                    textAlign: TextAlign.start,
-                                    style: TextStyle(
-                                      color: ColorConstant.blueA400,
-                                      fontSize: getFontSize(
-                                        16,
-                                      ),
-                                      fontFamily: 'Source Sans Pro',
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: getPadding(
-                                    top: 8,
-                                    bottom: 3,
-                                  ),
-                                  child: Text(
-                                    "Reviews",
-                                    overflow: TextOverflow.ellipsis,
-                                    textAlign: TextAlign.start,
-                                    style: TextStyle(
-                                      fontSize: getFontSize(
-                                        14,
-                                      ),
-                                      fontFamily: 'Source Sans Pro',
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        )),
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Padding(
@@ -860,7 +678,7 @@ class AppointmentsListVoiceCallScreen extends StatelessWidget {
                       ),
                     ),
                     CustomButton(
-                      isDark: isDark,
+                      isDark: !isDark,
                       width: size.width,
                       text: "Message Now (Start at 10:00 AM)",
                       margin: getMargin(
