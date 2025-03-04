@@ -1,17 +1,14 @@
-import 'dart:convert';
-import 'dart:developer';
-
 import 'package:animate_do/animate_do.dart';
 import 'package:basic_utils/basic_utils.dart';
 
 import 'package:doctorq/extensions.dart';
+import 'package:doctorq/screens/appointments/upcoming_appointments/widgets/listreply1_item_widget.dart';
 import 'package:doctorq/widgets/spacing.dart';
-import 'widgets/listreply1_item_widget.dart';
 import 'package:doctorq/app_export.dart';
 import 'package:doctorq/widgets/custom_search_view.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
-import '../list/voice_call_screen/voice_call_screen.dart';
+//import '../list/voice_call_screen/voice_call_screen.dart';
 
 import 'package:get_it/get_it.dart';
 
@@ -127,6 +124,7 @@ class PastAppointments extends StatelessWidget {
                                     if (isPast &&
                                         appointmentsList[index]['date'] == date)
                                       return AppointmentListItem(
+                                        isPast: isPast,
                                         index: index,
                                         item: appointmentsList[index],
                                       );
@@ -137,55 +135,6 @@ class PastAppointments extends StatelessWidget {
                             );
                           })))),
 
-          VerticalSpace(height: 40),
-        ],
-      ),
-    );
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          //  SearchBar(
-          //     isDark: isDark, autoLayoutVerController: autoLayoutVerController),
-          // InfoBar(isDark: isDark),
-          Align(
-            alignment: Alignment.center,
-            child: FadeInUp(
-              child: Padding(
-                padding: getPadding(
-                  left: 24,
-                  top: 18,
-                  right: 24,
-                ),
-                child: ListView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: appointmentsList.length,
-                  itemBuilder: (context, index) {
-                    //print(appointmentsList[index]);
-                    String ad = appointmentsList[index]['date'];
-                    String at = appointmentsList[index]['from_time'];
-                    DateTime appDateTime =
-                        DateFormat('yyyy-MM-dd HH:mm').parse(ad + " " + at);
-                    print(appDateTime);
-                    bool isPast = appDateTime.isBefore(DateTime.now());
-                    print(
-                        "Is ${DateFormat('yyyy-MM-dd HH:mm').format(appDateTime)} past? ${isPast ? 'Yes' : 'No'}");
-
-                    if (isPast)
-                      return AppointmentListItem(
-                        index: index,
-                        item: appointmentsList[index],
-                      );
-                    return const SizedBox.shrink();
-                  },
-                ),
-              ),
-            ),
-          ),
           VerticalSpace(height: 40),
         ],
       ),

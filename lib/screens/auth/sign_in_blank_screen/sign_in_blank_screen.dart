@@ -87,7 +87,39 @@ class _SignInBlankScreenState extends State<SignInBlankScreen> {
     );
   }
 
-  forceLog() async {
+  forceLog(isDark) async {
+    showDialog(
+      barrierColor: Colors.black.withOpacity(0.5),
+      barrierDismissible: true,
+      context: context,
+      builder: (context) {
+        Future.delayed(const Duration(milliseconds: 600), () {});
+        return Dialog(
+            backgroundColor: Colors.transparent,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(15.0),
+              ),
+            ),
+            elevation: 0.0,
+            child: Center(
+              child: Container(
+                width: getHorizontalSize(124),
+                height: getVerticalSize(124),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: isDark
+                        ? ColorConstant.darkBg
+                        : ColorConstant.whiteA700),
+                child: Center(
+                    child: CircularProgressIndicator(
+                  color: ColorConstant.blueA400,
+                  backgroundColor: ColorConstant.blueA400.withOpacity(.3),
+                )),
+              ),
+            ));
+      },
+    );
     var authRes = await authUser(context, "s@s.ru", "123456");
     if (authRes == true) {
       gogo(false);
@@ -498,7 +530,7 @@ class _SignInBlankScreenState extends State<SignInBlankScreen> {
                 builder: (context, isValid, child) {
                   return CustomButton(
                       onDoubleTap: () async {
-                        await forceLog();
+                        await forceLog(isDark);
                       },
                       isDark: isDark,
                       width: size.width,

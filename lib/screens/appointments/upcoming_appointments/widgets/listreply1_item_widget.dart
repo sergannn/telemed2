@@ -28,8 +28,10 @@ import 'package:date_count_down/date_count_down.dart';
 class AppointmentListItem extends StatelessWidget {
   final int index;
   final Map<dynamic, dynamic> item;
+  final bool isPast;
 
-  const AppointmentListItem({Key? key, required this.index, required this.item})
+  const AppointmentListItem(
+      {Key? key, required this.index, required this.item, required this.isPast})
       : super(key: key);
   Future<void> requestPermissions() async {
     await Permission.camera.request();
@@ -152,8 +154,6 @@ class AppointmentListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool isDark = Theme.of(context).brightness == Brightness.dark;
-    bool isRtl = context.locale == Constants.arLocal;
-    bool doctor = false;
 
     List<Map<dynamic, dynamic>> appointmentsList = context.appointmentsData;
     print(item['doctor']);
@@ -163,51 +163,13 @@ class AppointmentListItem extends StatelessWidget {
           12.00,
         ),
       ),
-      onTap: () async {
-        await requestPermissions();
-        Map<Permission, PermissionStatus> statuses = await [
-          Permission.camera,
-          Permission.microphone,
-        ].request();
-
-        print("Permission statuses:");
-        for (var entry in statuses.entries) {
-          print("${entry.key}: ${entry.value}");
-        }
-
-        bool hasCameraPermission = await Permission.camera.isGranted;
-        bool hasMicrophonePermission = await Permission.microphone.isGranted;
-
-        print("Has Camera Permission: $hasCameraPermission");
-        print("Has Microphone Permission: $hasMicrophonePermission");
-
-        print(hasCameraPermission && hasMicrophonePermission
-            ? "Both permissions granted"
-            : "One or both permissions denied");
-
-        bool hasPermission = await checkPermissions();
-        print(hasPermission ? "Permissions granted" : "Permissions denied");
-
-        if (hasPermission) {
-          print("navigating");
-          navigateToScreen(context);
-        } else {
-          print("not okey");
-          // Request permissions
-        }
+      onTap: () {
+        ser(context, isPast);
       },
       child: Container(
         // height: getVerticalSize(100),
-        margin: getMargin(top: 8.0, bottom: 8.0, right: 20, left: 20),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(
-            getHorizontalSize(12.00),
-          ),
-          border: Border.all(
-            color: isDark ? ColorConstant.darkLine : ColorConstant.bluegray50,
-            width: getHorizontalSize(1.00),
-          ),
-        ),
+        //  margin: getMargin(top: 8.0, bottom: 8.0, right: 20, left: 20),
+
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.max,
@@ -224,7 +186,7 @@ class AppointmentListItem extends StatelessWidget {
                       width: getSize(160), // Set fixed width for avatar
                       height: getSize(160), // Set fixed height for avatar
                       child: CircleAvatar(
-                        radius: getSize(20), // Use radius instead of minRadius
+                        radius: getSize(10), // Use radius instead of minRadius
                         backgroundColor: Colors.transparent,
                         child: ClipOval(
                             child: Container(
@@ -266,10 +228,8 @@ class AppointmentListItem extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Text(
-                            maxLines: 2, // Allow up to 2 lines
-                            item["doctor"]["username"] +
-                                "\n" +
-                                item['doctor']['specializations'][0]['name'],
+                            item["doctor"]["username"],
+
 //                                item['patient']['username'],
                             overflow: TextOverflow.ellipsis,
                             textAlign: TextAlign.start,
@@ -281,7 +241,8 @@ class AppointmentListItem extends StatelessWidget {
                               fontWeight: FontWeight.w600,
                             ),
                           ),
-
+                          Text(item['doctor']['specializations'][0]['name']),
+                          Text(getContactMethod(item)),
                           /*  CountDownText(
                             due: DateTime.parse(item["date"]),
                             finishedText: ' Done',
@@ -315,15 +276,51 @@ class AppointmentListItem extends StatelessWidget {
     );
   }
 
+  ser(context, isPast) async {
+    await requestPermissions();
+    Map<Permission, PermissionStatus> statuses = await [
+      Permission.camera,
+      Permission.microphone,
+    ].request();
+
+    print("Permission statuses:");
+    for (var entry in statuses.entries) {
+      print("${entry.key}: ${entry.value}");
+    }
+
+    bool hasCameraPermission = await Permission.camera.isGranted;
+    bool hasMicrophonePermission = await Permission.microphone.isGranted;
+
+    print("Has Camera Permission: $hasCameraPermission");
+    print("Has Microphone Permission: $hasMicrophonePermission");
+
+    print(hasCameraPermission && hasMicrophonePermission
+        ? "Both permissions granted"
+        : "One or both permissions denied");
+
+    bool hasPermission = await checkPermissions();
+    print(hasPermission ? "Permissions granted" : "Permissions denied");
+
+    if (hasPermission) {
+      print("navigating");
+      if (!isPast) {
+        navigateToScreen(context);
+      }
+    } else {
+      print("not okey");
+      // Request permissions
+    }
+  }
+
   getContactMethod(Map item) {
     if (item["description"] == "ContactMethods.voiceCall") {
-      return 'Voice Call';
+      return 'Аудио';
     }
     if (item["description"] == "ContactMethods.videoCall") {
-      return 'Video Call';
+      return 'Видео';
     }
     if (item["description"] == "ContactMethods.message") {
-      return 'Message';
+      return 'Текстовый чат';
     }
     return 'N/A';
   }

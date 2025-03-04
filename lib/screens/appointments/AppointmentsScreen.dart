@@ -83,8 +83,8 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            //...topBack("Записи", context),
-            //  const HeaderNavBar(),
+            ...topBack("Записи", context),
+            // const HeaderNavBar(),
             HeaderFilterButtons(),
             VerticalSpace(height: 24),
             Expanded(
@@ -263,7 +263,7 @@ class HeaderNavBar extends StatelessWidget {
                   ),
                 ],
               ),
-              /*  Container(
+              Container(
                 padding: getPadding(all: 10),
                 height: getVerticalSize(44),
                 width: getHorizontalSize(44),
@@ -275,7 +275,7 @@ class HeaderNavBar extends StatelessWidget {
                   Icons.add_circle_outline_rounded,
                   color: ColorConstant.blueA400,
                 ),
-              ),*/
+              ),
             ],
           ),
         ),

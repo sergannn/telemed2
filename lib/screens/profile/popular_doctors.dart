@@ -1,3 +1,11 @@
+// ignore_for_file: prefer_const_constructors
+
+import 'package:animate_do/animate_do.dart';
+import 'package:doctorq/extensions.dart';
+import 'package:doctorq/screens/home/home_screen/home_screen.dart';
+import 'package:doctorq/screens/home/home_screen/widgets/doctor_item.dart';
+import 'package:doctorq/utils/size_utils.dart';
+import 'package:doctorq/widgets/spacing.dart';
 import 'package:doctorq/widgets/top_back.dart';
 import 'package:flutter/material.dart';
 
@@ -8,7 +16,7 @@ class PopularDoctorsScreen extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: [
-          ...topBack("Запись к врачу", context),
+          ...topBack("Популярные", context),
           Expanded(
             child: Container(
               margin: const EdgeInsets.only(bottom: 6),
@@ -84,7 +92,7 @@ class PopularDoctorsScreen extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              Row(
+                              const Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
@@ -95,128 +103,24 @@ class PopularDoctorsScreen extends StatelessWidget {
                                       Text(
                                         'Популярные врачи',
                                         style: TextStyle(
-                                          color: const Color.fromARGB(
-                                              255, 12, 12, 12),
+                                          color:
+                                              Color.fromARGB(255, 12, 12, 12),
                                           fontFamily: 'Source Sans Pro',
                                           fontWeight: FontWeight.w600,
                                           fontSize: 16,
                                         ),
                                       ),
-                                      const SizedBox(
+                                      SizedBox(
                                           height:
                                               10), // добавлен SizedBox с отступом 16 пикселей
-                                      Text(
-                                        'Акушер',
-                                        style: TextStyle(
-                                          color: const Color.fromARGB(
-                                              255, 12, 12, 12),
-                                          fontFamily: 'Source Sans Pro',
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 14,
-                                        ),
-                                      ),
                                     ],
                                   ),
                                 ],
                               ),
-
-                              // Зеленый контейнер
-                              Container(
-                                margin: const EdgeInsets.only(top: 8),
-                                padding: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  color:
-                                      const Color.fromARGB(255, 247, 247, 247)
-                                          .withOpacity(0.8),
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        CircleAvatar(
-                                          radius: 20,
-                                          backgroundImage: AssetImage(
-                                              'assets/images/11.png'), // Используем AssetImage вместо Image.asset
-                                        ),
-                                        const SizedBox(width: 16),
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              const Text('Парфенов К.С.',
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold)),
-                                              const Text('Акушер-гинеколог'),
-                                            ],
-                                          ),
-                                        ),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.end,
-                                          children: [
-                                            Container(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 2,
-                                                      vertical: 2),
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.rectangle,
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                                color: const Color.fromARGB(
-                                                    255, 176, 214, 254),
-                                              ),
-                                              constraints: const BoxConstraints(
-                                                  minWidth: 10, minHeight: 4),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  Icon(
-                                                    Icons.currency_ruble,
-                                                    size: 12,
-                                                    color: Color.fromARGB(
-                                                        255, 16, 16, 16),
-                                                  ),
-                                                  const Text('2300',
-                                                      style: TextStyle(
-                                                          color: Color.fromARGB(
-                                                              255, 16, 16, 16),
-                                                          fontSize: 11)),
-                                                ],
-                                              ),
-                                            ),
-                                            const SizedBox(height: 4),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(
-                                        height: 8), // Отступ между строками
-                                    Container(
-                                      width: double.infinity, // Полная ширина
-                                      height: 40, // Высота изображения
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(
-                                            12), // Закругленные углы
-                                        image: DecorationImage(
-                                          image: AssetImage(
-                                              'assets/images/icons.png'),
-                                          fit: BoxFit.contain,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )
                             ],
                           ),
                         ),
+                        DoctorsSilder20(),
                         Container(
                           margin: const EdgeInsets.only(bottom: 8),
                           padding: const EdgeInsets.symmetric(
@@ -228,7 +132,7 @@ class PopularDoctorsScreen extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              Row(
+                              const Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
@@ -236,14 +140,14 @@ class PopularDoctorsScreen extends StatelessWidget {
                                     crossAxisAlignment: CrossAxisAlignment
                                         .start, // выравнивание всех чилдренов внутри коламн по левому краю
                                     children: [
-                                      const SizedBox(
+                                      SizedBox(
                                           height:
                                               10), // добавлен SizedBox с отступом 16 пикселей
                                       Text(
                                         'Акушер-гинеколог',
                                         style: TextStyle(
-                                          color: const Color.fromARGB(
-                                              255, 12, 12, 12),
+                                          color:
+                                              Color.fromARGB(255, 12, 12, 12),
                                           fontFamily: 'Source Sans Pro',
                                           fontWeight: FontWeight.w400,
                                           fontSize: 14,
@@ -271,7 +175,7 @@ class PopularDoctorsScreen extends StatelessWidget {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        CircleAvatar(
+                                        const CircleAvatar(
                                           radius: 20,
                                           backgroundImage: AssetImage(
                                               'assets/images/11.png'), // Используем AssetImage вместо Image.asset
@@ -629,5 +533,24 @@ class PopularDoctorsScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class DoctorsSilder20 extends StatelessWidget {
+  const DoctorsSilder20({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    print("doctors");
+    print(context.doctorsData.length);
+    return Column(
+        children: List.generate(context.doctorsData.length, (index) {
+      return DoctorItem(
+        item: context.doctorsData[index],
+        index: index,
+      );
+    }));
   }
 }

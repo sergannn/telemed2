@@ -1,6 +1,0 @@
-framework module daily_flutter {
-  umbrella header "daily_flutter-umbrella.h"
-
-  export *
-  module * { export * }
-}

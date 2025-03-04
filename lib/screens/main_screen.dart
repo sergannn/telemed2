@@ -4,6 +4,7 @@ import 'package:doctorq/screens/history/history_screen.dart';
 import 'package:doctorq/screens/appointments/AppointmentsScreen.dart';
 import 'package:doctorq/screens/home/home_screen/home_screen.dart';
 import 'package:doctorq/screens/profile/blank_screen/blank_screen.dart';
+import 'package:doctorq/screens/profile/main_profile.dart';
 import 'package:doctorq/screens/profile/settings_screen.dart';
 import 'package:doctorq/stores/user_store.dart';
 import 'package:doctorq/theme/svg_constant.dart';
@@ -15,20 +16,6 @@ import 'package:doctorq/chat/main.dart';
 
 // ignore: must_be_immutable
 class Main extends StatelessWidget {
-  //AppointmentsModel appointment;
-  // String? user;
-  // late String uId;
-  // Home() {
-  //   print(user);
-
-  //   Map<String, dynamic> userData = jsonDecode(user ?? '{"user_id":"-1"}');
-  //   print('its userdata');
-  //   print(userData);
-  //   uId = userData['user_id'] ?? '-1'; // Fallback to '-1' if user_id is missing
-  //   print("uId::");
-  //   print(uId);
-  // }
-
   List<Widget> _buildScreens() {
     return [
       HomeScreen(),
@@ -219,77 +206,41 @@ class Main extends StatelessWidget {
               Icons.add,
               color: Colors.black,
             ),
-
             title: ("Сеансы"),
             activeColorSecondary: ColorConstant.blueA400,
-            //activeColorPrimary: ColorConstant.blueA400.withOpacity(0.1),
-            //inactiveColorPrimary: ColorConstant.blueA400,
           )),
-      /*  PersistentTabConfig(
-          screen: _buildScreens()[3],
+      PersistentTabConfig(
+          screen: ChatScreen(),
           item: ItemConfig(
-            icon: Image.asset(
-              ImageConstant.history,
+            title: "Здоровье",
+            icon: Icon(
+              Icons.health_and_safety,
+              size: 28,
+              color: const Color.fromARGB(255, 92, 92, 92),
             ),
-            inactiveIcon: Image.asset(
-              ImageConstant.inActiveHome,
-              width: getHorizontalSize(30),
-              height: getVerticalSize(30),
+            inactiveIcon: Icon(
+              Icons.health_and_safety,
+              size: 28,
+              color: const Color.fromARGB(255, 36, 36, 36),
             ),
-            title: ("История"),
             activeColorSecondary: ColorConstant.blueA400,
-            //activeColorPrimary: ColorConstant.blueA400.withOpacity(0.1),
-            //inactiveColorPrimary: ColorConstant.blueA400,
           )),
-*/
-      /*   PersistentBottomNavBarItem(
-        icon: Image.asset(
-          ImageConstant.eventNote,
-          // width: getHorizontalSize(26),
-          // height: getVerticalSize(26),
-        ),
-        inactiveIcon: Image.asset(
-          ImageConstant.inActiveEventNote,
-          width: getHorizontalSize(33),
-          height: getVerticalSize(33),
-        ),
-        title: ("Appointment"),
-        activeColorSecondary: ColorConstant.blueA400,
-        activeColorPrimary: ColorConstant.blueA400.withOpacity(0.1),
-        inactiveColorPrimary: ColorConstant.blueA400,
-      ),
-      PersistentBottomNavBarItem(
-        icon: Image.asset(
-          ImageConstant.history,
-          // width: getHorizontalSize(26),
-          // height: getVerticalSize(26),
-        ),
-        inactiveIcon: Image.asset(
-          ImageConstant.inActiveHistory,
-          width: getHorizontalSize(30),
-          height: getVerticalSize(30),
-        ),
-        title: ("History"),
-        activeColorSecondary: ColorConstant.blueA400,
-        activeColorPrimary: ColorConstant.blueA400.withOpacity(0.1),
-        inactiveColorPrimary: ColorConstant.blueA400,
-      ),
-      PersistentBottomNavBarItem(
-        icon: Image.asset(
-          ImageConstant.person,
-          // width: getHorizontalSize(26),
-          // height: getVerticalSize(26),
-        ),
-        inactiveIcon: Image.asset(
-          ImageConstant.inActivePerson,
-          width: getHorizontalSize(30),
-          height: getVerticalSize(30),
-        ),
-        title: ("Profile"),
-        activeColorSecondary: ColorConstant.blueA400,
-        activeColorPrimary: ColorConstant.blueA400.withOpacity(0.1),
-        inactiveColorPrimary: ColorConstant.blueA400,
-      ),*/
+      PersistentTabConfig(
+          screen: MainProfileScreen(),
+          item: ItemConfig(
+            title: "Профиль",
+            icon: Icon(Icons.face_2_rounded,
+                size: 28,
+                semanticLabel: "aa",
+                color: const Color.fromARGB(255, 92, 92, 92)
+                //size: 15.0,
+                ), // Image.asset(
+            inactiveIcon: Icon(Icons.chat,
+                size: 28,
+                semanticLabel: "aa",
+                color: const Color.fromARGB(255, 36, 36, 36)),
+            activeColorSecondary: ColorConstant.blueA400,
+          ))
     ];
   }
 
@@ -307,47 +258,7 @@ class Main extends StatelessWidget {
     bool isDark = Theme.of(context).brightness == Brightness.dark;
     var tabs =
         userData['patient_id'] != null ? _pNavBarsItems() : _dNavBarsItems();
-    tabs.add(PersistentTabConfig(
-        screen: ChatScreen(),
-        item: ItemConfig(
-          title: "Здоровье",
-          icon: Icon(
-            Icons.health_and_safety,
-            size: 28,
-            color: const Color.fromARGB(255, 92, 92, 92),
-          ),
-          inactiveIcon: Icon(
-            Icons.health_and_safety,
-            size: 28,
-            color: const Color.fromARGB(255, 36, 36, 36),
-          ),
 
-          //   title: ("Помощник"),
-          activeColorSecondary: ColorConstant.blueA400,
-          // activeColorPrimary: ColorConstant.blueA400.withOpacity(0.1),
-          // inactiveColorPrimary: ColorConstant.blueA400,
-        )));
-    tabs.add(PersistentTabConfig(
-        screen: ChatScreen(),
-        item: ItemConfig(
-          title: "Чаты",
-          icon: Icon(Icons.chat,
-              size: 28,
-              semanticLabel: "aa",
-              color: const Color.fromARGB(255, 92, 92, 92)
-              //size: 15.0,
-              ), // Image.asset(
-          inactiveIcon: Icon(Icons.chat,
-              size: 28,
-              semanticLabel: "aa",
-              color: const Color.fromARGB(255, 36, 36, 36)),
-//              width: getHorizontalSize(30), height: getVerticalSize(30)),
-
-          //   title: ("Помощник"),
-          activeColorSecondary: ColorConstant.blueA400,
-          // activeColorPrimary: ColorConstant.blueA400.withOpacity(0.1),
-          // inactiveColorPrimary: ColorConstant.blueA400,
-        )));
     return PersistentTabView(
       //context,
       controller: _controller,
@@ -367,17 +278,7 @@ class Main extends StatelessWidget {
       stateManagement: true, // Default is true.
       hideNavigationBar:
           false, // Recommended to set 'resizeToAvoidBottomInset' as true while using this argument. Default is true.
-      /*
-      decoration: NavBarDecoration(
-        border: Border.all(
-          color: isDark ? ColorConstant.darkLine : ColorConstant.lightLine,
-        ),
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(24),
-          topRight: Radius.circular(24),
-        ),
-        colorBehindNavBar: Colors.white,
-      ),*/
+
       popAllScreensOnTapOfSelectedTab: true,
       popActionScreens: PopActionScreensType.all,
       /*itemAnimationProperties: ItemAnimationProperties(

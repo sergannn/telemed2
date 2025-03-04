@@ -7,8 +7,10 @@ import 'package:doctorq/screens/home/home_screen/widgets/autolayouthor_item_widg
 import 'package:doctorq/screens/home/home_screen/widgets/story_item_widget.dart';
 import 'package:doctorq/screens/profile/main_notification.dart';
 import 'package:doctorq/screens/profile/settings/appearance_screen/appearance_screen.dart';
+import 'package:doctorq/screens/profile/settings/logout_modal_bottomsheet/logout_modal_bottomsheet.dart';
 import 'package:doctorq/screens/profile/widgets/autolayouthor_item_widget_profile_tasks.dart';
 import 'package:doctorq/screens/stories/story_scren.dart';
+import 'package:doctorq/services/auth_service.dart';
 import "package:story_view/story_view.dart";
 import 'package:animate_do/animate_do.dart';
 import 'package:doctorq/extensions.dart';
@@ -497,41 +499,52 @@ class MainProfileScreen extends StatelessWidget {
                       //if (context.userData['patient_id'] != null)
 
                       //  NewsHeader(isDark: isDark),
+
                       Padding(
-                        padding: getPadding(
-                          left: 20,
-                          right: 20,
-                          bottom: 20,
-                          top: 30,
-                        ),
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 24,
-                              height: 24,
-                              decoration: BoxDecoration(
-                                color: ColorConstant.bluegray800,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Icon(
-                                Icons.logout_rounded,
-                                color: Colors.white,
-                                size: 16,
-                              ),
+                          padding: getPadding(
+                            left: 20,
+                            right: 20,
+                            bottom: 20,
+                            top: 30,
+                          ),
+                          child: GestureDetector(
+                            onTap: () {
+                              showDialog(
+                                  barrierColor: Colors.black.withOpacity(0.8),
+                                  barrierDismissible: false,
+                                  context: context,
+                                  builder: (context) {
+                                    return ProfileSettingsLogoutModalBottomsheet();
+                                  });
+                            },
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 24,
+                                  height: 24,
+                                  decoration: BoxDecoration(
+                                    color: ColorConstant.bluegray800,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Icon(
+                                    Icons.logout_rounded,
+                                    color: Colors.white,
+                                    size: 16,
+                                  ),
+                                ),
+                                HorizontalSpace(width: 26),
+                                Text(
+                                  "Выход из аккаунта",
+                                  style: TextStyle(
+                                    fontSize: getFontSize(16),
+                                    fontFamily: 'Source Sans Pro',
+                                    fontWeight: FontWeight.w800,
+                                    color: ColorConstant.bluegray800,
+                                  ),
+                                ),
+                              ],
                             ),
-                            HorizontalSpace(width: 26),
-                            Text(
-                              "Выход из аккаунта",
-                              style: TextStyle(
-                                fontSize: getFontSize(16),
-                                fontFamily: 'Source Sans Pro',
-                                fontWeight: FontWeight.w800,
-                                color: ColorConstant.bluegray800,
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
+                          ))
                     ],
                   ),
                 ),

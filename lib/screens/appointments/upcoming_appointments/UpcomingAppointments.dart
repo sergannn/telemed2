@@ -122,6 +122,7 @@ class UpcomingAppointments extends StatelessWidget {
                                     if (!isPast &&
                                         appointmentsList[index]['date'] == date)
                                       return AppointmentListItem(
+                                        isPast: isPast,
                                         index: index,
                                         item: appointmentsList[index],
                                       );

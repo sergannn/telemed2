@@ -1,8 +1,10 @@
 import 'dart:convert';
 //import 'package:date_picker_timeline /date_picker_widget.dart';
 import 'package:doctorq/date_picker_timeline-1.2.6/lib/date_picker_widget.dart';
+import 'package:doctorq/screens/history/video_call_page/video_call_page.dart';
 import 'package:doctorq/screens/home/home_screen/widgets/autolayouthor_item_widget_tasks.dart';
 import 'package:doctorq/screens/home/home_screen/widgets/autolayouthor_item_widget_zapisi.dart';
+import 'package:doctorq/screens/home/home_screen/widgets/doctor_item.dart';
 import 'package:doctorq/screens/home/home_screen/widgets/story_item_widget.dart';
 import 'package:doctorq/screens/profile/main_notification.dart';
 import 'package:doctorq/screens/profile/main_profile.dart';
@@ -393,6 +395,7 @@ class HomeScreen extends StatelessWidget {
                               MaterialPageRoute(
                                   builder: (context) =>
                                       //  const HomeSearchDoctorScreen()
+                                      //    HistoryVideoCallPage()
                                       SearchDoctorScreen()));
                         },
                         controller: autoLayoutVerController,

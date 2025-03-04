@@ -32,6 +32,7 @@ migrate_working_dir/
 /build/
 /android/
 /ios/
+/out/
 pubspec.yaml
 /macos/
 pubspec.lock
