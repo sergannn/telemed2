@@ -6,6 +6,7 @@ import 'package:doctorq/screens/appointments/steps/step_2_filled_screen/step_2_f
 import 'package:doctorq/theme/svg_constant.dart';
 import 'package:doctorq/widgets/bkBtn.dart';
 import 'package:doctorq/widgets/spacing.dart';
+import 'package:doctorq/widgets/top_back.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../widgets/custom_icon_button.dart';
 import 'package:doctorq/app_export.dart';
@@ -59,298 +60,157 @@ class _AppointmentsBookScreenState extends State<AppointmentsBookScreen> {
     print('Days of week: $daysOfWeek');
     print(_generateInactiveDates());
     return Scaffold(
-      body: SafeArea(
-          child:
+      body: 
               // floatingActionButton: const FloatingActionButton(onPressed: null, child: Text("2")),
               SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.end,
-//          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          //        mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: size.width,
-              margin: getMargin(top: 26, bottom: 10),
+        child: 
+          
+            
+            Column(
+              children: [
+                  ...topBack("Запись к врачу", context),
+                // Зеленый контейнер
+            Align(
+              alignment: Alignment.centerLeft,
               child: Padding(
                 padding: getPadding(
                   left: 24,
+                  top: 4,
                   right: 24,
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Row(
-                      children: [
-                        const BkBtn(),
-                        HorizontalSpace(width: 20),
-                        Text(
-                          "Запись к врачу",
-                          // doctor["username"],
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            fontSize: getFontSize(
-                              26,
-                            ),
-                            fontFamily: 'Source Sans Pro',
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        InkWell(
-                          borderRadius: BorderRadius.circular(12),
-                          onTap: () {
-                            setState(() {
-                              isFav = !isFav;
-                            });
-                          },
-                          child: Container(
-                            padding: getPadding(all: 10),
-                            height: getVerticalSize(44),
-                            width: getHorizontalSize(44),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              color: Colors.white,
-//                              color: ColorConstant.blueA400.withOpacity(0.1),
-                            ),
-                            child: CommonImageView(
-                              color: Colors.red,
-                              imagePath: isFav
-                                  ? ImageConstant.favorite
-                                  : ImageConstant.favoriteBorder,
-                            ),
-                          ),
-                        ),
-                        HorizontalSpace(width: 16),
-                        /* Container(
-                          padding: getPadding(all: 10),
-                          height: getVerticalSize(44),
-                          width: getHorizontalSize(44),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            color: ColorConstant.blueA400.withOpacity(0.1),
-                          ),
-                          child: CommonImageView(
-                            imagePath: ImageConstant.share,
-                          ),
-                        ),*/
-                      ],
-                    )
-                  ],
-                ),
-              ),
-            ),
-            Column(
-              children: [
-                VerticalSpace(height: 14),
-                Container(
-                  margin: getMargin(left: 20, right: 20),
-                  height: getVerticalSize(100),
+                child: Container(
+                  margin: const EdgeInsets.only(top: 8),
+                  padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(
-                      getHorizontalSize(
-                        12.00,
-                      ),
-                    ),
-                    color: isDark
-                        ? ColorConstant.darkTextField
-                        : Colors.white, //ColorConstant.whiteA700,
-                    border: Border.all(
-                      color: ColorConstant.bluegray50,
-                      width: getHorizontalSize(
-                        1.00,
-                      ),
-                    ),
+                    color: const Color.fromARGB(255, 247, 247, 247)
+                        .withOpacity(0.8),
+                    borderRadius: BorderRadius.circular(20),
                   ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.max,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.only(
-                          topLeft: isRtl
-                              ? Radius.circular(
-                                  getHorizontalSize(
-                                    0.00,
-                                  ),
-                                )
-                              : Radius.circular(
-                                  getHorizontalSize(
-                                    12.00,
-                                  ),
-                                ),
-                          bottomLeft: isRtl
-                              ? Radius.circular(
-                                  getHorizontalSize(
-                                    0.00,
-                                  ),
-                                )
-                              : Radius.circular(
-                                  getHorizontalSize(
-                                    12.00,
-                                  ),
-                                ),
-                          bottomRight: isRtl
-                              ? Radius.circular(
-                                  getHorizontalSize(
-                                    12.00,
-                                  ),
-                                )
-                              : Radius.circular(
-                                  getHorizontalSize(
-                                    0.00,
-                                  ),
-                                ),
-                          topRight: isRtl
-                              ? Radius.circular(
-                                  getHorizontalSize(
-                                    12.00,
-                                  ),
-                                )
-                              : Radius.circular(
-                                  getHorizontalSize(
-                                    0.00,
-                                  ),
-                                ),
-                        ),
-                        child: CommonImageView(
-                          url: doctor["photo"],
-                          height: getSize(
-                            100.00,
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CircleAvatar(
+                            radius: 20,
+                            backgroundImage: AssetImage(
+                                'assets/images/11.png'), // Используем AssetImage вместо Image.asset
                           ),
-                          width: getSize(
-                            100.00,
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text('Парфенов К.С.',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
+                                const Text('Акушер-гинеколог'),
+                              ],
+                            ),
                           ),
-                          fit: BoxFit.fitWidth,
-                        ),
-                      ),
-                      HorizontalSpace(width: 20),
-                      Expanded(
-                        child: Padding(
-                          padding: getPadding(
-                            top: 10,
-                            bottom: 10,
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              Text(
-                                doctor["username"],
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.start,
-                                style: TextStyle(
-                                  fontSize: getFontSize(
-                                    16,
-                                  ),
-                                  fontFamily: 'Source Sans Pro',
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-
-                              /*  HorizontalSpace(width: 4),
-                                    Text(
-                                      "4.7 (4692 reviews)",
-                                      overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.start,
-                                      style: TextStyle(
-                                        fontSize: getFontSize(
-                                          11,
-                                        ),
-                                        fontFamily: 'Source Sans Pro',
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    ),*/
-
                               Container(
-                                margin: getMargin(top: 3),
-                                child: Text(
-                                  doctor['specializations'].length == 0
-                                      ? ''
-                                      : doctor['specializations'][0]['name'],
-                                  maxLines: 2,
-                                  textAlign: TextAlign.start,
-                                  style: TextStyle(
-                                    fontSize: getFontSize(
-                                      11,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 2, vertical: 2),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.rectangle,
+                                  borderRadius: BorderRadius.circular(20),
+                                  color:
+                                      const Color.fromARGB(255, 176, 214, 254),
+                                ),
+                                constraints: const BoxConstraints(
+                                    minWidth: 10, minHeight: 4),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      Icons.currency_ruble,
+                                      size: 12,
+                                      color: Color.fromARGB(255, 16, 16, 16),
                                     ),
-                                    fontFamily: 'Source Sans Pro',
-                                    fontWeight: FontWeight.w400,
-                                  ),
+                                    const Text('2300',
+                                        style: TextStyle(
+                                            color:
+                                                Color.fromARGB(255, 16, 16, 16),
+                                            fontSize: 11)),
+                                  ],
                                 ),
                               ),
+                              const SizedBox(height: 4),
                             ],
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8), // Отступ между строками
+                      Container(
+                        width: double.infinity, // Полная ширина
+                        height: 40, // Высота изображения
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              BorderRadius.circular(12), // Закругленные углы
+                          image: DecorationImage(
+                            image: AssetImage('assets/images/icons.png'),
+                            fit: BoxFit.contain,
                           ),
                         ),
                       ),
                     ],
                   ),
                 ),
-                Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                        child: doctorDetails(isRtl, isDark),
-                        padding: getPadding(
-                          left: 24,
-                          top: 16,
-                          right: 24,
-                        ))),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: getPadding(
-                      left: 24,
-                      top: 16,
-                      right: 24,
-                    ),
-                    child: Text(
-                      "О враче",
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                        color:
-                            isDark ? Colors.white : ColorConstant.bluegray800,
-                        fontSize: getFontSize(
-                          16,
-                        ),
-                        fontFamily: 'Source Sans Pro',
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  width: getHorizontalSize(
-                    374.00,
-                  ),
-                  margin: getMargin(
+              ),
+            ),
+
+            // Зеленый контейнер
+            Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: getPadding(
                     left: 24,
-                    top: 16,
+                    top: 14,
                     right: 24,
                   ),
-                  child: Text(
-                    "Dr. Jenny Wilson is the top most Cardiologist specialist in Nanyang Hospital at London. She achived several awards for her wonderful contribution in medical field. She is available for private consultation.",
-                    maxLines: null,
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                      fontSize: getFontSize(
-                        14,
-                      ),
-                      fontFamily: 'Source Sans Pro',
-                      fontWeight: FontWeight.w400,
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 8),
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 238, 238, 238)
+                          .withOpacity(0.8),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        // Заголовок
+                        Text(
+                          'О враче',
+                          style: TextStyle(
+                            color: const Color.fromARGB(255, 17, 17, 17),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                          ),
+                        ),
+
+                        // Описание
+                        Padding(
+                          padding: EdgeInsets.only(top: 12),
+                          child: Text(
+                            'Наш тест на важные показатели здоровья покажет вам , на что обратить свое внимание и носит рекомендательный характер. Пройдите по ссылке, чтобы ознакомиться и уже сейчас сделать свой организм выносливее и крепче',
+                            style: TextStyle(
+                              color: const Color.fromARGB(255, 17, 17, 17),
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+
+                        SizedBox(height: 12),
+                        // Кнопка и время
+                      ],
                     ),
                   ),
-                ),
-                //workingTime(),
-                //reviewsWidget(),
+                )),
 
                 VerticalSpace(height: 5),
                 Align(
@@ -398,17 +258,22 @@ class _AppointmentsBookScreenState extends State<AppointmentsBookScreen> {
                         },
                       )),
                     )),
+                
+       
                 CustomButton(
-                  isDark: isDark,
-                  width: size.width,
-                  text: "Book Appointment",
-                  margin: getMargin(
-                    left: 24,
-                    top: 25,
-                    right: 24,
-                    bottom: 20,
-                  ),
-                  onTap: () {
+                     
+                      isDark: isDark,
+                      width: size.width,
+                      text: "Записаться",
+                      margin: getMargin(
+                        left: 24,
+                        top: 22,
+                        right: 24,
+                      ),
+                      variant: ButtonVariant.FillBlueA400,
+                      fontStyle: ButtonFontStyle.SourceSansProSemiBold18,
+                      alignment: Alignment.center,
+                      onTap: () {
                     print(selectedDate);
                     Navigator.push(
                       context,
@@ -416,15 +281,13 @@ class _AppointmentsBookScreenState extends State<AppointmentsBookScreen> {
                           builder: (context) => AppointmentsStep2FilledScreen(
                               date: selectedDate)),
                     );
-                  },
-                  fontStyle: ButtonFontStyle.SourceSansProSemiBold18,
-                ),
-              ],
-            ),
+                  }),
+
+            
           ],
         ),
-      )),
-    );
+      ));
+    
   }
 
   Widget doctorDetails(isRtl, isDark) {
@@ -714,4 +577,6 @@ class _AppointmentsBookScreenState extends State<AppointmentsBookScreen> {
       ),
     );
   }
+  
+  forceLog() {}
 }

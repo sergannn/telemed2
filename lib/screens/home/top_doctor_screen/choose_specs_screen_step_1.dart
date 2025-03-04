@@ -9,6 +9,7 @@ import 'package:doctorq/utils/utility.dart';
 import 'package:doctorq/widgets/bkBtn.dart';
 import 'package:doctorq/widgets/custom_search_view.dart';
 import 'package:doctorq/widgets/spacing.dart';
+import 'package:doctorq/widgets/top_back.dart';
 import 'widgets/listfullname3_item_widget.dart';
 import 'package:doctorq/app_export.dart';
 import 'package:flutter/material.dart';
@@ -78,57 +79,8 @@ class _TopDoctorScreenState extends State<ChooseSpecsScreen>
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Container(
-              width: size.width,
-              margin: getMargin(
-                top: 20,
-              ),
-              child: Padding(
-                padding: getPadding(
-                  left: 20,
-                  right: 20,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const BkBtn(),
-                        HorizontalSpace(width: 20),
-                        Text(
-                          "Запись к врачу",
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            fontSize: getFontSize(
-                              26,
-                            ),
-                            fontFamily: 'Source Sans Pro',
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Container(
-                      padding: getPadding(all: 10),
-                      height: getVerticalSize(44),
-                      width: getHorizontalSize(44),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        color: ColorConstant.blueA400.withOpacity(0.1),
-                      ),
-                      child: CommonImageView(
-                        imagePath: ImageConstant.filter,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+              ...topBack("Записи", context),
+               
             VerticalSpace(height: 24),
             Container(
               width: double.infinity, // Makes the container full width

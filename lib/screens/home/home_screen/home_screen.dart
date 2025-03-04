@@ -7,6 +7,7 @@ import 'package:doctorq/screens/home/home_screen/widgets/story_item_widget.dart'
 import 'package:doctorq/screens/profile/main_notification.dart';
 import 'package:doctorq/screens/profile/main_profile.dart';
 import 'package:doctorq/screens/profile/popular_doctors.dart';
+import 'package:doctorq/screens/profile/search_doctors.dart';
 import 'package:doctorq/screens/profile/settings/appearance_screen/appearance_screen.dart';
 import 'package:doctorq/screens/stories/story_scren.dart';
 import "package:story_view/story_view.dart";
@@ -387,13 +388,12 @@ class HomeScreen extends StatelessWidget {
                         focusNode: FocusNode(),
                         readOnly: true,
                         onTap: () {
-                          /*
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      const HomeSearchDoctorScreen()));
-                                      */
+                                      //  const HomeSearchDoctorScreen()
+                                      SearchDoctorScreen()));
                         },
                         controller: autoLayoutVerController,
                         hintText: "Поиск",

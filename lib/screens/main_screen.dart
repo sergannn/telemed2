@@ -294,7 +294,7 @@ class Main extends StatelessWidget {
   }
 
   final PersistentTabController _controller =
-      PersistentTabController(initialIndex: 0);
+      PersistentTabController(initialIndex: 2);
 
   Main({Key? key}) : super(key: key);
 

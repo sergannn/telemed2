@@ -5,6 +5,7 @@ import 'package:doctorq/screens/appointments/steps/step_3_filled_screen/step_3_f
 import 'package:doctorq/utils/utility.dart';
 import 'package:doctorq/widgets/bkBtn.dart';
 import 'package:doctorq/widgets/spacing.dart';
+import 'package:doctorq/widgets/top_back.dart';
 import '../../../../widgets/custom_icon_button.dart';
 import 'package:doctorq/app_export.dart';
 import 'package:doctorq/widgets/custom_button.dart';
@@ -124,6 +125,7 @@ class _AppointmentsStep2FilledScreenState
     // appointmentManager.fetchTimes();
     bool isDark = Theme.of(context).brightness == Brightness.dark;
     bool isRtl = context.locale == Constants.arLocal;
+
     return Scaffold(
       /* appBar: AppBar(title: Text('Available Times'), actions: [
         IconButton(
@@ -143,717 +145,625 @@ class _AppointmentsStep2FilledScreenState
       ]),
       // floatingActionButton: FloatingActionButton(onPressed: null, child: Text('doctor id: ${doctor['doctor_id']}')),
       */
-      body: SafeArea(
+      body: SingleChildScrollView(
         child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Container(
-              width: size.width,
-              margin: getMargin(
-                top: 20,
-              ),
+            ...topBack("Запись к врачу", context),
+            // Зеленый контейнер
+            Align(
+              alignment: Alignment.centerLeft,
               child: Padding(
                 padding: getPadding(
-                  left: 20,
-                  right: 20,
+                  left: 24,
+                  top: 4,
+                  right: 24,
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    const BkBtn(),
-                    HorizontalSpace(width: 20),
-                    Text(
-                      "${doctor['username']}", //,//  ${doctor['doctor_id']}",
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                        fontSize: getFontSize(
-                          26,
-                        ),
-                        fontFamily: 'Source Sans Pro',
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            VerticalSpace(height: 10),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: getPadding(
-                          left: 24,
-                          top: 14,
-                          right: 24,
-                        ),
-                        child: Text(
-                          "Завтра, 02.09.2024",
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            color: isDark
-                                ? Colors.white
-                                : ColorConstant.bluegray800,
-                            fontSize: getFontSize(
-                              16,
-                            ),
-                            fontFamily: 'Source Sans Pro',
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: getPadding(
-                        left: 24,
-                        top: 16,
-                        right: 24,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.max,
+                child: Container(
+                  margin: const EdgeInsets.only(top: 8),
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 247, 247, 247)
+                        .withOpacity(0.8),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          CustomButton(
-                            isDark: isDark,
-                            width: 184,
-                            text: "Morning",
-                            onTap: () {
-                              setState(() {
-                                isMorning = true;
-                              });
-                            },
-                            variant: isMorning
-                                ? ButtonVariant.FillBlueA400
-                                : ButtonVariant.OutlineBlueA400,
-                            shape: ButtonShape.RoundedBorder21,
-                            padding: ButtonPadding.PaddingAll12,
-                            fontStyle: isMorning
-                                ? ButtonFontStyle.SourceSansProSemiBold18
-                                : ButtonFontStyle
-                                    .SourceSansProSemiBold18BlueA400,
-                            prefixWidget: Container(
-                              margin: getMargin(
-                                  right: isRtl ? 0 : 10, left: isRtl ? 10 : 0),
-                              child: Image.asset(
-                                ImageConstant.morning,
-                                color: isMorning
-                                    ? Colors.white
-                                    : ColorConstant.blueA400,
-                                width: getHorizontalSize(20),
-                                height: getVerticalSize(20),
-                              ),
+                          CircleAvatar(
+                            radius: 20,
+                            backgroundImage: AssetImage(
+                                'assets/images/11.png'), // Используем AssetImage вместо Image.asset
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text('Парфенов К.С.',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
+                                const Text('Акушер-гинеколог'),
+                              ],
                             ),
                           ),
-                          HorizontalSpace(width: 12),
-                          CustomButton(
-                            isDark: isDark,
-                            width: 184,
-                            text: "Evening",
-                            onTap: () {
-                              setState(() {
-                                isMorning = false;
-                              });
-                            },
-                            variant: isMorning
-                                ? ButtonVariant.OutlineBlueA400
-                                : ButtonVariant.FillBlueA400,
-                            shape: ButtonShape.RoundedBorder21,
-                            padding: ButtonPadding.PaddingAll12,
-                            fontStyle: isMorning
-                                ? ButtonFontStyle
-                                    .SourceSansProSemiBold18BlueA400
-                                : ButtonFontStyle.SourceSansProSemiBold18,
-                            prefixWidget: Container(
-                              margin: getMargin(
-                                  right: isRtl ? 0 : 10, left: isRtl ? 10 : 0),
-                              child: Image.asset(
-                                ImageConstant.evening,
-                                color: isMorning
-                                    ? ColorConstant.blueA400
-                                    : Colors.white,
-                                width: getHorizontalSize(20),
-                                height: getVerticalSize(20),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 2, vertical: 2),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.rectangle,
+                                  borderRadius: BorderRadius.circular(20),
+                                  color:
+                                      const Color.fromARGB(255, 176, 214, 254),
+                                ),
+                                constraints: const BoxConstraints(
+                                    minWidth: 10, minHeight: 4),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      Icons.currency_ruble,
+                                      size: 12,
+                                      color: Color.fromARGB(255, 16, 16, 16),
+                                    ),
+                                    const Text('2300',
+                                        style: TextStyle(
+                                            color:
+                                                Color.fromARGB(255, 16, 16, 16),
+                                            fontSize: 11)),
+                                  ],
+                                ),
                               ),
-                            ),
+                              const SizedBox(height: 4),
+                            ],
                           ),
                         ],
                       ),
-                    ),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: getPadding(
-                          left: 20,
-                          top: 20,
-                          bottom: 10,
-                          right: 20,
-                        ),
-                        child: Text(
-                          "Choose the Hour",
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            color: ColorConstant.bluegray800,
-                            fontSize: getFontSize(
-                              16,
-                            ),
-                            fontFamily: 'Source Sans Pro',
-                            fontWeight: FontWeight.w600,
+                      const SizedBox(height: 8), // Отступ между строками
+                      Container(
+                        width: double.infinity, // Полная ширина
+                        height: 40, // Высота изображения
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              BorderRadius.circular(12), // Закругленные углы
+                          image: DecorationImage(
+                            image: AssetImage('assets/images/icons.png'),
+                            fit: BoxFit.contain,
                           ),
                         ),
                       ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+
+            // Зеленый контейнер
+            Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: getPadding(
+                    left: 24,
+                    top: 14,
+                    right: 24,
+                  ),
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 8),
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 238, 238, 238)
+                          .withOpacity(0.8),
+                      borderRadius: BorderRadius.circular(20),
                     ),
-                    SizedBox(
-                      height: getVerticalSize(240),
-                      child: GridView.builder(
-                        padding: getPadding(
-                          left: 20,
-                          top: 10,
-                          right: 20,
-                        ),
-                        physics: const BouncingScrollPhysics(),
-                        shrinkWrap: true,
-                        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                          childAspectRatio: 2.767,
-                          // mainAxisExtent: getVerticalSize(
-                          //   158.00,
-                          // ),
-                          maxCrossAxisExtent: 200,
-                          mainAxisSpacing: getHorizontalSize(
-                            10.00,
-                          ),
-                          crossAxisSpacing: getHorizontalSize(
-                            10.00,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        // Заголовок
+                        Text(
+                          'О враче',
+                          style: TextStyle(
+                            color: const Color.fromARGB(255, 17, 17, 17),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
                           ),
                         ),
-                        itemCount: availableTimesList.length,
-                        itemBuilder: (context, index) {
-                          return InkWell(
-                            onTap: () {
-                              setState(() {
-                                selectedTime = index;
-                              });
-                            },
-                            child: Container(
-                              padding: getPadding(
-                                left: 20,
-                                top: 8,
-                                right: 20,
-                                bottom: 8,
+
+                        // Описание
+                        Padding(
+                          padding: EdgeInsets.only(top: 12),
+                          child: Text(
+                            'Наш тест на важные показатели здоровья покажет вам , на что обратить свое внимание и носит рекомендательный характер. Пройдите по ссылке, чтобы ознакомиться и уже сейчас сделать свой организм выносливее и крепче',
+                            style: TextStyle(
+                              color: const Color.fromARGB(255, 17, 17, 17),
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+
+                        SizedBox(height: 12),
+                        // Кнопка и время
+                      ],
+                    ),
+                  ),
+                )),
+
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: getPadding(
+                  left: 20,
+                  top: 20,
+                  bottom: 10,
+                  right: 20,
+                ),
+                child: Text(
+                  "Выберите время",
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                    color: ColorConstant.bluegray800,
+                    fontSize: getFontSize(
+                      16,
+                    ),
+                    fontFamily: 'Source Sans Pro',
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: getVerticalSize(280),
+              child: GridView.builder(
+                padding: getPadding(
+                  left: 20,
+                  top: 10,
+                  right: 20,
+                ),
+                physics: const BouncingScrollPhysics(),
+                shrinkWrap: true,
+                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                  childAspectRatio: 2.767,
+                  // mainAxisExtent: getVerticalSize(
+                  //   158.00,
+                  // ),
+                  maxCrossAxisExtent: 170,
+                  mainAxisSpacing: getHorizontalSize(
+                    10.00,
+                  ),
+                  crossAxisSpacing: getHorizontalSize(
+                    10.00,
+                  ),
+                ),
+                itemCount: availableTimesList.length,
+                itemBuilder: (context, index) {
+                  return InkWell(
+                    onTap: () {
+                      setState(() {
+                        selectedTime = index;
+                      });
+                    },
+                    child: Container(
+                      padding: getPadding(
+                        left: 20,
+                        top: 8,
+                        right: 20,
+                        bottom: 8,
+                      ),
+                      decoration: BoxDecoration(
+                        color: selectedTime == index
+                            ? ColorConstant.blueA400
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(
+                          getHorizontalSize(
+                            21.50,
+                          ),
+                        ),
+                        border: Border.all(
+                          color: ColorConstant.blueA400,
+                          width: getHorizontalSize(
+                            2.00,
+                          ),
+                        ),
+                      ),
+                      child: Text(
+                        availableTimesList[0] != 'No dates'
+                            ? availableTimesList[index]
+                                .split('-')
+                                .map((e) => e + '\n')
+                                .join()
+                            : 'Свободных мест на \n ${appointmentManager.formattedDate} нет',
+                        // availableTimesList[index] +
+                        //     '${isMorning ? ' AM' : ' PM'}',
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: selectedTime == index
+                              ? Colors.white
+                              : ColorConstant.blueA400,
+                          fontSize: getFontSize(
+                            17,
+                          ),
+                          fontFamily: 'Source Sans Pro',
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: getPadding(
+                  left: 20,
+                  top: 40,
+                  right: 20,
+                ),
+                child: Text(
+                  "Выберите вид дальнейшей консультации",
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                    color: ColorConstant.bluegray800,
+                    fontSize: getFontSize(
+                      16,
+                    ),
+                    fontFamily: 'Source Sans Pro',
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+            VerticalSpace(height: 14),
+            InkWell(
+              onTap: () {
+                setState(() {
+                  contactMethod = ContactMethods.message;
+                });
+              },
+              child: Container(
+                margin: getMargin(
+                  top: 8.0,
+                  left: 20,
+                  right: 20,
+                  bottom: 8.0,
+                ),
+                padding: getPadding(left: 20, right: 20, top: 16, bottom: 16),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(
+                    getHorizontalSize(
+                      56.00,
+                    ),
+                  ),
+                  border: Border.all(
+                      color: contactMethod == ContactMethods.message
+                          ? Colors.transparent
+                          : ColorConstant.lightLine),
+                  gradient: LinearGradient(
+                    begin: const Alignment(
+                      1,
+                      1.0024292469024658,
+                    ),
+                    end: const Alignment(
+                      0,
+                      0.0024292469024658203,
+                    ),
+                    colors: contactMethod == ContactMethods.message
+                        ? [
+                            const Color(0xFFE4F0FF), const Color(0xFFE4F0FF)
+                            //  ColorConstant.blueA400,
+                            //  ColorConstant.blue300,
+                          ]
+                        : [Colors.transparent, Colors.transparent],
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        CustomIconButton(
+                          isRtl: isRtl,
+                          height: 56,
+                          width: 56,
+                          variant: contactMethod == ContactMethods.message
+                              ? IconButtonVariant.FillWhiteA700
+                              : IconButtonVariant.FillBlueA40019,
+                          shape: IconButtonShape.RoundedBorder28,
+                          padding: IconButtonPadding.PaddingAll16,
+                          child: CommonImageView(
+                            imagePath: ImageConstant.reviews,
+                          ),
+                        ),
+                        HorizontalSpace(width: 16),
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Чат",
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                color: ColorConstant.black900,
+                                fontSize: getFontSize(18),
+                                fontFamily: 'Source Sans Pro',
+                                fontWeight: FontWeight.w600,
                               ),
-                              decoration: BoxDecoration(
-                                color: selectedTime == index
-                                    ? ColorConstant.blueA400
-                                    : Colors.transparent,
-                                borderRadius: BorderRadius.circular(
-                                  getHorizontalSize(
-                                    21.50,
-                                  ),
-                                ),
-                                border: Border.all(
-                                  color: ColorConstant.blueA400,
-                                  width: getHorizontalSize(
-                                    2.00,
-                                  ),
-                                ),
+                            ),
+                            Padding(
+                              padding: getPadding(
+                                top: 3,
                               ),
                               child: Text(
-                                availableTimesList[0] != 'No dates'
-                                    ? availableTimesList[index]
-                                        .split('-')
-                                        .map((e) => e + '\n')
-                                        .join()
-                                    : 'Свободных мест на \n ${appointmentManager.formattedDate} нет',
-                                // availableTimesList[index] +
-                                //     '${isMorning ? ' AM' : ' PM'}',
+                                "Онлайн-консультация",
                                 overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.center,
+                                textAlign: TextAlign.start,
                                 style: TextStyle(
-                                  color: selectedTime == index
-                                      ? Colors.white
-                                      : ColorConstant.blueA400,
-                                  fontSize: getFontSize(
-                                    17,
-                                  ),
-                                  fontFamily: 'Source Sans Pro',
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: getPadding(
-                          left: 20,
-                          top: 20,
-                          right: 20,
-                        ),
-                        child: Text(
-                          "Fee Information",
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            color: ColorConstant.bluegray800,
-                            fontSize: getFontSize(
-                              16,
-                            ),
-                            fontFamily: 'Source Sans Pro',
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ),
-                    VerticalSpace(height: 14),
-                    InkWell(
-                      onTap: () {
-                        setState(() {
-                          contactMethod = ContactMethods.message;
-                        });
-                      },
-                      child: Container(
-                        margin: getMargin(
-                          top: 8.0,
-                          left: 20,
-                          right: 20,
-                          bottom: 8.0,
-                        ),
-                        padding: getPadding(
-                            left: 20, right: 20, top: 16, bottom: 16),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(
-                            getHorizontalSize(
-                              16.00,
-                            ),
-                          ),
-                          border: Border.all(
-                              color: contactMethod == ContactMethods.message
-                                  ? Colors.transparent
-                                  : ColorConstant.lightLine),
-                          gradient: LinearGradient(
-                            begin: const Alignment(
-                              1,
-                              1.0024292469024658,
-                            ),
-                            end: const Alignment(
-                              0,
-                              0.0024292469024658203,
-                            ),
-                            colors: contactMethod == ContactMethods.message
-                                ? [
-                                    ColorConstant.blueA400,
-                                    ColorConstant.blue300,
-                                  ]
-                                : [Colors.transparent, Colors.transparent],
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                CustomIconButton(
-                                  isRtl: isRtl,
-                                  height: 56,
-                                  width: 56,
-                                  variant:
-                                      contactMethod == ContactMethods.message
-                                          ? IconButtonVariant.FillWhiteA700
-                                          : IconButtonVariant.FillBlueA40019,
-                                  shape: IconButtonShape.RoundedBorder28,
-                                  padding: IconButtonPadding.PaddingAll16,
-                                  child: CommonImageView(
-                                    imagePath: ImageConstant.reviews,
-                                  ),
-                                ),
-                                HorizontalSpace(width: 16),
-                                Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Messaging",
-                                      overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.start,
-                                      style: TextStyle(
-                                        color: contactMethod ==
-                                                ContactMethods.message
-                                            ? ColorConstant.whiteA700
-                                            : isDark
-                                                ? Colors.white
-                                                : ColorConstant.black900,
-                                        fontSize: getFontSize(
-                                          18,
-                                        ),
-                                        fontFamily: 'Source Sans Pro',
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: getPadding(
-                                        top: 3,
-                                      ),
-                                      child: Text(
-                                        "Can messaging with doctor",
-                                        overflow: TextOverflow.ellipsis,
-                                        textAlign: TextAlign.start,
-                                        style: TextStyle(
-                                          color: contactMethod ==
-                                                  ContactMethods.message
-                                              ? ColorConstant.whiteA700
-                                              : isDark
-                                                  ? Colors.white
-                                                  : ColorConstant.lightGrayText,
-                                          fontSize: getFontSize(
-                                            14,
-                                          ),
-                                          fontFamily: 'Source Sans Pro',
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            Text(
-                              "${Constants.currency}5",
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.start,
-                              style: TextStyle(
-                                color: contactMethod == ContactMethods.message
-                                    ? ColorConstant.whiteA700
-                                    : ColorConstant.blueA400,
-                                fontSize: getFontSize(
-                                  23,
-                                ),
+                                color: ColorConstant.gray600,
+                                fontSize: getFontSize(14),
                                 fontFamily: 'Source Sans Pro',
-                                fontWeight: FontWeight.w600,
+                                fontWeight: FontWeight.w400,
+                              ),
                               ),
                             ),
                           ],
                         ),
-                      ),
+                      ],
                     ),
-                    InkWell(
-                      onTap: () {
-                        setState(() {
-                          contactMethod = ContactMethods.voiceCall;
-                        });
-                      },
-                      child: Container(
-                        margin: getMargin(
-                          top: 8.0,
-                          left: 20,
-                          right: 20,
-                          bottom: 8.0,
-                        ),
-                        padding: getPadding(
-                            left: 20, right: 20, top: 16, bottom: 16),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(
-                            getHorizontalSize(
-                              16.00,
-                            ),
-                          ),
-                          border: Border.all(
-                              color: contactMethod == ContactMethods.voiceCall
-                                  ? Colors.transparent
-                                  : ColorConstant.lightLine),
-                          gradient: LinearGradient(
-                            begin: const Alignment(
-                              1,
-                              1.0024292469024658,
-                            ),
-                            end: const Alignment(
-                              0,
-                              0.0024292469024658203,
-                            ),
-                            colors: contactMethod == ContactMethods.voiceCall
-                                ? [
-                                    ColorConstant.blueA400,
-                                    ColorConstant.blue300,
-                                  ]
-                                : [Colors.transparent, Colors.transparent],
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                CustomIconButton(
-                                  isRtl: isRtl,
-                                  height: 56,
-                                  width: 56,
-                                  variant:
-                                      contactMethod == ContactMethods.voiceCall
-                                          ? IconButtonVariant.FillWhiteA700
-                                          : IconButtonVariant.FillBlueA40019,
-                                  shape: IconButtonShape.RoundedBorder28,
-                                  padding: IconButtonPadding.PaddingAll16,
-                                  child: CommonImageView(
-                                    imagePath: ImageConstant.call,
-                                  ),
-                                ),
-                                HorizontalSpace(width: 16),
-                                Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Voice Call",
-                                      overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.start,
-                                      style: TextStyle(
-                                        color: contactMethod ==
-                                                ContactMethods.voiceCall
-                                            ? ColorConstant.whiteA700
-                                            : isDark
-                                                ? Colors.white
-                                                : ColorConstant.black900,
-                                        fontSize: getFontSize(
-                                          18,
-                                        ),
-                                        fontFamily: 'Source Sans Pro',
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: getPadding(
-                                        top: 3,
-                                      ),
-                                      child: Text(
-                                        "Can make a voice call with doctor",
-                                        overflow: TextOverflow.ellipsis,
-                                        textAlign: TextAlign.start,
-                                        style: TextStyle(
-                                          color: contactMethod ==
-                                                  ContactMethods.voiceCall
-                                              ? ColorConstant.whiteA700
-                                              : isDark
-                                                  ? Colors.white
-                                                  : ColorConstant.lightGrayText,
-                                          fontSize: getFontSize(
-                                            14,
-                                          ),
-                                          fontFamily: 'Source Sans Pro',
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            Text(
-                              "${Constants.currency}10",
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.start,
-                              style: TextStyle(
-                                color: contactMethod == ContactMethods.voiceCall
-                                    ? ColorConstant.whiteA700
-                                    : ColorConstant.blueA400,
-                                fontSize: getFontSize(
-                                  23,
-                                ),
-                                fontFamily: 'Source Sans Pro',
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        setState(() {
-                          contactMethod = ContactMethods.videoCall;
-                        });
-                      },
-                      child: Container(
-                        margin: getMargin(
-                          top: 8.0,
-                          left: 20,
-                          right: 20,
-                          bottom: 8.0,
-                        ),
-                        padding: getPadding(
-                            left: 20, right: 20, top: 16, bottom: 16),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(
-                            getHorizontalSize(
-                              16.00,
-                            ),
-                          ),
-                          border: Border.all(
-                              color: contactMethod == ContactMethods.videoCall
-                                  ? Colors.transparent
-                                  : ColorConstant.lightLine),
-                          gradient: LinearGradient(
-                            begin: const Alignment(
-                              1,
-                              1.0024292469024658,
-                            ),
-                            end: const Alignment(
-                              0,
-                              0.0024292469024658203,
-                            ),
-                            colors: contactMethod == ContactMethods.videoCall
-                                ? [
-                                    ColorConstant.blueA400,
-                                    ColorConstant.blue300,
-                                  ]
-                                : [Colors.transparent, Colors.transparent],
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                CustomIconButton(
-                                  isRtl: isRtl,
-                                  height: 56,
-                                  width: 56,
-                                  variant:
-                                      contactMethod == ContactMethods.videoCall
-                                          ? IconButtonVariant.FillWhiteA700
-                                          : IconButtonVariant.FillBlueA40019,
-                                  shape: IconButtonShape.RoundedBorder28,
-                                  padding: IconButtonPadding.PaddingAll16,
-                                  child: CommonImageView(
-                                    imagePath: ImageConstant.videocam,
-                                  ),
-                                ),
-                                HorizontalSpace(width: 16),
-                                Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Video Call",
-                                      overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.start,
-                                      style: TextStyle(
-                                        color: contactMethod ==
-                                                ContactMethods.videoCall
-                                            ? ColorConstant.whiteA700
-                                            : isDark
-                                                ? Colors.white
-                                                : ColorConstant.black900,
-                                        fontSize: getFontSize(
-                                          18,
-                                        ),
-                                        fontFamily: 'Source Sans Pro',
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: getPadding(
-                                        top: 3,
-                                      ),
-                                      child: Text(
-                                        "Can make a video call with doctor",
-                                        overflow: TextOverflow.ellipsis,
-                                        textAlign: TextAlign.start,
-                                        style: TextStyle(
-                                          color: contactMethod ==
-                                                  ContactMethods.videoCall
-                                              ? ColorConstant.whiteA700
-                                              : isDark
-                                                  ? Colors.white
-                                                  : ColorConstant.lightGrayText,
-                                          fontSize: getFontSize(
-                                            14,
-                                          ),
-                                          fontFamily: 'Source Sans Pro',
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            Text(
-                              "${Constants.currency}20",
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.start,
-                              style: TextStyle(
-                                color: contactMethod == ContactMethods.videoCall
-                                    ? ColorConstant.whiteA700
-                                    : ColorConstant.blueA400,
-                                fontSize: getFontSize(
-                                  23,
-                                ),
-                                fontFamily: 'Source Sans Pro',
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    CustomButton(
-                      isDark: isDark,
-                      width: size.width,
-                      text: "Next",
-                      margin: getMargin(
-                        left: 20,
-                        right: 20,
-                        bottom: 10,
-                        top: 10,
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  AppointmentsStep3FilledScreen(
-                                    time: availableTimesList[selectedTime],
-                                    date: appointmentManager.date,
-                                    contactMethod: contactMethod,
-                                  )),
-                        );
-                      },
-                      fontStyle: ButtonFontStyle.SourceSansProSemiBold18,
-                    ),
+                    
                   ],
                 ),
               ),
             ),
+            InkWell(
+              onTap: () {
+                setState(() {
+                  contactMethod = ContactMethods.voiceCall;
+                });
+              },
+              child: Container(
+                margin: getMargin(
+                  top: 8.0,
+                  left: 20,
+                  right: 20,
+                  bottom: 8.0,
+                ),
+                padding: getPadding(left: 20, right: 20, top: 16, bottom: 16),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(
+                    getHorizontalSize(
+                      56.00,
+                    ),
+                  ),
+                  border: Border.all(
+                      color: contactMethod == ContactMethods.voiceCall
+                          ? Colors.transparent
+                          : ColorConstant.lightLine),
+                  gradient: LinearGradient(
+                    begin: const Alignment(
+                      1,
+                      1.0024292469024658,
+                    ),
+                    end: const Alignment(
+                      0,
+                      0.0024292469024658203,
+                    ),
+                    colors: contactMethod == ContactMethods.voiceCall
+                        ? [
+                           const Color(0xFFE4F0FF), const Color(0xFFE4F0FF)
+                          ]
+                        : [Colors.transparent, Colors.transparent],
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        CustomIconButton(
+                          isRtl: isRtl,
+                          height: 56,
+                          width: 56,
+                          variant: contactMethod == ContactMethods.voiceCall
+                              ? IconButtonVariant.FillWhiteA700
+                              : IconButtonVariant.FillBlueA40019,
+                          shape: IconButtonShape.RoundedBorder28,
+                          padding: IconButtonPadding.PaddingAll16,
+                          child: CommonImageView(
+                            imagePath: ImageConstant.call,
+                          ),
+                        ),
+                        HorizontalSpace(width: 16),
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Аудио",
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                color: ColorConstant.black900,
+                                fontSize: getFontSize(18),
+                                fontFamily: 'Source Sans Pro',
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            Padding(
+                              padding: getPadding(
+                                top: 3,
+                              ),
+                              child: Text(
+                                "Онлайн-консультация",
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.start,
+                               style: TextStyle(
+                                color: ColorConstant.gray600,
+                                fontSize: getFontSize(14),
+                                fontFamily: 'Source Sans Pro',
+                                fontWeight: FontWeight.w400,
+                              ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                   
+                  ],
+                ),
+              ),
+            ),
+            InkWell(
+              onTap: () {
+                setState(() {
+                  contactMethod = ContactMethods.videoCall;
+                });
+              },
+              child: Container(
+                margin: getMargin(
+                  top: 8.0,
+                  left: 20,
+                  right: 20,
+                  bottom: 8.0,
+                ),
+                padding: getPadding(left: 20, right: 20, top: 16, bottom: 16),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(
+                    getHorizontalSize(
+                      56.00,
+                    ),
+                  ),
+                  border: Border.all(
+                      color: contactMethod == ContactMethods.videoCall
+                          ? Colors.transparent
+                          : ColorConstant.lightLine),
+                  gradient: LinearGradient(
+                    begin: const Alignment(
+                      1,
+                      1.0024292469024658,
+                    ),
+                    end: const Alignment(
+                      0,
+                      0.0024292469024658203,
+                    ),
+                    colors: contactMethod == ContactMethods.videoCall
+                        ? [
+                           const Color(0xFFE4F0FF), const Color(0xFFE4F0FF)
+                          ]
+                        : [Colors.transparent, Colors.transparent],
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        CustomIconButton(
+                          isRtl: isRtl,
+                          height: 56,
+                          width: 56,
+                          variant: contactMethod == ContactMethods.videoCall
+                              ? IconButtonVariant.FillWhiteA700
+                              : IconButtonVariant.FillBlueA40019,
+                          shape: IconButtonShape.RoundedBorder28,
+                          padding: IconButtonPadding.PaddingAll16,
+                          child: CommonImageView(
+                            imagePath: ImageConstant.videocam,
+                          ),
+                        ),
+                        HorizontalSpace(width: 16),
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Видео",
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.start,
+                             style: TextStyle(
+                                color: ColorConstant.black900,
+                                fontSize: getFontSize(18),
+                                fontFamily: 'Source Sans Pro',
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            Padding(
+                              padding: getPadding(
+                                top: 3,
+                              ),
+                              child: Text(
+                                "Онлайн-консультация",
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.start,
+                               style: TextStyle(
+                                color: ColorConstant.gray600,
+                                fontSize: getFontSize(14),
+                                fontFamily: 'Source Sans Pro',
+                                fontWeight: FontWeight.w400,
+                              ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    
+                  ],
+                ),
+              ),
+            ),
+            
+                CustomButton(
+                      
+                      isDark: isDark,
+                      width: size.width,
+                      text: "Записаться",
+                      margin: getMargin(
+                        left: 24,
+                        top: 22,
+                        right: 24,
+                      ),
+                      variant: ButtonVariant.FillBlueA400,
+                      fontStyle: ButtonFontStyle.SourceSansProSemiBold18,
+                      alignment: Alignment.center,
+                      onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => AppointmentsStep3FilledScreen(
+                            time: availableTimesList[selectedTime],
+                            date: appointmentManager.date,
+                            contactMethod: contactMethod,
+                          )),
+                );
+              },),
           ],
         ),
       ),
     );
   }
+  
 }

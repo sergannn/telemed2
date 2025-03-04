@@ -11,6 +11,7 @@ import 'package:doctorq/utils/utility.dart';
 import 'package:doctorq/widgets/bkBtn.dart';
 import 'package:doctorq/widgets/custom_search_view.dart';
 import 'package:doctorq/widgets/spacing.dart';
+import 'package:doctorq/widgets/top_back.dart';
 import 'widgets/listfullname3_item_widget.dart';
 import 'package:doctorq/app_export.dart';
 import 'package:flutter/material.dart';
@@ -80,57 +81,8 @@ class _TopDoctorScreenState extends State<ChooseSpecScreen2>
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Container(
-              width: size.width,
-              margin: getMargin(
-                top: 20,
-              ),
-              child: Padding(
-                padding: getPadding(
-                  left: 20,
-                  right: 20,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const BkBtn(),
-                        HorizontalSpace(width: 20),
-                        Text(
-                          "Запись к врачу",
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            fontSize: getFontSize(
-                              26,
-                            ),
-                            fontFamily: 'Source Sans Pro',
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Container(
-                      padding: getPadding(all: 10),
-                      height: getVerticalSize(44),
-                      width: getHorizontalSize(44),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        color: ColorConstant.blueA400.withOpacity(0.1),
-                      ),
-                      child: CommonImageView(
-                        imagePath: ImageConstant.filter,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            ...topBack("Запись к врачу", context),
+           
             VerticalSpace(height: 24),
             Container(
               width: double.infinity, // Makes the container full width
@@ -139,7 +91,7 @@ class _TopDoctorScreenState extends State<ChooseSpecScreen2>
                 decoration: InputDecoration(
                   contentPadding:
                       EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                  hintText: 'Search...',
+                  hintText: 'Найти врача',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                     borderSide: BorderSide(color: Colors.grey.shade300),
@@ -152,6 +104,51 @@ class _TopDoctorScreenState extends State<ChooseSpecScreen2>
                 ),
               ),
             ),
+            SizedBox(height: 20.0),
+             // Зеленый контейнер
+            Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: getPadding(
+                    left: 24,
+                    top: 0,
+                    right: 24,
+                  ),
+                  child: Container(
+                    height: 28, // Увеличенная высота
+                    margin: const EdgeInsets.only(top: 0),
+                    padding: const EdgeInsets.all(2),
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 238, 238, 238)
+                          .withOpacity(0.8),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    alignment: Alignment.center, // Центрирование содержимого
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        // Заголовок
+                       
+
+                        // Описание
+                        Padding(
+                          padding: EdgeInsets.only(top: 2),
+                          child: Text(
+                            'Запись осуществляется по вашему местному времени',
+                             textAlign: TextAlign.center, // Центрирование текста
+                            style: TextStyle(
+                              color: const Color.fromARGB(255, 17, 17, 17),
+                              fontSize: 10,
+                            ),
+                          ),
+                        ),
+
+                        // Кнопка и время
+                      ],
+                    ),
+                  ),
+                )),
+                
             VerticalSpace(height: 24),
 
             //Text(context.specsData.length.toString()),
@@ -435,3 +432,4 @@ class _TopDoctorScreenState extends State<ChooseSpecScreen2>
         ));
   }
 }
+

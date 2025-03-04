@@ -83,7 +83,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            ...topBack("Записи", context),
+            //...topBack("Записи", context),
             //  const HeaderNavBar(),
             HeaderFilterButtons(),
             VerticalSpace(height: 24),
