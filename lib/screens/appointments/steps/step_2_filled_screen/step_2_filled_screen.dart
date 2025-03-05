@@ -149,7 +149,7 @@ class _AppointmentsStep2FilledScreenState
       body: SingleChildScrollView(
         child: Column(
           children: [
-            ...topBack("Запись к врачу", context),
+            ...topBack(text:"Запись к врачу", context:context),
             GestureDetector(child:
             DoctorInfoWidget(),
             onTap:() {

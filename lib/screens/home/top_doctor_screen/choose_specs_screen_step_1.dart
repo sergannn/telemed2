@@ -79,7 +79,7 @@ class _TopDoctorScreenState extends State<ChooseSpecsScreen>
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-              ...topBack("Записи", context),
+              ...topBack(text:"Записи", context:context),
                
             VerticalSpace(height: 24),
             Container(

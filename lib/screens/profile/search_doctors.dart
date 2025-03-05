@@ -8,7 +8,7 @@ class SearchDoctorScreen extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: [
-          ...topBack("Поиск врача", context),
+          ...topBack(text:"Поиск врача",context: context),
           Expanded(
             child: Container(
               margin: const EdgeInsets.only(bottom: 6),

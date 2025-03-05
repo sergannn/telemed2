@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 
-List<Widget> topBack(text, context) {
+
+  List<Widget> topBack({
+  String text = '',
+  required BuildContext context,
+  double height = 40,
+  Icon icon = const Icon(Icons.settings_input_component, size: 20),
+}) {
   return [
-    SizedBox(height: 40), // фиксированный отступ
+    SizedBox(height: height), // фиксированный отступ
     Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
@@ -28,7 +34,7 @@ List<Widget> topBack(text, context) {
             ),
             const Spacer(), // раздвигает элементы
             IconButton(
-              icon: const Icon(Icons.settings_input_component, size: 20),
+              icon: icon,//const Icon(Icons.settings_input_component, size: 20),
               onPressed: () {}, //обработчик нажатия
             ),
           ],

@@ -3,6 +3,7 @@ import 'package:doctorq/extensions.dart';
 import 'package:doctorq/screens/appointments/past_appointments/past_appointments.dart';
 import 'package:doctorq/screens/appointments/review_screen/review_screen.dart';
 import 'package:doctorq/screens/appointments/steps/step_2_filled_screen/step_2_filled_screen.dart';
+import 'package:doctorq/screens/profile/doctors_info.dart';
 import 'package:doctorq/theme/svg_constant.dart';
 import 'package:doctorq/widgets/bkBtn.dart';
 import 'package:doctorq/widgets/spacing.dart';
@@ -60,234 +61,232 @@ class _AppointmentsBookScreenState extends State<AppointmentsBookScreen> {
     print('Days of week: $daysOfWeek');
     print(_generateInactiveDates());
     return Scaffold(
-      body: 
-              // floatingActionButton: const FloatingActionButton(onPressed: null, child: Text("2")),
-              SingleChildScrollView(
-        child: 
+        body:
+            // floatingActionButton: const FloatingActionButton(onPressed: null, child: Text("2")),
+            SingleChildScrollView(
+      child: Column(
+        children: [
+          ...topBack(text:"Запись к врачу", context:context),
           
-            
-            Column(
-              children: [
-                  ...topBack("Запись к врачу", context),
-                // Зеленый контейнер
-            Align(
+          
+          GestureDetector(onTap: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => DoctorInfoScreen()));
+          },
+          child:
+          // Зеленый контейнер
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: getPadding(
+                left: 24,
+                top: 4,
+                right: 24,
+              ),
+              child: Container(
+                margin: const EdgeInsets.only(top: 8),
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color:
+                      const Color.fromARGB(255, 247, 247, 247).withOpacity(0.8),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CircleAvatar(
+                          radius: 20,
+                          backgroundImage: AssetImage(
+                              'assets/images/11.png'), // Используем AssetImage вместо Image.asset
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text('Парфенов К.С.',
+                                  style:
+                                      TextStyle(fontWeight: FontWeight.bold)),
+                              const Text('Акушер-гинеколог'),
+                            ],
+                          ),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 2, vertical: 2),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.rectangle,
+                                borderRadius: BorderRadius.circular(20),
+                                color: const Color.fromARGB(255, 176, 214, 254),
+                              ),
+                              constraints: const BoxConstraints(
+                                  minWidth: 10, minHeight: 4),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.currency_ruble,
+                                    size: 12,
+                                    color: Color.fromARGB(255, 16, 16, 16),
+                                  ),
+                                  const Text('2300',
+                                      style: TextStyle(
+                                          color:
+                                              Color.fromARGB(255, 16, 16, 16),
+                                          fontSize: 11)),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                          ],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8), // Отступ между строками
+                    Container(
+                      width: double.infinity, // Полная ширина
+                      height: 40, // Высота изображения
+                      decoration: BoxDecoration(
+                        borderRadius:
+                            BorderRadius.circular(12), // Закругленные углы
+                        image: DecorationImage(
+                          image: AssetImage('assets/images/icons.png'),
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+
+          // Зеленый контейнер
+         ),  Align(
               alignment: Alignment.centerLeft,
               child: Padding(
                 padding: getPadding(
                   left: 24,
-                  top: 4,
+                  top: 14,
                   right: 24,
                 ),
                 child: Container(
                   margin: const EdgeInsets.only(top: 8),
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 247, 247, 247)
+                    color: const Color.fromARGB(255, 238, 238, 238)
                         .withOpacity(0.8),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          CircleAvatar(
-                            radius: 20,
-                            backgroundImage: AssetImage(
-                                'assets/images/11.png'), // Используем AssetImage вместо Image.asset
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text('Парфенов К.С.',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold)),
-                                const Text('Акушер-гинеколог'),
-                              ],
-                            ),
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 2, vertical: 2),
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.rectangle,
-                                  borderRadius: BorderRadius.circular(20),
-                                  color:
-                                      const Color.fromARGB(255, 176, 214, 254),
-                                ),
-                                constraints: const BoxConstraints(
-                                    minWidth: 10, minHeight: 4),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(
-                                      Icons.currency_ruble,
-                                      size: 12,
-                                      color: Color.fromARGB(255, 16, 16, 16),
-                                    ),
-                                    const Text('2300',
-                                        style: TextStyle(
-                                            color:
-                                                Color.fromARGB(255, 16, 16, 16),
-                                            fontSize: 11)),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                            ],
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 8), // Отступ между строками
-                      Container(
-                        width: double.infinity, // Полная ширина
-                        height: 40, // Высота изображения
-                        decoration: BoxDecoration(
-                          borderRadius:
-                              BorderRadius.circular(12), // Закругленные углы
-                          image: DecorationImage(
-                            image: AssetImage('assets/images/icons.png'),
-                            fit: BoxFit.contain,
-                          ),
+                      // Заголовок
+                      Text(
+                        'О враче',
+                        style: TextStyle(
+                          color: const Color.fromARGB(255, 17, 17, 17),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
                         ),
                       ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
 
-            // Зеленый контейнер
-            Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: getPadding(
-                    left: 24,
-                    top: 14,
-                    right: 24,
-                  ),
-                  child: Container(
-                    margin: const EdgeInsets.only(top: 8),
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 238, 238, 238)
-                          .withOpacity(0.8),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        // Заголовок
-                        Text(
-                          'О враче',
+                      // Описание
+                      Padding(
+                        padding: EdgeInsets.only(top: 12),
+                        child: Text(
+                          'Наш тест на важные показатели здоровья покажет вам , на что обратить свое внимание и носит рекомендательный характер. Пройдите по ссылке, чтобы ознакомиться и уже сейчас сделать свой организм выносливее и крепче',
                           style: TextStyle(
                             color: const Color.fromARGB(255, 17, 17, 17),
-                            fontWeight: FontWeight.bold,
                             fontSize: 12,
                           ),
                         ),
+                      ),
 
-                        // Описание
-                        Padding(
-                          padding: EdgeInsets.only(top: 12),
-                          child: Text(
-                            'Наш тест на важные показатели здоровья покажет вам , на что обратить свое внимание и носит рекомендательный характер. Пройдите по ссылке, чтобы ознакомиться и уже сейчас сделать свой организм выносливее и крепче',
-                            style: TextStyle(
-                              color: const Color.fromARGB(255, 17, 17, 17),
-                              fontSize: 12,
-                            ),
-                          ),
-                        ),
-
-                        SizedBox(height: 12),
-                        // Кнопка и время
-                      ],
-                    ),
+                      SizedBox(height: 12),
+                      // Кнопка и время
+                    ],
                   ),
+                ),
+              )),
+
+          VerticalSpace(height: 5),
+          Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: getPadding(
+                  left: 24,
+                  top: 16,
+                  right: 24,
+                ),
+                child: SingleChildScrollView(
+                    child: DatePicker(
+                  //activeDates: [],
+                  inactiveDates: _generateInactiveDates(),
+                  DateTime.now(),
+                  deactivatedColor: Colors.grey,
+
+                  initialSelectedDate: DateTime.now(),
+                  selectionColor: ColorConstant.fromHex(
+                      "C8E0FF"), // ColorConstant.blueA400,
+                  height: MediaQuery.of(context).size.height * 0.15,
+                  dateTextStyle: TextStyle(
+                      fontFamily: 'Source Sans Pro',
+                      color: ColorConstant.black900,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 23),
+                  dayTextStyle: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 14,
+                    fontFamily: 'Source Sans Pro',
+                    color: ColorConstant.black900,
+                  ),
+                  monthTextStyle: TextStyle(
+                    fontFamily: 'Source Sans Pro',
+                    color: ColorConstant.black900,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 14,
+                  ),
+                  selectedTextColor: Colors.white,
+                  onDateChange: (date) {
+                    // New date selected
+                    setState(() {
+                      selectedDate = date;
+                    });
+                  },
                 )),
+              )),
 
-                VerticalSpace(height: 5),
-                Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: getPadding(
-                        left: 24,
-                        top: 16,
-                        right: 24,
-                      ),
-                      child: SingleChildScrollView(
-                          child: DatePicker(
-                        //activeDates: [],
-                        inactiveDates: _generateInactiveDates(),
-                        DateTime.now(),
-                        deactivatedColor: Colors.grey,
-
-                        initialSelectedDate: DateTime.now(),
-                        selectionColor: ColorConstant.fromHex(
-                            "C8E0FF"), // ColorConstant.blueA400,
-                        height: MediaQuery.of(context).size.height * 0.15,
-                        dateTextStyle: TextStyle(
-                            fontFamily: 'Source Sans Pro',
-                            color: ColorConstant.black900,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 23),
-                        dayTextStyle: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14,
-                          fontFamily: 'Source Sans Pro',
-                          color: ColorConstant.black900,
-                        ),
-                        monthTextStyle: TextStyle(
-                          fontFamily: 'Source Sans Pro',
-                          color: ColorConstant.black900,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14,
-                        ),
-                        selectedTextColor: Colors.white,
-                        onDateChange: (date) {
-                          // New date selected
-                          setState(() {
-                            selectedDate = date;
-                          });
-                        },
-                      )),
-                    )),
-                
-       
-                CustomButton(
-                     
-                      isDark: isDark,
-                      width: size.width,
-                      text: "Записаться",
-                      margin: getMargin(
-                        left: 24,
-                        top: 22,
-                        right: 24,
-                      ),
-                      variant: ButtonVariant.FillBlueA400,
-                      fontStyle: ButtonFontStyle.SourceSansProSemiBold18,
-                      alignment: Alignment.center,
-                      onTap: () {
-                    print(selectedDate);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => AppointmentsStep2FilledScreen(
-                              date: selectedDate)),
-                    );
-                  }),
-
-            
-          ],
-        ),
-      ));
-    
+          CustomButton(
+              isDark: isDark,
+              width: size.width,
+              text: "Записаться",
+              margin: getMargin(
+                left: 24,
+                top: 22,
+                right: 24,
+              ),
+              variant: ButtonVariant.FillBlueA400,
+              fontStyle: ButtonFontStyle.SourceSansProSemiBold18,
+              alignment: Alignment.center,
+              onTap: () {
+                print(selectedDate);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          AppointmentsStep2FilledScreen(date: selectedDate)),
+                );
+              }),
+        ],
+      ),
+    ));
   }
 
   Widget doctorDetails(isRtl, isDark) {
@@ -577,6 +576,6 @@ class _AppointmentsBookScreenState extends State<AppointmentsBookScreen> {
       ),
     );
   }
-  
+
   forceLog() {}
 }

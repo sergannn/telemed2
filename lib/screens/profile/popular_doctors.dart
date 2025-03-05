@@ -16,7 +16,7 @@ class PopularDoctorsScreen extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: [
-          ...topBack("Популярные", context),
+          ...topBack(text:"Популярные",context: context),
           Expanded(
             child: Container(
               margin: const EdgeInsets.only(bottom: 6),
