@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:doctorq/extensions.dart';
 import 'package:doctorq/screens/appointments/steps/step_3_filled_screen/step_3_filled_screen.dart';
+import 'package:doctorq/screens/profile/doctors_info.dart';
 import 'package:doctorq/utils/utility.dart';
 import 'package:doctorq/widgets/bkBtn.dart';
 import 'package:doctorq/widgets/spacing.dart';
@@ -149,101 +150,15 @@ class _AppointmentsStep2FilledScreenState
         child: Column(
           children: [
             ...topBack("Запись к врачу", context),
-            // Зеленый контейнер
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                padding: getPadding(
-                  left: 24,
-                  top: 4,
-                  right: 24,
-                ),
-                child: Container(
-                  margin: const EdgeInsets.only(top: 8),
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 247, 247, 247)
-                        .withOpacity(0.8),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          CircleAvatar(
-                            radius: 20,
-                            backgroundImage: AssetImage(
-                                'assets/images/11.png'), // Используем AssetImage вместо Image.asset
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text('Парфенов К.С.',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold)),
-                                const Text('Акушер-гинеколог'),
-                              ],
-                            ),
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 2, vertical: 2),
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.rectangle,
-                                  borderRadius: BorderRadius.circular(20),
-                                  color:
-                                      const Color.fromARGB(255, 176, 214, 254),
-                                ),
-                                constraints: const BoxConstraints(
-                                    minWidth: 10, minHeight: 4),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(
-                                      Icons.currency_ruble,
-                                      size: 12,
-                                      color: Color.fromARGB(255, 16, 16, 16),
-                                    ),
-                                    const Text('2300',
-                                        style: TextStyle(
-                                            color:
-                                                Color.fromARGB(255, 16, 16, 16),
-                                            fontSize: 11)),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                            ],
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 8), // Отступ между строками
-                      Container(
-                        width: double.infinity, // Полная ширина
-                        height: 40, // Высота изображения
-                        decoration: BoxDecoration(
-                          borderRadius:
-                              BorderRadius.circular(12), // Закругленные углы
-                          image: DecorationImage(
-                            image: AssetImage('assets/images/icons.png'),
-                            fit: BoxFit.contain,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-
-            // Зеленый контейнер
+            GestureDetector(child:
+            DoctorInfoWidget(),
+            onTap:() {
+              Navigator.push(  context,
+                      MaterialPageRoute(
+                          builder: (context) => DoctorInfoScreen())
+                    );
+            
+  }),
             Align(
                 alignment: Alignment.centerLeft,
                 child: Padding(
@@ -765,5 +680,98 @@ class _AppointmentsStep2FilledScreenState
       ),
     );
   }
-  
+  Widget DoctorInfoWidget() {
+    return   Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: getPadding(
+                  left: 24,
+                  top: 4,
+                  right: 24,
+                ),
+                child: Container(
+                  margin: const EdgeInsets.only(top: 8),
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 247, 247, 247)
+                        .withOpacity(0.8),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CircleAvatar(
+                            radius: 20,
+                            backgroundImage: AssetImage(
+                                'assets/images/11.png'), // Используем AssetImage вместо Image.asset
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text('Парфaнов К.С.',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
+                                const Text('Акушер-гинеколог'),
+                              ],
+                            ),
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 2, vertical: 2),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.rectangle,
+                                  borderRadius: BorderRadius.circular(20),
+                                  color:
+                                      const Color.fromARGB(255, 176, 214, 254),
+                                ),
+                                constraints: const BoxConstraints(
+                                    minWidth: 10, minHeight: 4),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      Icons.currency_ruble,
+                                      size: 12,
+                                      color: Color.fromARGB(255, 16, 16, 16),
+                                    ),
+                                    const Text('2300',
+                                        style: TextStyle(
+                                            color:
+                                                Color.fromARGB(255, 16, 16, 16),
+                                            fontSize: 11)),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                            ],
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8), // Отступ между строками
+                      Container(
+                        width: double.infinity, // Полная ширина
+                        height: 40, // Высота изображения
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              BorderRadius.circular(12), // Закругленные углы
+                          image: DecorationImage(
+                            image: AssetImage('assets/images/icons.png'),
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+  }
 }

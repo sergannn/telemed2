@@ -65,7 +65,9 @@ class UpcomingAppointments extends StatelessWidget {
                   shrinkWrap: true,
                   itemCount: appointmentsList.length,
                   itemBuilder: (context, index) {
+                    //добавил ispast false- посмотреть позже еще раз
                     return AppointmentListItem(
+                      isPast: false,
                       index: index,
                       item: appointmentsList[index],
                     );

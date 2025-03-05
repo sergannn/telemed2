@@ -102,7 +102,7 @@ dependencies:
 #flutter_login_yandex_updated: ^0.0.9
   flutter_screenutil: ^5.9.3
   basic_utils: ^5.7.0
-  analyzer: ^6.11.0
+#  analyzer: ^6.11.0
 #  dartdoc: ^8.3.2
 #  flutter_dtmf: ^2.0.2
 #  flutter_dialpad: ^1.0.5
