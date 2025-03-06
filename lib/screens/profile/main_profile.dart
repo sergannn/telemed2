@@ -5,9 +5,13 @@ import 'package:doctorq/screens/home/home_screen/home_screen.dart';
 import 'package:doctorq/screens/home/home_screen/widgets/autolayouthor_item_widget_tasks.dart';
 import 'package:doctorq/screens/home/home_screen/widgets/autolayouthor_item_widget_zapisi.dart';
 import 'package:doctorq/screens/home/home_screen/widgets/story_item_widget.dart';
+import 'package:doctorq/screens/profile/exit_sure.dart';
 import 'package:doctorq/screens/profile/main_notification.dart';
+import 'package:doctorq/screens/profile/questions_screen.dart';
 import 'package:doctorq/screens/profile/settings/appearance_screen/appearance_screen.dart';
 import 'package:doctorq/screens/profile/settings/logout_modal_bottomsheet/logout_modal_bottomsheet.dart';
+import 'package:doctorq/screens/profile/settings_all.dart';
+import 'package:doctorq/screens/profile/settings_screen.dart';
 import 'package:doctorq/screens/profile/widgets/autolayouthor_item_widget_profile_tasks.dart';
 import 'package:doctorq/screens/stories/story_scren.dart';
 import 'package:doctorq/services/auth_service.dart';
@@ -141,7 +145,7 @@ class MainProfileScreen extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        MainNotificationsScreen())
+                                        SettingsAllScreen())
                                 //HomeNotificationScreen()
                                 //),
                                 );
@@ -155,7 +159,7 @@ class MainProfileScreen extends StatelessWidget {
                                 color: Colors
                                     .white, //ColorConstant.blueA400.withOpacity(0.1),
                               ),
-                              child: Icon(Icons.notifications)),
+                              child: Icon(Icons.settings)),
                         ),
                       ],
                     )
@@ -361,6 +365,7 @@ class MainProfileScreen extends StatelessWidget {
                                 ],
                               ),
                               VerticalSpace(height: 16),
+                              GestureDetector(child:
                               Row(
                                 children: [
                                   Icon(Icons.feedback,
@@ -378,7 +383,12 @@ class MainProfileScreen extends StatelessWidget {
                                   Icon(Icons.chevron_right,
                                       color: ColorConstant.bluegray800),
                                 ],
-                              ),
+                              ),onTap: () {
+                                    Navigator.push(context, MaterialPageRoute(
+                                       builder: (context) => FAQScreen()));
+       
+                                  
+                              }),
                             ],
                           ),
                         ),
@@ -517,7 +527,16 @@ class MainProfileScreen extends StatelessWidget {
                                     return ProfileSettingsLogoutModalBottomsheet();
                                   });
                             },
-                            child: Row(
+                            child:  GestureDetector(
+                              onTap: () {
+                                print("tapap");
+         Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ExiteSureScreen()
+          ));
+                              },
+                              child: Row(
                               children: [
                                 Container(
                                   width: 24,
@@ -544,7 +563,7 @@ class MainProfileScreen extends StatelessWidget {
                                 ),
                               ],
                             ),
-                          ))
+                          )))
                     ],
                   ),
                 ),

@@ -30,7 +30,7 @@ import 'package:flutter/material.dart';
             ),
             Text(
               text,
-              style: TextStyle(fontSize: 18),
+              style: TextStyle(fontSize: 16),
             ),
             const Spacer(), // раздвигает элементы
             IconButton(

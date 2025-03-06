@@ -123,43 +123,6 @@ class _SignInBlankScreenState extends State<SignInBlankScreen> {
     var authRes = await authUser(context, "s@s.ru", "123456");
     if (authRes == true) {
       gogo(false);
-/*      showDialog(
-          barrierColor: Colors.black.withOpacity(0.5),
-          barrierDismissible: true,
-          context: context,
-          builder: (context) {
-            Future.delayed(const Duration(milliseconds: 600), () {
-              Navigator.of(context).pop(true);
-
-              Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => Main() //user: user
-//                                          uId: id,
-                      ),
-                  (Route<dynamic> route) => false);
-            });
-            return Dialog(
-                backgroundColor: Colors.transparent,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(15.0),
-                  ),
-                ),
-                elevation: 0.0,
-                child: Center(
-                  child: Container(
-                    width: getHorizontalSize(124),
-                    height: getVerticalSize(124),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: ColorConstant.darkBg),
-                    child: Center(
-                        child: CircularProgressIndicator(
-                      color: ColorConstant.blueA400,
-                      backgroundColor: ColorConstant.blueA400.withOpacity(.3),
-                    )),
-                  ),
-                ));
-          });*/
     }
   }
 

@@ -172,10 +172,10 @@ class Main extends StatelessWidget {
       PersistentTabConfig(
           screen: _buildScreens()[2],
           item: ItemConfig(
-            icon: Icon(Icons.medical_information,
-                size: 28, color: const Color.fromARGB(255, 92, 92, 92)),
+            icon: Icon(Icons.border_color,
+                color: const Color.fromARGB(255, 92, 92, 92)),
             inactiveIcon: Icon(
-              Icons.medical_information,
+              Icons.border_color,
               size: 28,
               color: const Color.fromARGB(255, 36, 36, 36),
             ),
@@ -187,10 +187,10 @@ class Main extends StatelessWidget {
       PersistentTabConfig(
           screen: _buildScreens()[1],
           item: ItemConfig(
-            icon: Icon(Icons.healing,
-                size: 28, color: const Color.fromARGB(255, 92, 92, 92)),
+            icon: Icon(Icons.chrome_reader_mode,
+                 color: const Color.fromARGB(255, 92, 92, 92)),
             inactiveIcon: Icon(
-              Icons.healing,
+              Icons.chrome_reader_mode,
               size: 28,
               color: const Color.fromARGB(255, 36, 36, 36),
             ),
@@ -203,42 +203,42 @@ class Main extends StatelessWidget {
           screen: _buildScreens()[0],
           item: ItemConfig(
             icon: Icon(
-              Icons.add,
-              color: Colors.black,
+              Icons.house_siding_outlined,
+              color: const Color.fromARGB(255, 37, 37, 37),
             ),
-            title: ("Сеансы"),
+            title: ("Главная"),
             activeColorSecondary: ColorConstant.blueA400,
-          )),
-      PersistentTabConfig(
-          screen: ChatScreen(),
-          item: ItemConfig(
-            title: "Здоровье",
-            icon: Icon(
-              Icons.health_and_safety,
-              size: 28,
-              color: const Color.fromARGB(255, 92, 92, 92),
-            ),
             inactiveIcon: Icon(
-              Icons.health_and_safety,
+              Icons.house_siding_outlined,
               size: 28,
               color: const Color.fromARGB(255, 36, 36, 36),
             ),
+          )),
+      PersistentTabConfig(
+          screen: _buildScreens()[1],
+          item: ItemConfig(
+            icon: Icon(Icons.favorite,
+               color: const Color.fromARGB(255, 92, 92, 92)),
+            inactiveIcon: Icon(
+              Icons.favorite,
+              size: 28,
+              color: const Color.fromARGB(255, 36, 36, 36),
+            ),
+            title: ("Здоровье"),
             activeColorSecondary: ColorConstant.blueA400,
+            //activeColorPrimary: ColorConstant.blueA400.withOpacity(0.1),
+            //inactiveColorPrimary: ColorConstant.blueA400,
           )),
       PersistentTabConfig(
           screen: MainProfileScreen(),
           item: ItemConfig(
             title: "Профиль",
-            icon: Icon(Icons.face_2_rounded,
-                size: 28,
-                semanticLabel: "aa",
-                color: const Color.fromARGB(255, 92, 92, 92)
-                //size: 15.0,
-                ), // Image.asset(
-            inactiveIcon: Icon(Icons.chat,
-                size: 28,
-                semanticLabel: "aa",
-                color: const Color.fromARGB(255, 36, 36, 36)),
+            icon: Icon(Icons.account_box,
+               
+              
+                color: const Color.fromARGB(255, 92, 92, 92)), // Image.asset(
+            inactiveIcon: Icon(Icons.account_box,
+                size: 28,color: const Color.fromARGB(255, 36, 36, 36)),
             activeColorSecondary: ColorConstant.blueA400,
           ))
     ];
