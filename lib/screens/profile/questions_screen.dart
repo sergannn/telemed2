@@ -69,34 +69,33 @@ class FAQScreen extends StatelessWidget {
           color: const Color.fromARGB(255, 255, 255, 255),
           borderRadius: BorderRadius.circular(20.0),
         ),
-        child: Row(
-          children: [
-            IconButton(
-              icon: const Icon(
-                Icons.help,
-                color: Colors.black,
-                size: 20,
-              ),
-              onPressed: () => Navigator.pop(context),
+        child: Row(children: [
+          IconButton(
+            icon: const Icon(
+              Icons.help,
+              color: Colors.black,
+              size: 20,
             ),
-            Expanded(
-              flex: 1,
-              child: Text(
-                'Как подготовиться к онлайн консультации?',
-                style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w600),
-                softWrap: true,
-              ),
+            onPressed: () => Navigator.pop(context),
+          ),
+          Expanded(
+            flex: 1,
+            child: Text(
+              'Как подготовиться к онлайн консультации?',
+              style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w600),
+              softWrap: true,
             ),
-            const Icon(
-                Icons.arrow_forward_ios,
-                color: Colors.grey,
-                size: 22,
-              ),
-            
-            /*
+          ),
+          const Icon(
+            Icons.arrow_forward_ios,
+            color: Colors.grey,
+            size: 22,
+          ),
+
+          /*
                 ExpansionTile(
               title:      IconButton(
               icon: const Icon(
@@ -111,7 +110,7 @@ class FAQScreen extends StatelessWidget {
                 ListTile(title: Text('Sub-item 2')),
        
           ])]*/
-              ]  ),
+        ]),
       ),
     );
   }
@@ -170,31 +169,9 @@ class FAQScreen extends StatelessWidget {
       body: Column(
         children: [
           ...topBack(text: "Вопросы и предложения", context: context),
-          VerticalSpace(height: 24),
-          Container(
-            width: double.infinity, // Makes the container full width
-            margin: EdgeInsets.symmetric(horizontal: 16), // Adds side margins
-            child: TextField(
-              decoration: InputDecoration(
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                hintText: 'Найти',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(color: Colors.grey.shade300),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(color: Colors.blue, width: 2),
-                ),
-                prefixIcon: Icon(Icons.search, color: Colors.grey),
-              ),
-            ),
-          ),
-          SizedBox(height: 20.0),
           Expanded(
             child: Container(
-              margin: const EdgeInsets.only(bottom: 6),
+              margin: const EdgeInsets.only(bottom: 16),
               padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
                 color:
@@ -203,7 +180,7 @@ class FAQScreen extends StatelessWidget {
               ),
               child: ListView(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 38),
                 children: [
                   howTo(context),
                   whatFor(context),
@@ -674,18 +651,6 @@ class FAQScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  CustomButton(
-                      width: size.width,
-                      text: "Записаться",
-                      margin: getMargin(
-                        left: 24,
-                        top: 22,
-                        right: 24,
-                      ),
-                      variant: ButtonVariant.FillBlueA400,
-                      fontStyle: ButtonFontStyle.SourceSansProSemiBold18,
-                      alignment: Alignment.center,
-                      onTap: () {}),
                 ],
               ),
             ),

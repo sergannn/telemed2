@@ -7,7 +7,7 @@ class DoctorInfoScreen extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: [
-          const SizedBox(height: 40), // фиксированный отступ
+          //const SizedBox(height: 40), // фиксированный отступ
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(16),

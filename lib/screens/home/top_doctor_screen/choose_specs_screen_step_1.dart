@@ -79,8 +79,8 @@ class _TopDoctorScreenState extends State<ChooseSpecsScreen>
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-              ...topBack(text:"Записи", context:context),
-               
+            ...topBack(text: "Записи", context: context),
+
             VerticalSpace(height: 24),
             Container(
               width: double.infinity, // Makes the container full width
@@ -214,84 +214,6 @@ class _TopDoctorScreenState extends State<ChooseSpecsScreen>
                   ),
                 ],
               ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget specsGrid() {
-    return SizedBox(
-      //height: getVerticalSize(240),
-      child: GridView.builder(
-        padding: getPadding(
-          left: 20,
-          top: 10,
-          right: 20,
-        ),
-        physics: const BouncingScrollPhysics(),
-        shrinkWrap: true,
-        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-          childAspectRatio: 2.767,
-          // mainAxisExtent: getVerticalSize(
-          //   158.00,
-          // ),
-          maxCrossAxisExtent: 150,
-          mainAxisSpacing: getHorizontalSize(
-            10.00,
-          ),
-          crossAxisSpacing: getHorizontalSize(
-            10.00,
-          ),
-        ),
-        itemCount: 9, //availableTimesList.length,
-        itemBuilder: (context, index) {
-          return InkWell(
-            onTap: () {
-              tabController!.animateTo(index);
-              setState(() {
-                // selectedTime = index;
-              });
-            },
-            child: Container(
-              padding: getPadding(
-                left: 20,
-                top: 8,
-                right: 20,
-                bottom: 8,
-              ),
-              decoration: BoxDecoration(
-                color: getRandomDarkBackgroundColor(), // Colors.red,
-                //    _randomColorForWhiteText(), //ColorConstant.blueA400,
-                borderRadius: BorderRadius.circular(
-                  getHorizontalSize(
-                    21.50,
-                  ),
-                ),
-                border: Border.all(
-                  color: ColorConstant.pink300E5, //(),
-                  //  color: ColorConstant.blueA400,
-                  // width: getHorizontalSize(
-                  //    2.00,
-                  //  ),
-                ),
-              ),
-              child: FittedBox(
-                  child: Text(
-                maxLines: 2,
-                context.specsData[index].name,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: ColorConstant.whiteA700,
-                  fontSize: getFontSize(
-                    25,
-                  ),
-                  fontFamily: 'Source Sans Pro',
-                  fontWeight: FontWeight.w600,
-                ),
-              )),
             ),
           );
         },

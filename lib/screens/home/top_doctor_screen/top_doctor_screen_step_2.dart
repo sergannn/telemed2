@@ -1,21 +1,12 @@
 import 'dart:math';
 
-import 'package:animate_do/animate_do.dart';
-import 'package:date_picker_timeline/date_picker_timeline.dart';
-import 'package:doctorq/data_files/doctors_list.dart';
 import 'package:doctorq/extensions.dart';
 import 'package:doctorq/screens/home/home_screen/widgets/autolayouthor1_item_widget.dart';
-import 'package:doctorq/screens/home/home_screen/widgets/autolayouthor_item_widget.dart';
-import 'package:doctorq/screens/home/top_doctor_screen/choose_specs_screen_step_1.dart';
-import 'package:doctorq/utils/utility.dart';
-import 'package:doctorq/widgets/bkBtn.dart';
-import 'package:doctorq/widgets/custom_search_view.dart';
+
 import 'package:doctorq/widgets/spacing.dart';
 import 'package:doctorq/widgets/top_back.dart';
-import 'widgets/listfullname3_item_widget.dart';
 import 'package:doctorq/app_export.dart';
 import 'package:flutter/material.dart';
-import 'package:doctorq/services/api_service.dart';
 
 class ChooseSpecScreen2 extends StatefulWidget {
   const ChooseSpecScreen2({Key? key}) : super(key: key);
@@ -81,8 +72,8 @@ class _TopDoctorScreenState extends State<ChooseSpecScreen2>
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            ...topBack(text:"Запись к врачу", context:context),
-           
+            ...topBack(text: "Запись к врачу", context: context),
+
             VerticalSpace(height: 24),
             Container(
               width: double.infinity, // Makes the container full width
@@ -105,7 +96,7 @@ class _TopDoctorScreenState extends State<ChooseSpecScreen2>
               ),
             ),
             SizedBox(height: 20.0),
-             // Зеленый контейнер
+            // Зеленый контейнер
             Align(
                 alignment: Alignment.centerLeft,
                 child: Padding(
@@ -128,14 +119,13 @@ class _TopDoctorScreenState extends State<ChooseSpecScreen2>
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         // Заголовок
-                       
 
                         // Описание
                         Padding(
                           padding: EdgeInsets.only(top: 2),
                           child: Text(
                             'Запись осуществляется по вашему местному времени',
-                             textAlign: TextAlign.center, // Центрирование текста
+                            textAlign: TextAlign.center, // Центрирование текста
                             style: TextStyle(
                               color: const Color.fromARGB(255, 17, 17, 17),
                               fontSize: 10,
@@ -148,7 +138,7 @@ class _TopDoctorScreenState extends State<ChooseSpecScreen2>
                     ),
                   ),
                 )),
-                
+
             VerticalSpace(height: 24),
 
             //Text(context.specsData.length.toString()),
@@ -163,179 +153,6 @@ class _TopDoctorScreenState extends State<ChooseSpecScreen2>
             VerticalSpace(height: 24),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget specsList() {
-    return SizedBox(
-      // height: getVerticalSize(240),
-      child: ListView.builder(
-        padding: getPadding(
-          left: 20,
-          top: 10,
-          right: 20,
-        ),
-        physics: const BouncingScrollPhysics(),
-        shrinkWrap: true,
-        itemCount: 9, // availableTimesList.length,
-        itemBuilder: (context, index) {
-          Random random = new Random();
-          int randomNumber = random.nextInt(context.doctorsData.length);
-          return InkWell(
-            onTap: () {
-              print("1");
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const ChooseSpecsScreen()),
-              );
-            },
-            child: Container(
-              margin: EdgeInsets.only(bottom: 10),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  // Avatar section
-                  Container(
-                    width: MediaQuery.of(context).size.width / 8,
-                    height: MediaQuery.of(context).size.width / 8,
-                    margin: EdgeInsets.only(right: 16),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      //   border: Border.all(color: ColorConstant.blueA400),
-                    ),
-                    child: ClipOval(
-                      child: Image.network(
-                        // Replace with actual avatar URL
-                        context.doctorsData[randomNumber]['photo'],
-                        // 'https://placehold.co/60x60',
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-
-                  // Content section
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          context.specsData[index].name,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: ColorConstant.black900,
-                            fontSize: getFontSize(16),
-                            fontFamily: 'Source Sans Pro',
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        /*SizedBox(height: 4),
-                        Text(
-                          'Doctor Description', // Add actual description
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: ColorConstant.blueA400,
-                            fontSize: getFontSize(14),
-                            fontFamily: 'Source Sans Pro',
-                            fontWeight: FontWeight.normal,
-                          ),
-                        )*/
-                      ],
-                    ),
-                  ),
-
-                  // Arrow section
-                  Icon(
-                    Icons.arrow_forward_ios,
-                    size: 24,
-                    color: ColorConstant.blueA400,
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget specsGrid() {
-    return SizedBox(
-      //height: getVerticalSize(240),
-      child: GridView.builder(
-        padding: getPadding(
-          left: 20,
-          top: 10,
-          right: 20,
-        ),
-        physics: const BouncingScrollPhysics(),
-        shrinkWrap: true,
-        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-          childAspectRatio: 2.767,
-          // mainAxisExtent: getVerticalSize(
-          //   158.00,
-          // ),
-          maxCrossAxisExtent: 150,
-          mainAxisSpacing: getHorizontalSize(
-            10.00,
-          ),
-          crossAxisSpacing: getHorizontalSize(
-            10.00,
-          ),
-        ),
-        itemCount: 9, //availableTimesList.length,
-        itemBuilder: (context, index) {
-          return InkWell(
-            onTap: () {
-              tabController!.animateTo(index);
-              setState(() {
-                // selectedTime = index;
-              });
-            },
-            child: Container(
-              padding: getPadding(
-                left: 20,
-                top: 8,
-                right: 20,
-                bottom: 8,
-              ),
-              decoration: BoxDecoration(
-                color: getRandomDarkBackgroundColor(), // Colors.red,
-                //    _randomColorForWhiteText(), //ColorConstant.blueA400,
-                borderRadius: BorderRadius.circular(
-                  getHorizontalSize(
-                    21.50,
-                  ),
-                ),
-                border: Border.all(
-                  color: ColorConstant.pink300E5, //(),
-                  //  color: ColorConstant.blueA400,
-                  // width: getHorizontalSize(
-                  //    2.00,
-                  //  ),
-                ),
-              ),
-              child: FittedBox(
-                  child: Text(
-                maxLines: 2,
-                context.specsData[index].name,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: ColorConstant.whiteA700,
-                  fontSize: getFontSize(
-                    25,
-                  ),
-                  fontFamily: 'Source Sans Pro',
-                  fontWeight: FontWeight.w600,
-                ),
-              )),
-            ),
-          );
-        },
       ),
     );
   }
@@ -368,8 +185,6 @@ class _TopDoctorScreenState extends State<ChooseSpecScreen2>
                         item: context.doctorsData[index],
                         index: index,
                       );
-                      return GestureDetector(
-                          child: Listfullname3ItemWidget(index: index));
                     }
                   } else {
                     print(context.doctorsData[index]['specializations']
@@ -432,4 +247,3 @@ class _TopDoctorScreenState extends State<ChooseSpecScreen2>
         ));
   }
 }
-

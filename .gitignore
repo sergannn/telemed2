@@ -33,6 +33,7 @@ migrate_working_dir/
 /android/
 /ios/
 /out/
+punspec.lock
 pubspec.yaml
 /macos/
 pubspec.lock

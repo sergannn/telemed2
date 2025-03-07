@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 
-
-  List<Widget> topBack({
-  String text = '',
-  required BuildContext context,
-  double height = 40,
-  Icon icon = const Icon(Icons.settings_input_component, size: 20),
-}) {
+List<Widget> topBack(
+    {String text = '',
+    required BuildContext context,
+    double height = 40,
+    Icon icon = const Icon(Icons.settings_input_component, size: 20),
+    bool back = true}) {
   return [
     SizedBox(height: height), // фиксированный отступ
     Container(
@@ -25,7 +24,8 @@ import 'package:flutter/material.dart';
         child: Row(
           children: [
             IconButton(
-              icon: const Icon(Icons.arrow_back_ios),
+              icon: Icon(Icons.arrow_back_ios,
+                  color: back ? Colors.black : Colors.transparent),
               onPressed: () => Navigator.pop(context),
             ),
             Text(
@@ -34,7 +34,8 @@ import 'package:flutter/material.dart';
             ),
             const Spacer(), // раздвигает элементы
             IconButton(
-              icon: icon,//const Icon(Icons.settings_input_component, size: 20),
+              icon:
+                  icon, //const Icon(Icons.settings_input_component, size: 20),
               onPressed: () {}, //обработчик нажатия
             ),
           ],

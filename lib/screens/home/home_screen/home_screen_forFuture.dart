@@ -28,7 +28,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 //final GlobalKey<RandomTextRevealState> globalKey = GlobalKey();
 
-class ItemController extends GetxController {
+class StoriesItemController extends GetxController {
   var cats = [].obs; // Reactive list to store fetched items
   var users = [].obs; // Reactive list to store fetched items
   var articles = [].obs;
@@ -108,11 +108,11 @@ class ItemController extends GetxController {
 }
 
 // ignore: must_be_immutable
-class HomeScreen extends StatelessWidget {
+class StoriesScreen extends StatelessWidget {
   TextEditingController autoLayoutVerController = TextEditingController();
-  final ItemController itemController = Get.put(ItemController());
+  final StoriesItemController itemController = Get.put(StoriesItemController());
 
-  HomeScreen({Key? key}) : super(key: key);
+  StoriesScreen({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     bool isDark = Theme.of(context).brightness == Brightness.dark;
@@ -413,7 +413,7 @@ class HomeScreen extends StatelessWidget {
                           ),
                         );
                       }),
-                      Align(
+                      /*Align(
                         alignment: Alignment.center,
                         child: Padding(
                           padding: getPadding(
@@ -477,7 +477,7 @@ class HomeScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Obx(() {
+                        Obx(() {
                         //print(itemController.storyItems.length);
                         return FadeInUp(
                           delay: const Duration(milliseconds: 300),
@@ -514,7 +514,7 @@ class HomeScreen extends StatelessWidget {
                             ),
                           ),
                         );
-                      }),
+                      }),*/
                       //  Text(context.userData['patient_id']),
                       if (context.userData['patient_id'] != null)
                         DoctorsSliderHeader(isDark: isDark),
@@ -650,7 +650,8 @@ class DoctorsSliderHeader extends StatelessWidget {
                 bottom: 3,
               ),
               child: InkWell(
-                onTap: () {/*
+                onTap: () {
+                  /*
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -721,7 +722,7 @@ class DoctorsSilder extends StatelessWidget {
 }
 
 class NewsSlider extends StatelessWidget {
-  final ItemController itemController = Get.put(ItemController());
+  final StoriesItemController itemController = Get.put(StoriesItemController());
   NewsSlider({
     Key? key,
   }) : super(key: key);

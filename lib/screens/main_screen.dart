@@ -3,6 +3,9 @@ import 'package:doctorq/chat/chat_screen.dart';
 import 'package:doctorq/screens/history/history_screen.dart';
 import 'package:doctorq/screens/appointments/AppointmentsScreen.dart';
 import 'package:doctorq/screens/home/home_screen/home_screen.dart';
+import 'package:doctorq/screens/home/home_screen/home_screen_forFuture.dart';
+import 'package:doctorq/screens/home/specialist_doctor_screen/specialist_doctor_screen.dart';
+import 'package:doctorq/screens/medcard/card_gallery.dart';
 import 'package:doctorq/screens/profile/blank_screen/blank_screen.dart';
 import 'package:doctorq/screens/profile/main_profile.dart';
 import 'package:doctorq/screens/profile/settings_screen.dart';
@@ -19,9 +22,12 @@ class Main extends StatelessWidget {
   List<Widget> _buildScreens() {
     return [
       HomeScreen(),
-      ProfileBlankScreen(),
+      MedCardScreen(),
+      //   HomeSpecialistDoctorScreen(),
+//      ProfileBlankScreen(),
 //      ProfileSettingsScreen(), //uId: uId ?? '-1'),
       const AppointmentsScreen(), //uId ?? '-1'),
+      StoriesScreen()
       //   const HistoryScreen(),
     ];
   }
@@ -188,7 +194,7 @@ class Main extends StatelessWidget {
           screen: _buildScreens()[1],
           item: ItemConfig(
             icon: Icon(Icons.chrome_reader_mode,
-                 color: const Color.fromARGB(255, 92, 92, 92)),
+                color: const Color.fromARGB(255, 92, 92, 92)),
             inactiveIcon: Icon(
               Icons.chrome_reader_mode,
               size: 28,
@@ -215,10 +221,10 @@ class Main extends StatelessWidget {
             ),
           )),
       PersistentTabConfig(
-          screen: _buildScreens()[1],
+          screen: _buildScreens()[3],
           item: ItemConfig(
             icon: Icon(Icons.favorite,
-               color: const Color.fromARGB(255, 92, 92, 92)),
+                color: const Color.fromARGB(255, 92, 92, 92)),
             inactiveIcon: Icon(
               Icons.favorite,
               size: 28,
@@ -234,11 +240,9 @@ class Main extends StatelessWidget {
           item: ItemConfig(
             title: "Профиль",
             icon: Icon(Icons.account_box,
-               
-              
                 color: const Color.fromARGB(255, 92, 92, 92)), // Image.asset(
             inactiveIcon: Icon(Icons.account_box,
-                size: 28,color: const Color.fromARGB(255, 36, 36, 36)),
+                size: 28, color: const Color.fromARGB(255, 36, 36, 36)),
             activeColorSecondary: ColorConstant.blueA400,
           ))
     ];
