@@ -1,5 +1,6 @@
 import 'dart:convert';
 //import 'package:date_picker_timeline /date_picker_widget.dart';
+import 'package:doctorq/chat/chat_screen.dart';
 import 'package:doctorq/date_picker_timeline-1.2.6/lib/date_picker_widget.dart';
 import 'package:doctorq/screens/home/home_screen/home_screen.dart';
 import 'package:doctorq/screens/home/home_screen/widgets/autolayouthor_item_widget_tasks.dart';
@@ -144,8 +145,7 @@ class MainProfileScreen extends StatelessWidget {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        SettingsAllScreen())
+                                    builder: (context) => SettingsAllScreen())
                                 //HomeNotificationScreen()
                                 //),
                                 );
@@ -346,49 +346,58 @@ class MainProfileScreen extends StatelessWidget {
                                 ],
                               ),
                               VerticalSpace(height: 16),
-                              Row(
-                                children: [
-                                  Icon(Icons.support,
-                                      color: ColorConstant.bluegray800),
-                                  HorizontalSpace(width: 16),
-                                  Text(
-                                    "Чат с поддержкой",
-                                    style: TextStyle(
-                                      fontSize: getFontSize(14),
-                                      fontFamily: 'Source Sans Pro',
-                                      color: ColorConstant.bluegray800,
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return ChatScreen();
+                                  }));
+                                },
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.support,
+                                        color: ColorConstant.bluegray800),
+                                    HorizontalSpace(width: 16),
+                                    Text(
+                                      "Чат с поддержкой",
+                                      style: TextStyle(
+                                        fontSize: getFontSize(14),
+                                        fontFamily: 'Source Sans Pro',
+                                        color: ColorConstant.bluegray800,
+                                      ),
                                     ),
-                                  ),
-                                  Expanded(child: Container()),
-                                  Icon(Icons.chevron_right,
-                                      color: ColorConstant.bluegray800),
-                                ],
+                                    Expanded(child: Container()),
+                                    Icon(Icons.chevron_right,
+                                        color: ColorConstant.bluegray800),
+                                  ],
+                                ),
                               ),
                               VerticalSpace(height: 16),
-                              GestureDetector(child:
-                              Row(
-                                children: [
-                                  Icon(Icons.feedback,
-                                      color: ColorConstant.bluegray800),
-                                  HorizontalSpace(width: 16),
-                                  Text(
-                                    "Вопросы и предложения",
-                                    style: TextStyle(
-                                      fontSize: getFontSize(14),
-                                      fontFamily: 'Source Sans Pro',
-                                      color: ColorConstant.bluegray800,
-                                    ),
+                              GestureDetector(
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.feedback,
+                                          color: ColorConstant.bluegray800),
+                                      HorizontalSpace(width: 16),
+                                      Text(
+                                        "Вопросы и предложения",
+                                        style: TextStyle(
+                                          fontSize: getFontSize(14),
+                                          fontFamily: 'Source Sans Pro',
+                                          color: ColorConstant.bluegray800,
+                                        ),
+                                      ),
+                                      Expanded(child: Container()),
+                                      Icon(Icons.chevron_right,
+                                          color: ColorConstant.bluegray800),
+                                    ],
                                   ),
-                                  Expanded(child: Container()),
-                                  Icon(Icons.chevron_right,
-                                      color: ColorConstant.bluegray800),
-                                ],
-                              ),onTap: () {
-                                    Navigator.push(context, MaterialPageRoute(
-                                       builder: (context) => FAQScreen()));
-       
-                                  
-                              }),
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => FAQScreen()));
+                                  }),
                             ],
                           ),
                         ),
@@ -518,52 +527,52 @@ class MainProfileScreen extends StatelessWidget {
                             top: 30,
                           ),
                           child: GestureDetector(
-                            onTap: () {
-                              showDialog(
-                                  barrierColor: Colors.black.withOpacity(0.8),
-                                  barrierDismissible: false,
-                                  context: context,
-                                  builder: (context) {
-                                    return ProfileSettingsLogoutModalBottomsheet();
-                                  });
-                            },
-                            child:  GestureDetector(
                               onTap: () {
-                                print("tapap");
-         Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ExiteSureScreen()
-          ));
+                                showDialog(
+                                    barrierColor: Colors.black.withOpacity(0.8),
+                                    barrierDismissible: false,
+                                    context: context,
+                                    builder: (context) {
+                                      return ProfileSettingsLogoutModalBottomsheet();
+                                    });
                               },
-                              child: Row(
-                              children: [
-                                Container(
-                                  width: 24,
-                                  height: 24,
-                                  decoration: BoxDecoration(
-                                    color: ColorConstant.bluegray800,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Icon(
-                                    Icons.logout_rounded,
-                                    color: Colors.white,
-                                    size: 16,
-                                  ),
+                              child: GestureDetector(
+                                onTap: () {
+                                  print("tapap");
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              ExiteSureScreen()));
+                                },
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: 24,
+                                      height: 24,
+                                      decoration: BoxDecoration(
+                                        color: ColorConstant.bluegray800,
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Icon(
+                                        Icons.logout_rounded,
+                                        color: Colors.white,
+                                        size: 16,
+                                      ),
+                                    ),
+                                    HorizontalSpace(width: 26),
+                                    Text(
+                                      "Выход из аккаунта",
+                                      style: TextStyle(
+                                        fontSize: getFontSize(16),
+                                        fontFamily: 'Source Sans Pro',
+                                        fontWeight: FontWeight.w800,
+                                        color: ColorConstant.bluegray800,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                HorizontalSpace(width: 26),
-                                Text(
-                                  "Выход из аккаунта",
-                                  style: TextStyle(
-                                    fontSize: getFontSize(16),
-                                    fontFamily: 'Source Sans Pro',
-                                    fontWeight: FontWeight.w800,
-                                    color: ColorConstant.bluegray800,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          )))
+                              )))
                     ],
                   ),
                 ),

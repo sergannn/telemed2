@@ -1,6 +1,8 @@
 //import 'package:date_picker_timeline /date_picker_widget.dart';
+import 'package:doctorq/app_export.dart';
 import 'package:doctorq/screens/home/home_screen/home_screen.dart';
 import 'package:doctorq/screens/profile/main_notification_support_tests.dart';
+import 'package:doctorq/widgets/top_back.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -17,27 +19,13 @@ class SupportNotification extends StatelessWidget {
         theme: ThemeData(),
         home: Scaffold(
             body: Column(children: [
-          const SizedBox(height: 40), // фиксированный отступ
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.8),
-              border: Border(bottom: BorderSide(color: Colors.grey.shade300)),
-            ),
-            child: Row(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.arrow_back),
-                  onPressed: () => Navigator.pop(context),
-                ),
-                const Text(
-                  'Поддержка',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-          ),
+          // const SizedBox(height: 40), // фиксированный отступ
+          ...topBack(
+              height: 0,
+              text: "Поддержка",
+              context: context,
+              back: true,
+              icon: Icon(Icons.favorite)),
 
           Expanded(
             child: Container(
@@ -320,6 +308,9 @@ class SupportNotification extends StatelessWidget {
                             ],
                           ),
                         ),
+
+                        //отступ снизу
+                        Container(height: getVerticalSize(100))
                       ],
                     ),
                   ),

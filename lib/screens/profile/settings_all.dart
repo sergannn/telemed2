@@ -7,9 +7,9 @@ class SettingsAllScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          ...topBack(text: "Настройки", context: context),
+      body: SafeArea(
+        child: Column(children: [
+          ...topBack(text: "Настройки", context: context, height: 0),
           Expanded(
             child: Container(
               margin: const EdgeInsets.only(bottom: 6),
@@ -20,11 +20,10 @@ class SettingsAllScreen extends StatelessWidget {
                 border: Border(top: BorderSide(color: Colors.grey.shade300)),
               ),
               child: ListView(
+                shrinkWrap: true,
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                
                 children: [
-                  
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.only(bottom: 12),
@@ -32,50 +31,51 @@ class SettingsAllScreen extends StatelessWidget {
                       color: const Color.fromARGB(255, 255, 255, 255)
                           .withOpacity(0.95),
                     ),
-                    child: GestureDetector(child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 2),
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 255, 255, 255),
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                      child: Row(
-                        children: [
-                          IconButton(
-                            icon: const Icon(
-                              Icons.medical_information_sharp,
-                              color: Colors.black,
-                              size: 20,
-                            ),
-                            onPressed:null
+                    child: GestureDetector(
+                      child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 255, 255, 255),
+                            borderRadius: BorderRadius.circular(20.0),
                           ),
-                          const Text(
-                            'Информация об аккаунте',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.black,
-                            ),
-                          ),
-                          const Spacer(),
-                          IconButton(
-                            icon: const Icon(
-                              Icons.arrow_forward_ios,
-                              color: Colors.grey,
-                              size: 22,
-                            ),
-                            onPressed: () {},
-                          ),
-                        ],
-                      )
+                          child: Row(
+                            children: [
+                              IconButton(
+                                  icon: const Icon(
+                                    Icons.medical_information_sharp,
+                                    color: Colors.black,
+                                    size: 20,
+                                  ),
+                                  onPressed: null),
+                              const Text(
+                                'Информация об аккаунте',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              const Spacer(),
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.arrow_forward_ios,
+                                  color: Colors.grey,
+                                  size: 22,
+                                ),
+                                onPressed: () {},
+                              ),
+                            ],
+                          )),
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute<void>(
+                              builder: (BuildContext context) =>
+                                  const AkkInfoScreen(),
+                            ));
+                      },
                     ),
-                    onTap: () {
-                      Navigator.push(context,  MaterialPageRoute<void>(
-      builder: (BuildContext context) => const AkkInfoScreen(),
-    ));
-                    },),
                   ),
-
-
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.only(bottom: 12),
@@ -120,8 +120,6 @@ class SettingsAllScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-
-                  
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.only(bottom: 12),
@@ -302,7 +300,7 @@ class SettingsAllScreen extends StatelessWidget {
               ),
             ),
           ),
-        ],
+        ]),
       ),
     );
   }

@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:doctorq/app_export.dart';
+import 'package:doctorq/chat/chat_screen.dart';
 import 'package:doctorq/extensions.dart';
 import 'package:doctorq/models/appointment_model.dart';
 import 'package:doctorq/models/appointments_model.dart';
@@ -118,8 +119,26 @@ class AppointmentListItem extends StatelessWidget {
       String description = item["description"];
 
       switch (description) {
+        case "ContactMethods.message":
+          print("voice");
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => ChatScreen()));
+          break;
         case "ContactMethods.voiceCall":
           print("voice");
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => AppointmentsListVoiceCallScreen(
+                        appointment: AppointmentsModel(
+                            img: '',
+                            id: '',
+                            name: 'Запись',
+                            contactMethodIcon: '',
+                            status: '',
+                            time: '13-00'),
+                        user: '{"user_id":"1"}',
+                      )));
           break;
         case "ContactMethods.videoCall":
           try {
@@ -155,7 +174,6 @@ class AppointmentListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isDark = Theme.of(context).brightness == Brightness.dark;
 
-    List<Map<dynamic, dynamic>> appointmentsList = context.appointmentsData;
     print(item['doctor']);
     return InkWell(
       borderRadius: BorderRadius.circular(
@@ -277,7 +295,8 @@ class AppointmentListItem extends StatelessWidget {
   }
 
   ser(context, isPast) async {
-     navigateToScreen(context);
+    navigateToScreenWithTypes(context);
+//    navigateToScreen(context);
     return;
     await requestPermissions();
     Map<Permission, PermissionStatus> statuses = await [
