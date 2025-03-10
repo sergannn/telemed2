@@ -83,7 +83,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            ...topBack(text:"Записи", context:context),
+            ...topBack(height:0,text:"Записи", context:context,back:false),
             // const HeaderNavBar(),
             HeaderFilterButtons(),
             VerticalSpace(height: 24),
@@ -113,6 +113,8 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
 
   Container HeaderFilterButtons() {
     return Container(
+      
+      alignment: Alignment.center,
       decoration: BoxDecoration(
         color: ColorConstant.fromHex("E4F0FF"),
         borderRadius: BorderRadius.circular(
@@ -125,7 +127,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
       height: getVerticalSize(
         45.00,
       ),
-      margin: getMargin(left: 20, top: 24),
+     // margin: getMargin(left: 20, top: 24),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -137,8 +139,8 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                 });
               },
               child: Container(
-                // padding: getPadding(top: 8, bottom: 8),
-                padding: const EdgeInsets.all(16),
+                 padding: getPadding(top: 8, bottom: 8),
+                //padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: showUpcomming ? Colors.white : Colors.transparent,
                   borderRadius: BorderRadius.circular(
@@ -172,7 +174,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
               ),
             ),
           ),
-          HorizontalSpace(width: 16),
+          HorizontalSpace(width: 10),
           Expanded(
             child: InkWell(
               onTap: () {
@@ -215,71 +217,3 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
   }
 }
 
-class HeaderNavBar extends StatelessWidget {
-  const HeaderNavBar({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Container(
-        width: size.width,
-        margin: getMargin(
-          top: 26,
-        ),
-        child: Padding(
-          padding: getPadding(
-            left: 24,
-            right: 24,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  CommonImageView(
-                    imagePath: ImageConstant.appLogo,
-                    height: getVerticalSize(36),
-                    width: getHorizontalSize(36),
-                  ),
-                  HorizontalSpace(width: 20),
-                  Text(
-                    "Сеансы",
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                      fontSize: getFontSize(
-                        26,
-                      ),
-                      fontFamily: 'Source Sans Pro',
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-              Container(
-                padding: getPadding(all: 10),
-                height: getVerticalSize(44),
-                width: getHorizontalSize(44),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  color: ColorConstant.blueA400.withOpacity(0.1),
-                ),
-                child: Icon(
-                  Icons.add_circle_outline_rounded,
-                  color: ColorConstant.blueA400,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}

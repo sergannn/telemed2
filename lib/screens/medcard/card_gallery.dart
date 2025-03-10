@@ -53,7 +53,7 @@ class _MedCardScreenState extends State<MedCardScreen>
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            ...topBack(text: "Медкарта", context: context, back: false),
+            ...topBack(text: "Медкарта", context: context, back: false,icon: Icon(Icons.favorite)),
 
             //Text(context.specsData.length.toString()),
             //DatePicker(height: 100, DateTime.now()),

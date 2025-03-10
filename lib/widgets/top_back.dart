@@ -24,9 +24,11 @@ List<Widget> topBack(
         child: Row(
           children: [
             IconButton(
+         
+              highlightColor: back ? Colors.orange.withOpacity(0.3) : Colors.transparent,
               icon: Icon(Icons.arrow_back_ios,
                   color: back ? Colors.black : Colors.transparent),
-              onPressed: () => Navigator.pop(context),
+              onPressed: () { if(back) {Navigator.pop(context);}},
             ),
             Text(
               text,

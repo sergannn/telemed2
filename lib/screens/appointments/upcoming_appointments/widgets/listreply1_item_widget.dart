@@ -277,6 +277,8 @@ class AppointmentListItem extends StatelessWidget {
   }
 
   ser(context, isPast) async {
+     navigateToScreen(context);
+    return;
     await requestPermissions();
     Map<Permission, PermissionStatus> statuses = await [
       Permission.camera,
