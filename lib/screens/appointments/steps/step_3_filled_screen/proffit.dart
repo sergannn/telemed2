@@ -475,7 +475,7 @@ void showCancelDialog(BuildContext context) {
                   alignment: Alignment.center,
                   onPressed: () async {
                     Navigator.pop(context);
-                    await showLoadingDialog(context);
+                   // await showLoadingDialog(context);
                   },
                 ),
               ],
