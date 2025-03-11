@@ -1,9 +1,6 @@
 import 'dart:math' as math;
 
-import 'package:doctorq/screens/appointments/steps/step_2_filled_screen/step_2_filled_screen.dart';
 import 'package:doctorq/utils/size_utils.dart';
-import 'package:doctorq/widgets/custom_button.dart';
-import 'package:doctorq/widgets/spacing.dart';
 import 'package:doctorq/widgets/top_back.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +13,8 @@ class FAQScreen extends StatefulWidget {
 }
 
 class FAQState extends State<FAQScreen> {
-  List<bool> _expansionStates = List<bool>.filled(12, false); // Состояния для каждой стрелки
+  List<bool> _expansionStates =
+      List<bool>.filled(12, false); // Состояния для каждой стрелки
 
   Widget _buildExpansionTile({
     required String title,
@@ -91,7 +89,7 @@ class FAQState extends State<FAQScreen> {
     return Scaffold(
       body: Column(
         children: [
-           SizedBox(height: 40),
+          SizedBox(height: 40),
           ...topBack(
             text: "Вопросы и предложения",
             context: context,
@@ -102,7 +100,8 @@ class FAQState extends State<FAQScreen> {
               margin: const EdgeInsets.only(bottom: 16),
               padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 236, 236, 236).withOpacity(0.95),
+                color:
+                    const Color.fromARGB(255, 236, 236, 236).withOpacity(0.95),
                 border: Border(top: BorderSide(color: Colors.grey.shade300)),
               ),
               child: ListView(
@@ -110,109 +109,121 @@ class FAQState extends State<FAQScreen> {
                 children: [
                   _buildExpansionTile(
                     title: 'Как подготовиться к онлайн консультации?',
-                    content: 'Если вы хотите что-то уточнить у данного врача, воспользуйтесь повторной онлайн консультацией в формате чата или запишитесь на другой формат консультации.',
+                    content:
+                        'Если вы хотите что-то уточнить у данного врача, воспользуйтесь повторной онлайн консультацией в формате чата или запишитесь на другой формат консультации.',
                     index: 0,
                   ),
                   _buildExpansionTile(
                     title: 'Зачем мне это приложение?',
-                    content: 'Если вы хотите что-то уточнить у данного врача, воспользуйтесь повторной онлайн консультацией в формате чата или запишитесь на другой формат консультации.',
+                    content:
+                        'Если вы хотите что-то уточнить у данного врача, воспользуйтесь повторной онлайн консультацией в формате чата или запишитесь на другой формат консультации.',
                     index: 1,
                   ),
                   _buildExpansionTile(
                     title: 'Что я получу в результате онлайн консультации?',
-                    content: 'Если вы хотите что-то уточнить у данного врача, воспользуйтесь повторной онлайн консультацией в формате чата или запишитесь на другой формат консультации.',
+                    content:
+                        'Если вы хотите что-то уточнить у данного врача, воспользуйтесь повторной онлайн консультацией в формате чата или запишитесь на другой формат консультации.',
                     index: 2,
                   ),
                   _buildExpansionTile(
                     title: 'Медкарта',
-                    content: 'Если вы хотите что-то уточнить у данного врача, воспользуйтесь повторной онлайн консультацией в формате чата или запишитесь на другой формат консультации.',
+                    content:
+                        'Если вы хотите что-то уточнить у данного врача, воспользуйтесь повторной онлайн консультацией в формате чата или запишитесь на другой формат консультации.',
                     index: 3,
                   ),
                   _buildExpansionTile(
                     title: 'Мой профиль',
-                    content: 'Если вы хотите что-то уточнить у данного врача, воспользуйтесь повторной онлайн консультацией в формате чата или запишитесь на другой формат консультации.',
+                    content:
+                        'Если вы хотите что-то уточнить у данного врача, воспользуйтесь повторной онлайн консультацией в формате чата или запишитесь на другой формат консультации.',
                     index: 4,
                   ),
                   _buildExpansionTile(
                     title: 'Онлайн-запись',
-                    content: 'Если вы хотите что-то уточнить у данного врача, воспользуйтесь повторной онлайн консультацией в формате чата или запишитесь на другой формат консультации.',
+                    content:
+                        'Если вы хотите что-то уточнить у данного врача, воспользуйтесь повторной онлайн консультацией в формате чата или запишитесь на другой формат консультации.',
                     index: 5,
                   ),
                   _buildExpansionTile(
                     title: 'Запись на онлайн-прием',
-                    content: 'Если вы хотите что-то уточнить у данного врача, воспользуйтесь повторной онлайн консультацией в формате чата или запишитесь на другой формат консультации.',
+                    content:
+                        'Если вы хотите что-то уточнить у данного врача, воспользуйтесь повторной онлайн консультацией в формате чата или запишитесь на другой формат консультации.',
                     index: 6,
                   ),
                   _buildExpansionTile(
                     title: 'Оплата и баллы лояльности',
-                    content: 'Если вы хотите что-то уточнить у данного врача, воспользуйтесь повторной онлайн консультацией в формате чата или запишитесь на другой формат консультации.',
+                    content:
+                        'Если вы хотите что-то уточнить у данного врача, воспользуйтесь повторной онлайн консультацией в формате чата или запишитесь на другой формат консультации.',
                     index: 7,
                   ),
                   _buildExpansionTile(
                     title: 'Пакеты услуг',
-                    content: 'Если вы хотите что-то уточнить у данного врача, воспользуйтесь повторной онлайн консультацией в формате чата или запишитесь на другой формат консультации.',
+                    content:
+                        'Если вы хотите что-то уточнить у данного врача, воспользуйтесь повторной онлайн консультацией в формате чата или запишитесь на другой формат консультации.',
                     index: 8,
                   ),
                   _buildExpansionTile(
                     title: 'Я - пациент',
-                    content: 'Если вы хотите что-то уточнить у данного врача, воспользуйтесь повторной онлайн консультацией в формате чата или запишитесь на другой формат консультации.',
+                    content:
+                        'Если вы хотите что-то уточнить у данного врача, воспользуйтесь повторной онлайн консультацией в формате чата или запишитесь на другой формат консультации.',
                     index: 9,
                   ),
                   _buildExpansionTile(
                     title: 'Подготовка к исследованиям',
-                    content: 'Если вы хотите что-то уточнить у данного врача, воспользуйтесь повторной онлайн консультацией в формате чата или запишитесь на другой формат консультации.',
+                    content:
+                        'Если вы хотите что-то уточнить у данного врача, воспользуйтесь повторной онлайн консультацией в формате чата или запишитесь на другой формат консультации.',
                     index: 10,
                   ),
                   _buildExpansionTile(
                     title: 'Чат-комьюнити',
-                    content: 'Если вы хотите что-то уточнить у данного врача, воспользуйтесь повторной онлайн консультацией в формате чата или запишитесь на другой формат консультации.',
+                    content:
+                        'Если вы хотите что-то уточнить у данного врача, воспользуйтесь повторной онлайн консультацией в формате чата или запишитесь на другой формат консультации.',
                     index: 11,
                   ),
-                   Container(
-    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-    decoration: BoxDecoration(
-      color: const Color.fromARGB(255, 255, 255, 255),
-      borderRadius: BorderRadius.circular(20.0),
-    ),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text.rich(
-          TextSpan(
-            children: [
-              TextSpan(
-                text: 'Остались вопросы ',
-                style: TextStyle(
-                  fontSize: 10,
-                  color: Colors.black,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-              TextSpan(
-                text: 'Напишите нам',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.blue,
-                  fontWeight: FontWeight.w400,
-                ),
-                recognizer: TapGestureRecognizer()
-                  ..onTap = () {
-                    // Логика для клика
-                    print('Нажали на "Напишите нам"');
-                  },
-              ),
-            ],
-          ),
-        ),
-      ],
-    ),
-  ),
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 255, 255, 255),
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text.rich(
+                          TextSpan(
+                            children: [
+                              TextSpan(
+                                text: 'Остались вопросы ',
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              TextSpan(
+                                text: 'Напишите нам',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.blue,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    // Логика для клика
+                                    print('Нажали на "Напишите нам"');
+                                  },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
           ),
-          //отступ снизу
-                        Container(height: getVerticalSize(100))
+          Container(height: getVerticalSize(100))
         ],
       ),
     );
