@@ -126,7 +126,7 @@ class _SettingsAllScreenState extends State<SettingsAllScreen> {
                               onChanged: (value) {
                                 setState(() {
                                   _notificationsEnabled = value;
-                                  // Здесь можно добавить дополнительную логику
+                                  // Логику сюда
                                   // при изменении состояния уведомлений
                                 });
                               },
@@ -300,11 +300,11 @@ class _SettingsAllScreenState extends State<SettingsAllScreen> {
                             ),
                             const Spacer(),
                             Switch(
-                              value: _themeEnabled,  // Используем отдельное состояние
+                              value: _themeEnabled,  // Отделились
                               onChanged: (value) {
                                 setState(() {
                                   _themeEnabled = value;
-                                  // Логика для темы
+                                  // Логику сюда
                                 });
                               },
                               activeColor: Colors.blue,
