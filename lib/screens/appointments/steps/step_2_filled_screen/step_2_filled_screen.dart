@@ -149,16 +149,15 @@ class _AppointmentsStep2FilledScreenState
       body: SingleChildScrollView(
         child: Column(
           children: [
-            ...topBack(text:"Запись к врачу", context:context),
-            GestureDetector(child:
-            DoctorInfoWidget(),
-            onTap:() {
-              Navigator.push(  context,
+            ...topBack(text: "Запись к врачу", context: context),
+            GestureDetector(
+                child: DoctorInfoWidget(),
+                onTap: () {
+                  Navigator.push(
+                      context,
                       MaterialPageRoute(
-                          builder: (context) => DoctorInfoScreen())
-                    );
-            
-  }),
+                          builder: (context) => DoctorInfoScreen()));
+                }),
             Align(
                 alignment: Alignment.centerLeft,
                 child: Padding(
@@ -206,7 +205,6 @@ class _AppointmentsStep2FilledScreenState
                     ),
                   ),
                 )),
-
             Align(
               alignment: Alignment.centerLeft,
               child: Padding(
@@ -426,18 +424,17 @@ class _AppointmentsStep2FilledScreenState
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
-                                color: ColorConstant.gray600,
-                                fontSize: getFontSize(14),
-                                fontFamily: 'Source Sans Pro',
-                                fontWeight: FontWeight.w400,
-                              ),
+                                  color: ColorConstant.gray600,
+                                  fontSize: getFontSize(14),
+                                  fontFamily: 'Source Sans Pro',
+                                  fontWeight: FontWeight.w400,
+                                ),
                               ),
                             ),
                           ],
                         ),
                       ],
                     ),
-                    
                   ],
                 ),
               ),
@@ -476,9 +473,7 @@ class _AppointmentsStep2FilledScreenState
                       0.0024292469024658203,
                     ),
                     colors: contactMethod == ContactMethods.voiceCall
-                        ? [
-                           const Color(0xFFE4F0FF), const Color(0xFFE4F0FF)
-                          ]
+                        ? [const Color(0xFFE4F0FF), const Color(0xFFE4F0FF)]
                         : [Colors.transparent, Colors.transparent],
                   ),
                 ),
@@ -529,19 +524,18 @@ class _AppointmentsStep2FilledScreenState
                                 "Онлайн-консультация",
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.start,
-                               style: TextStyle(
-                                color: ColorConstant.gray600,
-                                fontSize: getFontSize(14),
-                                fontFamily: 'Source Sans Pro',
-                                fontWeight: FontWeight.w400,
-                              ),
+                                style: TextStyle(
+                                  color: ColorConstant.gray600,
+                                  fontSize: getFontSize(14),
+                                  fontFamily: 'Source Sans Pro',
+                                  fontWeight: FontWeight.w400,
+                                ),
                               ),
                             ),
                           ],
                         ),
                       ],
                     ),
-                   
                   ],
                 ),
               ),
@@ -580,9 +574,7 @@ class _AppointmentsStep2FilledScreenState
                       0.0024292469024658203,
                     ),
                     colors: contactMethod == ContactMethods.videoCall
-                        ? [
-                           const Color(0xFFE4F0FF), const Color(0xFFE4F0FF)
-                          ]
+                        ? [const Color(0xFFE4F0FF), const Color(0xFFE4F0FF)]
                         : [Colors.transparent, Colors.transparent],
                   ),
                 ),
@@ -618,7 +610,7 @@ class _AppointmentsStep2FilledScreenState
                               "Видео",
                               overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.start,
-                             style: TextStyle(
+                              style: TextStyle(
                                 color: ColorConstant.black900,
                                 fontSize: getFontSize(18),
                                 fontFamily: 'Source Sans Pro',
@@ -633,39 +625,36 @@ class _AppointmentsStep2FilledScreenState
                                 "Онлайн-консультация",
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.start,
-                               style: TextStyle(
-                                color: ColorConstant.gray600,
-                                fontSize: getFontSize(14),
-                                fontFamily: 'Source Sans Pro',
-                                fontWeight: FontWeight.w400,
-                              ),
+                                style: TextStyle(
+                                  color: ColorConstant.gray600,
+                                  fontSize: getFontSize(14),
+                                  fontFamily: 'Source Sans Pro',
+                                  fontWeight: FontWeight.w400,
+                                ),
                               ),
                             ),
                           ],
                         ),
                       ],
                     ),
-                    
                   ],
                 ),
               ),
             ),
-            
-                CustomButton(
-                      
-                      isDark: isDark,
-                      width: size.width,
-                      text: "Записаться",
-                      margin: getMargin(
-                        left: 24,
-                        top: 22,
-                        right: 24,
-                      ),
-                      variant: ButtonVariant.FillBlueA400,
-                      fontStyle: ButtonFontStyle.SourceSansProSemiBold18,
-                      alignment: Alignment.center,
-                      onTap: () {
-                Navigator.push(
+            CustomButton(
+              isDark: isDark,
+              width: size.width,
+              text: "Записаться",
+              margin: getMargin(
+                left: 24,
+                top: 22,
+                right: 24,
+              ),
+              variant: ButtonVariant.FillBlueA400,
+              fontStyle: ButtonFontStyle.SourceSansProSemiBold18,
+              alignment: Alignment.center,
+              onTap: () {
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
                       builder: (context) => AppointmentsStep3FilledScreen(
@@ -674,104 +663,101 @@ class _AppointmentsStep2FilledScreenState
                             contactMethod: contactMethod,
                           )),
                 );
-              },),
+              },
+            ),
           ],
         ),
       ),
     );
   }
+
   Widget DoctorInfoWidget() {
-    return   Align(
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                padding: getPadding(
-                  left: 24,
-                  top: 4,
-                  right: 24,
-                ),
-                child: Container(
-                  margin: const EdgeInsets.only(top: 8),
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 247, 247, 247)
-                        .withOpacity(0.8),
-                    borderRadius: BorderRadius.circular(20),
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Padding(
+        padding: getPadding(
+          left: 24,
+          top: 4,
+          right: 24,
+        ),
+        child: Container(
+          margin: const EdgeInsets.only(top: 8),
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: const Color.fromARGB(255, 247, 247, 247).withOpacity(0.8),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CircleAvatar(
+                    radius: 20,
+                    backgroundImage: AssetImage(
+                        'assets/images/11.png'), // Используем AssetImage вместо Image.asset
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text('Парфaнов К.С.',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        const Text('Акушер-гинеколог'),
+                      ],
+                    ),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          CircleAvatar(
-                            radius: 20,
-                            backgroundImage: AssetImage(
-                                'assets/images/11.png'), // Используем AssetImage вместо Image.asset
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text('Парфaнов К.С.',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold)),
-                                const Text('Акушер-гинеколог'),
-                              ],
-                            ),
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 2, vertical: 2),
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.rectangle,
-                                  borderRadius: BorderRadius.circular(20),
-                                  color:
-                                      const Color.fromARGB(255, 176, 214, 254),
-                                ),
-                                constraints: const BoxConstraints(
-                                    minWidth: 10, minHeight: 4),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(
-                                      Icons.currency_ruble,
-                                      size: 12,
-                                      color: Color.fromARGB(255, 16, 16, 16),
-                                    ),
-                                    const Text('2300',
-                                        style: TextStyle(
-                                            color:
-                                                Color.fromARGB(255, 16, 16, 16),
-                                            fontSize: 11)),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                            ],
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 8), // Отступ между строками
                       Container(
-                        width: double.infinity, // Полная ширина
-                        height: 40, // Высота изображения
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 2, vertical: 2),
                         decoration: BoxDecoration(
-                          borderRadius:
-                              BorderRadius.circular(12), // Закругленные углы
-                          image: DecorationImage(
-                            image: AssetImage('assets/images/icons.png'),
-                            fit: BoxFit.contain,
-                          ),
+                          shape: BoxShape.rectangle,
+                          borderRadius: BorderRadius.circular(20),
+                          color: const Color.fromARGB(255, 176, 214, 254),
+                        ),
+                        constraints:
+                            const BoxConstraints(minWidth: 10, minHeight: 4),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.currency_ruble,
+                              size: 12,
+                              color: Color.fromARGB(255, 16, 16, 16),
+                            ),
+                            const Text('2300',
+                                style: TextStyle(
+                                    color: Color.fromARGB(255, 16, 16, 16),
+                                    fontSize: 11)),
+                          ],
                         ),
                       ),
+                      const SizedBox(height: 4),
                     ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8), // Отступ между строками
+              Container(
+                width: double.infinity, // Полная ширина
+                height: 40, // Высота изображения
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12), // Закругленные углы
+                  image: DecorationImage(
+                    image: AssetImage('assets/images/icons.png'),
+                    fit: BoxFit.contain,
                   ),
                 ),
               ),
-            );
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
