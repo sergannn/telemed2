@@ -20,7 +20,7 @@ import 'package:doctorq/screens/appointments/AppointmentsScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomButtonWidget extends StatelessWidget {
-  final VoidCallback? onPressed;  // Используем onPressed вместо onTap
+  final VoidCallback? onPressed; // Используем onPressed вместо onTap
   final bool isDark;
   final double width;
   final String text;
@@ -31,7 +31,7 @@ class CustomButtonWidget extends StatelessWidget {
 
   const CustomButtonWidget({
     Key? key,
-    this.onPressed,  // Используем onPressed вместо onTap
+    this.onPressed, // Используем onPressed вместо onTap
     required this.isDark,
     required this.width,
     required this.text,
@@ -50,14 +50,14 @@ class CustomButtonWidget extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           alignment: alignment,
           padding: EdgeInsets.symmetric(vertical: 16),
-          backgroundColor: isDark 
-            ? const Color.fromARGB(255, 125, 171, 223) 
-            : const Color.fromARGB(255, 125, 171, 223) , 
+          backgroundColor: isDark
+              ? const Color.fromARGB(255, 125, 171, 223)
+              : const Color.fromARGB(255, 125, 171, 223),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),
           ),
         ),
-        onPressed: onPressed,  // Используем onPressed вместо onTap
+        onPressed: onPressed, // Используем onPressed вместо onTap
         child: Text(
           text,
           style: TextStyle(
@@ -90,7 +90,6 @@ class AppointmentsStep3FilledScreen extends StatefulWidget {
 
 class _AppointmentsStep3FilledScreenState
     extends State<AppointmentsStep3FilledScreen> {
-
   @override
   Widget build(BuildContext context) {
     bool isDark = Theme.of(context).brightness == Brightness.dark;
@@ -98,158 +97,158 @@ class _AppointmentsStep3FilledScreenState
       body: SafeArea(
         child: Column(
           children: [
-            ...topBack(text:"Запись к врачу",context: context,height:0.0),
+            ...topBack(text: "Запись к врачу", context: context, height: 0.0),
             VerticalSpace(height: 10),
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                   Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: getPadding(
-                left: 24,
-                top: 4,
-                right: 24,
-              ),
-              child: Container(
-                margin: const EdgeInsets.only(top: 8),
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color:
-                      const Color.fromARGB(255, 247, 247, 247).withOpacity(0.8),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CircleAvatar(
-                          radius: 20,
-                          backgroundImage: AssetImage(
-                              'assets/images/11.png'), // Используем AssetImage вместо Image.asset
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: getPadding(
+                          left: 24,
+                          top: 4,
+                          right: 24,
                         ),
-                        const SizedBox(width: 16),
-                        Expanded(
+                        child: Container(
+                          margin: const EdgeInsets.only(top: 8),
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 247, 247, 247)
+                                .withOpacity(0.8),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text('Парфенов К.С.',
-                                  style:
-                                      TextStyle(fontWeight: FontWeight.bold)),
-                              const Text('Акушер-гинеколог'),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  CircleAvatar(
+                                    radius: 20,
+                                    backgroundImage: AssetImage(
+                                        'assets/images/11.png'), // Используем AssetImage вместо Image.asset
+                                  ),
+                                  const SizedBox(width: 16),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Text('Парфенов К.С.',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold)),
+                                        const Text('Акушер-гинеколог'),
+                                      ],
+                                    ),
+                                  ),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 2, vertical: 2),
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.rectangle,
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          color: const Color.fromARGB(
+                                              255, 176, 214, 254),
+                                        ),
+                                        constraints: const BoxConstraints(
+                                            minWidth: 10, minHeight: 4),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Icon(
+                                              Icons.currency_ruble,
+                                              size: 12,
+                                              color: Color.fromARGB(
+                                                  255, 16, 16, 16),
+                                            ),
+                                            const Text('2300',
+                                                style: TextStyle(
+                                                    color: Color.fromARGB(
+                                                        255, 16, 16, 16),
+                                                    fontSize: 11)),
+                                          ],
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                  height: 8), // Отступ между строками
+                              Container(
+                                width: double.infinity, // Полная ширина
+                                height: 40, // Высота изображения
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(
+                                      12), // Закругленные углы
+                                  image: DecorationImage(
+                                    image:
+                                        AssetImage('assets/images/icons.png'),
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 2, vertical: 2),
-                              decoration: BoxDecoration(
-                                shape: BoxShape.rectangle,
-                                borderRadius: BorderRadius.circular(20),
-                                color: const Color.fromARGB(255, 176, 214, 254),
-                              ),
-                              constraints: const BoxConstraints(
-                                  minWidth: 10, minHeight: 4),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(
-                                    Icons.currency_ruble,
-                                    size: 12,
-                                    color: Color.fromARGB(255, 16, 16, 16),
-                                  ),
-                                  const Text('2300',
-                                      style: TextStyle(
-                                          color:
-                                              Color.fromARGB(255, 16, 16, 16),
-                                          fontSize: 11)),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                          ],
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8), // Отступ между строками
-                    Container(
-                      width: double.infinity, // Полная ширина
-                      height: 40, // Высота изображения
-                      decoration: BoxDecoration(
-                        borderRadius:
-                            BorderRadius.circular(12), // Закругленные углы
-                        image: DecorationImage(
-                          image: AssetImage('assets/images/icons.png'),
-                          fit: BoxFit.contain,
-                        ),
                       ),
                     ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-                   
-                    
-                    
-                  
-                   
-                 
-
-
                     Align(
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                padding: getPadding(
-                  left: 24,
-                  top: 14,
-                  right: 24,
-                ),
-                child: Container(
-                  margin: const EdgeInsets.only(top: 8),
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 255, 255, 255)
-                        .withOpacity(0.8),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      // Заголовок
-                      Text(
-                        'Время/дата',
-                        style: TextStyle(
-                          color: const Color.fromARGB(255, 17, 17, 17),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12,
-                        ),
-                      ),
-
-                      // Описание
-                      Padding(
-                        padding: EdgeInsets.only(top: 12),
-                        child: Text(
-                          'Вставить отображение выбранных даты/времени для записи',
-                          style: TextStyle(
-                            color: const Color.fromARGB(255, 17, 17, 17),
-                            fontSize: 12,
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: getPadding(
+                            left: 24,
+                            top: 14,
+                            right: 24,
                           ),
-                        ),
-                      ),
+                          child: Container(
+                            margin: const EdgeInsets.only(top: 8),
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(255, 255, 255, 255)
+                                  .withOpacity(0.8),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                // Заголовок
+                                Text(
+                                  'Время/дата',
+                                  style: TextStyle(
+                                    color:
+                                        const Color.fromARGB(255, 17, 17, 17),
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12,
+                                  ),
+                                ),
 
-                      SizedBox(height: 12),
-                      // Кнопка и время
-                    ],
-                  ),
-                ),
-              )),
+                                // Описание
+                                Padding(
+                                  padding: EdgeInsets.only(top: 12),
+                                  child: Text(
+                                    'Вставить отображение выбранных даты/времени для записи',
+                                    style: TextStyle(
+                                      color:
+                                          const Color.fromARGB(255, 17, 17, 17),
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ),
+
+                                SizedBox(height: 12),
+                                // Кнопка и время
+                              ],
+                            ),
+                          ),
+                        )),
                     Container(
                       width: double.infinity,
                       margin: getMargin(
@@ -390,18 +389,18 @@ class _AppointmentsStep3FilledScreenState
               ),
             ),
             CustomButtonWidget(
-  isDark: isDark,
-  width: size.width,
-  text: "Записаться",
-  margin: getMargin(
-    left: 24,
-    top: 22,
-    right: 24,
-  ),
-   variant: ButtonVariant.FillBlueA400,
-  fontStyle: ButtonFontStyle.SourceSansProSemiBold18,
-  alignment: Alignment.center,
-  onPressed: () async {  
+              isDark: isDark,
+              width: size.width,
+              text: "Записаться",
+              margin: getMargin(
+                left: 24,
+                top: 22,
+                right: 24,
+              ),
+              variant: ButtonVariant.FillBlueA400,
+              fontStyle: ButtonFontStyle.SourceSansProSemiBold18,
+              alignment: Alignment.center,
+              onPressed: () async {
                 // UserStore storeUserStore = getIt.get<UserStore>();
                 Map<dynamic, dynamic> userData = context.userData;
                 Map<dynamic, dynamic> selectedDoctor = context.selectedDoctor;
@@ -434,18 +433,16 @@ class _AppointmentsStep3FilledScreenState
                   snackBar(context, message: 'Ошибка');
                 }
                 Future.delayed(Duration(seconds: 3), () {
-                  Navigator.pop(
-                      context); 
+                  Navigator.pop(context);
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
                           builder: (context) => ProffitScreen(
-                            contactMethod: widget.contactMethod,
-                            date: widget.date,
-                            time:widget.time
-                          )));                });
+                              contactMethod: widget.contactMethod,
+                              date: widget.date,
+                              time: widget.time)));
+                });
               },
-            
             ),
           ],
         ),
