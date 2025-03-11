@@ -2,39 +2,45 @@ import 'package:doctorq/screens/profile/akk_information.dart';
 import 'package:doctorq/widgets/top_back.dart';
 import 'package:flutter/material.dart';
 
-class SettingsAllScreen extends StatelessWidget {
+class SettingsAllScreen extends StatefulWidget {
   const SettingsAllScreen({Key? key}) : super(key: key);
+
+  @override
+  State<SettingsAllScreen> createState() => _SettingsAllScreenState();
+}
+
+class _SettingsAllScreenState extends State<SettingsAllScreen> {
+  bool _notificationsEnabled = false;
+  bool _themeEnabled = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(children: [
-          ...topBack(text: "Настройки", context: context, height: 0),
-          Expanded(
-            child: Container(
-              margin: const EdgeInsets.only(bottom: 6),
-              padding: const EdgeInsets.all(6),
-              decoration: BoxDecoration(
-                color:
-                    const Color.fromARGB(255, 236, 236, 236).withOpacity(0.95),
-                border: Border(top: BorderSide(color: Colors.grey.shade300)),
-              ),
-              child: ListView(
-                shrinkWrap: true,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                children: [
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.only(bottom: 12),
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 255, 255, 255)
-                          .withOpacity(0.95),
-                    ),
-                    child: GestureDetector(
-                      child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 2),
+        child: Column(
+          children: [
+            ...topBack(text: "Настройки", context: context, height: 0),
+            Expanded(
+              child: Container(
+                margin: const EdgeInsets.only(bottom: 6),
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 236, 236, 236).withOpacity(0.95),
+                  border: Border(top: BorderSide(color: Colors.grey.shade300)),
+                ),
+                child: ListView(
+                  shrinkWrap: true,
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.only(bottom: 12),
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(255, 255, 255, 255).withOpacity(0.95),
+                      ),
+                      child: GestureDetector(
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                           decoration: BoxDecoration(
                             color: const Color.fromARGB(255, 255, 255, 255),
                             borderRadius: BorderRadius.circular(20.0),
@@ -42,12 +48,13 @@ class SettingsAllScreen extends StatelessWidget {
                           child: Row(
                             children: [
                               IconButton(
-                                  icon: const Icon(
-                                    Icons.medical_information_sharp,
-                                    color: Colors.black,
-                                    size: 20,
-                                  ),
-                                  onPressed: null),
+                                icon: const Icon(
+                                  Icons.medical_information_sharp,
+                                  color: Colors.black,
+                                  size: 20,
+                                ),
+                                onPressed: null,
+                              ),
                               const Text(
                                 'Информация об аккаунте',
                                 style: TextStyle(
@@ -62,64 +69,74 @@ class SettingsAllScreen extends StatelessWidget {
                                   color: Colors.grey,
                                   size: 22,
                                 ),
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute<void>(
+                                      builder: (BuildContext context) => const AkkInfoScreen(),
+                                    ),
+                                  );
+                                },
                               ),
                             ],
-                          )),
-                      onTap: () {
-                        Navigator.push(
+                          ),
+                        ),
+                        onTap: () {
+                          Navigator.push(
                             context,
                             MaterialPageRoute<void>(
-                              builder: (BuildContext context) =>
-                                  const AkkInfoScreen(),
-                            ));
-                      },
+                              builder: (BuildContext context) => const AkkInfoScreen(),
+                            ),
+                          );
+                        },
+                      ),
                     ),
-                  ),
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.only(bottom: 12),
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 255, 255, 255)
-                          .withOpacity(0.95),
-                    ),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 2),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.only(bottom: 12),
                       decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 255, 255, 255),
-                        borderRadius: BorderRadius.circular(20.0),
+                        color: const Color.fromARGB(255, 255, 255, 255).withOpacity(0.95),
                       ),
-                      child: Row(
-                        children: [
-                          IconButton(
-                            icon: const Icon(
-                              Icons.notification_add_sharp,
-                              color: Colors.black,
-                              size: 20,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 255, 255, 255),
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                        child: Row(
+                          children: [
+                            IconButton(
+                              icon: const Icon(
+                                Icons.notification_add_sharp,
+                                color: Colors.black,
+                                size: 20,
+                              ),
+                              onPressed: () => Navigator.pop(context),
                             ),
-                            onPressed: () => Navigator.pop(context),
-                          ),
-                          const Text(
-                            'Уведомления',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.black,
+                            const Text(
+                              'Уведомления',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.black,
+                              ),
                             ),
-                          ),
-                          const Spacer(),
-                          Switch(
-                            value: false,
-                            onChanged: (value) {
-                              // Здесь добавьте логику переключения уведомлений
-                            },
-                            activeColor: Colors.blue,
-                            activeTrackColor: Colors.blue.withOpacity(0.5),
-                          ),
-                        ],
+                            const Spacer(),
+                            Switch(
+                              value: _notificationsEnabled,
+                              onChanged: (value) {
+                                setState(() {
+                                  _notificationsEnabled = value;
+                                  // Здесь можно добавить дополнительную логику
+                                  // при изменении состояния уведомлений
+                                });
+                              },
+                              activeColor: Colors.blue,
+                              activeTrackColor: Colors.blue.withOpacity(0.5),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.only(bottom: 12),
@@ -253,54 +270,56 @@ class SettingsAllScreen extends StatelessWidget {
                     ),
                   ),
                   Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.only(bottom: 12),
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 255, 255, 255)
-                          .withOpacity(0.95),
-                    ),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 2),
+                      width: double.infinity,
+                      padding: const EdgeInsets.only(bottom: 12),
                       decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 255, 255, 255),
-                        borderRadius: BorderRadius.circular(20.0),
+                        color: const Color.fromARGB(255, 255, 255, 255).withOpacity(0.95),
                       ),
-                      child: Row(
-                        children: [
-                          IconButton(
-                            icon: const Icon(
-                              Icons.brightness_4_sharp,
-                              color: Colors.black,
-                              size: 20,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 255, 255, 255),
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                        child: Row(
+                          children: [
+                            IconButton(
+                              icon: const Icon(
+                                Icons.brightness_4_sharp,
+                                color: Colors.black,
+                                size: 20,
+                              ),
+                              onPressed: () => Navigator.pop(context),
                             ),
-                            onPressed: () => Navigator.pop(context),
-                          ),
-                          const Text(
-                            'Тема',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.black,
+                            const Text(
+                              'Тема',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.black,
+                              ),
                             ),
-                          ),
-                          const Spacer(),
-                          Switch(
-                            value: false,
-                            onChanged: (value) {
-                              // Здесь добавьте логику переключения уведомлений
-                            },
-                            activeColor: Colors.blue,
-                            activeTrackColor: Colors.blue.withOpacity(0.5),
-                          ),
-                        ],
+                            const Spacer(),
+                            Switch(
+                              value: _themeEnabled,  // Используем отдельное состояние
+                              onChanged: (value) {
+                                setState(() {
+                                  _themeEnabled = value;
+                                  // Логика для темы
+                                });
+                              },
+                              activeColor: Colors.blue,
+                              activeTrackColor: Colors.blue.withOpacity(0.5),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-        ]),
+          ],
+        ),
       ),
     );
   }

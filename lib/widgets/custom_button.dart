@@ -21,7 +21,7 @@ class CustomButton extends StatelessWidget {
     this.prefixWidget,
     this.suffixWidget,
     this.text,
-    this.textStyle,
+    this.textStyle, 
   }) : super(key: key);
 
   ButtonShape? shape;

@@ -19,6 +19,7 @@ class SupportNotification extends StatelessWidget {
         theme: ThemeData(),
         home: Scaffold(
             body: Column(children: [
+              SizedBox(height: 40),
           // const SizedBox(height: 40), // фиксированный отступ
           ...topBack(
               height: 0,

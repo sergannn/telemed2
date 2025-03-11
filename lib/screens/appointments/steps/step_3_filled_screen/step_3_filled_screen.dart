@@ -19,6 +19,58 @@ import 'package:flutter/material.dart';
 import 'package:doctorq/screens/appointments/AppointmentsScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+class CustomButtonWidget extends StatelessWidget {
+  final VoidCallback? onPressed;  // Используем onPressed вместо onTap
+  final bool isDark;
+  final double width;
+  final String text;
+  final EdgeInsetsGeometry? margin;
+  final ButtonVariant variant;
+  final ButtonFontStyle fontStyle;
+  final Alignment alignment;
+
+  const CustomButtonWidget({
+    Key? key,
+    this.onPressed,  // Используем onPressed вместо onTap
+    required this.isDark,
+    required this.width,
+    required this.text,
+    this.margin,
+    required this.variant,
+    required this.fontStyle,
+    required this.alignment,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: width,
+      margin: margin ?? EdgeInsets.zero,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          alignment: alignment,
+          padding: EdgeInsets.symmetric(vertical: 16),
+          backgroundColor: isDark 
+            ? const Color.fromARGB(255, 125, 171, 223) 
+            : const Color.fromARGB(255, 125, 171, 223) , 
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+        ),
+        onPressed: onPressed,  // Используем onPressed вместо onTap
+        child: Text(
+          text,
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 // ignore: must_be_immutable
 class AppointmentsStep3FilledScreen extends StatefulWidget {
   ContactMethods contactMethod;
@@ -337,19 +389,19 @@ class _AppointmentsStep3FilledScreenState
                 ),
               ),
             ),
-            CustomButton(
-               isDark: isDark,
-              width: size.width,
-              text: "Записаться",
-              margin: getMargin(
-                left: 24,
-                top: 22,
-                right: 24,
-              ),
-               variant: ButtonVariant.FillBlueA400,
-              fontStyle: ButtonFontStyle.SourceSansProSemiBold18,
-              alignment: Alignment.center,
-              onTap: () async {
+            CustomButtonWidget(
+  isDark: isDark,
+  width: size.width,
+  text: "Записаться",
+  margin: getMargin(
+    left: 24,
+    top: 22,
+    right: 24,
+  ),
+   variant: ButtonVariant.FillBlueA400,
+  fontStyle: ButtonFontStyle.SourceSansProSemiBold18,
+  alignment: Alignment.center,
+  onPressed: () async {  
                 // UserStore storeUserStore = getIt.get<UserStore>();
                 Map<dynamic, dynamic> userData = context.userData;
                 Map<dynamic, dynamic> selectedDoctor = context.selectedDoctor;

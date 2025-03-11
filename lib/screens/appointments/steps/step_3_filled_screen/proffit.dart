@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:doctorq/extensions.dart';
 import 'package:doctorq/screens/appointments/steps/step_2_filled_screen/step_2_filled_screen.dart';
 import 'package:doctorq/screens/appointments/upcoming_appointments/UpcomingAppointments.dart';
@@ -10,6 +12,59 @@ import '../../../../widgets/spacing.dart';
 import 'package:doctorq/app_export.dart';
 import 'package:doctorq/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
+
+
+class CustomButton extends StatelessWidget {
+  final VoidCallback? onPressed;
+  final bool isDark; // Убрали required
+  final double width;
+  final String text;
+  final EdgeInsetsGeometry? margin;
+  final ButtonVariant variant;
+  final ButtonFontStyle fontStyle;
+  final Alignment alignment;
+
+  const CustomButton({
+    Key? key,
+    this.onPressed,
+    this.isDark = false, // Добавили дефолтное значение
+    required this.width,
+    required this.text,
+    this.margin,
+    required this.variant,
+    required this.fontStyle,
+    required this.alignment,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: width,
+      margin: margin ?? EdgeInsets.zero,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          alignment: alignment,
+          padding: EdgeInsets.symmetric(vertical: 16),
+          backgroundColor: isDark 
+            ? const Color.fromARGB(255, 125, 171, 223)
+            : const Color.fromARGB(255, 125, 171, 223),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+        ),
+        onPressed: onPressed,
+        child: Text(
+          text,
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+      ),
+    );
+  }
+}
 
 // ignore: must_be_immutable
 class ProffitScreen extends StatefulWidget {
@@ -373,10 +428,179 @@ class _AppointmentsStep3FilledScreenState extends State<ProffitScreen> {
               variant: ButtonVariant.FillBlueA400,
               fontStyle: ButtonFontStyle.SourceSansProSemiBold18,
               alignment: Alignment.center,
+              onPressed: () {
+                showCancelDialog(context);
+              },
             ),
           ],
         ),
       ),
     );
   }
+}
+
+void showCancelDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+        child: Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          backgroundColor: Colors.white,
+          elevation: 0,
+          child: Container(
+            padding: EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Вы точно хотите отменить запись?',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 24),
+                CustomButton(
+                  width: double.infinity,
+                  text: "Отменить запись",
+                  variant: ButtonVariant.FillBlueA400,
+                  fontStyle: ButtonFontStyle.SourceSansProSemiBold18,
+                  alignment: Alignment.center,
+                  onPressed: () async {
+                    Navigator.pop(context);
+                    await showLoadingDialog(context);
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    },
+  );
+}
+
+
+Future<void> showLoadingDialog(BuildContext context) async {
+  // Показать диалог загрузки
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+        child: Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          backgroundColor: Colors.white,
+          elevation: 0,
+          child: Container(
+            padding: EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  width: 60,
+                  height: 60,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 4,
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      const Color.fromARGB(255, 125, 171, 223),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 16),
+                Text(
+                  'Отмена записи...',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black87,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    },
+  );
+
+  // Задержка, чтобы показать индикатор загрузки
+  await Future.delayed(Duration(seconds: 2));
+
+  // Закрываем диалог загрузки
+  if (Navigator.canPop(context)) {
+    Navigator.pop(context);
+    // После закрытия диалога загрузки открываем следующее окно
+    showRescheduleDialog(context);
+  }
+}
+
+void showRescheduleDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+        child: Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          backgroundColor: Colors.white,
+          elevation: 0,
+          child: Container(
+            padding: EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Хотите перезаписаться к данному врачу?',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 24),
+                CustomButton(
+                  width: double.infinity,
+                  text: "Перезаписаться",
+                  variant: ButtonVariant.FillBlueA400,
+                  fontStyle: ButtonFontStyle.SourceSansProSemiBold18,
+                  alignment: Alignment.center,
+                  onPressed: () {
+                    Navigator.pop(context);
+                    // Здесь добавьте логику перезаписи
+                  },
+                ),
+                SizedBox(height: 12),
+                CustomButton(
+                  width: double.infinity,
+                  text: "Перейти на главную",
+                  variant: ButtonVariant.FillBlueA400,
+                  fontStyle: ButtonFontStyle.SourceSansProSemiBold18,
+                  alignment: Alignment.center,
+                  onPressed: () {
+                    Navigator.pop(context);
+                    // Здесь добавьте логику перехода на главную страницу
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    },
+  );
 }
