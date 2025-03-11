@@ -1,8 +1,11 @@
 import 'dart:ui';
 
 import 'package:doctorq/extensions.dart';
+import 'package:doctorq/screens/appointments/book_screen/book_screen.dart';
 import 'package:doctorq/screens/appointments/steps/step_2_filled_screen/step_2_filled_screen.dart';
 import 'package:doctorq/screens/appointments/upcoming_appointments/UpcomingAppointments.dart';
+import 'package:doctorq/screens/home/home_screen/home_screen.dart';
+import 'package:doctorq/screens/profile/doctors_info.dart';
 import 'package:doctorq/services/api_service.dart';
 import 'package:doctorq/stores/user_store.dart';
 import 'package:doctorq/utils/utility.dart';
@@ -12,7 +15,6 @@ import '../../../../widgets/spacing.dart';
 import 'package:doctorq/app_export.dart';
 import 'package:doctorq/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
-
 
 class CustomButton extends StatelessWidget {
   final VoidCallback? onPressed;
@@ -45,9 +47,9 @@ class CustomButton extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           alignment: alignment,
           padding: EdgeInsets.symmetric(vertical: 16),
-          backgroundColor: isDark 
-            ? const Color.fromARGB(255, 125, 171, 223)
-            : const Color.fromARGB(255, 125, 171, 223),
+          backgroundColor: isDark
+              ? const Color.fromARGB(255, 125, 171, 223)
+              : const Color.fromARGB(255, 125, 171, 223),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),
           ),
@@ -86,6 +88,7 @@ class ProffitScreen extends StatefulWidget {
 class _AppointmentsStep3FilledScreenState extends State<ProffitScreen> {
   @override
   Widget build(BuildContext context) {
+    print(context.selectedDoctor);
     bool isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       body: SafeArea(
@@ -475,7 +478,7 @@ void showCancelDialog(BuildContext context) {
                   alignment: Alignment.center,
                   onPressed: () async {
                     Navigator.pop(context);
-                   // await showLoadingDialog(context);
+                    await showLoadingDialog(context);
                   },
                 ),
               ],
@@ -486,7 +489,6 @@ void showCancelDialog(BuildContext context) {
     },
   );
 }
-
 
 Future<void> showLoadingDialog(BuildContext context) async {
   // Показать диалог загрузки
@@ -541,7 +543,7 @@ Future<void> showLoadingDialog(BuildContext context) async {
   if (Navigator.canPop(context)) {
     Navigator.pop(context);
     // После закрытия диалога загрузки открываем следующее окно
-    showRescheduleDialog(context);
+    //showRescheduleDialog(context);
   }
 }
 
@@ -580,7 +582,10 @@ void showRescheduleDialog(BuildContext context) {
                   fontStyle: ButtonFontStyle.SourceSansProSemiBold18,
                   alignment: Alignment.center,
                   onPressed: () {
-                    Navigator.pop(context);
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => AppointmentsBookScreen()));
                     // Здесь добавьте логику перезаписи
                   },
                 ),
@@ -592,7 +597,8 @@ void showRescheduleDialog(BuildContext context) {
                   fontStyle: ButtonFontStyle.SourceSansProSemiBold18,
                   alignment: Alignment.center,
                   onPressed: () {
-                    Navigator.pop(context);
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context) => HomeScreen()));
                     // Здесь добавьте логику перехода на главную страницу
                   },
                 ),
