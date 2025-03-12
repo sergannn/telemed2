@@ -54,6 +54,9 @@ class Main extends StatelessWidget {
             //inactiveColorPrimary: ColorConstant.blueA400,
           )),*/
       PersistentTabConfig(
+        onSelectedTabPressWhenNoScreensPushed: () {
+          print("hmmmm");
+        },
           screen: _buildScreens()[1],
           item: ItemConfig(
             icon: SvgPicture.string(

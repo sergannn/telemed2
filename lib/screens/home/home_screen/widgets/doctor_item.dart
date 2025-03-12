@@ -3,7 +3,6 @@ import 'package:doctorq/data_files/doctors_list.dart';
 import 'package:doctorq/extensions.dart';
 import 'package:doctorq/models/doctors_model.dart';
 import 'package:doctorq/screens/appointments/book_screen/book_screen.dart';
-import 'package:doctorq/screens/home/top_doctor_screen/top_doctor_screen_step_2.dart';
 import 'package:doctorq/theme/svg_constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -17,7 +16,7 @@ class DoctorItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isDark = Theme.of(context).brightness == Brightness.dark;
+
 
     return InkWell(
       onTap: () {
@@ -93,7 +92,12 @@ class DoctorItem extends StatelessWidget {
                           children: [
                             Text(item['username'],
                                 style: TextStyle(fontWeight: FontWeight.bold)),
-                            const Text('Акушер-гинеколог'),
+                            Text(
+                      item['specializations'].length == 0
+                          ? ''
+                          : item['specializations'][0][
+                              'name'], // добавлен SizedBox с отступом 16 пикселей
+                            )
                           ],
                         ),
                       ),

@@ -99,18 +99,24 @@ class _AppointmentsBookScreenState extends State<AppointmentsBookScreen> {
                       children: [
                         CircleAvatar(
                           radius: 20,
-                          backgroundImage: AssetImage(
-                              'assets/images/11.png'), // Используем AssetImage вместо Image.asset
+                          backgroundImage: //
+                          NetworkImage(
+                            context.selectedDoctor['photo']), // Используем AssetImage вместо Image.asset
                         ),
                         const SizedBox(width: 16),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text('Парфенов К.С.',
+                               Text(  context.selectedDoctor['username'],
                                   style:
                                       TextStyle(fontWeight: FontWeight.bold)),
-                              const Text('Акушер-гинеколог'),
+                              Text(
+                                      context.selectedDoctor['specializations'].length == 0
+                          ? ''
+                          :    context.selectedDoctor['specializations'][0][
+                              'name'])
+                         
                             ],
                           ),
                         ),

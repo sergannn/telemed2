@@ -121,6 +121,7 @@ class PopularDoctorsScreen extends StatelessWidget {
                           ),
                         ),
                         DoctorsSilder20(),
+                      /*
                         Container(
                           margin: const EdgeInsets.only(bottom: 8),
                           padding: const EdgeInsets.symmetric(
@@ -523,7 +524,7 @@ class PopularDoctorsScreen extends StatelessWidget {
                             ],
                           ),
                         ),
-                      ],
+                    */  ],
                     ),
                   ),
                 ],

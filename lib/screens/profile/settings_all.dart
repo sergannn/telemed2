@@ -1,4 +1,5 @@
 import 'package:doctorq/screens/profile/akk_information.dart';
+import 'package:doctorq/screens/profile/data_usage.dart';
 import 'package:doctorq/widgets/top_back.dart';
 import 'package:flutter/material.dart';
 
@@ -144,7 +145,19 @@ class _SettingsAllScreenState extends State<SettingsAllScreen> {
                       color: const Color.fromARGB(255, 255, 255, 255)
                           .withOpacity(0.95),
                     ),
-                    child: Container(
+                    child: 
+                                              //child: FittedBox(
+GestureDetector(onTap:() {
+
+  Navigator.push(context, MaterialPageRoute(builder: (context) =>
+
+  DataUsageScreen()
+
+));
+
+}, child:
+                    
+                    Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 2),
                       decoration: BoxDecoration(
@@ -179,7 +192,7 @@ class _SettingsAllScreenState extends State<SettingsAllScreen> {
                           ),
                         ],
                       ),
-                    ),
+                    )),
                   ),
                   Container(
                     width: double.infinity,

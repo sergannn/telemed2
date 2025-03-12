@@ -1,15 +1,18 @@
+import 'package:doctorq/extensions.dart';
+import 'package:doctorq/screens/profile/main_profile.dart';
 import 'package:doctorq/utils/size_utils.dart';
+import 'package:doctorq/widgets/spacing.dart';
 import 'package:doctorq/widgets/top_back.dart';
 import 'package:flutter/material.dart';
 
-class AkkInfoScreen extends StatefulWidget {
-  const AkkInfoScreen({Key? key}) : super(key: key);
+class AkkEditScreen extends StatefulWidget {
+  const AkkEditScreen({Key? key}) : super(key: key);
 
   @override
-  State<AkkInfoScreen> createState() => _AkkInfoScreenState();
+  State<AkkEditScreen> createState() => _AkkInfoScreenState();
 }
 
-class _AkkInfoScreenState extends State<AkkInfoScreen> {
+class _AkkInfoScreenState extends State<AkkEditScreen> {
   bool isChecked = false;
 
   @override
@@ -17,7 +20,7 @@ class _AkkInfoScreenState extends State<AkkInfoScreen> {
     return Scaffold(
       body: Column(
         children: [
-          ...topBack(text: "Информация об аккаунте", context: context),
+          ...topBack(text: "Редактирование профиля", context: context, icon: Icon(Icons.edit)),
           Expanded(
             child: Container(
               margin: const EdgeInsets.only(bottom: 4),
@@ -43,6 +46,59 @@ class _AkkInfoScreenState extends State<AkkInfoScreen> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+
+Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          CircleAvatar(
+                            radius: getVerticalSize(25),
+                            backgroundImage:
+                                NetworkImage(context.userData['photo']),
+                          ),
+
+                          HorizontalSpace(width: 20),
+
+                          //child: FittedBox(
+                          GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          MainProfileScreen()),
+                                );
+                              },
+                              child: RichText(
+                                text: TextSpan(
+                                  text: context.userData['first_name'] +
+                                      ' ' +
+                                      context.userData['last_name'] +
+                                      '\n',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.black,
+                                    fontFamily: 'Source Sans Pro',
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                      text: '3 близких' +
+                                          // context.userData['patient_id'] +
+                                          "",
+                                      style: TextStyle(
+                                        color: Colors.grey,
+                                        fontFamily: 'Source Sans Pro',
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ))
+                        ],
+                      ),
+                      SizedBox(height: 40),
                         Container(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 8,
@@ -55,7 +111,7 @@ class _AkkInfoScreenState extends State<AkkInfoScreen> {
                           child: Row(
                             children: [
                               const Text(
-                                'Имя пользователя',
+                                'ФИО',
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: Color.fromARGB(255, 70, 70, 70),
@@ -86,21 +142,7 @@ class _AkkInfoScreenState extends State<AkkInfoScreen> {
                               const Spacer(),
                               Stack(
                                 alignment: Alignment.center,
-                                children: [
-                                  Container(
-                                    width: 24,
-                                    height: 24,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      shape: BoxShape.circle,
-                                    ),
-                                  ),
-                                  Icon(
-                                    Icons.create,
-                                    color: Colors.black,
-                                    size: 16,
-                                  ),
-                                ],
+                                
                               ),
                             ],
                           ),
@@ -163,21 +205,7 @@ class _AkkInfoScreenState extends State<AkkInfoScreen> {
                               const Spacer(),
                               Stack(
                                 alignment: Alignment.center,
-                                children: [
-                                  Container(
-                                    width: 24,
-                                    height: 24,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      shape: BoxShape.circle,
-                                    ),
-                                  ),
-                                  Icon(
-                                    Icons.create,
-                                    color: Colors.black,
-                                    size: 16,
-                                  ),
-                                ],
+                                
                               ),
                             ],
                           ),
@@ -209,7 +237,7 @@ class _AkkInfoScreenState extends State<AkkInfoScreen> {
                           child: Row(
                             children: [
                               const Text(
-                                'Город',
+                                'Дата рождения',
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: Color.fromARGB(255, 70, 70, 70),
@@ -231,7 +259,7 @@ class _AkkInfoScreenState extends State<AkkInfoScreen> {
                           child: Row(
                             children: [
                               const Text(
-                                'Санкт-Петербург',
+                                '03.10.1994',
                                 style: TextStyle(
                                   fontSize: 14,
                                   color: Colors.black,
@@ -240,21 +268,7 @@ class _AkkInfoScreenState extends State<AkkInfoScreen> {
                               const Spacer(),
                               Stack(
                                 alignment: Alignment.center,
-                                children: [
-                                  Container(
-                                    width: 24,
-                                    height: 24,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      shape: BoxShape.circle,
-                                    ),
-                                  ),
-                                  Icon(
-                                    Icons.create,
-                                    color: Colors.black,
-                                    size: 16,
-                                  ),
-                                ],
+                                
                               ),
                             ],
                           ),
@@ -317,21 +331,7 @@ class _AkkInfoScreenState extends State<AkkInfoScreen> {
                               const Spacer(),
                               Stack(
                                 alignment: Alignment.center,
-                                children: [
-                                  Container(
-                                    width: 24,
-                                    height: 24,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      shape: BoxShape.circle,
-                                    ),
-                                  ),
-                                  Icon(
-                                    Icons.create,
-                                    color: Colors.black,
-                                    size: 16,
-                                  ),
-                                ],
+                               
                               ),
                             ],
                           ),
@@ -394,21 +394,7 @@ class _AkkInfoScreenState extends State<AkkInfoScreen> {
                               const Spacer(),
                               Stack(
                                 alignment: Alignment.center,
-                                children: [
-                                  Container(
-                                    width: 24,
-                                    height: 24,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      shape: BoxShape.circle,
-                                    ),
-                                  ),
-                                  Icon(
-                                    Icons.create,
-                                    color: Colors.black,
-                                    size: 16,
-                                  ),
-                                ],
+                               
                               ),
                             ],
                           ),
@@ -416,94 +402,7 @@ class _AkkInfoScreenState extends State<AkkInfoScreen> {
                       ],
                     ),
                   ),
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.only(bottom: 12),
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 255, 255, 255)
-                          .withOpacity(0.95),
-                    ),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 2),
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 255, 255, 255),
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                      child: Row(
-                        children: [
-                          IconButton(
-                            icon: const Icon(
-                              Icons.password_sharp,
-                              color: Colors.black,
-                              size: 20,
-                            ),
-                            onPressed: () => Navigator.pop(context),
-                          ),
-                          const Text(
-                            'Изменить пароль для входа',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.black,
-                            ),
-                          ),
-                          const Spacer(),
-                          IconButton(
-                            icon: const Icon(
-                              Icons.arrow_forward_ios,
-                              color: Colors.grey,
-                              size: 22,
-                            ),
-                            onPressed: () {},
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.only(bottom: 12),
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 255, 255, 255)
-                          .withOpacity(0.95),
-                    ),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 2),
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 255, 255, 255),
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                      child: Row(
-                        children: [
-                          IconButton(
-                            icon: const Icon(
-                              Icons.delete_forever_sharp,
-                              color: Colors.black,
-                              size: 20,
-                            ),
-                            onPressed: () => Navigator.pop(context),
-                          ),
-                          const Text(
-                            'Удалить аккаунт',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.black,
-                            ),
-                          ),
-                          const Spacer(),
-                          IconButton(
-                            icon: const Icon(
-                              Icons.arrow_forward_ios,
-                              color: Colors.grey,
-                              size: 22,
-                            ),
-                            onPressed: () {},
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                  
                   Container(
                     padding:
                         const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -571,7 +470,7 @@ class _AkkInfoScreenState extends State<AkkInfoScreen> {
                                 color: const Color.fromARGB(255, 96, 159, 222)),
                           ),
                           child: Text(
-                            'Отмена',
+                            'Отменить',
                             style: TextStyle(
                               color: Colors.black,
                               fontSize:
@@ -597,7 +496,7 @@ class _AkkInfoScreenState extends State<AkkInfoScreen> {
                             ),
                           ),
                           child: Text(
-                            'Выйти',
+                            'Сохранить',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize:
