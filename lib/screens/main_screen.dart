@@ -1,5 +1,6 @@
 import 'package:doctorq/app_export.dart';
 import 'package:doctorq/chat/chat_screen.dart';
+import 'package:doctorq/persistent_bottom_nav_bar_v2-5.3.1/lib/persistent_bottom_nav_bar_v2.dart';
 import 'package:doctorq/screens/history/history_screen.dart';
 import 'package:doctorq/screens/appointments/AppointmentsScreen.dart';
 import 'package:doctorq/screens/home/home_screen/home_screen.dart';
@@ -14,7 +15,7 @@ import 'package:doctorq/theme/svg_constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 //import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
-import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
+//import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 import 'package:doctorq/chat/main.dart';
 
 // ignore: must_be_immutable
@@ -35,28 +36,10 @@ class Main extends StatelessWidget {
 //  List<PersistentBottomNavBarItem> _navBarsItems() {
   List<PersistentTabConfig> _dNavBarsItems() {
     return [
-      /*PersistentTabConfig(
-          screen: _buildScreens()[0],
-          item: ItemConfig(
-            icon: Image.asset(
-              ImageConstant.home,
-              width: getHorizontalSize(30),
-              height: getVerticalSize(30),
-            ),
-            inactiveIcon: Image.asset(
-              ImageConstant.inActiveHome,
-              width: getHorizontalSize(30),
-              height: getVerticalSize(30),
-            ),
-            title: ("Домой"),
-            activeColorSecondary: ColorConstant.blueA400,
-            //activeColorPrimary: ColorConstant.blueA400.withOpacity(0.1),
-            //inactiveColorPrimary: ColorConstant.blueA400,
-          )),*/
       PersistentTabConfig(
-        onSelectedTabPressWhenNoScreensPushed: () {
-          print("hmmmm");
-        },
+          onSelectedTabPressWhenNoScreensPushed: () {
+            print("hmmmm");
+          },
           screen: _buildScreens()[1],
           item: ItemConfig(
             icon: SvgPicture.string(
@@ -265,6 +248,7 @@ class Main extends StatelessWidget {
     bool isDark = Theme.of(context).brightness == Brightness.dark;
     var tabs =
         userData['patient_id'] != null ? _pNavBarsItems() : _dNavBarsItems();
+// Добавьте этот метод
 
     return PersistentTabView(
       //context,
@@ -272,6 +256,7 @@ class Main extends StatelessWidget {
       //screens: _buildScreens(),
       tabs: tabs,
       navBarBuilder: (navBarConfig) => CustomBottomNavBar(
+        controller: _controller,
         navBarConfig: navBarConfig,
       ),
 
@@ -311,6 +296,7 @@ class Main extends StatelessWidget {
 class CustomBottomNavBar extends StatelessWidget {
   CustomBottomNavBar({
     required this.navBarConfig,
+    required this.controller,
     this.navBarDecoration = const NavBarDecoration(),
     super.key,
   }) : assert(
@@ -319,6 +305,8 @@ class CustomBottomNavBar extends StatelessWidget {
         );
 
   final NavBarConfig navBarConfig;
+  final PersistentTabController controller;
+
   final NavBarDecoration navBarDecoration;
 
   Widget _buildItem(ItemConfig item, bool isSelected) => Column(
@@ -376,6 +364,7 @@ class CustomBottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final midIndex = (navBarConfig.items.length / 2).floor();
+
     return DecoratedNavBar(
       decoration: navBarDecoration,
       filter: navBarConfig.selectedItem.filter,
