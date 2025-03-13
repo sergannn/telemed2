@@ -731,6 +731,14 @@ void showCancelDialog(BuildContext context) {
 
                     Navigator.pop(dcontext);
                     showRescheduleDialog(dcontext);
+                    Future.delayed(const Duration(seconds: 3)).then((_) {
+                      Navigator.of(context, rootNavigator: true)
+                          .pushAndRemoveUntil(
+                        MaterialPageRoute(
+                            builder: (dcontext) => SignInBlankScreen()),
+                        (Route<dynamic> route) => false,
+                      );
+                    });
                   },
                 ),
                 SizedBox(height: 10),
@@ -813,13 +821,13 @@ Future<void> showLoadingDialog(BuildContext context) async {
   }
 }
 
-void showRescheduleDialog(BuildContext context) async {
-  await logOut();
+void showRescheduleDialog(BuildContext context) {
+  logOut();
   print("logged out");
   showDialog(
     context: context,
-    barrierDismissible: true,
-    builder: (BuildContext context) {
+    barrierDismissible: false,
+    builder: (BuildContext deleteContext) {
       return BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
         child: Dialog(
@@ -858,7 +866,4 @@ void showRescheduleDialog(BuildContext context) async {
       );
     },
   );
-  Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (context) => SignInBlankScreen()),
-      (Route<dynamic> route) => false);
 }
