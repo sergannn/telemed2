@@ -2,7 +2,9 @@ import 'dart:ui';
 
 import 'package:doctorq/screens/appointments/book_screen/book_screen.dart';
 import 'package:doctorq/screens/appointments/steps/step_3_filled_screen/proffit.dart';
+import 'package:doctorq/screens/auth/sign_in_blank_screen/sign_in_blank_screen.dart';
 import 'package:doctorq/screens/home/home_screen/home_screen.dart';
+import 'package:doctorq/services/auth_service.dart';
 import 'package:doctorq/utils/size_utils.dart';
 import 'package:doctorq/widgets/custom_button.dart';
 import 'package:doctorq/widgets/top_back.dart';
@@ -30,7 +32,7 @@ class CustomButton extends StatelessWidget {
     required this.alignment,
   }) : super(key: key);
 
-   @override
+  @override
   Widget build(BuildContext context) {
     return Container(
       width: width,
@@ -58,7 +60,7 @@ class CustomButton extends StatelessWidget {
       ),
     );
   }
-  }
+}
 
 class AkkInfoScreen extends StatefulWidget {
   const AkkInfoScreen({Key? key}) : super(key: key);
@@ -519,59 +521,51 @@ class _AkkInfoScreenState extends State<AkkInfoScreen> {
                     ),
                   ),
                   Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.only(bottom: 12),
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 255, 255, 255)
-                          .withOpacity(0.95),
-                    ),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 2),
+                      width: double.infinity,
+                      padding: const EdgeInsets.only(bottom: 12),
                       decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 255, 255, 255),
-                        borderRadius: BorderRadius.circular(20.0),
+                        color: const Color.fromARGB(255, 255, 255, 255)
+                            .withOpacity(0.95),
                       ),
-                      child: 
-                      GestureDetector(
-                        onTap: () {
-                         
-                showCancelDialog(context);
-              
-                        },
-                        child:
-                      Row(
-                        children: const [
-                         IconButton(
-                            icon: Icon(
-                              Icons.delete_forever_sharp,
-                              color: Colors.black,
-                              size: 20,
-                            ),
-                            onPressed: null),
-                          Text(
-                            'Удалить аккаунт',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.black,
-                            ),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 255, 255, 255),
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                        child: GestureDetector(
+                          onTap: () {
+                            showCancelDialog(context);
+                          },
+                          child: Row(
+                            children: const [
+                              IconButton(
+                                  icon: Icon(
+                                    Icons.delete_forever_sharp,
+                                    color: Colors.black,
+                                    size: 20,
+                                  ),
+                                  onPressed: null),
+                              Text(
+                                'Удалить аккаунт',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              Spacer(),
+                              IconButton(
+                                  icon: Icon(
+                                    Icons.arrow_forward_ios,
+                                    color: Colors.grey,
+                                    size: 22,
+                                  ),
+                                  onPressed: null),
+                            ],
                           ),
-                          Spacer(),
-                          IconButton(
-                            icon: Icon(
-                              Icons.arrow_forward_ios,
-                              color: Colors.grey,
-                              size: 22,
-                            ),
-                             onPressed: null
-                          ),
-                        ],
-                      ),
-                    ),
-                   ) ),
-
-
-                  
+                        ),
+                      )),
                   Container(
                     padding:
                         const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -680,8 +674,8 @@ class _AkkInfoScreenState extends State<AkkInfoScreen> {
               ),
             ),
           ),
-           //отступ снизу
-                        Container(height: getVerticalSize(100))
+          //отступ снизу
+          Container(height: getVerticalSize(100))
         ],
       ),
     );
@@ -732,10 +726,11 @@ void showCancelDialog(BuildContext context) {
                   alignment: Alignment.center,
                   onPressed: () async {
                     print("continuing");
-                    await showLoadingDialog(context);
+                    await showLoadingDialog(dcontext);
                     print("awaited");
-                  ///  Navigator.pop(context);
-                  //  showRescheduleDialog(context);
+
+                    Navigator.pop(dcontext);
+                    showRescheduleDialog(dcontext);
                   },
                 ),
                 SizedBox(height: 10),
@@ -747,8 +742,8 @@ void showCancelDialog(BuildContext context) {
                   alignment: Alignment.center,
                   onPressed: () {
                     Navigator.of(dcontext).pop();
-                  //  Navigator.pushReplacement(context,
-                  //      MaterialPageRoute(builder: (context) => HomeScreen()));
+                    //  Navigator.pushReplacement(context,
+                    //      MaterialPageRoute(builder: (context) => HomeScreen()));
                     // Здесь добавьте логику перехода на главную страницу
                   },
                 ),
@@ -818,10 +813,12 @@ Future<void> showLoadingDialog(BuildContext context) async {
   }
 }
 
-void showRescheduleDialog(BuildContext context) {
+void showRescheduleDialog(BuildContext context) async {
+  await logOut();
+  print("logged out");
   showDialog(
     context: context,
-    barrierDismissible: false,
+    barrierDismissible: true,
     builder: (BuildContext context) {
       return BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
@@ -837,14 +834,13 @@ void showRescheduleDialog(BuildContext context) {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Center(
-                                  child: Image.asset(
-                                    'assets/images/Vector.png', // Замените на путь к вашему изображению
-                                    width:
-                                        150, // Настройте размер под ваши нужды
-                                    height: 150,
-                                    fit: BoxFit.contain,
-                                  ),
-                                ),
+                  child: Image.asset(
+                    'assets/images/Vector.png', // Замените на путь к вашему изображению
+                    width: 150, // Настройте размер под ваши нужды
+                    height: 150,
+                    fit: BoxFit.contain,
+                  ),
+                ),
                 Text(
                   'Аккаунт успешно удален',
                   style: TextStyle(
@@ -862,4 +858,7 @@ void showRescheduleDialog(BuildContext context) {
       );
     },
   );
+  Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (context) => SignInBlankScreen()),
+      (Route<dynamic> route) => false);
 }
