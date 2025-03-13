@@ -1,5 +1,7 @@
+import 'package:doctorq/screens/profile/about_app.dart';
 import 'package:doctorq/screens/profile/akk_information.dart';
 import 'package:doctorq/screens/profile/data_usage.dart';
+import 'package:doctorq/screens/profile/legal_information.dart';
 import 'package:doctorq/widgets/top_back.dart';
 import 'package:flutter/material.dart';
 
@@ -194,6 +196,16 @@ GestureDetector(onTap:() {
                       ),
                     )),
                   ),
+
+          GestureDetector(onTap:() {
+
+  Navigator.push(context, MaterialPageRoute(builder: (context) =>
+
+  LegalInformationScreen()
+
+));
+
+}, child:        
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.only(bottom: 12),
@@ -237,7 +249,17 @@ GestureDetector(onTap:() {
                         ],
                       ),
                     ),
-                  ),
+                  )),
+
+                  GestureDetector(onTap:() {
+
+  Navigator.push(context, MaterialPageRoute(builder: (context) =>
+
+  AboutAppScreen()
+
+));
+
+}, child:   
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.only(bottom: 12),
@@ -281,7 +303,7 @@ GestureDetector(onTap:() {
                         ],
                       ),
                     ),
-                  ),
+                  )),
                   Container(
                       width: double.infinity,
                       padding: const EdgeInsets.only(bottom: 12),

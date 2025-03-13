@@ -333,7 +333,7 @@ class _PersistentTabViewState extends State<PersistentTabView> {
               _controller.jumpToTab(index);
               print(index);
               print("hello from persistent");
-              if (index == 4) {
+              if (index == 4 || index==2) {
                 print("its 4");
                 popAllScreens();
               }

@@ -1,8 +1,8 @@
 import 'package:doctorq/widgets/top_back.dart';
 import 'package:flutter/material.dart';
 
-class SearchDoctorScreen extends StatelessWidget {
-  const SearchDoctorScreen({Key? key}) : super(key: key);
+class AboutAppScreen extends StatelessWidget {
+  const AboutAppScreen({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
