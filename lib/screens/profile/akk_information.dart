@@ -1,6 +1,64 @@
+import 'dart:ui';
+
+import 'package:doctorq/screens/appointments/book_screen/book_screen.dart';
+import 'package:doctorq/screens/appointments/steps/step_3_filled_screen/proffit.dart';
+import 'package:doctorq/screens/home/home_screen/home_screen.dart';
 import 'package:doctorq/utils/size_utils.dart';
+import 'package:doctorq/widgets/custom_button.dart';
 import 'package:doctorq/widgets/top_back.dart';
 import 'package:flutter/material.dart';
+
+class CustomButton extends StatelessWidget {
+  final VoidCallback? onPressed;
+  final bool isDark; // Убрали required
+  final double width;
+  final String text;
+  final EdgeInsetsGeometry? margin;
+  final ButtonVariant variant;
+  final ButtonFontStyle fontStyle;
+  final Alignment alignment;
+
+  const CustomButton({
+    Key? key,
+    this.onPressed,
+    this.isDark = false, // Добавили дефолтное значение
+    required this.width,
+    required this.text,
+    this.margin,
+    required this.variant,
+    required this.fontStyle,
+    required this.alignment,
+  }) : super(key: key);
+
+   @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: width,
+      margin: margin ?? EdgeInsets.zero,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          alignment: alignment,
+          padding: EdgeInsets.symmetric(vertical: 16),
+          backgroundColor: isDark
+              ? const Color.fromARGB(255, 125, 171, 223)
+              : const Color.fromARGB(255, 125, 171, 223),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+        ),
+        onPressed: onPressed,
+        child: Text(
+          text,
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+      ),
+    );
+  }
+  }
 
 class AkkInfoScreen extends StatefulWidget {
   const AkkInfoScreen({Key? key}) : super(key: key);
@@ -474,36 +532,46 @@ class _AkkInfoScreenState extends State<AkkInfoScreen> {
                         color: const Color.fromARGB(255, 255, 255, 255),
                         borderRadius: BorderRadius.circular(20.0),
                       ),
-                      child: Row(
-                        children: [
-                          IconButton(
-                            icon: const Icon(
+                      child: 
+                      GestureDetector(
+                        onTap: () {
+                         
+                showCancelDialog(context);
+              
+                        },
+                        child:
+                      Row(
+                        children: const [
+                         IconButton(
+                            icon: Icon(
                               Icons.delete_forever_sharp,
                               color: Colors.black,
                               size: 20,
                             ),
-                            onPressed: () => Navigator.pop(context),
-                          ),
-                          const Text(
+                            onPressed: null),
+                          Text(
                             'Удалить аккаунт',
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.black,
                             ),
                           ),
-                          const Spacer(),
+                          Spacer(),
                           IconButton(
-                            icon: const Icon(
+                            icon: Icon(
                               Icons.arrow_forward_ios,
                               color: Colors.grey,
                               size: 22,
                             ),
-                            onPressed: () {},
+                             onPressed: null
                           ),
                         ],
                       ),
                     ),
-                  ),
+                   ) ),
+
+
+                  
                   Container(
                     padding:
                         const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -618,4 +686,180 @@ class _AkkInfoScreenState extends State<AkkInfoScreen> {
       ),
     );
   }
+}
+
+void showCancelDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    barrierDismissible: true,
+    builder: (BuildContext dcontext) {
+      return BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+        child: Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          backgroundColor: Colors.white,
+          elevation: 0,
+          child: Container(
+            padding: EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Вы точно хотите удалить аккаунт?',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                Text(
+                  'Это займет до 30 дней. Вместе с профилем мы удалим личные данные, медкарту, архив записей, избранное.',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.black87,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 24),
+                CustomButton(
+                  width: double.infinity,
+                  text: "Продолжить",
+                  variant: ButtonVariant.FillBlueA400,
+                  fontStyle: ButtonFontStyle.SourceSansProSemiBold18,
+                  alignment: Alignment.center,
+                  onPressed: () async {
+                    print("continuing");
+                    await showLoadingDialog(context);
+                    print("awaited");
+                  ///  Navigator.pop(context);
+                  //  showRescheduleDialog(context);
+                  },
+                ),
+                SizedBox(height: 10),
+                CustomButton(
+                  width: double.infinity,
+                  text: "Отменить",
+                  variant: ButtonVariant.FillBlueA400,
+                  fontStyle: ButtonFontStyle.SourceSansProSemiBold18,
+                  alignment: Alignment.center,
+                  onPressed: () {
+                    Navigator.of(dcontext).pop();
+                  //  Navigator.pushReplacement(context,
+                  //      MaterialPageRoute(builder: (context) => HomeScreen()));
+                    // Здесь добавьте логику перехода на главную страницу
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    },
+  );
+}
+
+Future<void> showLoadingDialog(BuildContext context) async {
+  // Показать диалог загрузки
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+        child: Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          backgroundColor: Colors.white,
+          elevation: 0,
+          child: Container(
+            padding: EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: const [
+                SizedBox(
+                  width: 60,
+                  height: 60,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 4,
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      Color.fromARGB(255, 125, 171, 223),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 16),
+                Text(
+                  'Удаление..',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black87,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    },
+  );
+
+  // Задержка, чтобы показать индикатор загрузки
+  await Future.delayed(Duration(seconds: 2));
+
+  // Закрываем диалог загрузки
+  if (Navigator.canPop(context)) {
+    Navigator.pop(context);
+    // После закрытия диалога загрузки открываем следующее окно
+    //showRescheduleDialog(context);
+  }
+}
+
+void showRescheduleDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+        child: Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          backgroundColor: Colors.white,
+          elevation: 0,
+          child: Container(
+            padding: EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Center(
+                                  child: Image.asset(
+                                    'assets/images/Vector.png', // Замените на путь к вашему изображению
+                                    width:
+                                        150, // Настройте размер под ваши нужды
+                                    height: 150,
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                Text(
+                  'Аккаунт успешно удален',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 24),
+              ],
+            ),
+          ),
+        ),
+      );
+    },
+  );
 }
