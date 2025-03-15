@@ -1,14 +1,10 @@
-import 'dart:math';
-import 'dart:typed_data';
-
-import 'package:doctorq/extensions.dart';
-import 'package:doctorq/screens/home/home_screen/widgets/autolayouthor1_item_widget.dart';
+import 'package:doctorq/screens/medcard/profile_survey.dart';
 
 import 'package:doctorq/widgets/spacing.dart';
 import 'package:doctorq/widgets/top_back.dart';
 import 'package:doctorq/app_export.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:table_calendar/table_calendar.dart';
 
 class MedCardScreen extends StatefulWidget {
   const MedCardScreen({Key? key}) : super(key: key);
@@ -25,8 +21,7 @@ class _MedCardScreenState extends State<MedCardScreen>
     // TODO: implement initState
     super.initState();
     // getSpecs();
-    tabController =
-        TabController(length: context.specsData.length, vsync: this);
+    tabController = TabController(length: 3, vsync: this);
   }
 
   @override
@@ -38,14 +33,6 @@ class _MedCardScreenState extends State<MedCardScreen>
 
   @override
   Widget build(BuildContext context) {
-    print(context.doctorsData[0]);
-    print("its the first doctor");
-    print("of ");
-    print(context.doctorsData.length);
-    print(context.doctorsData);
-    print("and the specs:");
-    print(context.specsData.length);
-
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -53,7 +40,11 @@ class _MedCardScreenState extends State<MedCardScreen>
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            ...topBack(text: "Медкарта", context: context, back: false,icon: Icon(Icons.favorite)),
+            ...topBack(
+                text: "Медкарта",
+                context: context,
+                back: false,
+                icon: Icon(Icons.favorite)),
 
             //Text(context.specsData.length.toString()),
             //DatePicker(height: 100, DateTime.now()),
@@ -63,8 +54,7 @@ class _MedCardScreenState extends State<MedCardScreen>
                     EdgeInsets.symmetric(horizontal: 16), // Adds side margins
                 child: SpecsTabBar(
                     ['Документы', 'Анкета', 'Дневник'], tabController)),
-            CatDoctorsList(context.specsData, tabController,
-                MediaQuery.of(context).size.height),
+            MedCardList(tabController, MediaQuery.of(context).size.height),
             VerticalSpace(height: 24),
           ],
         ),
@@ -72,118 +62,30 @@ class _MedCardScreenState extends State<MedCardScreen>
     );
   }
 
-  Widget CatDoctorsList(doctorData, tabController, height) {
+  Widget MedCardList(tabController, height) {
+    print(tabController.length);
+    print("it was length");
     return SizedBox(
       height: height,
       child: TabBarView(
         controller: tabController,
         children: [
-          ...doctorData.map((spec) => GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 16,
-                  crossAxisSpacing: 16,
-                  childAspectRatio: 1,
-                ),
-                padding: EdgeInsets.all(16),
-                itemCount: doctorData.length,
-                itemBuilder: (context, index) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
-                          blurRadius: 8,
-                          offset: Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: FutureBuilder<Uint8List>(
-                            future: http.get(
-                              Uri.parse(
-                                  'https://api.api-ninjas.com/v1/randomimage?category=nature'),
-                              headers: {
-                                'X-Api-Key':
-                                    'asYXsFiF+s0CXdGmy2oSg==mDD7MRrJJuANFnMx'
-                              },
-                            ).then((response) {
-                              if (response.statusCode == 200) {
-                                return response.bodyBytes;
-                              } else {
-                                throw Exception('Failed to load image');
-                              }
-                            }).catchError((error) {
-                              print('Error loading image: $error');
-                              return null;
-                            }),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                try {
-                                  return Image.memory(
-                                    snapshot.data!,
-                                    width: double.infinity,
-                                    height: 150,
-                                    fit: BoxFit.cover,
-                                    cacheWidth: 150, // Оптимизация памяти
-                                    cacheHeight: 150, // Оптимизация памяти
-                                  );
-                                } catch (e) {
-                                  print('Error decoding image: $e');
-                                  return Container(
-                                    width: double.infinity,
-                                    height: 150,
-                                    color: Colors.grey[200],
-                                    child: Center(
-                                      child: Icon(Icons.error,
-                                          color: Colors.grey[600]),
-                                    ),
-                                  );
-                                }
-                              } else if (snapshot.hasError) {
-                                return Container(
-                                  width: double.infinity,
-                                  height: 150,
-                                  color: Colors.grey[200],
-                                  child: Center(
-                                    child: Icon(Icons.error,
-                                        color: Colors.grey[600]),
-                                  ),
-                                );
-                              }
-                              return Container(
-                                width: double.infinity,
-                                height: 150,
-                                color: Colors.grey[200],
-                                child: Center(
-                                  child: CircularProgressIndicator(),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                        SizedBox(height: 8),
-                        Text(
-                          'Документ ${index + 1}',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: getFontSize(14),
-                            fontWeight: FontWeight.w500,
-                            fontFamily: 'Source Sans Pro',
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              )),
+          // Первая вкладка - сетка документов
+          Text("a"),
+          // Вторая вкладка - анкета
+          SurveyScreen(),
+
+          // Третья вкладка - дневник
+          TableCalendar(
+            locale: 'ru_RU',
+            focusedDay: DateTime.now(),
+            firstDay: DateTime.utc(2010, 10, 16),
+            lastDay: DateTime.utc(2030, 3, 14),
+          ),
+          /*   ShowCalendarToolWidget(
+            action: '',
+            dateStr: '',
+          )*/
         ],
       ),
     );
@@ -199,6 +101,21 @@ class _MedCardScreenState extends State<MedCardScreen>
           color: ColorConstant.fromHex("E4F0FF"),
         ),
         child: TabBar(
+          onTap: (int index) {
+            // Navigate to a new screen when a tab is tapped
+            if (index == 10) {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const SurveyScreen())).then((_) {
+                // Return to the previous tab after navigation
+                if (mounted) {
+                  tabController.animateTo(0);
+                }
+              });
+              ;
+            }
+          },
           //dividerHeight: 10,
           controller: tabController,
           tabs: [

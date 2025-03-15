@@ -138,13 +138,12 @@ class _SignInBlankScreenState extends State<SignInBlankScreen> {
 
   @override
   Widget build(BuildContext context) {
+    inspectTheme(context);
     bool isDark = Theme.of(context).brightness == Brightness.dark;
-    bool isRtl = context.locale == Constants.arLocal;
-    //inspectTheme(context);
 
     return Scaffold(
         resizeToAvoidBottomInset: true,
-        //backgroundColor: Colors.red,
+        backgroundColor: Colors.white,
         // floatingActionButton:
         //   FloatingActionButton(onPressed: null, child: Text("a")),
         body: SafeArea(

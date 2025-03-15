@@ -12,20 +12,17 @@ import 'package:doctorq/screens/profile/main_notification.dart';
 import 'package:doctorq/screens/profile/questions_screen.dart';
 import 'package:doctorq/screens/profile/settings/appearance_screen/appearance_screen.dart';
 import 'package:doctorq/screens/profile/settings/logout_modal_bottomsheet/logout_modal_bottomsheet.dart';
-import 'package:doctorq/screens/profile/settings_all.dart';
-import 'package:doctorq/screens/profile/settings_screen.dart';
+import 'package:doctorq/screens/profile/settings/settings_all.dart';
+import 'package:doctorq/screens/profile/settings/settings_screen.dart';
 import 'package:doctorq/screens/profile/widgets/autolayouthor_item_widget_profile_tasks.dart';
 import 'package:doctorq/screens/stories/story_scren.dart';
 import 'package:doctorq/services/auth_service.dart';
 import "package:story_view/story_view.dart";
 import 'package:animate_do/animate_do.dart';
 import 'package:doctorq/extensions.dart';
-import 'package:doctorq/screens/home/favorite_doctor_screen/favorite_doctor_screen.dart';
-import 'package:doctorq/screens/home/notification_screen/notification_screen.dart';
-import 'package:doctorq/screens/home/search_doctor_screen/search_doctor_screen.dart';
+
 import 'package:doctorq/screens/home/specialist_doctor_screen/specialist_doctor_screen.dart';
 import 'package:doctorq/screens/home/top_doctor_screen/choose_specs_screen_step_1.dart';
-import 'package:doctorq/services/api_service.dart';
 import 'package:doctorq/utils/utility.dart';
 import 'package:doctorq/widgets/spacing.dart';
 //import 'widgets/autolayouthor1_item_widget.dart';
@@ -34,12 +31,7 @@ import 'package:doctorq/app_export.dart';
 import 'package:doctorq/widgets/custom_search_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 
-import 'package:doctorq/data_files/specialist_list.dart';
-import 'package:story_view/story_view.dart';
-//import 'package:random_text_reveal/random_text_reveal.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 //final GlobalKey<RandomTextRevealState> globalKey = GlobalKey();
 
@@ -108,41 +100,39 @@ class MainProfileScreen extends StatelessWidget {
                           HorizontalSpace(width: 20),
 
                           //child: FittedBox(
-GestureDetector(onTap:() {
-
-  Navigator.push(context, MaterialPageRoute(builder: (context) =>
-
-  AkkEditScreen()
-
-));
-
-}, child:
-                          RichText(
-                            text: TextSpan(
-                              text: context.userData['first_name'] +
-                                  ' ' +
-                                  context.userData['last_name'] +
-                                  '\n',
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.black,
-                                fontFamily: 'Source Sans Pro',
-                                fontWeight: FontWeight.w600,
-                              ),
-                              children: <TextSpan>[
-                                TextSpan(
-                                  text: '3 близких' +
-                                      // context.userData['patient_id'] +
-                                      "",
+                          GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => AkkEditScreen()));
+                              },
+                              child: RichText(
+                                text: TextSpan(
+                                  text: context.userData['first_name'] +
+                                      ' ' +
+                                      context.userData['last_name'] +
+                                      '\n',
                                   style: TextStyle(
-                                    color: Colors.grey,
+                                    fontSize: 14,
+                                    color: Colors.black,
                                     fontFamily: 'Source Sans Pro',
                                     fontWeight: FontWeight.w600,
                                   ),
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                      text: '3 близких' +
+                                          // context.userData['patient_id'] +
+                                          "",
+                                      style: TextStyle(
+                                        color: Colors.grey,
+                                        fontFamily: 'Source Sans Pro',
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                          ))
+                              ))
                         ],
                       ),
                     ),

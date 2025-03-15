@@ -516,34 +516,6 @@ mutation UpdateUserProfile(\$input: UpdateUserProfileInput!) {
       'profile_image': imagePath
     }
   };
-/*
-  var UPDATE_USER_PROFILE = '''
-    mutation { 
-      updateUserProfile(
-        input: {
-            first_name: ${first_name ?? 'null'},
-            last_name: ${last_name ?? 'null'},
-            gender: ${sex ?? 'null'},
-            email: '''+ (email==null ? null : "{email}"),
-            profile_image: $imagePath
-        }
-    ) {
-          user {
-        username:full_name
-        user_id:id
-        first_name
-        last_name
-        photo: profile_image
-        email
-      
-        }
-       
-          status
-    token
-    role
-      }
-    }
-  ''';*/
   print(UPDATE_USER_PROFILE);
 
   final uri = Uri.parse('https://onlinedoctor.su/graphql');
@@ -674,6 +646,89 @@ Future<bool> updateProfileWithImage(BuildContext context, String imagePath,
       print('Failed to update user data');
       return false;
     }
+    return true;
+  } else {
+    print('Error: ${response.statusCode}');
+    print(response.body);
+    return false;
+  }
+}
+
+Future<bool> updateProfileWithDocument(BuildContext context, String imagePath,
+    String firstName, String email) async {
+  print(firstName + "," + email);
+  //lk
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String? token = prefs.getString('authToken');
+  var UPDATE_USER_PROFILE = '''
+    mutation {
+      updateUserDocuments(
+        input: {
+          first_name: "$firstName",
+          email: "$email",
+          document_image: null
+        }
+      ) {
+          user {
+        username:full_name
+        user_id:id
+        first_name
+        last_name
+        photo: profile_image
+        email
+      
+        }
+       
+          status
+    token
+    role
+      }
+    }
+  ''';
+  print(UPDATE_USER_PROFILE);
+  final uri = Uri.parse('https://onlinedoctor.su/graphql');
+
+  final request = http.MultipartRequest('post', uri);
+
+  request.headers['Authorization'] = 'Bearer $token';
+  request.headers['Content-Type'] = 'multipart/form-data';
+  request.files.add(await http.MultipartFile.fromBytes(
+    'profile_image',
+    await File(imagePath).readAsBytes(),
+    filename: 'avatar.jpg',
+  ));
+
+  request.fields['operations'] = json.encode({'query': UPDATE_USER_PROFILE});
+  request.fields['map'] = json.encode({
+    '0': ['updateUserProfile.input.profile_image']
+  });
+
+  final streamedResponse = await request.send();
+  final response = await http.Response.fromStream(streamedResponse);
+  print(response.body);
+  if (response.statusCode == 200) {
+    print('Profile updated successfully!');
+
+    Map<String, dynamic> json =
+        jsonDecode(response.body)['data']['updateUserProfile'];
+    print(json);
+    print("it was json");
+    //   final updatedUserData =
+    //       await getCurrentUserDataAndReplaceField('photo', json['user']['photo']);
+    // await getCurrentUserDataAndReplaceField('first_name', 's');
+//    if (updatedUserData != null) {
+//      print(updatedUserData.toJson());
+//      print("it was updated data");
+    // User data has been successfully updated
+//      UserStore uStore = getIt.get<UserStore>();
+//      uStore.setUserData(updatedUserData.toJson());
+//      Session().saveUser(updatedUserData);
+    // Session().saveUser(user);
+    //  } else {
+    // Error occurred during update
+    //   print('Failed to update user data');
+    //    return false;
+    //  }
     return true;
   } else {
     print('Error: ${response.statusCode}');

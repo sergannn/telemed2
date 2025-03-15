@@ -1,22 +1,14 @@
 import 'package:doctorq/app_export.dart';
-import 'package:doctorq/chat/chat_screen.dart';
 import 'package:doctorq/persistent_bottom_nav_bar_v2-5.3.1/lib/persistent_bottom_nav_bar_v2.dart';
-import 'package:doctorq/screens/history/history_screen.dart';
 import 'package:doctorq/screens/appointments/AppointmentsScreen.dart';
 import 'package:doctorq/screens/home/home_screen/home_screen.dart';
 import 'package:doctorq/screens/home/home_screen/home_screen_forFuture.dart';
-import 'package:doctorq/screens/home/specialist_doctor_screen/specialist_doctor_screen.dart';
 import 'package:doctorq/screens/medcard/card_gallery.dart';
-import 'package:doctorq/screens/profile/blank_screen/blank_screen.dart';
 import 'package:doctorq/screens/profile/main_profile.dart';
-import 'package:doctorq/screens/profile/settings_screen.dart';
 import 'package:doctorq/stores/user_store.dart';
 import 'package:doctorq/theme/svg_constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-//import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
-//import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
-import 'package:doctorq/chat/main.dart';
 
 // ignore: must_be_immutable
 class Main extends StatelessWidget {
