@@ -55,7 +55,7 @@ class _MedCardScreenState extends State<MedCardScreen>
                 child: SpecsTabBar(
                     ['Документы', 'Анкета', 'Дневник'], tabController)),
             MedCardList(tabController, MediaQuery.of(context).size.height),
-            VerticalSpace(height: 24),
+            VerticalSpace(height: 224),
           ],
         ),
       ),
@@ -65,6 +65,8 @@ class _MedCardScreenState extends State<MedCardScreen>
   Widget MedCardList(tabController, height) {
     print(tabController.length);
     print("it was length");
+   
+  
     return SizedBox(
       height: height,
       child: TabBarView(
@@ -81,6 +83,7 @@ class _MedCardScreenState extends State<MedCardScreen>
             padding: EdgeInsets.all(16),
             itemCount: 10,
             itemBuilder: (context, index) {
+           
               return Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -97,7 +100,12 @@ class _MedCardScreenState extends State<MedCardScreen>
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ClipRRect(
+                    index==0 ? CircleAvatar(
+                      //radius: 150,
+                      backgroundColor: Colors.red,
+                      child: IconButton(
+                      onPressed: () {},
+                      icon:Icon(Icons.add))) : ClipRRect(
                       borderRadius: BorderRadius.circular(8),
                       child: FutureBuilder<Uint8List>(
                         future: http.get(
@@ -127,8 +135,8 @@ class _MedCardScreenState extends State<MedCardScreen>
                               return Image.memory(
                                 snapshot.data!,
                                 width: double.infinity,
-                                height: 150,
-                                fit: BoxFit.cover,
+                                height: getVerticalSize(100),
+                                fit: BoxFit.contain,
                                 cacheWidth: 150,
                                 cacheHeight: 150,
                               );
@@ -136,7 +144,7 @@ class _MedCardScreenState extends State<MedCardScreen>
                               print('Error decoding image: $e');
                               return Container(
                                 width: double.infinity,
-                                height: 150,
+                                   height: getVerticalSize(100),
                                 color: Colors.grey[200],
                                 child: Center(
                                   child: Icon(Icons.error,
@@ -147,7 +155,7 @@ class _MedCardScreenState extends State<MedCardScreen>
                           } else if (snapshot.hasError) {
                             return Container(
                               width: double.infinity,
-                              height: 150,
+                                  height: getVerticalSize(100),
                               color: Colors.grey[200],
                               child: Center(
                                 child:
@@ -157,7 +165,7 @@ class _MedCardScreenState extends State<MedCardScreen>
                           }
                           return Container(
                             width: double.infinity,
-                            height: 150,
+                              height: getVerticalSize(100),
                             color: Colors.grey[200],
                             child: Center(
                               child: CircularProgressIndicator(),
@@ -168,7 +176,7 @@ class _MedCardScreenState extends State<MedCardScreen>
                     ),
                     SizedBox(height: 8),
                     Text(
-                      'Документ ${index + 1}',
+                     index==0 ? 'Добавить' : 'Документ ${index + 1}',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: getFontSize(14),
@@ -182,7 +190,9 @@ class _MedCardScreenState extends State<MedCardScreen>
             },
           ),
           // Вторая вкладка - анкета
-          SurveyScreen(),
+         /*Container( margin:  EdgeInsets.only(bottom: MediaQuery.of(context).size.height/5),
+       child:*/ 
+       SurveyScreen(),
 
           // Третья вкладка - дневник
           TableCalendar(

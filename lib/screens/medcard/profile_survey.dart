@@ -1,6 +1,8 @@
 import 'dart:math' as math;
 import 'package:doctorq/screens/appointments/steps/step_2_filled_screen/step_2_filled_screen.dart';
+import 'package:doctorq/screens/medcard/card_gallery.dart';
 import 'package:doctorq/utils/size_utils.dart';
+import 'package:doctorq/utils/utility.dart';
 import 'package:doctorq/widgets/custom_button.dart';
 import 'package:doctorq/widgets/spacing.dart';
 import 'package:doctorq/widgets/top_back.dart';
@@ -166,7 +168,7 @@ class SurveyState extends State<SurveyScreen> {
 
     // Обновляем UI после загрузки всех значений
     setState(() {
-      //  _expansionStates[1] = false;
+        _expansionStates[1] = false;
       //  _expansionStates[1] = true;
     });
   }
@@ -836,7 +838,7 @@ class SurveyState extends State<SurveyScreen> {
       ),
       title: Container(
         width: double.infinity,
-        padding: const EdgeInsets.only(bottom: 12),
+       // padding: const EdgeInsets.only(bottom: 12),
         decoration: BoxDecoration(
           color: const Color.fromARGB(255, 255, 255, 255).withOpacity(0.95),
         ),
@@ -1359,81 +1361,74 @@ class SurveyState extends State<SurveyScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          SizedBox(height: 40),
-          /*...topBack(
-            text: "Анкета",
-            context: context,
-            height: 0,
-          ),*/
-          Expanded(
-            child: Container(
-              margin: const EdgeInsets.only(bottom: 16),
-              padding: const EdgeInsets.all(6),
-              decoration: BoxDecoration(
-                color:
-                    const Color.fromARGB(255, 236, 236, 236).withOpacity(0.95),
-                border: Border(top: BorderSide(color: Colors.grey.shade300)),
-              ),
-              child: ListView(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+    print("height:"+ MediaQuery.of(context).size.height.toString());
+    return 
+ListView(
+  padding:EdgeInsets.only(bottom:MediaQuery.of(context).size.height*0.35),
+    children:[
+  Container(
+                   
+    child:         
+             
+                Column( 
                 children: [
                   _buildExpansionTile(
                     title: 'Общая информация',
                     content: '',
                     index: 0,
                   ),
-                  SizedBox(height: 8),
+                 
                   _buildExpansionTile(
                     title: 'Параметры тела',
                     content: '',
                     index: 1,
                   ),
-                  SizedBox(height: 8),
+                
                   _buildExpansionTile(
                     title: 'История болезни',
                     content: '',
                     index: 2,
                   ),
-                  SizedBox(height: 8),
+                 
                   _buildExpansionTile(
                     title: 'Хронические заболевания',
                     content: '',
                     index: 3,
                   ),
-                  SizedBox(height: 8),
+         
                   _buildExpansionTile(
                     title: 'Наследственные заболевания',
                     content: '',
                     index: 4,
                   ),
-                  SizedBox(height: 8),
+                
                   _buildExpansionTile(
                     title: 'Аллергические реакции',
                     content: '',
                     index: 5,
                   ),
-                  SizedBox(height: 8),
+         
                   _buildExpansionTile(
                     title: 'Менструальный цикл',
                     content: '',
                     index: 6,
                   ),
-                  SizedBox(height: 8),
+          
                   _buildExpansionTile(
                     title: 'Беременность и контрацепция',
                     content: '',
                     index: 7,
                   ),
-                  SizedBox(height: 20),
+               //   SizedBox(height: 20),
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.35,
                     child: ElevatedButton(
                       onPressed: () async {
                         await _saveAllValues();
-                        Navigator.pop(context);
+                       snackBar(context, message: 'Данные сохранены');
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder:(context)=> MedCardScreen()));
+                    
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor:
@@ -1451,13 +1446,10 @@ class SurveyState extends State<SurveyScreen> {
                       ),
                     ),
                   ),
+                  SizedBox(height:20)
+             
                 ],
               ),
-            ),
-          ),
-          Container(height: getVerticalSize(100))
-        ],
-      ),
-    );
+  )]);
   }
 }
