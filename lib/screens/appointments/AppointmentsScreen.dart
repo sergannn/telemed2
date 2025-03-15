@@ -48,11 +48,11 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
 
   loadData() async {
     printLog('Getting Appointments');
-
+/*
     Future.delayed(Duration.zero, () {
       MyOverlay.show(context);
     });
-
+*/
     UserStore storeUserStore = getIt.get<UserStore>();
     Map<dynamic, dynamic> userData = storeUserStore.userData;
     print(userData);
@@ -71,7 +71,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
 
     printLog('Appointments loaded');
 
-    MyOverlay.hide();
+    //MyOverlay.hide();
   }
 
 //  late PullToRefreshController pullToRefreshController;
@@ -83,7 +83,8 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            ...topBack(height:0,text:"Записи", context:context,back:false),
+            ...topBack(
+                height: 0, text: "Записи", context: context, back: false),
             // const HeaderNavBar(),
             HeaderFilterButtons(),
             VerticalSpace(height: 24),
@@ -113,7 +114,6 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
 
   Container HeaderFilterButtons() {
     return Container(
-      
       alignment: Alignment.center,
       decoration: BoxDecoration(
         color: ColorConstant.fromHex("E4F0FF"),
@@ -127,7 +127,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
       height: getVerticalSize(
         45.00,
       ),
-     // margin: getMargin(left: 20, top: 24),
+      // margin: getMargin(left: 20, top: 24),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -139,7 +139,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                 });
               },
               child: Container(
-                 padding: getPadding(top: 8, bottom: 8),
+                padding: getPadding(top: 8, bottom: 8),
                 //padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: showUpcomming ? Colors.white : Colors.transparent,
@@ -216,4 +216,3 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
     );
   }
 }
-

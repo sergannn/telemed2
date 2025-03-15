@@ -279,7 +279,7 @@ class _AppointmentsStep2FilledScreenState
                         border: Border.all(
                           color: ColorConstant.blueA400,
                           width: getHorizontalSize(
-                            2.00,
+                            0.5,
                           ),
                         ),
                       ),
@@ -299,7 +299,7 @@ class _AppointmentsStep2FilledScreenState
                               ? Colors.white
                               : ColorConstant.blueA400,
                           fontSize: getFontSize(
-                            17,
+                            12,
                           ),
                           fontFamily: 'Source Sans Pro',
                           fontWeight: FontWeight.w600,

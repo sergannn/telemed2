@@ -146,10 +146,10 @@ class ExiteSureScreen extends StatelessWidget {
                                               onPressed: () async {
                                                 Future.delayed(Duration.zero,
                                                     () {
-                                                  MyOverlay.show(context);
+                                                  //   MyOverlay.show(context);
                                                 });
                                                 await logOut();
-                                                MyOverlay.hide();
+                                                // MyOverlay.hide();
                                                 Navigator.of(context,
                                                         rootNavigator: true)
                                                     .pushAndRemoveUntil(

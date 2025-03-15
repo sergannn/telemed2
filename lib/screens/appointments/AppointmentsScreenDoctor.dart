@@ -47,11 +47,11 @@ class _AppointmentsScreenState extends State<AppointmentsScreenDoctor> {
 
   loadData() async {
     printLog('Getting Appointments');
-
+/*
     Future.delayed(Duration.zero, () {
       MyOverlay.show(context);
     });
-
+*/
     UserStore storeUserStore = getIt.get<UserStore>();
     Map<dynamic, dynamic> userData = storeUserStore.userData;
 
@@ -68,7 +68,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreenDoctor> {
 
     printLog('Appointments loaded');
 
-    MyOverlay.hide();
+    // MyOverlay.hide();
   }
 
 //  late PullToRefreshController pullToRefreshController;

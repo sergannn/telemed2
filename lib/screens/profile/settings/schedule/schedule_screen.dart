@@ -116,7 +116,7 @@ class _ProfileSettingsAppearanceScreenState
     printLog('Getting Doctor Sessions');
 
     Future.delayed(Duration.zero, () {
-      MyOverlay.show(context);
+      //  MyOverlay.show(context);
     });
 
     doctor = context.userData;
@@ -152,7 +152,7 @@ class _ProfileSettingsAppearanceScreenState
 
     printLog(' Doctor Sessions loaded');
 
-    MyOverlay.hide();
+//    MyOverlay.hide();
   }
 
   DateTime selectedDate = DateTime.now();
