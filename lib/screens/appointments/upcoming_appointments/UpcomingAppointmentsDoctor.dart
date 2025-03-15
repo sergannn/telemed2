@@ -1,15 +1,6 @@
-import 'dart:convert';
-import 'dart:developer';
-
 import 'package:animate_do/animate_do.dart';
 
 import 'package:doctorq/extensions.dart';
-import 'package:doctorq/screens/profile/settings_screen.dart';
-import 'package:doctorq/services/api_service.dart';
-import 'package:doctorq/stores/appointments_store.dart';
-import 'package:doctorq/stores/user_store.dart';
-import 'package:doctorq/utils/utility.dart';
-import 'package:doctorq/widgets/loading_overlay.dart';
 import 'package:doctorq/widgets/spacing.dart';
 import '../list/messaging_screen/messaging_screen.dart';
 import 'widgets/listreply1_item_widget.dart';

@@ -1,9 +1,12 @@
+import 'dart:typed_data';
+
 import 'package:doctorq/screens/medcard/profile_survey.dart';
 
 import 'package:doctorq/widgets/spacing.dart';
 import 'package:doctorq/widgets/top_back.dart';
 import 'package:doctorq/app_export.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:table_calendar/table_calendar.dart';
 
 class MedCardScreen extends StatefulWidget {
@@ -45,9 +48,6 @@ class _MedCardScreenState extends State<MedCardScreen>
                 context: context,
                 back: false,
                 icon: Icon(Icons.favorite)),
-
-            //Text(context.specsData.length.toString()),
-            //DatePicker(height: 100, DateTime.now()),
             Container(
                 width: double.infinity, // Makes the container full width
                 margin:
@@ -71,7 +71,116 @@ class _MedCardScreenState extends State<MedCardScreen>
         controller: tabController,
         children: [
           // Первая вкладка - сетка документов
-          Text("a"),
+          GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              mainAxisSpacing: 16,
+              crossAxisSpacing: 16,
+              childAspectRatio: 1,
+            ),
+            padding: EdgeInsets.all(16),
+            itemCount: 10,
+            itemBuilder: (context, index) {
+              return Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.05),
+                      blurRadius: 8,
+                      offset: Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: FutureBuilder<Uint8List>(
+                        future: http.get(
+                            Uri.parse(
+                                'https://api.api-ninjas.com/v1/randomimage?category=abstract'),
+                            headers: {
+                              'X-Api-Key':
+                                  'asYXsFiF+s0CXdGdmy2oSg==mDD7MRrJJuANFnMx',
+                              'Accept': 'image/jpg'
+                            }).then((response) {
+                          print(response.statusCode);
+                          print(response.body);
+                          if (response.statusCode == 200) {
+                            print(response.body);
+                            return response.bodyBytes;
+                          } else {
+                            throw Exception('Failed to load image');
+                          }
+                        }).catchError((error) {
+                          print('Error loading image: $error');
+                          return null;
+                        }),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            try {
+                              //return Text("s");
+                              return Image.memory(
+                                snapshot.data!,
+                                width: double.infinity,
+                                height: 150,
+                                fit: BoxFit.cover,
+                                cacheWidth: 150,
+                                cacheHeight: 150,
+                              );
+                            } catch (e) {
+                              print('Error decoding image: $e');
+                              return Container(
+                                width: double.infinity,
+                                height: 150,
+                                color: Colors.grey[200],
+                                child: Center(
+                                  child: Icon(Icons.error,
+                                      color: Colors.grey[600]),
+                                ),
+                              );
+                            }
+                          } else if (snapshot.hasError) {
+                            return Container(
+                              width: double.infinity,
+                              height: 150,
+                              color: Colors.grey[200],
+                              child: Center(
+                                child:
+                                    Icon(Icons.error, color: Colors.grey[600]),
+                              ),
+                            );
+                          }
+                          return Container(
+                            width: double.infinity,
+                            height: 150,
+                            color: Colors.grey[200],
+                            child: Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      'Документ ${index + 1}',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: getFontSize(14),
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'Source Sans Pro',
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
           // Вторая вкладка - анкета
           SurveyScreen(),
 
