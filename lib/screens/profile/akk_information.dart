@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:doctorq/screens/appointments/book_screen/book_screen.dart';
 import 'package:doctorq/screens/appointments/steps/step_3_filled_screen/proffit.dart';
+import 'package:doctorq/screens/auth/forgot/password_otp_active_screen/guess_code_screen.dart';
 import 'package:doctorq/screens/auth/sign_in_blank_screen/sign_in_blank_screen.dart';
 import 'package:doctorq/screens/home/home_screen/home_screen.dart';
 import 'package:doctorq/services/auth_service.dart';
@@ -490,34 +491,39 @@ class _AkkInfoScreenState extends State<AkkInfoScreen> {
                         color: const Color.fromARGB(255, 255, 255, 255),
                         borderRadius: BorderRadius.circular(20.0),
                       ),
-                      child: Row(
-                        children: [
-                          IconButton(
-                            icon: const Icon(
-                              Icons.password_sharp,
-                              color: Colors.black,
-                              size: 20,
-                            ),
-                            onPressed: () => Navigator.pop(context),
-                          ),
-                          const Text(
-                            'Изменить пароль для входа',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.black,
-                            ),
-                          ),
-                          const Spacer(),
-                          IconButton(
-                            icon: const Icon(
-                              Icons.arrow_forward_ios,
-                              color: Colors.grey,
-                              size: 22,
-                            ),
-                            onPressed: () {},
-                          ),
-                        ],
-                      ),
+                      child: GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => GuessCodeScreen()));
+                          },
+                          child: Row(
+                            children: [
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.password_sharp,
+                                  color: Colors.black,
+                                  size: 20,
+                                ),
+                                onPressed: () => Navigator.pop(context),
+                              ),
+                              const Text(
+                                'Изменить пароль для входа',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              const Spacer(),
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.arrow_forward_ios,
+                                  color: Colors.grey,
+                                  size: 22,
+                                ),
+                                onPressed: () {},
+                              ),
+                            ],
+                          )),
                     ),
                   ),
                   Container(

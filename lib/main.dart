@@ -1,8 +1,11 @@
 import 'dart:developer';
+import 'package:doctorq/numScreen.dart';
+import 'package:doctorq/screens/auth/forgot/password_otp_active_screen/guess_code_screen.dart';
 import 'package:doctorq/screens/auth/sign_in_blank_screen/doctor_screen.dart';
 import 'package:doctorq/screens/auth/sign_in_blank_screen/sign_in_blank_screen.dart';
 import 'package:doctorq/screens/first/figmasample.dart';
 import 'package:doctorq/screens/first/first.dart';
+import 'package:doctorq/screens/lekarstva/lekarstva.dart';
 import 'package:doctorq/services/api_service.dart';
 import 'package:doctorq/services/session.dart';
 import 'package:doctorq/services/startup_service.dart';
@@ -13,6 +16,7 @@ import 'package:doctorq/utils/utility.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:number_pad_keyboard/number_pad_keyboard.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'theme/theme_constants.dart';
 import 'theme/theme_manager.dart';
@@ -34,12 +38,20 @@ void main() async {
 
   initStores();
   await Future.delayed(Duration(milliseconds: 1000));
-  runApp(EasyLocalization(
-      supportedLocales: const [Locale("en"), Locale("ar")],
-      path: "assets/translations",
-      assetLoader: const CodegenLoader(),
-      fallbackLocale: const Locale('en'),
-      child: MyApp()));
+  runApp(MaterialApp(
+      routes: {
+        // When navigating to the "/" route, build the FirstScreen widget.
+        //'/': (context) => const FirstScreen(),
+        // When navigating to the "/second" route, build the SecondScreen widget.
+        '/lekarstva': (context) => const MedicineWebView(),
+      },
+      title: "App",
+      home: EasyLocalization(
+          supportedLocales: const [Locale("en"), Locale("ar")],
+          path: "assets/translations",
+          assetLoader: const CodegenLoader(),
+          fallbackLocale: const Locale('en'),
+          child: MyApp())));
 }
 
 ThemeManager themeManager = ThemeManager();
@@ -51,14 +63,46 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+  final _passwordController = TextEditingController();
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+
+    switch (state) {
+      case AppLifecycleState.resumed:
+        debugPrint("App resumed");
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Numscreen()),
+        );
+
+        print('resumed');
+        break;
+      case AppLifecycleState.paused:
+        debugPrint("App paused");
+        break;
+      case AppLifecycleState.detached:
+        debugPrint("App detached");
+        break;
+      case AppLifecycleState.inactive:
+        debugPrint("App inactive");
+        break;
+      case AppLifecycleState.hidden:
+        print("hidden");
+      // TODO: Handle this case.
+      //throw UnimplementedError();
+    }
+  }
+
   @override
   void initState() {
 // TODO: implement initState
-
+    print('Context available: ${context != null}');
     themeManager.addListener(themeListener);
-
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     // _requestPermissions();
     // _configureDidReceiveLocalNotificationSubject();
     // _configureSelectNotificationSubject();
@@ -97,48 +141,26 @@ class _MyAppState extends State<MyApp> {
           localizationsDelegates: context.localizationDelegates,
           supportedLocales: context.supportedLocales,
           locale: context.locale,
-          home: FlutterSplashScreen.gif(
-            gifHeight: MediaQuery.of(context).size.height,
-            gifWidth: MediaQuery.of(context).size.width,
-            gifPath: "./assets/images/a_logo.jpg",
-            useImmersiveMode: true,
-            backgroundColor: Colors.white,
-            onInit: () {
-              debugPrint("On Init");
-            },
-            onEnd: () {
-              debugPrint("On End");
-            },
-
-            nextScreen: FutureBuilder(
-                future: getStartupData(), // Call your future function here
+          home: Builder(
+            builder: (context) => FlutterSplashScreen.gif(
+              gifHeight: MediaQuery.of(context).size.height,
+              gifWidth: MediaQuery.of(context).size.width,
+              gifPath: "./assets/images/a_logo.jpg",
+              useImmersiveMode: true,
+              backgroundColor: Colors.white,
+              onInit: () => debugPrint("On Init"),
+              onEnd: () => debugPrint("On End"),
+              nextScreen: FutureBuilder(
+                future: getStartupData(),
                 builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-                  // if (snapshot.connectionState == ConnectionState.done && jsonDecode(snapshot.data ?? '{}')['user_id'] != '-1') {
                   if (snapshot.connectionState == ConnectionState.done &&
                       snapshot.data == true) {
-                    // getDoctors();
-                    // Once the future is done, display the text
-                    //return MessagesDetailScreen(),
-                    printLog("its a snapshot");
-
-                    // print(snapshot.data);
-                    return Main(); // FloatingActionButton(
-                    //onPressed: null, child: Text(snapshot.data.toString()));
-                  } else {
-                    //return FigmaToCodeApp();
-                    //return SignInBlankScreen();
-                    return firstScreen();
-                    // return const SignInBlankScreen();
+                    return Main();
                   }
-                }), /*MessagesDetailScreen(
-          appointment: AppointmentsModel( id:0,
-              img: ImageConstant.doctor2,
-              name: "Dr. Jane Cooper",
-              contactMethodIcon: ImageConstant.reviews,
-              status: 'Completed',
-              time: '09:00 - 09:30 AM')),*/
-            //LightSignInBlankScreen()
-            //LightSplashScreen(),
+                  return firstScreen();
+                },
+              ),
+            ),
           ),
         );
       },

@@ -53,11 +53,11 @@ class _SignInBlankScreenState extends State<SignInBlankScreen> {
         Future.delayed(const Duration(milliseconds: 600), () {
           Navigator.of(context).pop(true);
 
-          Navigator.of(context).pushAndRemoveUntil(
+          Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (context) => Main() //user: user
 //                                          uId: id,
-                  ),
-              (Route<dynamic> route) => false);
+                  ));
+          // (Route<dynamic> route) => false);
         });
         return Dialog(
             backgroundColor: Colors.transparent,
@@ -138,7 +138,7 @@ class _SignInBlankScreenState extends State<SignInBlankScreen> {
 
   @override
   Widget build(BuildContext context) {
-    inspectTheme(context);
+//    inspectTheme(context);
     bool isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(

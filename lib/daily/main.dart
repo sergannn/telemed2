@@ -354,53 +354,50 @@ class _MyAppState extends State<DailyApp> {
     final nextParticipant2 = _participantFocusPriority.length > 2
         ? _participantFocusPriority.elementAt(2)
         : null;
-    final theme = Theme.of(context);
-    return MaterialApp(
-        scaffoldMessengerKey: _scaffoldMessengerKey,
-        home: CallClientStateProvider(
-          callClient: widget.callClient,
-          child: PopScope(
-            canPop: false,
-            onPopInvoked: (scope) {
-              Navigator.of(context).pop();
-              //return true;
-            },
-            child: Scaffold(
-              appBar: AppBar(title: const Text('Подготовка к звонку')),
-              bottomNavigationBar: 1 == 2 ? bottomDailyNavBar() : null,
-              body: 1 == 2
-                  ? Text("a")
-                  : SingleChildScrollView(
-                      // height: 50,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          bottomDailyNavBar(),
-                          // Text('aaaa'),
-                          Row(children: [
-                            Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 8),
-                                child: LocalParticipantView(
-                                    client: widget.callClient,
-                                    prefs: widget.prefs)),
-                          ]),
-                          focusedParticipantId != null
-                              ? RemoteParticipantView(
-                                  client: widget.callClient,
-                                  participantId: focusedParticipantId,
-                                  size: const Size.fromHeight(256),
-                                )
-                              : Text("waiting"),
-                          if (widget.callClient.callState == CallState.joined &&
-                              focusedParticipantId == null) ...[
-                            const SizedBox(height: 80),
-                            const Center(
-                                child:
-                                    CircularProgressIndicator(strokeWidth: 2)),
-                            Text("Ожидаем подключения пользователя...")
-                          ],
-                          /*   if (focusedParticipantId != null)
+    return Scaffold(
+        //scaffoldMessengerKey: _scaffoldMessengerKey,
+        body: CallClientStateProvider(
+      callClient: widget.callClient,
+      child: PopScope(
+        canPop: false,
+        onPopInvoked: (scope) {
+          Navigator.of(context).pop();
+          //return true;
+        },
+        child: Scaffold(
+          appBar: AppBar(title: const Text('Подготовка к звонку')),
+          bottomNavigationBar: 1 == 1 ? bottomDailyNavBar() : null,
+          body: 1 == 2
+              ? Text("a")
+              : SingleChildScrollView(
+                  // height: 50,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      bottomDailyNavBar(),
+                      // Text('aaaa'),
+                      Row(children: [
+                        Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            child: LocalParticipantView(
+                                client: widget.callClient,
+                                prefs: widget.prefs)),
+                      ]),
+                      focusedParticipantId != null
+                          ? RemoteParticipantView(
+                              client: widget.callClient,
+                              participantId: focusedParticipantId,
+                              size: const Size.fromHeight(256),
+                            )
+                          : Text("waiting"),
+                      if (widget.callClient.callState == CallState.joined &&
+                          focusedParticipantId == null) ...[
+                        const SizedBox(height: 80),
+                        const Center(
+                            child: CircularProgressIndicator(strokeWidth: 2)),
+                        Text("Ожидаем подключения пользователя...")
+                      ],
+                      /*   if (focusedParticipantId != null)
                             Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 8),
@@ -410,66 +407,60 @@ class _MyAppState extends State<DailyApp> {
                                 size: const Size.fromHeight(256),
                               ),
                             ),*/
-                          if (_participantFocusPriority.length > 1)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 8),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  /*  if (nextParticipant1 != null)
+                      if (_participantFocusPriority.length > 1)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              /*  if (nextParticipant1 != null)
                                     RemoteParticipantView(
                                       client: widget.callClient,
                                       participantId: nextParticipant1,
                                       size: const Size.square(128),
                                     ),*/
-                                  /*     if (nextParticipant2 != null)
+                              /*     if (nextParticipant2 != null)
                                     RemoteParticipantView(
                                       client: widget.callClient,
                                       participantId: nextParticipant2,
                                       size: const Size.square(128),
                                     ),*/
-                                  if (_participantListUpdatedNotifier
-                                      .value.isNotEmpty)
-                                    Builder(
-                                      builder: (context) {
-                                        return InkWell(
-                                          onTap: () {
-                                            showParticipantListBottomSheet(
-                                              context,
-                                              widget.callClient,
-                                              _participantListUpdatedNotifier,
-                                            );
-                                          },
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Icon(Icons.group,
-                                                  color: theme
-                                                      .colorScheme.primary),
-                                              const SizedBox(width: 2),
-                                              Text(
-                                                '+${_participantListUpdatedNotifier.value.length}',
-                                                style: TextStyle(
-                                                    color: theme
-                                                        .colorScheme.primary,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                            ],
-                                          ),
+                              if (_participantListUpdatedNotifier
+                                  .value.isNotEmpty)
+                                Builder(
+                                  builder: (context) {
+                                    return InkWell(
+                                      onTap: () {
+                                        showParticipantListBottomSheet(
+                                          context,
+                                          widget.callClient,
+                                          _participantListUpdatedNotifier,
                                         );
                                       },
-                                    )
-                                ],
-                              ),
-                            ),
-                        ],
-                      ),
-                    ),
-            ),
-          ),
-        ));
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Icon(Icons.group),
+                                          const SizedBox(width: 2),
+                                          Text(
+                                            '+${_participantListUpdatedNotifier.value.length}',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                )
+                            ],
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+        ),
+      ),
+    ));
   }
 }
 

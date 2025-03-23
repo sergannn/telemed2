@@ -609,8 +609,12 @@ class HomeScreen extends StatelessWidget {
                                                   .width /
                                               10,
                                           child: IconButton(
-                                              onPressed: null,
-                                              icon: Icon(Icons.medication))),
+                                              onPressed: () {
+                                                Navigator.pushNamed(
+                                                    context, "/lekarstva");
+                                              },
+                                              icon: Icon(Icons.medication,
+                                                  size: getVerticalSize(50)))),
                                       Text("Лекарства")
                                     ]),
                                     Column(children: [
@@ -622,7 +626,10 @@ class HomeScreen extends StatelessWidget {
                                                   .width /
                                               10,
                                           child: IconButton(
-                                              onPressed: null,
+                                              onPressed: () {
+                                                Navigator.pushNamed(
+                                                    context, "/lekarstva");
+                                              },
                                               icon: Icon(Icons.info))),
                                       Text("Полезное")
                                     ]),

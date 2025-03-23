@@ -1290,6 +1290,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.9.1"
+  number_pad_keyboard:
+    dependency: "direct main"
+    description:
+      name: number_pad_keyboard
+      sha256: "66dc5e88a14a49791bb06020ec7fb9287643e4bfb250d09c1d654af167aa6a45"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.6"
   octo_image:
     dependency: transitive
     description:

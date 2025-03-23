@@ -33,7 +33,7 @@ class _SignUpBlankScreenState extends State<SignUpBlankScreen> {
   @override
   Widget build(BuildContext context) {
     bool isDark = Theme.of(context).brightness == Brightness.dark;
-    bool isRtl = context.locale == Constants.arLocal;
+//    bool isRtl = context.locale == Constants.arLocal;
 //    return Text("a");
     return Scaffold(
       body: SafeArea(
@@ -722,6 +722,7 @@ class _SignUpBlankScreenState extends State<SignUpBlankScreen> {
   bool validateForm() {
     bool isValid = true;
     print('validating');
+    var last_error = '';
     for (final entry in RegFields.getAll().entries) {
       final field = entry.value;
       final controller = field['controller'] as TextEditingController;
@@ -731,14 +732,16 @@ class _SignUpBlankScreenState extends State<SignUpBlankScreen> {
         final error = validator(controller.text);
         if (error != null) {
           isValid = false;
-          // Показываем ошибку пользователю
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(error)),
-          );
+          last_error = error;
         }
       }
     }
-
+    // Показываем ошибку пользователю
+    if (!isValid) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(last_error)),
+      );
+    }
     return isValid;
   }
 }

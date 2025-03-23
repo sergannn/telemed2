@@ -242,45 +242,53 @@ class Main extends StatelessWidget {
         userData['patient_id'] != null ? _pNavBarsItems() : _dNavBarsItems();
 // Добавьте этот метод
 
-    return PersistentTabView(
-      //context,
-      controller: _controller,
-      //screens: _buildScreens(),
-      tabs: tabs,
-      navBarBuilder: (navBarConfig) => CustomBottomNavBar(
-        controller: _controller,
-        navBarConfig: navBarConfig,
-      ),
+    return PopScope(
+        canPop: false,
+        onPopInvoked: (bool didPop) async {
+          if (!didPop) {
+            // Handle blocked back navigation
+            print('Back navigation prevented');
+          }
+        },
+        child: PersistentTabView(
+          //context,
+          controller: _controller,
+          //screens: _buildScreens(),
+          tabs: tabs,
+          navBarBuilder: (navBarConfig) => CustomBottomNavBar(
+            controller: _controller,
+            navBarConfig: navBarConfig,
+          ),
 
-      //confineInSafeArea: true,
-      backgroundColor: isDark
-          ? ColorConstant.darkBg
-          : Colors.white, // Default is Colors.white.
-      handleAndroidBackButtonPress: true, // Default is true.
-      resizeToAvoidBottomInset:
-          true, // This needs to be true if you want to move up the screen when keyboard appears. Default is true.
-      stateManagement: true, // Default is true.
-      hideNavigationBar:
-          false, // Recommended to set 'resizeToAvoidBottomInset' as true while using this argument. Default is true.
+          //confineInSafeArea: true,
+          backgroundColor: isDark
+              ? ColorConstant.darkBg
+              : Colors.white, // Default is Colors.white.
+          handleAndroidBackButtonPress: true, // Default is true.
+          resizeToAvoidBottomInset:
+              true, // This needs to be true if you want to move up the screen when keyboard appears. Default is true.
+          stateManagement: true, // Default is true.
+          hideNavigationBar:
+              false, // Recommended to set 'resizeToAvoidBottomInset' as true while using this argument. Default is true.
 
-      popAllScreensOnTapOfSelectedTab: true,
-      popActionScreens: PopActionScreensType.all,
-      /*itemAnimationProperties: ItemAnimationProperties(
+          popAllScreensOnTapOfSelectedTab: true,
+          popActionScreens: PopActionScreensType.all,
+          /*itemAnimationProperties: ItemAnimationProperties(
         // Navigation Bar's items animation properties.
         duration: Duration(milliseconds: 200),
         curve: Curves.ease,
       ),*/
-      screenTransitionAnimation: const ScreenTransitionAnimation(
-        // Screen transition animation on change of selected tab.
-        // animateTabTransition: true,
-        curve: Curves.ease,
-        duration: Duration(milliseconds: 200),
-      ),
+          screenTransitionAnimation: const ScreenTransitionAnimation(
+            // Screen transition animation on change of selected tab.
+            // animateTabTransition: true,
+            curve: Curves.ease,
+            duration: Duration(milliseconds: 200),
+          ),
 
-      //navBarStyle:
-      //    NavBarStyle.style9, // Choose the nav bar style with this property.
-      navBarHeight: getVerticalSize(70),
-    );
+          //navBarStyle:
+          //    NavBarStyle.style9, // Choose the nav bar style with this property.
+          navBarHeight: getVerticalSize(70),
+        ));
   }
 }
 //part of "../persistent_bottom_nav_bar_v2.dart";

@@ -74,12 +74,14 @@ class _MyAppState extends State<GuessCodeScreen> {
               DialPad(
                   buttonColor: ColorConstant.fromHex("EDF5FF"),
                   hideSubtitle: true,
-                  hideDialButton: true,
-                  enableDtmf: false,
+                  hideDialButton: false,
+                  enableDtmf: true,
                   backspaceButtonIconColor: ColorConstant.fromHex("81AEEA"),
                   buttonTextColor: Colors.black,
                   dialOutputTextColor: Colors.black,
                   keyPressed: (value) {
+                    print(value);
+                    return;
                     //widget.makeCall();
 
                     if (selectedIndex < 4) {
