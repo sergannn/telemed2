@@ -112,7 +112,7 @@ class _ProfileSettingsAppearanceScreenState
   }
 
   Future<void> _loadData() async {
-    printLog('loading data...');
+    printLog('loading data....');
     printLog('Getting Doctor Sessions');
 
     Future.delayed(Duration.zero, () {

@@ -5,6 +5,7 @@ import 'package:doctorq/screens/appointments/steps/step_3_filled_screen/proffit.
 import 'package:doctorq/screens/auth/forgot/password_otp_active_screen/guess_code_screen.dart';
 import 'package:doctorq/screens/auth/sign_in_blank_screen/sign_in_blank_screen.dart';
 import 'package:doctorq/screens/home/home_screen/home_screen.dart';
+import 'package:doctorq/screens/profile/new_password.dart';
 import 'package:doctorq/services/auth_service.dart';
 import 'package:doctorq/utils/size_utils.dart';
 import 'package:doctorq/widgets/custom_button.dart';
@@ -484,48 +485,84 @@ class _AkkInfoScreenState extends State<AkkInfoScreen> {
                       color: const Color.fromARGB(255, 255, 255, 255)
                           .withOpacity(0.95),
                     ),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 2),
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 255, 255, 255),
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                      child: GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => GuessCodeScreen()));
-                          },
-                          child: Row(
-                            children: [
-                              IconButton(
-                                icon: const Icon(
-                                  Icons.password_sharp,
-                                  color: Colors.black,
-                                  size: 20,
-                                ),
-                                onPressed: () => Navigator.pop(context),
+                    child: GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => GuessCodeScreen()));
+                        },
+                        child: Row(
+                          children: [
+                            IconButton(
+                              icon: const Icon(
+                                Icons.password_sharp,
+                                color: Colors.black,
+                                size: 20,
                               ),
-                              const Text(
-                                'Изменить пароль для входа',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.black,
-                                ),
+                              onPressed: () => Navigator.pop(context),
+                            ),
+                            const Text(
+                              'Изменить пароль для входа',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.black,
                               ),
-                              const Spacer(),
-                              IconButton(
-                                icon: const Icon(
-                                  Icons.arrow_forward_ios,
-                                  color: Colors.grey,
-                                  size: 22,
-                                ),
-                                onPressed: () {},
+                            ),
+                            const Spacer(),
+                            IconButton(
+                              icon: const Icon(
+                                Icons.arrow_forward_ios,
+                                color: Colors.grey,
+                                size: 22,
                               ),
-                            ],
-                          )),
-                    ),
+                              onPressed: () {},
+                            ),
+                          ],
+                        )),
                   ),
+                  /* )
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 255, 255, 255),
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                        child: GestureDetector(
+                          onTap: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const NewPasswordScreen()),
+    );
+  },
+                          child: Row(
+                            children: const [
+                              IconButton(
+                                  icon: Icon(
+                                    Icons.delete_forever_sharp,
+                                    color: Colors.black,
+                                    size: 20,
+                                  ),
+                                  onPressed: null),
+                              Text(
+                            'Изменить пароль для входа',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.black,
+                            ),
+                          ),
+                          const Spacer(),
+                          IconButton(
+                            icon: const Icon(
+                              Icons.arrow_forward_ios,
+                              color: Colors.grey,
+                              size: 22,
+                            ),
+                            onPressed: null),
+                           ],
+                          ),
+                        ),
+                      )),*/
+
                   Container(
                       width: double.infinity,
                       padding: const EdgeInsets.only(bottom: 12),

@@ -3,7 +3,6 @@ library flutter_dialpad;
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
-//import 'package:flutter_dtmf/dtmf.dart';
 
 class DialPad extends StatefulWidget {
   final ValueSetter<String>? makeCall;
@@ -22,20 +21,21 @@ class DialPad extends StatefulWidget {
   final String? outputMask;
   final bool? enableDtmf;
 
-  DialPad(
-      {this.makeCall,
-      this.keyPressed,
-      this.hideDialButton,
-      this.hideSubtitle = false,
-      this.outputMask,
-      this.buttonColor,
-      this.buttonTextColor,
-      this.dialButtonColor,
-      this.dialButtonIconColor,
-      this.dialButtonIcon,
-      this.dialOutputTextColor,
-      this.backspaceButtonIconColor,
-      this.enableDtmf});
+  DialPad({
+    this.makeCall,
+    this.keyPressed,
+    this.hideDialButton,
+    this.hideSubtitle = false,
+    this.outputMask,
+    this.buttonColor,
+    this.buttonTextColor,
+    this.dialButtonColor,
+    this.dialButtonIconColor,
+    this.dialButtonIcon,
+    this.dialOutputTextColor,
+    this.backspaceButtonIconColor,
+    this.enableDtmf,
+  });
 
   @override
   _DialPadState createState() => _DialPadState();
@@ -44,7 +44,9 @@ class DialPad extends StatefulWidget {
 class _DialPadState extends State<DialPad> {
   MaskedTextController? textEditingController;
   var _value = "";
-  var mainTitle = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "*", "0", "＃"];
+  int selectedIndex = 0; // Добавлен для отслеживания введенных цифр
+  
+  var mainTitle = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "*", "0", "#"];
   var subTitle = [
     "",
     "ABC",
@@ -70,11 +72,11 @@ class _DialPadState extends State<DialPad> {
   _setText(String? value) async {
     if ((widget.enableDtmf == null || widget.enableDtmf!) && value != null)
     // Dtmf.playTone(digits: value.trim(), samplingRate: 8000, durationMs: 160);
-
+    
     if (widget.keyPressed != null) {
       () {
         print("hello?");
-
+        
         widget.makeCall!(_value);
         widget.keyPressed!(value!);
       }();
@@ -83,6 +85,12 @@ class _DialPadState extends State<DialPad> {
     setState(() {
       _value += value!;
       textEditingController!.text = _value;
+      selectedIndex++; // Увеличиваем счетчик введенных цифр
+      
+      // Проверяем длину введенного числа
+      if (_value.length >= 4) {
+        widget.makeCall!(_value); // Вызываем callback когда введено 4 цифры
+      }
     });
   }
 
@@ -93,7 +101,8 @@ class _DialPadState extends State<DialPad> {
     for (var i = 0; i < mainTitle.length; i++) {
       if (i % 3 == 0 && i > 0) {
         rows.add(Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: items));
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly, 
+            children: items));
         rows.add(SizedBox(
           height: 12,
         ));
@@ -109,7 +118,6 @@ class _DialPadState extends State<DialPad> {
         onTap: _setText,
       ));
     }
-    //To Do: Fix this workaround for last row
     rows.add(
         Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: items));
     rows.add(SizedBox(
@@ -127,18 +135,6 @@ class _DialPadState extends State<DialPad> {
     return Center(
       child: Column(
         children: <Widget>[
-          /*Padding(
-            padding: EdgeInsets.all(20),
-            child: TextFormField(
-              readOnly: true,
-              style: TextStyle(
-                  color: widget.dialOutputTextColor ?? Colors.black,
-                  fontSize: sizeFactor / 2),
-              textAlign: TextAlign.center,
-              decoration: InputDecoration(border: InputBorder.none),
-              controller: textEditingController,
-            ),
-          ),*/
           ..._getDialerButtons(),
           SizedBox(
             height: 15,
@@ -169,8 +165,7 @@ class _DialPadState extends State<DialPad> {
               ),
               Expanded(
                 child: Padding(
-                  padding:
-                      EdgeInsets.only(right: screenSize.height * 0.03685504),
+                  padding: EdgeInsets.only(right: screenSize.height * 0.03685504),
                   child: IconButton(
                     icon: Icon(
                       Icons.backspace,
@@ -187,6 +182,7 @@ class _DialPadState extends State<DialPad> {
                             if (_value.length > 0) {
                               setState(() {
                                 _value = _value.substring(0, _value.length - 1);
+                                selectedIndex--; // Уменьшаем счетчик при удалении цифры
                                 textEditingController!.text = _value;
                               });
                             }
@@ -213,17 +209,19 @@ class DialButton extends StatefulWidget {
   final Color? iconColor;
   final ValueSetter<String?>? onTap;
   final bool? shouldAnimate;
-  DialButton(
-      {this.key,
-      this.title,
-      this.subtitle,
-      this.hideSubtitle = false,
-      this.color,
-      this.textColor,
-      this.icon,
-      this.iconColor,
-      this.shouldAnimate,
-      this.onTap});
+
+  DialButton({
+    this.key,
+    this.title,
+    this.subtitle,
+    this.hideSubtitle = false,
+    this.color,
+    this.textColor,
+    this.icon,
+    this.iconColor,
+    this.shouldAnimate,
+    this.onTap,
+  });
 
   @override
   _DialButtonState createState() => _DialButtonState();
@@ -237,8 +235,8 @@ class _DialButtonState extends State<DialButton>
 
   @override
   void initState() {
-    _animationController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
+    _animationController = AnimationController(
+        vsync: this, duration: Duration(milliseconds: 300));
     _colorTween = ColorTween(
             begin: widget.color != null ? widget.color : Colors.white24,
             end: Colors.white)
@@ -251,7 +249,7 @@ class _DialButtonState extends State<DialButton>
   void dispose() {
     _animationController.dispose();
     super.dispose();
-    if ((widget.shouldAnimate == null || widget.shouldAnimate!) &&
+    if ((widget.shouldAnimate == null || widget.shouldAnimate!) && 
         _timer != null) _timer!.cancel();
   }
 
@@ -316,7 +314,8 @@ class _DialButtonState extends State<DialButton>
                                 color: widget.iconColor != null
                                     ? widget.iconColor
                                     : Colors.white)),
-                  ))),
+                  )),
+      )
     );
   }
 }

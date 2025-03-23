@@ -2,6 +2,8 @@ import 'dart:convert';
 //import 'package:date_picker_timeline /date_picker_widget.dart';
 import 'package:doctorq/chat/chat_screen.dart';
 import 'package:doctorq/date_picker_timeline-1.2.6/lib/date_picker_widget.dart';
+import 'package:doctorq/screens/appointments/AppointmentsScreen.dart';
+import 'package:doctorq/screens/appointments/AppointmentsScreenDoctor.dart';
 import 'package:doctorq/screens/home/home_screen/home_screen.dart';
 import 'package:doctorq/screens/home/home_screen/widgets/autolayouthor_item_widget_tasks.dart';
 import 'package:doctorq/screens/home/home_screen/widgets/autolayouthor_item_widget_zapisi.dart';
@@ -9,6 +11,8 @@ import 'package:doctorq/screens/home/home_screen/widgets/story_item_widget.dart'
 import 'package:doctorq/screens/profile/edit_profile_information.dart';
 import 'package:doctorq/screens/profile/exit_sure.dart';
 import 'package:doctorq/screens/profile/main_notification.dart';
+import 'package:doctorq/screens/profile/my_wallet.dart';
+import 'package:doctorq/screens/profile/promocodes_certificates.dart';
 import 'package:doctorq/screens/profile/questions_screen.dart';
 import 'package:doctorq/screens/profile/settings/appearance_screen/appearance_screen.dart';
 import 'package:doctorq/screens/profile/settings/logout_modal_bottomsheet/logout_modal_bottomsheet.dart';
@@ -288,7 +292,8 @@ class MainProfileScreen extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Row(
+                              GestureDetector(
+                              child: Row(
                                 children: [
                                   Icon(Icons.wallet,
                                       color: ColorConstant.bluegray800),
@@ -306,7 +311,16 @@ class MainProfileScreen extends StatelessWidget {
                                       color: ColorConstant.bluegray800),
                                 ],
                               ),
+                              onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => MyWalletScreen()));
+                                  }
+                              ),
                               VerticalSpace(height: 16),
+                               GestureDetector(
+                              child: 
                               Row(
                                 children: [
                                   Icon(Icons.card_giftcard,
@@ -325,7 +339,16 @@ class MainProfileScreen extends StatelessWidget {
                                       color: ColorConstant.bluegray800),
                                 ],
                               ),
+                               onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => PromocodesCertificatesScreen()));
+                                  }
+                               ),
                               VerticalSpace(height: 16),
+                               GestureDetector(
+                              child: 
                               Row(
                                 children: [
                                   Icon(Icons.archive,
@@ -344,6 +367,13 @@ class MainProfileScreen extends StatelessWidget {
                                       color: ColorConstant.bluegray800),
                                 ],
                               ),
+                               onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => AppointmentsScreen()));
+                                  }
+                               ),
                               VerticalSpace(height: 16),
                               GestureDetector(
                                 onTap: () {
