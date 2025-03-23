@@ -300,7 +300,12 @@ class CustomBottomNavBar extends StatelessWidget {
   final PersistentTabController controller;
 
   final NavBarDecoration navBarDecoration;
-
+  Widget buildMiddleItemForTest(ItemConfig item, bool isSelected) {
+    return _buildMiddleItem(item, isSelected);
+  }
+ Widget buildItemForTest(ItemConfig item, bool isSelected) {
+    return _buildItem(item, isSelected);
+  }
   Widget _buildItem(ItemConfig item, bool isSelected) => Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
