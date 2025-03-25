@@ -1,6 +1,7 @@
 import 'package:doctorq/app_export.dart';
 import 'package:doctorq/screens/auth/forgot/password_otp_active_screen/guess_code_screen.dart';
 import 'package:doctorq/screens/auth/reset/password_screen/password_screen.dart';
+import 'package:doctorq/screens/main_screen.dart';
 import 'package:doctorq/screens/profile/blank_screen/blank_screen.dart';
 import 'package:doctorq/stores/user_store.dart';
 import 'package:doctorq/widgets/bkBtn.dart';
@@ -14,12 +15,12 @@ import 'package:doctorq/services/auth_service.dart';
 
 class ForgotPasswordOtpActiveScreen extends StatelessWidget {
   final dynamic response;
-  late dynamic code;
   ForgotPasswordOtpActiveScreen({Key? key, this.response}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     bool isDark = Theme.of(context).brightness == Brightness.dark;
+    print(response);
     return Scaffold(
       body: SafeArea(
         child: SizedBox(
@@ -66,12 +67,13 @@ class ForgotPasswordOtpActiveScreen extends StatelessWidget {
                       top: 40,
                     ),
                     child: Text(
-                      "Код подтверждения был выслан на email /sms \n" +
-                          response.toString()
+                      "Код подтверждения был выслан на email и по sms \n" +
+                          "Временно показываем:" +
+                          response['code'].toString()
                       //   context.userData['email']
                       ,
                       overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.start,
+                      textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: getFontSize(
                           16,
@@ -103,7 +105,24 @@ class ForgotPasswordOtpActiveScreen extends StatelessWidget {
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly,
                         ],
-                        onChanged: (value) {},
+                        onChanged: (value) async {
+                          print(value.length.toString());
+                          if (value.length == 4) {
+                            if (value == response['code']) {
+                              var authRes =
+                                  await authUser(context, "s@s.ru", "123456");
+                              if (authRes == true) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => Main()
+                                      //   const GuessCode()
+                                      //     const ProfileBlankScreen()
+                                      ),
+                                );
+                              }
+                            }
+                          }
+                        },
                         textStyle: TextStyle(
                           fontSize: getFontSize(
                             29,
@@ -193,64 +212,6 @@ class ForgotPasswordOtpActiveScreen extends StatelessWidget {
                   SizedBox(height: 20),
                   Text("Не получили код? Проверьте спам"),
                   SizedBox(height: 20),
-                  CustomButton(
-                    isDark: isDark,
-                    width: size.width,
-                    text: "Подтвердить",
-                    /*margin: getMargin(
-                  left: 24,
-                  right: 24,
-                  bottom: 20,
-                ),*/
-                    onTap: () {
-                      showDialog(
-                        barrierColor: Colors.black.withOpacity(0.5),
-                        barrierDismissible: true,
-                        context: context,
-                        builder: (context) {
-                          Future.delayed(const Duration(milliseconds: 600), () {
-                            Navigator.of(context).pop(true);
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => GuessCodeScreen()
-                                  //   const GuessCode()
-                                  //     const ProfileBlankScreen()
-                                  ),
-                            );
-                          });
-                          return Dialog(
-                              backgroundColor: Colors.transparent,
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(15.0),
-                                ),
-                              ),
-                              elevation: 0.0,
-                              child: Center(
-                                child: Container(
-                                  width: getHorizontalSize(124),
-                                  height: getVerticalSize(124),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20),
-                                      color: isDark
-                                          ? ColorConstant.darkBg
-                                          : ColorConstant.whiteA700),
-                                  child: Center(
-                                      child: CircularProgressIndicator(
-                                    color: ColorConstant.blueA400,
-                                    backgroundColor:
-                                        ColorConstant.blueA400.withOpacity(.3),
-                                  )),
-                                ),
-                              ));
-                        },
-                      );
-                    },
-                    variant: ButtonVariant.FillBlueA400,
-                    fontStyle: ButtonFontStyle.SourceSansProSemiBold18,
-                    alignment: Alignment.center,
-                  ),
                 ],
               ),
             ],

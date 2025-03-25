@@ -241,8 +241,12 @@ class _SignUpBlankScreenState extends State<SignUpBlankScreen> {
                     if (true) {
                       //authRes == true) {
                       print("ok");
-                      var res = await sendSMS(phoneController.text);
-                      print(res?['code']);
+                      var code = generateRandomCode();
+                      var smsRes = await sendSMS(phoneController.text, code);
+                      var emailRes =
+                          await sendEmail(emailController.text, code);
+                      print(smsRes?['code']);
+                      print(emailRes?['code']);
                       showDialog(
                         barrierColor: Colors.black.withOpacity(0.5),
                         barrierDismissible: true,
@@ -254,7 +258,7 @@ class _SignUpBlankScreenState extends State<SignUpBlankScreen> {
                                 MaterialPageRoute(
                                     builder: (context) =>
                                         ForgotPasswordOtpActiveScreen(
-                                            response: res)
+                                            response: emailRes)
                                     //const ProfileBlankScreen()
                                     ));
                             //(Route<dynamic> route) => false);

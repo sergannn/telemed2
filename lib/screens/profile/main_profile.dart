@@ -293,87 +293,86 @@ class MainProfileScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               GestureDetector(
-                              child: Row(
-                                children: [
-                                  Icon(Icons.wallet,
-                                      color: ColorConstant.bluegray800),
-                                  HorizontalSpace(width: 16),
-                                  Text(
-                                    "Мой кошелек",
-                                    style: TextStyle(
-                                      fontSize: getFontSize(14),
-                                      fontFamily: 'Source Sans Pro',
-                                      color: ColorConstant.bluegray800,
-                                    ),
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.wallet,
+                                          color: ColorConstant.bluegray800),
+                                      HorizontalSpace(width: 16),
+                                      Text(
+                                        "Мой кошелек",
+                                        style: TextStyle(
+                                          fontSize: getFontSize(14),
+                                          fontFamily: 'Source Sans Pro',
+                                          color: ColorConstant.bluegray800,
+                                        ),
+                                      ),
+                                      Expanded(child: Container()),
+                                      Icon(Icons.chevron_right,
+                                          color: ColorConstant.bluegray800),
+                                    ],
                                   ),
-                                  Expanded(child: Container()),
-                                  Icon(Icons.chevron_right,
-                                      color: ColorConstant.bluegray800),
-                                ],
-                              ),
-                              onTap: () {
+                                  onTap: () {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => MyWalletScreen()));
-                                  }
-                              ),
+                                            builder: (context) =>
+                                                MyWalletScreen()));
+                                  }),
                               VerticalSpace(height: 16),
-                               GestureDetector(
-                              child: 
-                              Row(
-                                children: [
-                                  Icon(Icons.card_giftcard,
-                                      color: ColorConstant.bluegray800),
-                                  HorizontalSpace(width: 16),
-                                  Text(
-                                    "Промокоды и Сертификаты",
-                                    style: TextStyle(
-                                      fontSize: getFontSize(14),
-                                      fontFamily: 'Source Sans Pro',
-                                      color: ColorConstant.bluegray800,
-                                    ),
+                              GestureDetector(
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.card_giftcard,
+                                          color: ColorConstant.bluegray800),
+                                      HorizontalSpace(width: 16),
+                                      Text(
+                                        "Промокоды и Сертификаты",
+                                        style: TextStyle(
+                                          fontSize: getFontSize(14),
+                                          fontFamily: 'Source Sans Pro',
+                                          color: ColorConstant.bluegray800,
+                                        ),
+                                      ),
+                                      Expanded(
+                                          child: Container()), //пустое место
+                                      Icon(Icons.chevron_right,
+                                          color: ColorConstant.bluegray800),
+                                    ],
                                   ),
-                                  Expanded(child: Container()), //пустое место
-                                  Icon(Icons.chevron_right,
-                                      color: ColorConstant.bluegray800),
-                                ],
-                              ),
-                               onTap: () {
+                                  onTap: () {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => PromocodesCertificatesScreen()));
-                                  }
-                               ),
+                                            builder: (context) =>
+                                                PromocodesCertificatesScreen()));
+                                  }),
                               VerticalSpace(height: 16),
-                               GestureDetector(
-                              child: 
-                              Row(
-                                children: [
-                                  Icon(Icons.archive,
-                                      color: ColorConstant.bluegray800),
-                                  HorizontalSpace(width: 16),
-                                  Text(
-                                    "Архив записей",
-                                    style: TextStyle(
-                                      fontSize: getFontSize(14),
-                                      fontFamily: 'Source Sans Pro',
-                                      color: ColorConstant.bluegray800,
-                                    ),
+                              GestureDetector(
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.archive,
+                                          color: ColorConstant.bluegray800),
+                                      HorizontalSpace(width: 16),
+                                      Text(
+                                        "Архив записей",
+                                        style: TextStyle(
+                                          fontSize: getFontSize(14),
+                                          fontFamily: 'Source Sans Pro',
+                                          color: ColorConstant.bluegray800,
+                                        ),
+                                      ),
+                                      Expanded(child: Container()),
+                                      Icon(Icons.chevron_right,
+                                          color: ColorConstant.bluegray800),
+                                    ],
                                   ),
-                                  Expanded(child: Container()),
-                                  Icon(Icons.chevron_right,
-                                      color: ColorConstant.bluegray800),
-                                ],
-                              ),
-                               onTap: () {
+                                  onTap: () {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => AppointmentsScreen()));
-                                  }
-                               ),
+                                            builder: (context) =>
+                                                AppointmentsScreen()));
+                                  }),
                               VerticalSpace(height: 16),
                               GestureDetector(
                                 onTap: () {
@@ -704,53 +703,59 @@ Widget fourThings(titles, images) {
         return HorizontalSpace(width: 16);
       },
       itemBuilder: (context, index) {
-        return Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 8,
-                offset: Offset(0, 2),
+        return GestureDetector(
+            onTap: () {
+              Navigator.pushNamed(context, '/webview',
+                  arguments:
+                      'https://admin.onlinedoctor.su/articles/symptom.html');
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 8,
+                    offset: Offset(0, 2),
+                  ),
+                ],
               ),
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Container(
-                  width: getHorizontalSize(140),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                    image: DecorationImage(
-                      image: AssetImage(images[index]),
-                      fit: BoxFit.cover,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Container(
+                      width: getHorizontalSize(140),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        image: DecorationImage(
+                          image: AssetImage(images[index]),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-              Padding(
-                padding: getPadding(
-                  left: 16,
-                  top: 12,
-                  bottom: 16,
-                  right: 16,
-                ),
-                child: Text(
-                  titles[index],
-                  style: TextStyle(
-                    fontSize: getFontSize(14),
-                    fontFamily: 'Source Sans Pro',
-                    fontWeight: FontWeight.w600,
-                    color: ColorConstant.bluegray800,
+                  Padding(
+                    padding: getPadding(
+                      left: 16,
+                      top: 12,
+                      bottom: 16,
+                      right: 16,
+                    ),
+                    child: Text(
+                      titles[index],
+                      style: TextStyle(
+                        fontSize: getFontSize(14),
+                        fontFamily: 'Source Sans Pro',
+                        fontWeight: FontWeight.w600,
+                        color: ColorConstant.bluegray800,
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
-            ],
-          ),
-        );
+            ));
       },
     ),
   );

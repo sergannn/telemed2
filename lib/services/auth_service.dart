@@ -221,7 +221,21 @@ String generateRandomCode() {
   return code;
 }
 
-Future<Map<String, dynamic>?> sendSMS(tel) async {
+Future<Map<String, dynamic>?> sendEmail(email, code) async {
+  final url = Uri.parse('https://derevni-i-syola.ru/test-mail/$email/$code');
+  print(url);
+  final response = await http.get(url);
+
+  print(response.body);
+  if (response.statusCode == 200) {
+    print({'response': response.body, 'code': code});
+    return {'response': response.body, 'code': code, 'email': email};
+  } else {
+    return {'response': response.body, 'code': code, 'email': email};
+  }
+}
+
+Future<Map<String, dynamic>?> sendSMS(tel, code) async {
   final url = Uri.parse('https://api.exolve.ru/messaging/v1/SendSMS');
   print(tel);
   final headers = {
@@ -230,13 +244,12 @@ Future<Map<String, dynamic>?> sendSMS(tel) async {
   };
 
   try {
-    var code = generateRandomCode();
     final response = await http.post(url,
         headers: headers,
         body: jsonEncode({
           "number": "79587120489", // номер отправителя
           "destination": tel, // номер получателя
-          "text": generateRandomCode() // текст сообщения
+          "text": code // текст сообщения
         }));
     print(response.body);
     if (response.statusCode == 200) {
