@@ -10,9 +10,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:doctorq/extensions.dart';
+import 'package:doctorq/services/auth_service.dart';
 
 class ForgotPasswordOtpActiveScreen extends StatelessWidget {
-  const ForgotPasswordOtpActiveScreen({Key? key}) : super(key: key);
+  final dynamic response;
+  late dynamic code;
+  ForgotPasswordOtpActiveScreen({Key? key, this.response}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +66,8 @@ class ForgotPasswordOtpActiveScreen extends StatelessWidget {
                       top: 40,
                     ),
                     child: Text(
-                      "Код подтверждения был выслан на email " //адресу\n" +
+                      "Код подтверждения был выслан на email /sms \n" +
+                          response.toString()
                       //   context.userData['email']
                       ,
                       overflow: TextOverflow.ellipsis,

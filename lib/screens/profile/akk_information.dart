@@ -515,55 +515,18 @@ class _AkkInfoScreenState extends State<AkkInfoScreen> {
                                   color: Colors.grey,
                                   size: 22,
                                 ),
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const NewPasswordScreen()),
+                                  );
+                                },
                               ),
                             ],
                           )),
                     ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 2),
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 255, 255, 255),
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const NewPasswordScreen()),
-                          );
-                        },
-                        child: Row(
-                          children: const [
-                            IconButton(
-                                icon: Icon(
-                                  Icons.delete_forever_sharp,
-                                  color: Colors.black,
-                                  size: 20,
-                                ),
-                                onPressed: null),
-                            Text(
-                              'Изменить пароль для входа',
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.black,
-                              ),
-                            ),
-                            const Spacer(),
-                            IconButton(
-                                icon: const Icon(
-                                  Icons.arrow_forward_ios,
-                                  color: Colors.grey,
-                                  size: 22,
-                                ),
-                                onPressed: null),
-                          ],
-                        ),
-                      ),
-                    )
                   ]),
                   Container(
                       width: double.infinity,

@@ -677,7 +677,7 @@ class _SignInBlankScreenState extends State<SignInBlankScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const SignUpBlankScreen()),
+                              builder: (context) => SignUpBlankScreen()),
                         );
                       },
                       child: Text(

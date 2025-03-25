@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:doctorq/models/user_model.dart';
 import 'package:doctorq/services/session.dart';
@@ -176,13 +177,6 @@ Future<bool> authUser(
 
   final QueryResult result = await graphqlClient.mutate(options);
   debugPrintTransactionEnd('mutation login');
-  /* print("Request Details:");
-  print("Query: ${options.document}");
-  print("Variables: ${options.variables}");
-  print("Operation Name: ${options.operationName}");
-//  print("Headers: ${options.headers}");
-*/
-  // Log response details
   print("\nResponse Details:");
   print("Status: ${result.hasException ? "Error" : "Success"}");
   print("Data: ${jsonEncode(result.data)}");
@@ -216,6 +210,45 @@ Future<bool> authUser(
   userStore.setUserData(user.toJson());
 
   return true;
+}
+
+String generateRandomCode() {
+  final random = Random();
+  String code = '';
+  for (int i = 0; i < 4; i++) {
+    code += random.nextInt(10).toString();
+  }
+  return code;
+}
+
+Future<Map<String, dynamic>?> sendSMS(tel) async {
+  final url = Uri.parse('https://api.exolve.ru/messaging/v1/SendSMS');
+  print(tel);
+  final headers = {
+    'Authorization':
+        'Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJRV05sMENiTXY1SHZSV29CVUpkWjVNQURXSFVDS0NWODRlNGMzbEQtVHA0In0.eyJleHAiOjIwNTc3MDQxMTgsImlhdCI6MTc0MjM0NDExOCwianRpIjoiNzQ1NGVhMGItZGI5OS00ZWU3LWE0ZWMtZWZiOGFmYzdkOGVkIiwiaXNzIjoiaHR0cHM6Ly9zc28uZXhvbHZlLnJ1L3JlYWxtcy9FeG9sdmUiLCJhdWQiOiJhY2NvdW50Iiwic3ViIjoiOTVkNzJmYzgtZjNkYS00MmQ2LWJiNTAtOWIzMWZkNmU2YzkwIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiNDg0NjRlMTMtODUzNC00ZDYyLTliNTEtMDAyNmY4ZmI4NmE0Iiwic2Vzc2lvbl9zdGF0ZSI6ImE0NTE5Mzk1LWM0ZDQtNDY3Yi05YWMzLWZkMGUxZGY5MWM2MiIsImFjciI6IjEiLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsiZGVmYXVsdC1yb2xlcy1leG9sdmUiLCJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJleG9sdmVfYXBwIHByb2ZpbGUgZW1haWwiLCJzaWQiOiJhNDUxOTM5NS1jNGQ0LTQ2N2ItOWFjMy1mZDBlMWRmOTFjNjIiLCJ1c2VyX3V1aWQiOiI2YWU4NTg4NS00ZDM1LTQ1MzItYWNmYi05ODkzNGU2ZjNlNjgiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImNsaWVudElkIjoiNDg0NjRlMTMtODUzNC00ZDYyLTliNTEtMDAyNmY4ZmI4NmE0IiwiY2xpZW50SG9zdCI6IjE3Mi4xNi4xNjEuMTkiLCJhcGlfa2V5Ijp0cnVlLCJhcGlmb25pY2Ffc2lkIjoiNDg0NjRlMTMtODUzNC00ZDYyLTliNTEtMDAyNmY4ZmI4NmE0IiwiYmlsbGluZ19udW1iZXIiOiIxMzAwNDA4IiwiYXBpZm9uaWNhX3Rva2VuIjoiYXV0YmZkMzU3M2EtODIyMC00Mjg1LWJjY2MtYzYxMDk4MjQ2OGU0IiwicHJlZmVycmVkX3VzZXJuYW1lIjoic2VydmljZS1hY2NvdW50LTQ4NDY0ZTEzLTg1MzQtNGQ2Mi05YjUxLTAwMjZmOGZiODZhNCIsImN1c3RvbWVyX2lkIjoiMTA1MzA4IiwiY2xpZW50QWRkcmVzcyI6IjE3Mi4xNi4xNjEuMTkifQ.UVoabXQwZg15v638SJrsTwRFfpUZRnMfgShFEaBJ6ZtBlG9siaKzYqgtqLrdjA5yIji9ZIsASgpTaxPhMDOSwPDcEPa4c3nlUqBtTeFBO8_c1gxtAJK2ADjFjeL5Fupg6T6vaSmtXaHS9r6HFgXg5u0V1HXhUqqHaGKCm_UvizROQ12WjP-u5VRjGjXw4mYlH3ERn51DX5l6tgRt6EP63720FJYijElu5Cs19jXbtF1FAlx_EAgpFRjv3BUImvGLlXizBwspdfWWT4UIq703Fo9kGUQ1HPnayOmoM2AdcO5RyfBsAkDKlfSZenh8S0BBbK977IXCzohpV12BZbgOJQ'
+  };
+
+  try {
+    var code = generateRandomCode();
+    final response = await http.post(url,
+        headers: headers,
+        body: jsonEncode({
+          "number": "79587120489", // номер отправителя
+          "destination": tel, // номер получателя
+          "text": generateRandomCode() // текст сообщения
+        }));
+    print(response.body);
+    if (response.statusCode == 200) {
+      print({'response': response.body, 'code': code});
+      return {'response': response.body, 'code': code, 'phone': tel};
+    } else {
+      throw Exception('Failed to send SMS: ${response.statusCode}');
+    }
+  } catch (e) {
+    print('Error sending SMS: $e');
+    throw Exception('Error sending SMS: $e');
+  }
 }
 
 Future<String?> logOut() async {

@@ -16,7 +16,7 @@ import 'package:doctorq/services/auth_service.dart';
 import 'fields.dart';
 
 class SignUpBlankScreen extends StatefulWidget {
-  const SignUpBlankScreen({Key? key}) : super(key: key);
+  SignUpBlankScreen({Key? key}) : super(key: key);
 
   @override
   State<SignUpBlankScreen> createState() => _SignUpBlankScreenState();
@@ -28,6 +28,7 @@ class _SignUpBlankScreenState extends State<SignUpBlankScreen> {
   bool _showValidationErrors = false;
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
   String? _selectedRole;
 
   @override
@@ -72,273 +73,15 @@ class _SignUpBlankScreenState extends State<SignUpBlankScreen> {
                     ),
                   ),
                 ),
-                /*     Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                    width: double.infinity,
-                    margin: getMargin(
-                      left: 24,
-                      top: 30,
-                      right: 24,
-                    ),
-                    decoration: const BoxDecoration(),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Align(
-                          alignment: Alignment.center,
-                          child: Container(
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(
-                                getHorizontalSize(
-                                  2.00,
-                                ),
-                              ),
-                            ),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: getPadding(
-                                    left: 24,
-                                    right: 24,
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Padding(
-                                        padding: getPadding(),
-                                        child: Text(
-                                          "Email",
-                                          overflow: TextOverflow.ellipsis,
-                                          textAlign: TextAlign.start,
-                                          style: TextStyle(
-                                            color: isDark
-                                                ? Colors.white
-                                                : ColorConstant.bluegray800A2,
-                                            fontSize: getFontSize(
-                                              16,
-                                            ),
-                                            fontFamily: 'Source Sans Pro',
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: getPadding(
-                                          bottom: 5,
-                                        ),
-                                        child: Text(
-                                          "*",
-                                          overflow: TextOverflow.ellipsis,
-                                          textAlign: TextAlign.start,
-                                          style: TextStyle(
-                                            color: ColorConstant.redA700A2,
-                                            fontSize: getFontSize(
-                                              14,
-                                            ),
-                                            fontFamily: 'Source Sans Pro',
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                      boxShadow: isDark
-                                          ? customDarkBoxShadow
-                                          : customBoxShadow),
-                                  child: CustomTextFormField(
-                                    controller: emailController,
-                                    isDark: isDark,
-                                    width: size.width,
-                                    focusNode: FocusNode(),
-                                    hintText: "Email",
-                                    margin: getMargin(
-                                      top: 11,
-                                    ),
-                                    alignment: Alignment.centerLeft,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                    width: double.infinity,
-                    margin: getMargin(
-                      left: 24,
-                      top: 20,
-                      right: 24,
-                    ),
-                    decoration: const BoxDecoration(),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(
-                              getHorizontalSize(
-                                2.00,
-                              ),
-                            ),
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: getPadding(
-                                  left: 24,
-                                  top: 1,
-                                  right: 24,
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Padding(
-                                      padding: getPadding(
-                                        top: 3,
-                                      ),
-                                      child: Text(
-                                        "Password",
-                                        overflow: TextOverflow.ellipsis,
-                                        textAlign: TextAlign.start,
-                                        style: TextStyle(
-                                          color: isDark
-                                              ? Colors.white
-                                              : ColorConstant.bluegray800A2,
-                                          fontSize: getFontSize(
-                                            16,
-                                          ),
-                                          fontFamily: 'Source Sans Pro',
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: getPadding(
-                                        bottom: 5,
-                                      ),
-                                      child: Text(
-                                        "*",
-                                        overflow: TextOverflow.ellipsis,
-                                        textAlign: TextAlign.start,
-                                        style: TextStyle(
-                                          color: ColorConstant.redA700A2,
-                                          fontSize: getFontSize(
-                                            14,
-                                          ),
-                                          fontFamily: 'Source Sans Pro',
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                decoration: BoxDecoration(
-                                    boxShadow: isDark
-                                        ? customDarkBoxShadow
-                                        : customBoxShadow),
-                                child: CustomTextFormField(
-                                  controller: passwordController,
-                                  isDark: isDark,
-                                  width: size.width,
-                                  focusNode: FocusNode(),
-                                  hintText: "Password",
-                                  margin: getMargin(
-                                    top: 11,
-                                  ),
-                                  textInputAction: TextInputAction.done,
-                                  alignment: Alignment.center,
-                                  suffix: Container(
-                                    margin: getMargin(
-                                      left: 24,
-                                      right: 24,
-                                    ),
-                                    child: InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          obscure = !obscure;
-                                        });
-                                      },
-                                      child: CommonImageView(
-                                        imagePath: obscure
-                                            ? ImageConstant.visibilityOff
-                                            : ImageConstant.visibilityOn,
-                                      ),
-                                    ),
-                                  ),
-                                  suffixConstraints: BoxConstraints(
-                                    maxWidth: getHorizontalSize(
-                                      74.00,
-                                    ),
-                                    maxHeight: getVerticalSize(
-                                      24.00,
-                                    ),
-                                  ),
-                                  isObscureText: obscure,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-*/
-                /*    SizedBox(height: 20), // Add space between fields
-
-                ToggleButtons(
-                  constraints: const BoxConstraints(
-                    minHeight: 32.0,
-                    minWidth: 100.0,
-                  ),
-                  children: [Text('Доктор'), Text('Пациент')],
-                  isSelected: [
-                    _selectedRole == 'doctor',
-                    _selectedRole == 'patient'
-                  ],
-
-                  // This callback return the index of the c
-                  onPressed: (int index) {
-                    setState(() {
-                      _selectedRole = index == 0 ? 'doctor' : 'patient';
-                    });
-                  },
-                ),
-*/
                 ...RegFields.getAll().entries.map((entry) {
                   final field = entry.value;
                   print(field['label']);
 
                   if (entry.key == "email") {
                     emailController = field['controller'];
+                  }
+                  if (entry.key == 'phone') {
+                    phoneController = field['controller'];
                   }
                   if (entry.key == "password") {
                     passwordController = field['controller'];
@@ -364,14 +107,6 @@ class _SignUpBlankScreenState extends State<SignUpBlankScreen> {
                                         alignment: Alignment.center,
                                         child: Container(
                                           width: double.infinity,
-                                          /*
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(
-                                              getHorizontalSize(
-                                                2.00,
-                                              ),
-                                            ),
-                                          ),*/
                                           child: Column(
                                             mainAxisSize: MainAxisSize.min,
                                             mainAxisAlignment:
@@ -435,15 +170,6 @@ class _SignUpBlankScreenState extends State<SignUpBlankScreen> {
                                                     ],
                                                   )),
                                               Container(
-                                                /* decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          getHorizontalSize(
-                                                              2.00)),
-                                                  boxShadow: isDark
-                                                      ? customDarkBoxShadow
-                                                      : customBoxShadow,
-                                                ),*/
                                                 child: CustomTextFormField(
                                                   controller:
                                                       field['controller'],
@@ -515,18 +241,20 @@ class _SignUpBlankScreenState extends State<SignUpBlankScreen> {
                     if (true) {
                       //authRes == true) {
                       print("ok");
-
+                      var res = await sendSMS(phoneController.text);
+                      print(res?['code']);
                       showDialog(
                         barrierColor: Colors.black.withOpacity(0.5),
                         barrierDismissible: true,
                         context: context,
                         builder: (context) {
-                          Future.delayed(const Duration(milliseconds: 600), () {
+                          Future.delayed(Duration(milliseconds: 600), () {
                             Navigator.of(context).pop(true);
                             Navigator.of(context).push(//AndRemoveUntil(
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        ForgotPasswordOtpActiveScreen()
+                                        ForgotPasswordOtpActiveScreen(
+                                            response: res)
                                     //const ProfileBlankScreen()
                                     ));
                             //(Route<dynamic> route) => false);

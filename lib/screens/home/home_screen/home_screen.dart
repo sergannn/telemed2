@@ -6,6 +6,7 @@ import 'package:doctorq/screens/home/home_screen/widgets/autolayouthor_item_widg
 import 'package:doctorq/screens/home/home_screen/widgets/autolayouthor_item_widget_zapisi.dart';
 import 'package:doctorq/screens/home/home_screen/widgets/doctor_item.dart';
 import 'package:doctorq/screens/home/home_screen/widgets/story_item_widget.dart';
+import 'package:doctorq/screens/webviews/someWebPage.dart';
 import 'package:doctorq/screens/profile/main_notification.dart';
 import 'package:doctorq/screens/profile/main_profile.dart';
 import 'package:doctorq/screens/profile/popular_doctors.dart';
@@ -588,60 +589,92 @@ class HomeScreen extends StatelessWidget {
                                   // mainAxisSize: MainAxisSize.max,
                                   children: [
                                     Column(children: [
-                                      CircleAvatar(
-                                          backgroundColor:
-                                              ColorConstant.fromHex("C8E0FF"),
-                                          radius: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              10,
-                                          child: IconButton(
-                                              onPressed: null,
-                                              icon: Icon(Icons.person))),
+                                      GestureDetector(
+                                          onTap: () {
+                                            Navigator.pushNamed(
+                                                context, '/webview',
+                                                arguments:
+                                                    'https://admin.onlinedoctor.su/articles/symptom.html');
+                                          },
+                                          child: CircleAvatar(
+                                              backgroundColor:
+                                                  ColorConstant.fromHex(
+                                                      "C8E0FF"),
+                                              radius: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  10,
+                                              child: IconButton(
+                                                  onPressed: null,
+                                                  icon: Icon(Icons.person)))),
                                       Text("Врачи")
                                     ]),
                                     Column(children: [
-                                      CircleAvatar(
-                                          backgroundColor:
-                                              ColorConstant.fromHex("FFFCBB"),
-                                          radius: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              10,
-                                          child: IconButton(
-                                              onPressed: () {
-                                                Navigator.pushNamed(
-                                                    context, "/lekarstva");
-                                              },
-                                              icon: Icon(Icons.medication,
-                                                  size: getVerticalSize(50)))),
+                                      GestureDetector(
+                                          onTap: () {
+                                            Navigator.pushNamed(
+                                                context, '/webview',
+                                                arguments:
+                                                    'https://admin.onlinedoctor.su/articles/symptom.html');
+                                          },
+                                          child: CircleAvatar(
+                                              backgroundColor:
+                                                  ColorConstant.fromHex(
+                                                      "FFFCBB"),
+                                              radius: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  10,
+                                              child: IconButton(
+                                                  onPressed: () {
+                                                    Navigator.pushNamed(
+                                                        context, "/webview");
+                                                  },
+                                                  icon: Icon(Icons.medication,
+                                                      size: getVerticalSize(
+                                                          50))))),
                                       Text("Лекарства")
                                     ]),
                                     Column(children: [
-                                      CircleAvatar(
-                                          backgroundColor:
-                                              ColorConstant.fromHex("C8E0FF"),
-                                          radius: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              10,
-                                          child: IconButton(
-                                              onPressed: () {
-                                                Navigator.pushNamed(
-                                                    context, "/lekarstva");
-                                              },
-                                              icon: Icon(Icons.info))),
+                                      GestureDetector(
+                                          onTap: () {
+                                            Navigator.pushNamed(
+                                                context, '/webview',
+                                                arguments:
+                                                    'https://admin.onlinedoctor.su/articles/symptom.html');
+                                          },
+                                          child: CircleAvatar(
+                                              backgroundColor:
+                                                  ColorConstant.fromHex(
+                                                      "C8E0FF"),
+                                              radius: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  10,
+                                              child: IconButton(
+                                                  onPressed: () {
+                                                    Navigator.pushNamed(
+                                                        context, "/webview");
+                                                  },
+                                                  icon: Icon(Icons.info)))),
                                       Text("Полезное")
                                     ]),
                                     Column(children: [
-                                      CircleAvatar(
-                                          radius: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              10,
-                                          child: IconButton(
-                                              onPressed: null,
-                                              icon: Icon(Icons.article))),
+                                      GestureDetector(
+                                          onTap: () {
+                                            Navigator.pushNamed(
+                                                context, '/webview',
+                                                arguments:
+                                                    'https://admin.onlinedoctor.su/articles/symptom.html');
+                                          },
+                                          child: CircleAvatar(
+                                              radius: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  10,
+                                              child: IconButton(
+                                                  onPressed: null,
+                                                  icon: Icon(Icons.article)))),
                                       Text("Статьи")
                                     ]),
                                   ]))),
@@ -868,53 +901,62 @@ Widget fourThings(titles, images) {
         return HorizontalSpace(width: 16);
       },
       itemBuilder: (context, index) {
-        return Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 8,
-                offset: Offset(0, 2),
+        return GestureDetector(
+            onTap: () {
+              print("one of thing");
+              //  if (index == 0) {
+              Navigator.pushNamed(context, '/webview',
+                  arguments:
+                      'https://admin.onlinedoctor.su/articles/symptom.html');
+              // }
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 8,
+                    offset: Offset(0, 2),
+                  ),
+                ],
               ),
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Container(
-                  width: getHorizontalSize(160),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                    image: DecorationImage(
-                      image: AssetImage(images[index]),
-                      fit: BoxFit.cover,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Container(
+                      width: getHorizontalSize(160),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        image: DecorationImage(
+                          image: AssetImage(images[index]),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-              Padding(
-                padding: getPadding(
-                  left: 16,
-                  top: 12,
-                  bottom: 16,
-                  right: 16,
-                ),
-                child: Text(
-                  titles[index],
-                  style: TextStyle(
-                    fontSize: getFontSize(14),
-                    fontFamily: 'Source Sans Pro',
-                    fontWeight: FontWeight.w600,
-                    color: ColorConstant.bluegray800,
+                  Padding(
+                    padding: getPadding(
+                      left: 16,
+                      top: 12,
+                      bottom: 16,
+                      right: 16,
+                    ),
+                    child: Text(
+                      titles[index],
+                      style: TextStyle(
+                        fontSize: getFontSize(14),
+                        fontFamily: 'Source Sans Pro',
+                        fontWeight: FontWeight.w600,
+                        color: ColorConstant.bluegray800,
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
-            ],
-          ),
-        );
+            ));
       },
     ),
   );

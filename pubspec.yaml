@@ -104,6 +104,8 @@ dependencies:
   flutter_screenutil: ^5.9.3
   basic_utils: ^5.7.0
   number_pad_keyboard: ^0.0.6
+  flutter_local_notifications: ^19.0.0
+  flutter_timezone: ^4.1.0
 #  analyzer: ^6.11.0
 #  dartdoc: ^8.3.2
 #  flutter_dtmf: ^2.0.2

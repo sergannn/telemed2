@@ -232,7 +232,7 @@ class _ForgotPasswordMethodScreenState
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
-                                const ForgotPasswordOtpActiveScreen()),
+                                ForgotPasswordOtpActiveScreen()),
                       );
                     },
                     variant: ButtonVariant.FillBlueA400,

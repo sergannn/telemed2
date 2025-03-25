@@ -31,6 +31,7 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
+        coreLibraryDesugaringEnabled true
     }
 
     defaultConfig {
@@ -47,7 +48,10 @@ android {
         manifestPlaceholders += [YANDEX_CLIENT_ID:"1f0344857eab4da69d2bc892d42baede"]//,appAuthRedirectScheme: 'com.redirectScheme.comm']
         multiDexEnabled true // Add this line
     }
-
+dependencies {
+    // Add this [coreLibraryDesugaring] inside [dependencies]
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.4'// use compatible version e.g 2.1.4 
+}
     
 
     buildTypes {

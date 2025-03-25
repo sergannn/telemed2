@@ -124,6 +124,8 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                             });
                           },
                           makeCall: (number) async {
+                            print("making call");
+                            print(number);
                             if (number.toString().length >= 4) {
                               if (widget.isRepeatPassword) {
                                 if (repeatedPassword == newPassword) {
@@ -153,7 +155,8 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                                                     ),
                                                   ),
                                                   //child= это кнопка
-                                                   TextButton(child: Text("ok"),
+                                                  TextButton(
+                                                      child: Text("ok"),
                                                       onPressed: () {
                                                         Navigator.pop(dcontext);
                                                         Navigator
