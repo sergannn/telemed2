@@ -21,6 +21,7 @@ class _MyAppState extends State<GuessCodeScreen> {
         body: SafeArea(
           child: Column(
             children: [
+              
               Container(
                 width: size.width,
                 margin: getMargin(top: 36, left: 20, right: 20),

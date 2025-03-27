@@ -93,7 +93,7 @@ class SignUpOrSignInScreen extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const SignUpBlankScreen()),
+                      builder: (context) => SignUpBlankScreen()),
                 );
               },
               fontStyle: ButtonFontStyle.SourceSansProSemiBold18,
