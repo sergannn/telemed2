@@ -14,6 +14,7 @@ import 'package:doctorq/screens/profile/main_notification.dart';
 import 'package:doctorq/screens/profile/my_wallet.dart';
 import 'package:doctorq/screens/profile/promocodes_certificates.dart';
 import 'package:doctorq/screens/profile/questions_screen.dart';
+import 'package:doctorq/screens/profile/questions_screen.dart';
 import 'package:doctorq/screens/profile/settings/appearance_screen/appearance_screen.dart';
 import 'package:doctorq/screens/profile/settings/logout_modal_bottomsheet/logout_modal_bottomsheet.dart';
 import 'package:doctorq/screens/profile/settings/settings_all.dart';

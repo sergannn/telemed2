@@ -16,7 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:doctorq/services/api_service.dart';
 
 class ChooseSpecsScreen extends StatefulWidget {
-  const ChooseSpecsScreen({Key? key}) : super(key: key);
+  const ChooseSpecsScreen({Key? key,}) : super(key: key);
 
   @override
   State<ChooseSpecsScreen> createState() => _TopDoctorScreenState();

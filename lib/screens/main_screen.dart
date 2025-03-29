@@ -4,6 +4,7 @@ import 'package:doctorq/screens/appointments/AppointmentsScreen.dart';
 import 'package:doctorq/screens/home/home_screen/home_screen.dart';
 import 'package:doctorq/screens/home/home_screen/home_screen_forFuture.dart';
 import 'package:doctorq/screens/medcard/card_gallery.dart';
+import 'package:doctorq/screens/profile/health_screen.dart';
 import 'package:doctorq/screens/profile/main_profile.dart';
 import 'package:doctorq/stores/user_store.dart';
 import 'package:doctorq/theme/svg_constant.dart';
@@ -20,7 +21,8 @@ class Main extends StatelessWidget {
 //      ProfileBlankScreen(),
 //      ProfileSettingsScreen(), //uId: uId ?? '-1'),
       const AppointmentsScreen(), //uId ?? '-1'),
-      StoriesScreen()
+      StoriesScreen(),
+      HealthScreen()
       //   const HistoryScreen(),
     ];
   }
@@ -199,7 +201,7 @@ class Main extends StatelessWidget {
             ),
           )),
       PersistentTabConfig(
-          screen: _buildScreens()[3],
+          screen: _buildScreens()[4],
           item: ItemConfig(
             icon: Icon(Icons.favorite,
                 color: const Color.fromARGB(255, 92, 92, 92)),
@@ -213,6 +215,7 @@ class Main extends StatelessWidget {
             //activeColorPrimary: ColorConstant.blueA400.withOpacity(0.1),
             //inactiveColorPrimary: ColorConstant.blueA400,
           )),
+          
       PersistentTabConfig(
           screen: MainProfileScreen(),
           item: ItemConfig(

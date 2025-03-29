@@ -174,6 +174,7 @@ class _MedCardScreenState extends State<MedCardScreen>
                         },
                       ),
                     ),
+                    
                     SizedBox(height: 8),
                     Text(
                      index==0 ? 'Добавить' : 'Документ ${index + 1}',
