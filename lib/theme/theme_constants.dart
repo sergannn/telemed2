@@ -69,14 +69,15 @@ ThemeData lightTheme = ThemeData(
       ),
     ),
   ),
-);
+); /*
 
 ThemeData darkTheme = ThemeData(
   dialogTheme: DialogTheme(
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(getHorizontalSize(10))),
       backgroundColor: ColorConstant.darkBg),
-  scaffoldBackgroundColor: ColorConstant.darkBg,
+  scaffoldBackgroundColor: Colors.white,
+//  scaffoldBackgroundColor: ColorConstant.darkBg,
   tabBarTheme: const TabBarTheme(),
   appBarTheme: const AppBarTheme(
       // backgroundColor: ColorConstant.darkBg,
@@ -138,7 +139,7 @@ ThemeData darkTheme = ThemeData(
     )),
   ),
 );
-
+*/
 Widget darkCustomContainer(
     {required Widget child,
     EdgeInsetsGeometry padding = const EdgeInsets.symmetric(horizontal: 1)}) {

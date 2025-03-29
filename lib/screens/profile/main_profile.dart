@@ -372,7 +372,8 @@ class MainProfileScreen extends StatelessWidget {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                AppointmentsScreen()));
+                                                AppointmentsScreen(
+                                                    mode: 'old')));
                                   }),
                               VerticalSpace(height: 16),
                               GestureDetector(

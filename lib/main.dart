@@ -156,7 +156,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           title: 'Телемедицина',
           debugShowCheckedModeBanner: false,
           //
-          theme: lightTheme,
+          // theme: lightTheme,
           //  darkTheme: darkTheme,
           //  themeMode: themeManager.themeMode,
           localizationsDelegates: context.localizationDelegates,

@@ -36,9 +36,9 @@ class _HealthScreenState extends State<HealthScreen>
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          //   mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.end,
+          //   mainAxisAlignment: MainAxisAlignment.end,
           children: [
             ...topBack(
                 text: "Здоровье",
@@ -134,31 +134,32 @@ class _HealthScreenState extends State<HealthScreen>
 
   Widget ArticlesSection() {
     return ListView(
+      scrollDirection: Axis.vertical,
       padding: EdgeInsets.all(16),
       children: [
-      GestureDetector(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const HighPressureScreen()),
-          );
-        },
-        child:
-        ArticleSection(
-          title: "Важные советы от врачей",
-          images: [
-            ArticleImage(
-              imageUrl: "assets/images/ad.png",
-              title: "Высокое давление",
-            ),
-            ArticleImage(
-              imageUrl: "assets/images/abouthealth.png",
-              title: "5 причин заболеваний",
-            ),
-          ],
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const HighPressureScreen()),
+            );
+          },
+          child: ArticleSection(
+            title: "Важные советы от врачей",
+            images: [
+              ArticleImage(
+                imageUrl: "assets/images/ad.png",
+                title: "Высокое давление",
+              ),
+              ArticleImage(
+                imageUrl: "assets/images/abouthealth.png",
+                title: "5 причин заболеваний",
+              ),
+            ],
+          ),
         ),
-      ),
-        VerticalSpace(height: 24),
+        // VerticalSpace(height: 24),
         ArticleSection(
           title: "Все про симптомы",
           images: [
@@ -172,7 +173,7 @@ class _HealthScreenState extends State<HealthScreen>
             ),
           ],
         ),
-        VerticalSpace(height: 24),
+        //  VerticalSpace(height: 24),
         ArticleSection(
           title: "В чем смысл здорового образа жизни",
           images: [
@@ -186,7 +187,7 @@ class _HealthScreenState extends State<HealthScreen>
             ),
           ],
         ),
-        VerticalSpace(height: 24),
+        //   VerticalSpace(height: 24),
         ArticleSection(
           title: "Важное про беременность",
           images: [
@@ -205,7 +206,11 @@ class _HealthScreenState extends State<HealthScreen>
     );
   }
 
-  Widget ArticleSection({required String title, required List<ArticleImage> images}) {
+  Widget ArticleSection(
+      {required String title, required List<ArticleImage> images}) {
+    ///    return ...List.generate(100, (index) {
+//      return Text("a");
+    //   });
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -234,31 +239,33 @@ class _HealthScreenState extends State<HealthScreen>
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
-              children: images.map((image) => Padding(
-                padding: EdgeInsets.only(right: 16),
-                child: Column(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Image.asset(
-                        image.imageUrl,
-                        width: 160,
-                        height: 100,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      image.title,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: getFontSize(12),
-                        fontFamily: 'Source Sans Pro',
-                      ),
-                    ),
-                  ],
-                ),
-              )).toList(),
+              children: images
+                  .map((image) => Padding(
+                        padding: EdgeInsets.only(right: 16),
+                        child: Column(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Image.asset(
+                                image.imageUrl,
+                                width: 160,
+                                height: 100,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              image.title,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: getFontSize(12),
+                                fontFamily: 'Source Sans Pro',
+                              ),
+                            ),
+                          ],
+                        ),
+                      ))
+                  .toList(),
             ),
           ),
         ],

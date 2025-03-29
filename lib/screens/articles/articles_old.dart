@@ -195,6 +195,14 @@ class _MedCardScreenState extends State<MedCardScreen>
 
           // Третья вкладка - дневник
           TableCalendar(
+            onCalendarCreated: (controller) {
+              // controller.
+            },
+            holidayPredicate: (day) {
+              print(day);
+              // Every 20th day of the month will be treated as a holiday
+              return day.day == 20;
+            },
             locale: 'ru_RU',
             focusedDay: DateTime.now(),
             firstDay: DateTime.utc(2010, 10, 16),

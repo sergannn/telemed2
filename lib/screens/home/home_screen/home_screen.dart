@@ -141,6 +141,7 @@ class HomeScreen extends StatelessWidget {
 
     bool isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
+      backgroundColor: Colors.white,
       extendBody: true,
       // floatingActionButton: const FloatingActionButton( heroTag: "b", onPressed: null, child: Text("uId")),
       body: SafeArea(
@@ -575,88 +576,120 @@ class HomeScreen extends StatelessWidget {
                       ),
                       // someObxList(context, itemController), фотки докторов - сторисы
                       Align(
-  alignment: Alignment.center,
-  child: Padding(
-    padding: getPadding(
-      left: 20,
-      top: 30,
-      right: 20,
-    ),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Column(children: [
-          GestureDetector(
-            onTap: () {
-              Navigator.pushNamed(
-                context, '/webview',
-                arguments: 'https://admin.onlinedoctor.su/articles/symptom.html');
-            },
-            child: CircleAvatar(
-              backgroundColor: ColorConstant.fromHex("C8E0FF"),
-              radius: MediaQuery.of(context).size.width / 10,
-              child: IconButton(
-                onPressed: null,
-                icon: Icon(Icons.person,
-                color: Colors.grey,)))),
-          Text("Врачи")
-        ]),
-        Column(children: [
-          GestureDetector(
-            onTap: () {
-              Navigator.pushNamed(
-                context, '/webview',
-                arguments: 'https://admin.onlinedoctor.su/articles/symptom.html');
-            },
-            child: CircleAvatar(
-              backgroundColor: ColorConstant.fromHex("C8E0FF"), // Изменен с FFFCBB на C8E0FF
-              radius: MediaQuery.of(context).size.width / 10,
-              child: IconButton(
-                onPressed: () {
-                  Navigator.pushNamed(
-                    context, "/webview");
-                },
-                icon: Icon(Icons.medication,
-                color: Colors.grey,
-                  size: getVerticalSize(24))))), 
-          Text("Лекарства")
-        ]),
-        Column(children: [
-GestureDetector(
-onTap: () {
-Navigator.pushNamed(
-context, '/webview',
-arguments: 'https://admin.onlinedoctor.su/articles/symptom.html');
-},
-child: CircleAvatar(
-backgroundColor: ColorConstant.fromHex("C8E0FF"),
-radius: MediaQuery.of(context).size.width / 10,
-child: IconButton(
-onPressed: () {
-Navigator.pushNamed(
-context, "/webview");
-},
-icon: Icon(Icons.info,
-color: Colors.grey, // Измените цвет здесь
-size: getVerticalSize(24))))),
-Text("Полезное")
-]),
-        Column(children: [
-          GestureDetector(
-            onTap: () {
-              Navigator.pushNamed(
-                context, '/webview',
-                arguments: 'https://admin.onlinedoctor.su/articles/symptom.html');
-            },
-            child: CircleAvatar(
-              backgroundColor: ColorConstant.fromHex("C8E0FF"),
-              radius: MediaQuery.of(context).size.width / 10,
-              child: IconButton(
-                onPressed: null,
-                icon: Icon(Icons.article,
-                color: Colors.grey,)))),
-          Text("Статьи")
+                          alignment: Alignment.center,
+                          child: Padding(
+                              padding: getPadding(
+                                left: 20,
+                                top: 30,
+                                right: 20,
+                              ),
+                              child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Column(children: [
+                                      GestureDetector(
+                                          onTap: () {
+                                            Navigator.pushNamed(
+                                                context, '/webview',
+                                                arguments:
+                                                    'https://admin.onlinedoctor.su/articles/symptom.html');
+                                          },
+                                          child: CircleAvatar(
+                                              backgroundColor:
+                                                  ColorConstant.fromHex(
+                                                      "C8E0FF"),
+                                              radius: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  10,
+                                              child: IconButton(
+                                                  onPressed: null,
+                                                  icon: Icon(
+                                                    Icons.person,
+                                                    color: Colors.grey,
+                                                  )))),
+                                      Text("Врачи")
+                                    ]),
+                                    Column(children: [
+                                      GestureDetector(
+                                          onTap: () {
+                                            Navigator.pushNamed(
+                                                context, '/webview',
+                                                arguments:
+                                                    'https://admin.onlinedoctor.su/articles/symptom.html');
+                                          },
+                                          child: CircleAvatar(
+                                              backgroundColor:
+                                                  ColorConstant.fromHex(
+                                                      "C8E0FF"), // Изменен с FFFCBB на C8E0FF
+                                              radius: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  10,
+                                              child: IconButton(
+                                                  onPressed: () {
+                                                    Navigator.pushNamed(
+                                                        context, "/webview");
+                                                  },
+                                                  icon: Icon(Icons.medication,
+                                                      color: Colors.grey,
+                                                      size: getVerticalSize(
+                                                          24))))),
+                                      Text("Лекарства")
+                                    ]),
+                                    Column(children: [
+                                      GestureDetector(
+                                          onTap: () {
+                                            Navigator.pushNamed(
+                                                context, '/webview',
+                                                arguments:
+                                                    'https://admin.onlinedoctor.su/articles/symptom.html');
+                                          },
+                                          child: CircleAvatar(
+                                              backgroundColor:
+                                                  ColorConstant.fromHex(
+                                                      "C8E0FF"),
+                                              radius: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  10,
+                                              child: IconButton(
+                                                  onPressed: () {
+                                                    Navigator.pushNamed(
+                                                        context, "/webview");
+                                                  },
+                                                  icon: Icon(Icons.info,
+                                                      color: Colors
+                                                          .grey, // Измените цвет здесь
+                                                      size: getVerticalSize(
+                                                          24))))),
+                                      Text("Полезное")
+                                    ]),
+                                    Column(children: [
+                                      GestureDetector(
+                                          onTap: () {
+                                            Navigator.pushNamed(
+                                                context, '/webview',
+                                                arguments:
+                                                    'https://admin.onlinedoctor.su/articles/symptom.html');
+                                          },
+                                          child: CircleAvatar(
+                                              backgroundColor:
+                                                  ColorConstant.fromHex(
+                                                      "C8E0FF"),
+                                              radius: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  10,
+                                              child: IconButton(
+                                                  onPressed: null,
+                                                  icon: Icon(
+                                                    Icons.article,
+                                                    color: Colors.grey,
+                                                  )))),
+                                      Text("Статьи")
                                     ]),
                                   ]))),
                       // Раздел "Рекомендуем вам"

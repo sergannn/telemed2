@@ -22,19 +22,22 @@ import 'package:get_it/get_it.dart';
 GetIt getIt = GetIt.instance;
 
 class AppointmentsScreen extends StatefulWidget {
-  const AppointmentsScreen({Key? key}) : super(key: key);
+  final String? mode;
 
+  const AppointmentsScreen({Key? key, this.mode}) : super(key: key);
   @override
   State<AppointmentsScreen> createState() => _AppointmentsScreenState();
 }
 
 class _AppointmentsScreenState extends State<AppointmentsScreen> {
   bool showUpcomming = true;
+//  bool showUpcomming = widget.mode == 'old' ? false : true;
   List myAppointments = [];
 
   @override
   initState() {
     super.initState();
+    showUpcomming = widget.mode == 'old' ? false : true;
     loadData();
 
     /*   pullToRefreshController = PullToRefreshController(
@@ -78,6 +81,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,

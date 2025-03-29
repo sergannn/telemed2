@@ -35,7 +35,8 @@ class _AppointmentsBookScreenState extends State<AppointmentsBookScreen> {
   @override
   Widget build(BuildContext context) {
     bool isDark = Theme.of(context).brightness == Brightness.dark;
-    bool isRtl = context.locale == Constants.arLocal;
+    //  bool isRtl = context.locale == Constants.arLocal;
+
     Map<dynamic, dynamic> doctor = context.selectedDoctor;
     //print(doctor["doctorSession"]["sessionWeekDays"]);
     print(doctor);
@@ -52,7 +53,7 @@ class _AppointmentsBookScreenState extends State<AppointmentsBookScreen> {
       for (int day = 1; day <= 70; day++) {
         DateTime date = DateTime.now().add(Duration(days: day - 1));
         print(date.weekday);
-        if (!daysOfWeek.contains(date.weekday)) inactiveDates.add(date);
+        if (daysOfWeek.contains(date.weekday)) inactiveDates.add(date);
       }
 
       return inactiveDates;
@@ -66,115 +67,116 @@ class _AppointmentsBookScreenState extends State<AppointmentsBookScreen> {
             SingleChildScrollView(
       child: Column(
         children: [
-          ...topBack(text:"Запись к врачу", context:context),
-          
-          
-          GestureDetector(onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => DoctorInfoScreen()));
-          },
-          child:
-          // Зеленый контейнер
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: getPadding(
-                left: 24,
-                top: 4,
-                right: 24,
-              ),
-              child: Container(
-                margin: const EdgeInsets.only(top: 8),
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color:
-                      const Color.fromARGB(255, 247, 247, 247).withOpacity(0.8),
-                  borderRadius: BorderRadius.circular(20),
+          ...topBack(text: "Запись к врачу", context: context),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => DoctorInfoScreen()));
+            },
+            child:
+                // Зеленый контейнер
+                Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: getPadding(
+                  left: 24,
+                  top: 4,
+                  right: 24,
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CircleAvatar(
-                          radius: 20,
-                          backgroundImage: //
-                          NetworkImage(
-                            context.selectedDoctor['photo']), // Используем AssetImage вместо Image.asset
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                child: Container(
+                  margin: const EdgeInsets.only(top: 8),
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 247, 247, 247)
+                        .withOpacity(0.8),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CircleAvatar(
+                            radius: 20,
+                            backgroundImage: //
+                                NetworkImage(context.selectedDoctor[
+                                    'photo']), // Используем AssetImage вместо Image.asset
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(context.selectedDoctor['username'],
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
+                                Text(context.selectedDoctor['specializations']
+                                            .length ==
+                                        0
+                                    ? ''
+                                    : context.selectedDoctor['specializations']
+                                        [0]['name'])
+                              ],
+                            ),
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                               Text(  context.selectedDoctor['username'],
-                                  style:
-                                      TextStyle(fontWeight: FontWeight.bold)),
-                              Text(
-                                      context.selectedDoctor['specializations'].length == 0
-                          ? ''
-                          :    context.selectedDoctor['specializations'][0][
-                              'name'])
-                         
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 2, vertical: 2),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.rectangle,
+                                  borderRadius: BorderRadius.circular(20),
+                                  color:
+                                      const Color.fromARGB(255, 176, 214, 254),
+                                ),
+                                constraints: const BoxConstraints(
+                                    minWidth: 10, minHeight: 4),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      Icons.currency_ruble,
+                                      size: 12,
+                                      color: Color.fromARGB(255, 16, 16, 16),
+                                    ),
+                                    const Text('2300',
+                                        style: TextStyle(
+                                            color:
+                                                Color.fromARGB(255, 16, 16, 16),
+                                            fontSize: 11)),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 4),
                             ],
                           ),
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 2, vertical: 2),
-                              decoration: BoxDecoration(
-                                shape: BoxShape.rectangle,
-                                borderRadius: BorderRadius.circular(20),
-                                color: const Color.fromARGB(255, 176, 214, 254),
-                              ),
-                              constraints: const BoxConstraints(
-                                  minWidth: 10, minHeight: 4),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(
-                                    Icons.currency_ruble,
-                                    size: 12,
-                                    color: Color.fromARGB(255, 16, 16, 16),
-                                  ),
-                                  const Text('2300',
-                                      style: TextStyle(
-                                          color:
-                                              Color.fromARGB(255, 16, 16, 16),
-                                          fontSize: 11)),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                          ],
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8), // Отступ между строками
-                    Container(
-                      width: double.infinity, // Полная ширина
-                      height: 40, // Высота изображения
-                      decoration: BoxDecoration(
-                        borderRadius:
-                            BorderRadius.circular(12), // Закругленные углы
-                        image: DecorationImage(
-                          image: AssetImage('assets/images/icons.png'),
-                          fit: BoxFit.contain,
+                        ],
+                      ),
+                      const SizedBox(height: 8), // Отступ между строками
+                      Container(
+                        width: double.infinity, // Полная ширина
+                        height: 40, // Высота изображения
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              BorderRadius.circular(12), // Закругленные углы
+                          image: DecorationImage(
+                            image: AssetImage('assets/images/icons.png'),
+                            fit: BoxFit.contain,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
 
-          // Зеленый контейнер
-         ),  Align(
+            // Зеленый контейнер
+          ),
+          Align(
               alignment: Alignment.centerLeft,
               child: Padding(
                 padding: getPadding(
@@ -221,7 +223,6 @@ class _AppointmentsBookScreenState extends State<AppointmentsBookScreen> {
                   ),
                 ),
               )),
-
           VerticalSpace(height: 5),
           Align(
               alignment: Alignment.centerLeft,
@@ -268,7 +269,6 @@ class _AppointmentsBookScreenState extends State<AppointmentsBookScreen> {
                   },
                 )),
               )),
-
           CustomButton(
               isDark: isDark,
               width: size.width,

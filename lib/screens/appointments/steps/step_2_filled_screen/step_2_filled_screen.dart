@@ -125,7 +125,7 @@ class _AppointmentsStep2FilledScreenState
 //    final timeController = Get.find<TimeController>();
     // appointmentManager.fetchTimes();
     bool isDark = Theme.of(context).brightness == Brightness.dark;
-    bool isRtl = context.locale == Constants.arLocal;
+//    bool isRtl = context.locale == Constants.arLocal;
 
     return Scaffold(
       /* appBar: AppBar(title: Text('Available Times'), actions: [
@@ -386,7 +386,7 @@ class _AppointmentsStep2FilledScreenState
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         CustomIconButton(
-                          isRtl: isRtl,
+                          isRtl: false,
                           height: 56,
                           width: 56,
                           variant: contactMethod == ContactMethods.message
@@ -487,7 +487,7 @@ class _AppointmentsStep2FilledScreenState
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         CustomIconButton(
-                          isRtl: isRtl,
+                          isRtl: false,
                           height: 56,
                           width: 56,
                           variant: contactMethod == ContactMethods.voiceCall
@@ -588,7 +588,7 @@ class _AppointmentsStep2FilledScreenState
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         CustomIconButton(
-                          isRtl: isRtl,
+                          isRtl: false,
                           height: 56,
                           width: 56,
                           variant: contactMethod == ContactMethods.videoCall

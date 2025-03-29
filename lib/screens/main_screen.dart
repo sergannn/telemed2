@@ -215,7 +215,6 @@ class Main extends StatelessWidget {
             //activeColorPrimary: ColorConstant.blueA400.withOpacity(0.1),
             //inactiveColorPrimary: ColorConstant.blueA400,
           )),
-          
       PersistentTabConfig(
           screen: MainProfileScreen(),
           item: ItemConfig(

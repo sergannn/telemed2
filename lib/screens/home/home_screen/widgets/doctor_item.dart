@@ -16,11 +16,9 @@ class DoctorItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-
     return InkWell(
       onTap: () {
-        Navigator.of(context, rootNavigator: true)
+        Navigator.of(context) //, rootNavigator: true)
             .push(MaterialPageRoute(builder: (context) {
           context.setSelectedDoctorByIndex(index);
 
@@ -93,10 +91,10 @@ class DoctorItem extends StatelessWidget {
                             Text(item['username'],
                                 style: TextStyle(fontWeight: FontWeight.bold)),
                             Text(
-                      item['specializations'].length == 0
-                          ? ''
-                          : item['specializations'][0][
-                              'name'], // добавлен SizedBox с отступом 16 пикселей
+                              item['specializations'].length == 0
+                                  ? ''
+                                  : item['specializations'][0][
+                                      'name'], // добавлен SizedBox с отступом 16 пикселей
                             )
                           ],
                         ),
