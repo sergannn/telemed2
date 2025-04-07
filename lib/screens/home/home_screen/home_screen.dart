@@ -141,7 +141,7 @@ class HomeScreen extends StatelessWidget {
 
     bool isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-      backgroundColor: Colors.white,
+//      backgroundColor: Colors.white,
       extendBody: true,
       // floatingActionButton: const FloatingActionButton( heroTag: "b", onPressed: null, child: Text("uId")),
       body: SafeArea(

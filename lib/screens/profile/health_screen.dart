@@ -34,9 +34,8 @@ class _HealthScreenState extends State<HealthScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          //   mainAxisSize: MainAxisSize.min,
+      body: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           //   mainAxisAlignment: MainAxisAlignment.end,
           children: [
@@ -50,11 +49,17 @@ class _HealthScreenState extends State<HealthScreen>
               margin: EdgeInsets.symmetric(horizontal: 16),
               child: _buildTabBar(tabController),
             ),
-            HealthContent(tabController, MediaQuery.of(context).size.height),
-            VerticalSpace(height: 224),
-          ],
-        ),
-      ),
+            Expanded(
+//              height: height / 2,
+              child: TabBarView(
+                controller: tabController,
+                children: [
+                  ArticlesSection(),
+                  Container(), // Пустой трекер
+                ],
+              ),
+            )
+          ]),
     );
   }
 
@@ -119,22 +124,11 @@ class _HealthScreenState extends State<HealthScreen>
     );
   }
 
-  Widget HealthContent(TabController? tabController, double height) {
-    return SizedBox(
-      height: height,
-      child: TabBarView(
-        controller: tabController,
-        children: [
-          ArticlesSection(),
-          Container(), // Пустой трекер
-        ],
-      ),
-    );
-  }
-
   Widget ArticlesSection() {
-    return ListView(
-      scrollDirection: Axis.vertical,
+    return Expanded(
+        child: ListView(
+      shrinkWrap: true,
+//      scrollDirection: Axis.vertical,
       padding: EdgeInsets.all(16),
       children: [
         GestureDetector(
@@ -203,7 +197,7 @@ class _HealthScreenState extends State<HealthScreen>
         ),
         SizedBox(height: 38),
       ],
-    );
+    ));
   }
 
   Widget ArticleSection(

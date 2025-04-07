@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../app_export.dart';
 
-ThemeData lightTheme = ThemeData(
+ThemeData lightTheme222 = ThemeData(
   primaryColor: Colors.black,
   dialogTheme: DialogTheme(
       shape: RoundedRectangleBorder(
@@ -10,7 +10,8 @@ ThemeData lightTheme = ThemeData(
   //scaffoldBackgroundColor: ColorConstant.whiteA700,
   scaffoldBackgroundColor: Colors.white,
   appBarTheme: AppBarTheme(
-      backgroundColor: ColorConstant.redA400, foregroundColor: Colors.black),
+      backgroundColor: Colors.red, //ColorConstant.redA400,
+      foregroundColor: Colors.black),
   brightness: Brightness.light,
   bottomSheetTheme: BottomSheetThemeData(
     backgroundColor: ColorConstant.whiteA700,

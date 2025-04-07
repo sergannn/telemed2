@@ -61,6 +61,14 @@ void main() async {
         '/webview': (context) => const SomeWebView(),
       },
       title: "App",
+      theme: ThemeData(
+        scaffoldBackgroundColor: Colors.white,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.blue,
+          surface: Colors.white,
+          background: Colors.white,
+        ),
+      ),
       home: EasyLocalization(
           supportedLocales: const [Locale("en"), Locale("ar")],
           path: "assets/translations",
@@ -152,6 +160,14 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       designSize: const Size(360, 800),
       builder: (context, child) {
         return MaterialApp(
+          theme: ThemeData(
+            scaffoldBackgroundColor: Colors.white,
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: Colors.blue,
+              surface: Colors.white,
+              background: Colors.white,
+            ),
+          ),
           //color: Colors.red,
           title: 'Телемедицина',
           debugShowCheckedModeBanner: false,

@@ -30,7 +30,7 @@ class AutolayouthorItemWidgetTasks extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Container(
             margin: EdgeInsets.all(8.0), // Отступы

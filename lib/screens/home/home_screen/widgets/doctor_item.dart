@@ -134,7 +134,7 @@ class DoctorItem extends StatelessWidget {
                   ),
                   const SizedBox(height: 8), //
                   //Container(width: double.infinity, child: Frame2()),
-                  Container(
+                  /* Container(
                       width: double.infinity, // Полная ширина
                       height: getVerticalSize(40), // Высота изображения
                       decoration: BoxDecoration(
@@ -144,9 +144,9 @@ class DoctorItem extends StatelessWidget {
                         //                           AssetImage('assets/images/doctor_item_bottom.svg'),
                       ),
                       child: SvgPicture.string(
-                          // height: 40,
+                          height: 40,
                           fit: BoxFit.contain,
-                          SvgConstant.under_doctor)),
+                          SvgConstant.under_doctor)),*/
                 ],
               ),
             )

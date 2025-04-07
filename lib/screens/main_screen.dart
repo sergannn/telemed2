@@ -253,6 +253,8 @@ class Main extends StatelessWidget {
           }
         },
         child: PersistentTabView(
+          // avoidBottomPadding: false,
+
           //context,
           controller: _controller,
           //screens: _buildScreens(),

@@ -65,8 +65,7 @@ class _MedCardScreenState extends State<MedCardScreen>
   Widget MedCardList(tabController, height) {
     print(tabController.length);
     print("it was length");
-   
-  
+
     return SizedBox(
       height: height,
       child: TabBarView(
@@ -83,7 +82,6 @@ class _MedCardScreenState extends State<MedCardScreen>
             padding: EdgeInsets.all(16),
             itemCount: 10,
             itemBuilder: (context, index) {
-           
               return Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -100,83 +98,84 @@ class _MedCardScreenState extends State<MedCardScreen>
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    index==0 ? CircleAvatar(
-                      //radius: 150,
-                      backgroundColor: Colors.red,
-                      child: IconButton(
-                      onPressed: () {},
-                      icon:Icon(Icons.add))) : ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: FutureBuilder<Uint8List>(
-                        future: http.get(
-                            Uri.parse(
-                                'https://api.api-ninjas.com/v1/randomimage?category=abstract'),
-                            headers: {
-                              'X-Api-Key':
-                                  'asYXsFiF+s0CXdGdmy2oSg==mDD7MRrJJuANFnMx',
-                              'Accept': 'image/jpg'
-                            }).then((response) {
-                          print(response.statusCode);
-                          print(response.body);
-                          if (response.statusCode == 200) {
-                            print(response.body);
-                            return response.bodyBytes;
-                          } else {
-                            throw Exception('Failed to load image');
-                          }
-                        }).catchError((error) {
-                          print('Error loading image: $error');
-                          return null;
-                        }),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            try {
-                              //return Text("s");
-                              return Image.memory(
-                                snapshot.data!,
-                                width: double.infinity,
-                                height: getVerticalSize(100),
-                                fit: BoxFit.contain,
-                                cacheWidth: 150,
-                                cacheHeight: 150,
-                              );
-                            } catch (e) {
-                              print('Error decoding image: $e');
-                              return Container(
-                                width: double.infinity,
-                                   height: getVerticalSize(100),
-                                color: Colors.grey[200],
-                                child: Center(
-                                  child: Icon(Icons.error,
-                                      color: Colors.grey[600]),
-                                ),
-                              );
-                            }
-                          } else if (snapshot.hasError) {
-                            return Container(
-                              width: double.infinity,
+                    index == 0
+                        ? CircleAvatar(
+                            //radius: 150,
+                            backgroundColor: Colors.red,
+                            child: IconButton(
+                                onPressed: () {}, icon: Icon(Icons.add)))
+                        : ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: FutureBuilder<Uint8List>(
+                              future: http.get(
+                                  Uri.parse(
+                                      'https://api.api-ninjas.com/v1/randomimage?category=abstract'),
+                                  headers: {
+                                    'X-Api-Key':
+                                        'asYXsFiF+s0CXdGdmy2oSg==mDD7MRrJJuANFnMx',
+                                    'Accept': 'image/jpg'
+                                  }).then((response) {
+                                print(response.statusCode);
+                                print(response.body);
+                                if (response.statusCode == 200) {
+                                  print(response.body);
+                                  return response.bodyBytes;
+                                } else {
+                                  throw Exception('Failed to load image');
+                                }
+                              }).catchError((error) {
+                                print('Error loading image: $error');
+                                return null;
+                              }),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  try {
+                                    //return Text("s");
+                                    return Image.memory(
+                                      snapshot.data!,
+                                      width: double.infinity,
+                                      height: getVerticalSize(100),
+                                      fit: BoxFit.contain,
+                                      cacheWidth: 150,
+                                      cacheHeight: 150,
+                                    );
+                                  } catch (e) {
+                                    print('Error decoding image: $e');
+                                    return Container(
+                                      width: double.infinity,
+                                      height: getVerticalSize(100),
+                                      color: Colors.grey[200],
+                                      child: Center(
+                                        child: Icon(Icons.error,
+                                            color: Colors.grey[600]),
+                                      ),
+                                    );
+                                  }
+                                } else if (snapshot.hasError) {
+                                  return Container(
+                                    width: double.infinity,
+                                    height: getVerticalSize(100),
+                                    color: Colors.grey[200],
+                                    child: Center(
+                                      child: Icon(Icons.error,
+                                          color: Colors.grey[600]),
+                                    ),
+                                  );
+                                }
+                                return Container(
+                                  width: double.infinity,
                                   height: getVerticalSize(100),
-                              color: Colors.grey[200],
-                              child: Center(
-                                child:
-                                    Icon(Icons.error, color: Colors.grey[600]),
-                              ),
-                            );
-                          }
-                          return Container(
-                            width: double.infinity,
-                              height: getVerticalSize(100),
-                            color: Colors.grey[200],
-                            child: Center(
-                              child: CircularProgressIndicator(),
+                                  color: Colors.grey[200],
+                                  child: Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                );
+                              },
                             ),
-                          );
-                        },
-                      ),
-                    ),
+                          ),
                     SizedBox(height: 8),
                     Text(
-                     index==0 ? 'Добавить' : 'Документ ${index + 1}',
+                      index == 0 ? 'Добавить' : 'Документ ${index + 1}',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: getFontSize(14),
@@ -190,12 +189,22 @@ class _MedCardScreenState extends State<MedCardScreen>
             },
           ),
           // Вторая вкладка - анкета
-         /*Container( margin:  EdgeInsets.only(bottom: MediaQuery.of(context).size.height/5),
-       child:*/ 
-       SurveyScreen(),
+          /*Container( margin:  EdgeInsets.only(bottom: MediaQuery.of(context).size.height/5),
+       child:*/
+          SurveyScreen(),
 
           // Третья вкладка - дневник
           TableCalendar(
+            rangeStartDay: DateTime.now(),
+            rangeEndDay: DateTime(2025, 4, 19),
+            onCalendarCreated: (pageController) {},
+            eventLoader: (day) {
+              if (day.weekday == DateTime.monday) {
+                return ['Cyclic event'];
+              }
+
+              return [];
+            },
             locale: 'ru_RU',
             focusedDay: DateTime.now(),
             firstDay: DateTime.utc(2010, 10, 16),
