@@ -141,11 +141,12 @@ class _SignInBlankScreenState extends State<SignInBlankScreen> {
     inspectTheme(context);
     bool isDark = Theme.of(context).brightness == Brightness.dark;
     Color color = Theme.of(context).scaffoldBackgroundColor;
+    //Theme.of(context).scaffoldBackgroundColor = 'red';
     print("default scaf color");
     print(color);
     return Scaffold(
         resizeToAvoidBottomInset: true,
-//        backgroundColor: Colors.white,
+        backgroundColor: Colors.white,
         // floatingActionButton:
         //   FloatingActionButton(onPressed: null, child: Text("a")),
         body: SafeArea(

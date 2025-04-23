@@ -8,17 +8,18 @@ class forthScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        theme: ThemeData(scaffoldBackgroundColor: Colors.white),
         home: GestureDetector(
-      onHorizontalDragEnd: (details) {
-        if (details.primaryVelocity! > 0) {
-          // User swiped left
-          Navigator.pop(context);
-        }
-      },
-      child: Scaffold(
-        body: CustomContainer(),
-      ),
-    ));
+          onHorizontalDragEnd: (details) {
+            if (details.primaryVelocity! > 0) {
+              // User swiped left
+              Navigator.pop(context);
+            }
+          },
+          child: Scaffold(
+            body: CustomContainer(),
+          ),
+        ));
   }
 }
 
