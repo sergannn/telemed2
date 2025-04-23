@@ -11,6 +11,9 @@ import 'package:doctorq/screens/appointments/list/messaging_screen/messaging_scr
 import 'package:doctorq/screens/appointments/list/video_call_screen/video_call_screen.dart';
 import 'package:doctorq/screens/appointments/list/voice_call_ringing_screen/voice_call_ringing_screen.dart';
 import 'package:doctorq/screens/appointments/list/voice_call_screen/voice_call_screen.dart';
+import 'package:doctorq/screens/online_reception_audio.dart';
+import 'package:doctorq/screens/online_reception_chat.dart';
+import 'package:doctorq/screens/online_reception_video.dart';
 import 'package:doctorq/screens/ser_view.dart';
 import 'package:doctorq/widgets/custom_icon_button.dart';
 import 'package:doctorq/widgets/spacing.dart';
@@ -122,10 +125,15 @@ class AppointmentListItem extends StatelessWidget {
         case "ContactMethods.message":
           print("voice");
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => ChatScreen()));
+             // context, MaterialPageRoute(builder: (context) => ChatScreen()));
+             context, MaterialPageRoute(builder: (context) => OnlineReceptionChat()));
           break;
         case "ContactMethods.voiceCall":
-          print("voice");
+        
+              Navigator.push(
+             // context, MaterialPageRoute(builder: (context) => ChatScreen()));
+             context, MaterialPageRoute(builder: (context) => OnlineReceptionAudio()));
+          /*
           Navigator.push(
               context,
               MaterialPageRoute(
@@ -138,13 +146,17 @@ class AppointmentListItem extends StatelessWidget {
                             status: '',
                             time: '13-00'),
                         user: '{"user_id":"1"}',
-                      )));
+                      )));*/
           break;
         case "ContactMethods.videoCall":
           try {
             var prefs = await SharedPreferences.getInstance();
             final client = await CallClient.create();
-
+                   Navigator.push(
+             // context, MaterialPageRoute(builder: (context) => ChatScreen()));
+             context, MaterialPageRoute(builder: (context) => OnlineReceptionVideo()));
+             //start video commented
+/*
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -155,7 +167,7 @@ class AppointmentListItem extends StatelessWidget {
                   callClient: client,
                 ),
               ),
-            );
+            );*/
           } catch (e) {
             print('Error during video call setup: $e');
             // Optionally show an error message to the user here

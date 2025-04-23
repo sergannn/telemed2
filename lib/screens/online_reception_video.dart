@@ -12,7 +12,7 @@ class OnlineReceptionVideo extends StatelessWidget {
       body: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(), // Добавляем это
         child: Container(
-          width: double.infinity, // Добавляем это
+          width:double.infinity, // Добавляем это
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
