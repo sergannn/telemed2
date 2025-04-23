@@ -107,7 +107,8 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
                 child:
-                    showUpcomming ? UpcomingAppointments() : PastAppointments(),
+                    showUpcomming ? 
+                    UpcomingAppointments() : PastAppointments(),
               ),
             )),
           ],
