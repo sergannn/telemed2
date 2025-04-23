@@ -438,7 +438,7 @@ class ChatApp extends StatelessWidget {
       bottomNavigationBar: BottomNavigationBar(
         items: [
           const BottomNavigationBarItem(
-              icon: Icon(Icons.home), label: 'мой МТС'),
+              icon: Icon(Icons.home), label: 'мой'),
           const BottomNavigationBarItem(
               icon: Icon(Icons.receipt), label: 'Расходы'),
           const BottomNavigationBarItem(
@@ -465,7 +465,7 @@ class ChatApp extends StatelessWidget {
 
   Widget ___oldbuild(BuildContext context) {
     return MaterialApp(
-      title: 'MTS RnD GenUI/UX App',
+      title: 'M R GenUI/UX App',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -491,7 +491,7 @@ class ServiceCard extends StatelessWidget {
           builder: (context) {
             return AlertDialog(
               content: Text(
-                  'Смотрите новости в актуальном приложении МОЙ МТС. $title'),
+                  'Смотрите новости в актуальном приложении. $title'),
               actions: [
                 TextButton(
                   child: const Text('Закрыть'),

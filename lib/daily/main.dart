@@ -16,6 +16,8 @@ import 'package:doctorq/daily/participant_list_bottom_sheet.dart';
 import 'package:doctorq/daily/recording_button.dart';
 import 'package:doctorq/daily/remote_participant_view.dart';
 import 'package:doctorq/daily/room_settings_bar.dart';
+import 'package:doctorq/screens/online_reception_chat.dart';
+import 'package:doctorq/screens/online_reception_video.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -397,6 +399,30 @@ class _MyAppState extends State<DailyApp> {
                             child: CircularProgressIndicator(strokeWidth: 2)),
                         Text("Ожидаем подключения пользователя...")
                       ],
+                      ElevatedButton(
+                         onPressed: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => OnlineReceptionVideo()),
+    );
+  },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                const Color.fromARGB(255, 96, 159, 222),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18),
+                            ),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 8),
+                          ),
+                          child: Text(
+                            'Переход на экран, который визуально должен быть вместо этого на котором ты сейчас находишься',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
                       /*   if (focusedParticipantId != null)
                             Padding(
                               padding:
