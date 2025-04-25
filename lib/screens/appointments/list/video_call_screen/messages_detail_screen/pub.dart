@@ -119,7 +119,8 @@ class MyApp extends StatelessWidget {
 }
 
 class LightAppointmentsListVoiceCallRingingScreen extends StatefulWidget {
-  const LightAppointmentsListVoiceCallRingingScreen({Key? key}) : super(key: key);
+  const LightAppointmentsListVoiceCallRingingScreen({Key? key})
+      : super(key: key);
 
   @override
   _LightAppointmentsListVoiceCallRingingScreenState createState() =>
@@ -136,6 +137,7 @@ class _LightAppointmentsListVoiceCallRingingScreenState
 
   @override
   void initState() {
+    super.initState();
     controller = CameraController(_cameras[1], ResolutionPreset.max);
 
     controller.initialize().then((_) {
@@ -159,14 +161,12 @@ class _LightAppointmentsListVoiceCallRingingScreenState
       }
     });
 
-    super.initState();
     getLocalVideoStream();
 
     initPubNub();
   }
 
   Future<void> initPubNub() async {
-
     // Create PubNub instance with default keyset.
     pubnub = PubNub(
         defaultKeyset: Keyset(
@@ -179,8 +179,7 @@ class _LightAppointmentsListVoiceCallRingingScreenState
     // Subscribe to a channel
 
     var subscription = pubnub.subscribe(channels: {'Channel-Barcelona'});
-    subscription.messages.listen((envelope) {
-    });
+    subscription.messages.listen((envelope) {});
     // Publish a message
     await pubnub.publish('Channel-Barcelona', 'My message');
 
@@ -188,7 +187,6 @@ class _LightAppointmentsListVoiceCallRingingScreenState
     channel = pubnub.channel('Channel-Barcelona');
 
     await channel.publish('Another message');
-
   }
 
   send() async {
@@ -201,8 +199,7 @@ class _LightAppointmentsListVoiceCallRingingScreenState
   Widget build(BuildContext context) {
     if (!controller.value.isInitialized) {
       return Container();
-    } else {
-    }
+    } else {}
     return Scaffold(
         /*floatingActionButton: FloatingActionButton(
           onPressed: null,

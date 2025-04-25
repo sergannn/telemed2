@@ -66,12 +66,13 @@ class _MyAppState extends State<DailyApp> {
 
   @override
   void initState() {
+    super.initState();
     print("main state inited");
     print("its a room data:");
 //    widget.room = "a";
     print(widget.room);
     //widget.pre
-    super.initState();
+
     // main();
     // WidgetsFlutterBinding.ensureInitialized();
     // initLogging();
@@ -400,29 +401,30 @@ class _MyAppState extends State<DailyApp> {
                         Text("Ожидаем подключения пользователя...")
                       ],
                       ElevatedButton(
-                         onPressed: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => OnlineReceptionVideo()),
-    );
-  },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                const Color.fromARGB(255, 96, 159, 222),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18),
-                            ),
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 8),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => OnlineReceptionVideo()),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              const Color.fromARGB(255, 96, 159, 222),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18),
                           ),
-                          child: Text(
-                            'Переход на экран, который визуально должен быть вместо этого на котором ты сейчас находишься',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                            ),
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        ),
+                        child: Text(
+                          'Переход на экран, который визуально должен быть вместо этого на котором ты сейчас находишься',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
                           ),
                         ),
+                      ),
                       /*   if (focusedParticipantId != null)
                             Padding(
                               padding:

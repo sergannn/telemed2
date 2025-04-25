@@ -16,8 +16,9 @@ class MessagesDetailScreen extends StatefulWidget {
   AppointmentsModel appointment;
   late String uId;
   final String user;
-  MessagesDetailScreen({Key? key, required this.user, required this.appointment}) : super(key: key) {
-
+  MessagesDetailScreen(
+      {Key? key, required this.user, required this.appointment})
+      : super(key: key) {
     Map<String, dynamic> userData = jsonDecode(user);
     uId = userData[
         'user_id']; // Assuming 'user_Id' is the correct key in your JSON
@@ -60,7 +61,6 @@ class _MessagesDetailScreenState extends State<MessagesDetailScreen> {
   }
 
   Future<void> initPubNub() async {
-
     // Initialize PubNub instance
     pubnub = PubNub(
       defaultKeyset: Keyset(
@@ -76,7 +76,6 @@ class _MessagesDetailScreenState extends State<MessagesDetailScreen> {
 
     // Listen for messages
     subscription.messages.listen((envelope) {
-
       setState(() {
         // Ensure setState is called to update the UI
         chatList.add(ChatModel(
@@ -118,9 +117,8 @@ class _MessagesDetailScreenState extends State<MessagesDetailScreen> {
 
   @override
   void initState() {
-    initPubNub();
-
     super.initState();
+    initPubNub();
   }
 
   TextEditingController textEditingController = TextEditingController();

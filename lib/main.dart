@@ -59,7 +59,6 @@ void main() async {
         //'/': (context) => const FirstScreen(),
         // When navigating to the "/second" route, build the SecondScreen widget.
         '/webview': (context) => const SomeWebView(),
-        
       },
       title: "App",
       theme: ThemeData(
@@ -129,9 +128,10 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   void initState() {
 // TODO: implement initState
+    super.initState();
     print('Context available: ${context != null}');
     themeManager.addListener(themeListener);
-    super.initState();
+
     WidgetsBinding.instance.addObserver(this);
     // _requestPermissions();
     // _configureDidReceiveLocalNotificationSubject();

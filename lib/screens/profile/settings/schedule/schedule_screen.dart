@@ -103,12 +103,12 @@ class _ProfileSettingsAppearanceScreenState
 
   @override
   void initState() {
+    super.initState();
     printLog('initing');
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadData();
     });
-    super.initState();
   }
 
   Future<void> _loadData() async {

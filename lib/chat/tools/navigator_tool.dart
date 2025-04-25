@@ -18,7 +18,8 @@ class NavigatorTool extends BaseTool {
     final String profile = _getProfile(type);
     final double speed = _getSpeed(type);
 
-    final Future<Map<String, dynamic>> parsedData = _parseData(start, end, profile);
+    final Future<Map<String, dynamic>> parsedData =
+        _parseData(start, end, profile);
 
     final Future<String> infoString = parsedData.then((data) {
       final distance = data['distance'] as double;
@@ -66,7 +67,8 @@ class NavigatorTool extends BaseTool {
     }
   }
 
-  Future<Map<String, dynamic>> _parseData(String start, String end, String profile) async {
+  Future<Map<String, dynamic>> _parseData(
+      String start, String end, String profile) async {
     final startPoint = await _getCoordinates(start);
     final endPoint = await _getCoordinates(end);
     final routeData = await fetchRoute(startPoint, endPoint, profile);
@@ -108,7 +110,8 @@ class NavigatorTool extends BaseTool {
     throw Exception('Failed to resolve address: $address');
   }
 
-  Future<Map<String, dynamic>> fetchRoute(LatLng start, LatLng end, String profile) async {
+  Future<Map<String, dynamic>> fetchRoute(
+      LatLng start, LatLng end, String profile) async {
     final url = Uri.parse(
       'http://router.project-osrm.org/route/v1/$profile/${start.longitude},${start.latitude};${end.longitude},${end.latitude}?geometries=polyline',
     );
@@ -194,8 +197,9 @@ class _NavigatorToolWidgetState extends State<NavigatorToolWidget> {
 
   @override
   void initState() {
-    _mapController = MapController();
     super.initState();
+    _mapController = MapController();
+
     _loadRoute();
   }
 
@@ -210,7 +214,8 @@ class _NavigatorToolWidgetState extends State<NavigatorToolWidget> {
       if (_startPoint != null && _endPoint != null) {
         final centerLat = (_startPoint!.latitude + _endPoint!.latitude) / 2;
         final centerLng = (_startPoint!.longitude + _endPoint!.longitude) / 2;
-        _mapController.move(LatLng(centerLat, centerLng), 10); // Устанавливаем масштаб
+        _mapController.move(
+            LatLng(centerLat, centerLng), 10); // Устанавливаем масштаб
       }
 
       setState(() {});
