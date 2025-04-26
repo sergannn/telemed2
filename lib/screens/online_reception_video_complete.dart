@@ -401,7 +401,7 @@ color: Color.fromARGB(255, 91, 91, 91),
               
               // Текст вопроса
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24),
+                padding: EdgeInsets.symmetric(horizontal: 24,vertical: 14),
                 child: Text(
                   'Как прошел ваш онлайн прием с врачом?',
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),

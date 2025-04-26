@@ -11,10 +11,13 @@ import 'package:doctorq/screens/appointments/list/messaging_screen/messaging_scr
 import 'package:doctorq/screens/appointments/list/video_call_screen/video_call_screen.dart';
 import 'package:doctorq/screens/appointments/list/voice_call_ringing_screen/voice_call_ringing_screen.dart';
 import 'package:doctorq/screens/appointments/list/voice_call_screen/voice_call_screen.dart';
+import 'package:doctorq/screens/audio_resolution.dart';
+import 'package:doctorq/screens/chat_resolution.dart';
 import 'package:doctorq/screens/online_reception_audio.dart';
 import 'package:doctorq/screens/online_reception_chat.dart';
 import 'package:doctorq/screens/online_reception_video.dart';
 import 'package:doctorq/screens/ser_view.dart';
+import 'package:doctorq/screens/video_resolution.dart';
 import 'package:doctorq/widgets/custom_icon_button.dart';
 import 'package:doctorq/widgets/spacing.dart';
 import 'package:flutter/material.dart';
@@ -109,7 +112,7 @@ class AppointmentListItem extends StatelessWidget {
     }
   }
 
-  void navigateToScreenWithTypes(BuildContext context) async {
+  void navigateToScreenWithTypes(BuildContext context,bool isPast) async {
     print("Navigating...");
 
     try {
@@ -122,17 +125,31 @@ class AppointmentListItem extends StatelessWidget {
       String description = item["description"];
 
       switch (description) {
-        case "ContactMethods.message":
-          print("voice");
+        case "ContactMethods.message": 
+          print("message");
+          isPast==false ?
+          
           Navigator.push(
              // context, MaterialPageRoute(builder: (context) => ChatScreen()));
-             context, MaterialPageRoute(builder: (context) => OnlineReceptionChat()));
+             context, MaterialPageRoute(builder: (context) => OnlineReceptionChat()))
+      
+      :
+          Navigator.push(
+             // context, MaterialPageRoute(builder: (context) => ChatScreen()));
+             context, MaterialPageRoute(builder: (context) => ChatResolution()));
+      
+      
           break;
         case "ContactMethods.voiceCall":
-        
+           isPast==false ?
               Navigator.push(
              // context, MaterialPageRoute(builder: (context) => ChatScreen()));
-             context, MaterialPageRoute(builder: (context) => OnlineReceptionAudio()));
+             context, MaterialPageRoute(builder: (context) => OnlineReceptionAudio()))
+            :    Navigator.push(
+             // context, MaterialPageRoute(builder: (context) => ChatScreen()));
+             context, MaterialPageRoute(builder: (context) => AudioResolution()));
+      
+
           /*
           Navigator.push(
               context,
@@ -152,9 +169,18 @@ class AppointmentListItem extends StatelessWidget {
           try {
             var prefs = await SharedPreferences.getInstance();
             final client = await CallClient.create();
+
+
+                isPast==false ?
+      
                    Navigator.push(
              // context, MaterialPageRoute(builder: (context) => ChatScreen()));
-             context, MaterialPageRoute(builder: (context) => OnlineReceptionVideo()));
+             context, MaterialPageRoute(builder: (context) => OnlineReceptionVideo()))
+             :
+                    Navigator.push(
+             // context, MaterialPageRoute(builder: (context) => ChatScreen()));
+             context, MaterialPageRoute(builder: (context) => VideoResolution()));
+          
              //start video commented
 /*
             Navigator.push(
@@ -194,6 +220,7 @@ class AppointmentListItem extends StatelessWidget {
         ),
       ),
       onTap: () {
+        print("hello");
         ser(context, isPast);
       },
       child: Container(
@@ -307,7 +334,7 @@ class AppointmentListItem extends StatelessWidget {
   }
 
   ser(context, isPast) async {
-    navigateToScreenWithTypes(context);
+    navigateToScreenWithTypes(context, isPast);
 //    navigateToScreen(context);
     return;
     await requestPermissions();

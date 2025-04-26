@@ -1,19 +1,19 @@
 import 'package:doctorq/screens/articles/articles.dart';
 import 'package:doctorq/screens/online_reception_audio_complete.dart';
-import 'package:doctorq/screens/online_reception_audio_start_two.dart';
 import 'package:flutter/material.dart';
 
-class OnlineReceptionAudioStart extends StatefulWidget {
-  const OnlineReceptionAudioStart({Key? key}) : super(key: key);
+class OnlineReceptionAudioStartTwo extends StatefulWidget {
+  const OnlineReceptionAudioStartTwo({Key? key}) : super(key: key);
 
   @override
-  State<OnlineReceptionAudioStart> createState() => _OnlineReceptionAudioStartState();
+  State<OnlineReceptionAudioStartTwo> createState() =>
+      _OnlineReceptionAudioStartTwoState();
 }
 
-class _OnlineReceptionAudioStartState extends State<OnlineReceptionAudioStart> {
-
-
-  
+class _OnlineReceptionAudioStartTwoState
+    extends State<OnlineReceptionAudioStartTwo> {
+       bool isMicrophoneEnabled = false;
+       bool _isMuted = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,7 +23,7 @@ class _OnlineReceptionAudioStartState extends State<OnlineReceptionAudioStart> {
       body: SafeArea(
         child: Column(
           children: [
-            // Заголовок над чатом
+           // Заголовок над чатом
              Align(
               alignment: Alignment.centerLeft,
               child: Padding(
@@ -110,24 +110,55 @@ const SizedBox(height: 4), // Добавляем отступ между стр�
         ),
       ),
     ),
-    
 
-// Секция с таймером и кнопками
+// Секция с таймером и кнопками внизу экрана
             Expanded(
-              child: Center(
+              child: Align(
+                alignment: Alignment.bottomCenter,
                 child: Container(
                   padding: const EdgeInsets.all(16),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Text(
                         '00:00 мин',
                         style: TextStyle(fontSize: 12),
                       ),
-                      const SizedBox(height: 24),
+                      const SizedBox(height: 14),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
+                          // Кнопка громкая связь
+                         Column(
+  children: [
+    Container(
+      width: 54,
+      height: 54,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: _isMuted ? Color(0xFFE4F0FF) : Color(0xFF81AEEA),
+      ),
+      child: IconButton(
+        icon: Icon(
+          _isMuted ? Icons.volume_off : Icons.volume_up,
+          color: _isMuted ? Colors.black87 : Colors.white,
+        ),
+        onPressed: () {
+          setState(() {
+            _isMuted = !_isMuted;
+          });
+        },
+      ),
+    ),
+    const SizedBox(height: 4),
+    Text(
+      'Громкая \nсвязь',
+      textAlign: TextAlign.center,
+      style: TextStyle(fontSize: 10),
+    ),
+  ],
+),
+                          // Кнопка микрофона
                           Column(
                             children: [
                               Container(
@@ -135,28 +166,32 @@ const SizedBox(height: 4), // Добавляем отступ между стр�
                                 height: 54,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  color: Color(0xFF81AEEA),
+                                  color: isMicrophoneEnabled 
+                                      ? Color(0xFFE4F0FF) : Color(0xFF81AEEA),
                                 ),
                                 child: IconButton(
-                                  icon: Icon(Icons.camera_alt, color: Colors.white),
+                                  icon: Icon(isMicrophoneEnabled
+                                      ? Icons.mic_off
+                                      : Icons.mic_none,
+                                    color: isMicrophoneEnabled
+                                        ? Colors.black87
+                                        :  Colors.white),
                                   onPressed: () {
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => const OnlineReceptionAudioStartTwo(),
-                                      ),
-                                    );
+                                    setState(() {
+                                      isMicrophoneEnabled =
+                                          !isMicrophoneEnabled;
+                                    });
                                   },
                                 ),
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                'Принять\nвызов',
-                                textAlign: TextAlign.center,
+                                'Микрофон',
                                 style: TextStyle(fontSize: 10),
                               ),
                             ],
                           ),
+                          // Кнопка отмены
                           Column(
                             children: [
                               Container(
@@ -167,7 +202,8 @@ const SizedBox(height: 4), // Добавляем отступ между стр�
                                   color: Color(0xFFF83D39),
                                 ),
                                 child: IconButton(
-                                  icon: Icon(Icons.close, color: Colors.white),
+                                  icon: Icon(Icons.close,
+                                      color: Colors.white),
                                   onPressed: () {
                                     Navigator.pop(context);
                                   },
@@ -176,6 +212,30 @@ const SizedBox(height: 4), // Добавляем отступ между стр�
                               const SizedBox(height: 4),
                               Text(
                                 'Отмена',
+                                style: TextStyle(fontSize: 10),
+                              ),
+                            ],
+                          ),
+                          // Кнопка медкарты
+                          Column(
+                            children: [
+                              Container(
+                                width: 54,
+                                height: 54,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: const Color(0xFFE4F0FF),
+                                ),
+                                child: IconButton(
+                                  icon: Icon(Icons.man,
+                                      color: Colors.black87),
+                                  onPressed: () {},
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                'Доступ \nк медкарте',
+                                textAlign: TextAlign.center,
                                 style: TextStyle(fontSize: 10),
                               ),
                             ],

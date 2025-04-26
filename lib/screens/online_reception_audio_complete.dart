@@ -24,7 +24,7 @@ class CustomButton extends StatelessWidget {
   const CustomButton({
     Key? key,
     this.onPressed,
-    this.isDark = false, // Добавили дефолтное значение
+    this.isDark = false, 
     required this.width,
     required this.text,
     this.margin,
@@ -161,7 +161,7 @@ class _AppointmentsStep3FilledScreenState extends State<OnlineReceptionAudioComp
             crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [ 
                                   Text(
-                                    'Чат с врачом успешно завершен',
+                                    'Аудио с врачом успешно завершено',
                                     style: TextStyle(
                                       color:
                                           const Color.fromARGB(255, 17, 17, 17),
@@ -401,7 +401,7 @@ color: Color.fromARGB(255, 91, 91, 91),
               
               // Текст вопроса
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24),
+                padding: EdgeInsets.symmetric(horizontal: 24,vertical: 14),
                 child: Text(
                   'Как прошел ваш онлайн прием с врачом?',
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),

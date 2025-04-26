@@ -232,7 +232,7 @@ SizedBox(height: 20),
                                         )),
                                       const SizedBox(height: 4), // Добавляем отступ между строками
 const Text(
-'Чат / онлайн консультация',
+'Аудио / онлайн консультация',
 style: TextStyle(
 fontSize: 10,
 color: Color.fromARGB(255, 136, 136, 136),

@@ -36,7 +36,17 @@ class _AppointmentsBookScreenState extends State<AppointmentsBookScreen> {
   Widget build(BuildContext context) {
     bool isDark = Theme.of(context).brightness == Brightness.dark;
     //  bool isRtl = context.locale == Constants.arLocal;
-
+    print(context.selectedDoctor);
+    print("ku");
+    print("empty");
+    print(context.selectedDoctor.isEmpty);
+    if(context.selectedDoctor.isEmpty == true ) {
+      context.setSelectedDoctorByIndex(1);
+    }
+      print("ku");
+    print("empty");
+    print(context.selectedDoctor.isEmpty);
+    
     Map<dynamic, dynamic> doctor = context.selectedDoctor;
     //print(doctor["doctorSession"]["sessionWeekDays"]);
     print(doctor);

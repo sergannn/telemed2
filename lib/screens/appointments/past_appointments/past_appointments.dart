@@ -72,7 +72,8 @@ class PastAppointments extends StatelessWidget {
                       child: ListView.builder(
                           physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
-                          itemCount: groupedAppointments.length,
+                          //надо исправить позже
+                          itemCount: 5,//groupedAppointments.length,
                           itemBuilder: (context, index) {
                             String date =
                                 groupedAppointments.keys.elementAt(index);
