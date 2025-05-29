@@ -1,13 +1,10 @@
 import 'dart:math';
 
-import 'package:daily_flutter/daily_flutter.dart';
+
 import 'package:doctorq/app_export.dart';
-import 'package:doctorq/daily/main.dart';
-import 'package:doctorq/screens/appointments/AppointmentsScreenDoctor.dart';
-import 'package:doctorq/screens/auth/forgot/password_otp_active_screen/password_otp_active_screen.dart';
 import 'package:doctorq/screens/main_screen.dart';
 import 'package:doctorq/screens/auth/forgot/password_method_screen/password_method_screen.dart';
-import 'package:doctorq/services/api_service.dart';
+
 import 'package:doctorq/services/auth_service.dart';
 import 'package:doctorq/theme/svg_constant.dart';
 import 'package:doctorq/utils/pub.dart';
@@ -15,16 +12,13 @@ import 'package:doctorq/widgets/custom_button.dart';
 import 'package:doctorq/widgets/custom_checkbox.dart';
 import 'package:doctorq/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../../widgets/boxshadow.dart';
 import '../../../widgets/spacing.dart';
 import '../sign_up_blank_screen/sign_up_blank_screen.dart';
-import 'doctor_screen.dart';
-//import 'package:flutter_login_yandex_updated/flutter_login_yandex.dart';
-//import 'package:flutter_login_yandex/flutter_login_yandex.dart';
+
+
 
 class SignInBlankScreen extends StatefulWidget {
   SignInBlankScreen({Key? key}) : super(key: key);
@@ -513,13 +507,13 @@ class _SignInBlankScreenState extends State<SignInBlankScreen> {
                         /*if (forceUserLogin) {
                       emailController.text = testUserLogin;
                       passwordController.text = testUserPassword;
-                    }
+                    }*/
                         var authRes = await authUser(context,
                             emailController.text, passwordController.text);
                         if (authRes == true) {
                           gogo(isDark);
                         }
-                        */
+                        
                       });
                 }),
             Align(

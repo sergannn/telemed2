@@ -1,6 +1,6 @@
 import 'package:doctorq/app_export.dart';
 import 'package:doctorq/persistent_bottom_nav_bar_v2-5.3.1/lib/persistent_bottom_nav_bar_v2.dart';
-import 'package:doctorq/screens/appointments/AppointmentsScreen.dart';
+import 'package:doctorq/screens/appointments/AppointmentsScreenDoctor.dart';
 import 'package:doctorq/screens/home/home_screen/home_screen.dart';
 import 'package:doctorq/screens/home/home_screen/home_screen_forFuture.dart';
 import 'package:doctorq/screens/medcard/card_gallery.dart';
@@ -20,7 +20,7 @@ class Main extends StatelessWidget {
       //   HomeSpecialistDoctorScreen(),
 //      ProfileBlankScreen(),
 //      ProfileSettingsScreen(), //uId: uId ?? '-1'),
-      const AppointmentsScreen(), //uId ?? '-1'),
+      const AppointmentsScreenDoctor(), //uId ?? '-1'),
       StoriesScreen(),
       HealthScreen()
       //   const HistoryScreen(),
