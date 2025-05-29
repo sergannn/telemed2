@@ -3,14 +3,14 @@ import 'package:doctorq/screens/home/home_screen/widgets/doctor_item.dart';
 import 'package:doctorq/widgets/top_back.dart';
 import 'package:flutter/material.dart';
 
-class SearchDoctorScreen extends StatefulWidget {
-  const SearchDoctorScreen({Key? key}) : super(key: key);
+class SearchPatientScreen extends StatefulWidget {
+  const SearchPatientScreen({Key? key}) : super(key: key);
 
   @override
-  State<SearchDoctorScreen> createState() => _SearchDoctorScreenState();
+  State<SearchPatientScreen> createState() => _SearchDoctorScreenState();
 }
 
-class _SearchDoctorScreenState extends State<SearchDoctorScreen> {
+class _SearchDoctorScreenState extends State<SearchPatientScreen> {
   final SearchController _searchController = SearchController();
   List<dynamic> _allDoctors = [
     'Доктор Иванов (Терапевт)',
@@ -59,7 +59,7 @@ class _SearchDoctorScreenState extends State<SearchDoctorScreen> {
     return Scaffold(
       body: Column(
         children: [
-          ...topBack(text: "Поиск врача", context: context),
+          ...topBack(text: "Поиск пациента", context: context),
           Expanded(
             child: Container(
               margin: const EdgeInsets.only(bottom: 6),
@@ -101,7 +101,7 @@ class _SearchDoctorScreenState extends State<SearchDoctorScreen> {
                                 onPressed: () {},
                               ),
                             ],
-                            hintText: 'Найти врача...',
+                            hintText: 'Найти...',
                             hintStyle: MaterialStateProperty.all(
                               const TextStyle(
                                 fontSize: 14,
@@ -152,7 +152,7 @@ class _SearchDoctorScreenState extends State<SearchDoctorScreen> {
                     ),
                   ),
                 ],
-              ),
+              ),  
             ),
           ),
         ],

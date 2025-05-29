@@ -77,14 +77,14 @@ class _AudioResolutionState extends State<AudioResolution> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Text(
-                                  'Парфенов К.С.',
+                                  'Парфенова К.С.',
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 const Text(
-                                  'Акушер-гинеколог',
+                                  'Женщина, 71',
                                   style: TextStyle(
                                     fontSize: 12,
                                   ),

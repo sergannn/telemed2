@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:doctorq/extensions.dart';
+import 'package:doctorq/screens/appointments/AppointmentsScreen.dart';
 import 'package:doctorq/screens/appointments/book_screen/book_screen.dart';
 import 'package:doctorq/screens/appointments/steps/step_2_filled_screen/step_2_filled_screen.dart';
 import 'package:doctorq/screens/home/home_screen/home_screen.dart';
@@ -287,7 +288,15 @@ color: Color.fromARGB(255, 91, 91, 91),
       width: 0.8,
     ),
   ),
-  onPressed: () {}, // Здесь будет ваш обработчик нажатия
+  onPressed: () {
+        Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                            
+                                                AppointmentsScreen(
+                                                    mode: 'old')));
+  }, // Здесь будет ваш обработчик нажатия
   child: const Text(
     'Архив записей',
     textAlign: TextAlign.center,             // Текст по центру

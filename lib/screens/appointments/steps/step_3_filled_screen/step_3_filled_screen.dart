@@ -97,7 +97,7 @@ class _AppointmentsStep3FilledScreenState
       body: SafeArea(
         child: Column(
           children: [
-            ...topBack(text: "Запись к врачу", context: context, height: 0.0),
+            ...topBack(text: "Доступ к пациентам", context: context, height: 0.0),
             VerticalSpace(height: 10),
             Expanded(
               child: SingleChildScrollView(
@@ -136,10 +136,10 @@ class _AppointmentsStep3FilledScreenState
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        const Text('Парфенов К.С.',
+                                        const Text('Парфенова К.С.',
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold)),
-                                        const Text('Акушер-гинеколог'),
+                                        const Text('Женщина, 71'),
                                       ],
                                     ),
                                   ),

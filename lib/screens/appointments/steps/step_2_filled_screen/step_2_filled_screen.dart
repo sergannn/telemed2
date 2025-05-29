@@ -149,7 +149,7 @@ class _AppointmentsStep2FilledScreenState
       body: SingleChildScrollView(
         child: Column(
           children: [
-            ...topBack(text: "Запись к врачу", context: context),
+            ...topBack(text: "Доступ к пациентам", context: context),
             GestureDetector(
                 child: DoctorInfoWidget(),
                 onTap: () {
@@ -705,7 +705,7 @@ class _AppointmentsStep2FilledScreenState
                       children: [
                         const Text('Парфaнов К.С.',
                             style: TextStyle(fontWeight: FontWeight.bold)),
-                        const Text('Акушер-гинеколог'),
+                        const Text('Женщина, 71'),
                       ],
                     ),
                   ),

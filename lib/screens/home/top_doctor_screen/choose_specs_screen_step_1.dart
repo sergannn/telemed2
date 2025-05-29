@@ -106,7 +106,7 @@ class _TopDoctorScreenState extends State<ChooseSpecsScreen>
             Padding(
               padding: EdgeInsets.only(left: 16),
               child: Text(
-                'Специализации врача',
+                'Пациенты на лечении врача',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,

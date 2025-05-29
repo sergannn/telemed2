@@ -1,7 +1,6 @@
 import 'dart:convert';
 //import 'package:date_picker_timeline /date_picker_widget.dart';
 import 'package:doctorq/date_picker_timeline-1.2.6/lib/date_picker_widget.dart';
-import 'package:doctorq/screens/history/video_call_page/video_call_page.dart';
 import 'package:doctorq/screens/home/home_screen/widgets/autolayouthor_item_widget_tasks.dart';
 import 'package:doctorq/screens/home/home_screen/widgets/autolayouthor_item_widget_zapisi.dart';
 import 'package:doctorq/screens/home/home_screen/widgets/doctor_item.dart';
@@ -16,9 +15,6 @@ import 'package:doctorq/screens/stories/story_scren.dart';
 import "package:story_view/story_view.dart";
 import 'package:animate_do/animate_do.dart';
 import 'package:doctorq/extensions.dart';
-import 'package:doctorq/screens/home/favorite_doctor_screen/favorite_doctor_screen.dart';
-import 'package:doctorq/screens/home/notification_screen/notification_screen.dart';
-import 'package:doctorq/screens/home/search_doctor_screen/search_doctor_screen.dart';
 import 'package:doctorq/screens/home/specialist_doctor_screen/specialist_doctor_screen.dart';
 import 'package:doctorq/screens/home/top_doctor_screen/choose_specs_screen_step_1.dart';
 import 'package:doctorq/services/api_service.dart';
@@ -32,10 +28,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
-import 'package:doctorq/data_files/specialist_list.dart';
-import 'package:story_view/story_view.dart';
 //import 'package:random_text_reveal/random_text_reveal.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 //final GlobalKey<RandomTextRevealState> globalKey = GlobalKey();
 
@@ -398,10 +391,10 @@ class HomeScreen extends StatelessWidget {
                                   builder: (context) =>
                                       //  const HomeSearchDoctorScreen()
                                       //    HistoryVideoCallPage()
-                                      SearchDoctorScreen()));
+                                      SearchPatientScreen()));
                         },
                         controller: autoLayoutVerController,
-                        hintText: "Поиск",
+                        hintText: "Найти пациента",
                         margin: getMargin(left: 24, right: 24, top: 20),
                         alignment: Alignment.center,
                         suffix: Padding(
@@ -436,7 +429,7 @@ class HomeScreen extends StatelessWidget {
                             mainAxisSize: MainAxisSize.max,
                             children: [
                               Text(
-                                "Запись к врачу",
+                                "Доступ к пациентам",
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
@@ -497,7 +490,7 @@ class HomeScreen extends StatelessWidget {
                                             .push(
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  PopularDoctorsScreen()),
+                                                  PopularPatientsScreen()),
 //                                  TopDoctorScreen()),
                                         );
                                       }
@@ -524,8 +517,8 @@ class HomeScreen extends StatelessWidget {
                                           ),
                                           Text(
                                             index == 0
-                                                ? "Популярные врачи"
-                                                : "Специализации",
+                                                ? "Мои пациенты"
+                                                : "Пациенты на лечении",
                                             style: TextStyle(
                                               fontSize:
                                                   12.0, // размер в пикселях
@@ -610,7 +603,7 @@ class HomeScreen extends StatelessWidget {
                                                     Icons.person,
                                                     color: Colors.grey,
                                                   )))),
-                                      Text("Врачи")
+                                      Text("Пациенты")
                                     ]),
                                     Column(children: [
                                       GestureDetector(
@@ -637,7 +630,7 @@ class HomeScreen extends StatelessWidget {
                                                       color: Colors.grey,
                                                       size: getVerticalSize(
                                                           24))))),
-                                      Text("Лекарства")
+                                      Text("Видео")
                                     ]),
                                     Column(children: [
                                       GestureDetector(
@@ -1192,7 +1185,7 @@ Widget specsHeader(context, isDark) {
         mainAxisSize: MainAxisSize.max,
         children: [
           Text(
-            "Специализации",
+            "Пациенты на лечении",
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.start,
             style: TextStyle(

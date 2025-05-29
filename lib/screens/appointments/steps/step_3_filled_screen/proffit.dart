@@ -201,10 +201,10 @@ class _AppointmentsStep3FilledScreenState extends State<ProffitScreen> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        const Text('Парфенов К.С.',
+                                        const Text('Парфенова К.С.',
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold)),
-                                        const Text('Акушер-гинеколог'),
+                                        const Text('Женщина, 71'),
                                       ],
                                     ),
                                   ),

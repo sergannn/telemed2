@@ -9,14 +9,14 @@ import 'package:doctorq/widgets/spacing.dart';
 import 'package:doctorq/widgets/top_back.dart';
 import 'package:flutter/material.dart';
 
-class PopularDoctorsScreen extends StatelessWidget {
-  const PopularDoctorsScreen({Key? key}) : super(key: key);
+class PopularPatientsScreen extends StatelessWidget {
+  const PopularPatientsScreen({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
         children: [
-          ...topBack(text:"Популярные",context: context),
+          ...topBack(text:"Доступ к пациентам",context: context),
           Expanded(
             child: Container(
               margin: const EdgeInsets.only(bottom: 6),
@@ -53,7 +53,7 @@ class PopularDoctorsScreen extends StatelessWidget {
                             onPressed: () => Navigator.pop(context),
                           ),
                           const Text(
-                            'Найти врача',
+                            'Найти пациента',
                             style: TextStyle(
                               fontSize: 14,
                               color: Color.fromARGB(255, 131, 131, 131),
@@ -101,7 +101,7 @@ class PopularDoctorsScreen extends StatelessWidget {
                                         .start, // выравнивание всех чилдренов внутри коламн по левому краю
                                     children: [
                                       Text(
-                                        'Популярные врачи',
+                                        'Мои пациенты',
                                         style: TextStyle(
                                           color:
                                               Color.fromARGB(255, 12, 12, 12),
@@ -145,7 +145,7 @@ class PopularDoctorsScreen extends StatelessWidget {
                                           height:
                                               10), // добавлен SizedBox с отступом 16 пикселей
                                       Text(
-                                        'Акушер-гинеколог',
+                                        'Женщина, 71',
                                         style: TextStyle(
                                           color:
                                               Color.fromARGB(255, 12, 12, 12),
@@ -187,11 +187,11 @@ class PopularDoctorsScreen extends StatelessWidget {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              const Text('Парфенов К.С.',
+                                              const Text('Парфенова К.С.',
                                                   style: TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold)),
-                                              const Text('Акушер-гинеколог'),
+                                              const Text('Женщина, 71'),
                                             ],
                                           ),
                                         ),
@@ -321,11 +321,11 @@ class PopularDoctorsScreen extends StatelessWidget {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              const Text('Парфенов К.С.',
+                                              const Text('Парфенова К.С.',
                                                   style: TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold)),
-                                              const Text('Акушер-гинеколог'),
+                                              const Text('Женщина, 71'),
                                             ],
                                           ),
                                         ),
@@ -455,11 +455,11 @@ class PopularDoctorsScreen extends StatelessWidget {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              const Text('Парфенов К.С.',
+                                              const Text('Парфенова К.С.',
                                                   style: TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold)),
-                                              const Text('Акушер-гинеколог'),
+                                              const Text('Женщина, 71'),
                                             ],
                                           ),
                                         ),

@@ -372,6 +372,7 @@ class MainProfileScreen extends StatelessWidget {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
+                                            
                                                 AppointmentsScreen(
                                                     mode: 'old')));
                                   }),
@@ -456,7 +457,8 @@ class MainProfileScreen extends StatelessWidget {
                               ),
                               scrollDirection: Axis.horizontal,
                               physics: const BouncingScrollPhysics(),
-                              itemCount: itemController.cats.length,
+                              //это чтоб был один! , но при этом использовался getx
+                              itemCount: itemController.cats.length - itemController.cats.length +1,
                               separatorBuilder: (context, index) {
                                 return HorizontalSpace(width: 16);
                               },
@@ -484,7 +486,7 @@ class MainProfileScreen extends StatelessWidget {
                                           CrossAxisAlignment.start,
                                       children: [
                                         const Text(
-                                          "Специализации",
+                                          "Персональный трекер",
                                           style: TextStyle(
                                             fontSize: 16.0,
                                             fontFamily: 'Source Sans Pro',
@@ -937,7 +939,7 @@ Widget specsHeader(context, isDark) {
         mainAxisSize: MainAxisSize.max,
         children: [
           Text(
-            "Специализации",
+            "Пациенты на лечении",
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.start,
             style: TextStyle(

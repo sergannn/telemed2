@@ -68,7 +68,8 @@ class AutolayouthorItemWidgetZapisi extends StatelessWidget {
                                   'assets/images/doctor3.png') //NetworkImage('url_to_image_1'),
 
                               )),
-                    ],
+                              //исправить на нормальное расположение справа
+                    Spacer(), Icon(Icons.star),  SizedBox(width: 2),Text("TOP"), SizedBox(width: 40,)],//top дописать
                   )),
               Container(
                   padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),

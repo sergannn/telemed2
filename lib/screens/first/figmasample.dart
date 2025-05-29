@@ -91,7 +91,7 @@ class _HomeScreenState extends State<FigmaToCodeApp> {
             ),
             SizedBox(height: screenHeight * 0.02), // 2% of screen height
             // Appointment Section
-            SectionTitle(title: 'Запись к врачу'),
+            SectionTitle(title: 'Доступ к пациентам'),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

@@ -104,7 +104,7 @@ class DoctorItem extends StatelessWidget {
                         children: [
                           Container(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 2, vertical: 2),
+                                horizontal: 15, vertical: 2),
                             decoration: BoxDecoration(
                               shape: BoxShape.rectangle,
                               borderRadius: BorderRadius.circular(20),
@@ -115,12 +115,8 @@ class DoctorItem extends StatelessWidget {
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Icon(
-                                  Icons.currency_ruble,
-                                  size: 12,
-                                  color: Color.fromARGB(255, 16, 16, 16),
-                                ),
-                                const Text('2.300',
+                                //увеличить рамку
+                                const Text('Анкета',
                                     style: TextStyle(
                                         color: Color.fromARGB(255, 16, 16, 16),
                                         fontSize: 11)),

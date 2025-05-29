@@ -388,7 +388,7 @@ class _ChatScreenState extends State<ChatScreen> {
       child: Row(
         children: [
           ..._nowSuggestions.map((suggestion) {
-            suggestion['text'] = 'Что помогает от мигрени?';
+          //  suggestion['text'] = 'Что помогает от мигрени?';
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 4.0),
               child: GestureDetector(
@@ -538,12 +538,12 @@ class _ChatScreenState extends State<ChatScreen> {
                   : const Color.fromARGB(255, 231, 231, 231))),
       backgroundColor: const Color.fromARGB(255, 112, 112, 112),
       actions: [
-        /* IconButton(
+        IconButton(
           icon: Icon(Icons.close),
           onPressed: () {
             Navigator.pop(context); // Go back to the previous screen
           },
-        ),*/
+        ),
         IconButton(
           icon: Icon(_isDarkTheme ? Icons.wb_sunny : Icons.nights_stay),
           onPressed: _toggleTheme, // Toggle theme button

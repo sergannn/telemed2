@@ -427,7 +427,7 @@ class StoriesScreen extends StatelessWidget {
                             mainAxisSize: MainAxisSize.max,
                             children: [
                               Text(
-                                "Специализации",
+                                "Пациенты на лечении",
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.start,
                                 style: TextStyle(

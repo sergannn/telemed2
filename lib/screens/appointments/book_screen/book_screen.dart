@@ -77,14 +77,14 @@ class _AppointmentsBookScreenState extends State<AppointmentsBookScreen> {
             SingleChildScrollView(
       child: Column(
         children: [
-          ...topBack(text: "Запись к врачу", context: context),
+          ...topBack(text: "Анкета пациента", context: context),//две
           GestureDetector(
-            onTap: () {
+            onTap: () {/*
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => DoctorInfoScreen()));
-            },
+            */},
             child:
-                // Зеленый контейнер
+             
                 Align(
               alignment: Alignment.centerLeft,
               child: Padding(
@@ -135,7 +135,7 @@ class _AppointmentsBookScreenState extends State<AppointmentsBookScreen> {
                             children: [
                               Container(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 2, vertical: 2),
+                                    horizontal: 10, vertical: 2),
                                 decoration: BoxDecoration(
                                   shape: BoxShape.rectangle,
                                   borderRadius: BorderRadius.circular(20),
@@ -147,12 +147,8 @@ class _AppointmentsBookScreenState extends State<AppointmentsBookScreen> {
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Icon(
-                                      Icons.currency_ruble,
-                                      size: 12,
-                                      color: Color.fromARGB(255, 16, 16, 16),
-                                    ),
-                                    const Text('2300',
+                                    
+                                    const Text('Мой пациент',
                                         style: TextStyle(
                                             color:
                                                 Color.fromARGB(255, 16, 16, 16),
@@ -165,8 +161,53 @@ class _AppointmentsBookScreenState extends State<AppointmentsBookScreen> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 8), // Отступ между строками
-                      Container(
+                      const SizedBox(height: 8), 
+                      
+                       Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                        
+                    
+                          
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 2),
+                                /*decoration: BoxDecoration(
+                                  shape: BoxShape.rectangle,
+                                  borderRadius: BorderRadius.circular(20),
+                                  color:
+                                      const Color.fromARGB(255, 176, 214, 254),
+                                ),*/
+                                constraints: const BoxConstraints(
+                                    minWidth: 10, minHeight: 4),
+                                child:  Column(children: [
+                                      GestureDetector(
+                                          onTap: () {/*
+                                            Navigator.pushNamed(
+                                                context, '/webview',
+                                                arguments:
+                                                    'https://admin.onlinedoctor.su/articles/symptom.html');
+                                        */  },
+                                          child: CircleAvatar(
+                                              backgroundColor:
+                                                  ColorConstant.fromHex(
+                                                      "C8E0FF"),
+                                              
+                                              child: IconButton(
+                                                  onPressed: null,
+                                                  icon: Icon(
+                                                    Icons.person,
+                                                    color: Colors.grey,
+                                                  )))),
+                                      Text("Написать")])
+                              ),
+                              const SizedBox(height: 4),
+                            ]),
+                          
+                        
+                      
+                      // Отступ между строками
+                     /* Container(
                         width: double.infinity, // Полная ширина
                         height: 40, // Высота изображения
                         decoration: BoxDecoration(
@@ -177,7 +218,7 @@ class _AppointmentsBookScreenState extends State<AppointmentsBookScreen> {
                             fit: BoxFit.contain,
                           ),
                         ),
-                      ),
+                      ),*/
                     ],
                   ),
                 ),
@@ -207,7 +248,7 @@ class _AppointmentsBookScreenState extends State<AppointmentsBookScreen> {
                     children: [
                       // Заголовок
                       Text(
-                        'О враче',
+                        'О постановке диагноза',
                         style: TextStyle(
                           color: const Color.fromARGB(255, 17, 17, 17),
                           fontWeight: FontWeight.bold,
@@ -234,55 +275,11 @@ class _AppointmentsBookScreenState extends State<AppointmentsBookScreen> {
                 ),
               )),
           VerticalSpace(height: 5),
-          Align(
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                padding: getPadding(
-                  left: 24,
-                  top: 16,
-                  right: 24,
-                ),
-                child: SingleChildScrollView(
-                    child: DatePicker(
-                  //activeDates: [],
-                  inactiveDates: _generateInactiveDates(),
-                  DateTime.now(),
-                  deactivatedColor: Colors.grey,
-
-                  initialSelectedDate: DateTime.now(),
-                  selectionColor: ColorConstant.fromHex(
-                      "C8E0FF"), // ColorConstant.blueA400,
-                  height: MediaQuery.of(context).size.height * 0.15,
-                  dateTextStyle: TextStyle(
-                      fontFamily: 'Source Sans Pro',
-                      color: ColorConstant.black900,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 23),
-                  dayTextStyle: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 14,
-                    fontFamily: 'Source Sans Pro',
-                    color: ColorConstant.black900,
-                  ),
-                  monthTextStyle: TextStyle(
-                    fontFamily: 'Source Sans Pro',
-                    color: ColorConstant.black900,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 14,
-                  ),
-                  selectedTextColor: Colors.white,
-                  onDateChange: (date) {
-                    // New date selected
-                    setState(() {
-                      selectedDate = date;
-                    });
-                  },
-                )),
-              )),
+         
           CustomButton(
               isDark: isDark,
               width: size.width,
-              text: "Записаться",
+              text: "Запросить доступ к анкете",
               margin: getMargin(
                 left: 24,
                 top: 22,
@@ -291,14 +288,14 @@ class _AppointmentsBookScreenState extends State<AppointmentsBookScreen> {
               variant: ButtonVariant.FillBlueA400,
               fontStyle: ButtonFontStyle.SourceSansProSemiBold18,
               alignment: Alignment.center,
-              onTap: () {
+              onTap: () {/*
                 print(selectedDate);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
                           AppointmentsStep2FilledScreen(date: selectedDate)),
-                );
+                );*/
               }),
         ],
       ),

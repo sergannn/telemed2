@@ -1,11 +1,13 @@
 import 'package:doctorq/screens/appointments/steps/step_2_filled_screen/step_2_filled_screen.dart';
 import 'package:doctorq/screens/home/top_doctor_screen/choose_specs_screen_step_1.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:doctorq/screens/home/top_doctor_screen/choose_specs_screen_step_1.dart';
 import 'package:doctorq/widgets/spacing.dart';
 import 'package:doctorq/widgets/top_back.dart';
 import 'package:doctorq/app_export.dart';
 import 'package:doctorq/widgets/custom_button.dart';
+import 'package:video_player/video_player.dart';
 
 class HighPressureScreen extends StatefulWidget {
   const HighPressureScreen({Key? key}) : super(key: key);
@@ -17,12 +19,23 @@ class HighPressureScreen extends StatefulWidget {
 class _HighPressureScreenState extends State<HighPressureScreen> with SingleTickerProviderStateMixin {
   DateTime? selectedDate;
   late TabController _tabController;
+   late VideoPlayerController _controller;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+      // For network video
+    _controller = VideoPlayerController.network(
+      'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
+    )..initialize().then((_) {
+        setState(() {});
+        _controller.play();
+      });
   }
+
+
+
 
   @override
   void dispose() {
@@ -163,7 +176,8 @@ class _HighPressureScreenState extends State<HighPressureScreen> with SingleTick
           
         _buildArticleContent(),
         _buildVideoContent(),
-        Container(), // Обсуждение с врачами (пока пусто)
+        FakeChatScreen()
+//        Container(), // Обсуждение с врачами (пока пусто)
       ],
     ));
   }
@@ -241,7 +255,15 @@ class _HighPressureScreenState extends State<HighPressureScreen> with SingleTick
       ],
     );
   }
-
+void _toggleVideoPlayback() {
+  setState(() {
+    if (_controller.value.isPlaying) {
+      _controller.pause();
+    } else {
+      _controller.play();
+    }
+  });
+}
   Widget _buildVideoItem({required String title, required String imageUrl}) {
     return Container(
       decoration: BoxDecoration(
@@ -268,8 +290,15 @@ class _HighPressureScreenState extends State<HighPressureScreen> with SingleTick
                 fontFamily: 'SourceSansPro',
               ),
             ),
-          ),
-          ClipRRect(
+          ),Center(
+        child: _controller.value.isInitialized
+            ? GestureDetector(child: AspectRatio(
+                aspectRatio: _controller.value.aspectRatio,
+                child: VideoPlayer(_controller),
+              ),onTap:  () {_controller.pause(); })
+            : CircularProgressIndicator(),
+      ),
+          /*ClipRRect(
             borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(12),
               bottomRight: Radius.circular(12),
@@ -280,7 +309,7 @@ class _HighPressureScreenState extends State<HighPressureScreen> with SingleTick
               fit: BoxFit.cover,
               height: 150,
             ),
-          ),
+          ),*/
         ],
       ),
     );
@@ -313,4 +342,202 @@ class _HighPressureScreenState extends State<HighPressureScreen> with SingleTick
     ];
     return texts[index];
   }
+}
+
+
+class FakeChatScreen extends StatefulWidget {
+  @override
+  _FakeChatScreenState createState() => _FakeChatScreenState();
+}
+
+class _FakeChatScreenState extends State<FakeChatScreen> {
+  final List<ChatMessage> _messages = [
+    ChatMessage(
+      text: "Здравствуйте! У меня вопрос по поводу давления.",
+      isMe: false,
+      time: DateTime.now().subtract(Duration(minutes: 5))),
+    ChatMessage(
+      text: "Добрый день! Чем могу помочь?",
+      isMe: true,
+      time: DateTime.now().subtract(Duration(minutes: 4))),
+    ChatMessage(
+      text: "Какое давление считается нормальным для человека 45 лет?",
+      isMe: false,
+      time: DateTime.now().subtract(Duration(minutes: 3))),
+    ChatMessage(
+      text: "Нормальное давление для взрослого человека - 120/80 мм рт.ст. Но небольшие отклонения в пределах 110-139/70-89 тоже могут быть нормальными.",
+      isMe: true,
+      time: DateTime.now().subtract(Duration(minutes: 2))),
+  ];
+
+  final TextEditingController _textController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      /*appBar: AppBar(
+        title: Text("Обсуждение с врачами"),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.more_vert),
+            onPressed: () {},
+          ),
+        ],
+      ),*/
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView.builder(
+              reverse: false,
+              padding: EdgeInsets.symmetric(horizontal: 8.0),
+              itemCount: _messages.length,
+              itemBuilder: (context, index) {
+                return _buildMessage(_messages[index]);
+              },
+            ),
+          ),
+          _buildMessageComposer(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMessage(ChatMessage message) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 8.0),
+      alignment: message.isMe ? Alignment.centerRight : Alignment.centerLeft,
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: MediaQuery.of(context).size.width * 0.75,
+        ),
+        child: Container(
+          padding: EdgeInsets.all(12.0),
+          decoration: BoxDecoration(
+            color: message.isMe 
+                ? Color(0xFFE3F2FD) 
+                : Color(0xFFF5F5F5),
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(12),
+              topRight: Radius.circular(12),
+              bottomLeft: message.isMe ? Radius.circular(12) : Radius.circular(0),
+              bottomRight: message.isMe ? Radius.circular(0) : Radius.circular(12),
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                message.text,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.black87,
+                ),
+              ),
+              SizedBox(height: 4),
+              Text(
+                DateFormat('HH:mm').format(message.time),
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMessageComposer() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 6.0,
+            offset: Offset(0, -1),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          IconButton(
+            icon: Icon(Icons.attach_file),
+            onPressed: () {},
+          ),
+          Expanded(
+            child: TextField(
+              controller: _textController,
+              decoration: InputDecoration.collapsed(
+                hintText: "Напишите сообщение...",
+                hintStyle: TextStyle(color: Colors.grey),
+              ),
+            ),
+          ),
+          IconButton(
+            icon: Icon(Icons.send, color: Colors.blue),
+            onPressed: () {
+              if (_textController.text.trim().isNotEmpty) {
+                _sendMessage(_textController.text);
+                _textController.clear();
+              }
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _sendMessage(String text) {
+    setState(() {
+      _messages.add(ChatMessage(
+        text: text,
+        isMe: true,
+        time: DateTime.now(),
+      ));
+      
+      // Add fake doctor reply after 1 second
+      Future.delayed(Duration(seconds: 1), () {
+        setState(() {
+          _messages.add(ChatMessage(
+            text: _getRandomDoctorReply(),
+            isMe: false,
+            time: DateTime.now(),
+          ));
+        });
+      });
+    });
+  }
+
+  String _getRandomDoctorReply() {
+    final replies = [
+      "Похоже на классические симптомы гипертонии.",
+      "Рекомендую измерить давление утром и вечером в течение недели.",
+      "Вам следует обратиться к кардиологу для дополнительного обследования.",
+      "Попробуйте уменьшить потребление соли и больше отдыхать.",
+      "При таком давлении лучше вызвать скорую помощь.",
+    ];
+    return replies[DateTime.now().millisecond % replies.length];
+  }
+
+  @override
+  void dispose() {
+    _textController.dispose();
+    super.dispose();
+  }
+}
+
+class ChatMessage {
+  final String text;
+  final bool isMe;
+  final DateTime time;
+
+  ChatMessage({
+    required this.text,
+    required this.isMe,
+    required this.time,
+  });
 }
