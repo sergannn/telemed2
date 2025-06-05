@@ -45,5 +45,24 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	  <key>NSPhotoLibraryUsageDescription</key>
+    <string>This app requires access to photos for medical documentation.</string>
+
+    <key>NSMicrophoneUsageDescription</key>
+    <string>This app requires microphone access for voice communications.</string>
+
+    <key>NSCameraUsageDescription</key>
+    <string>This app requires camera access for medical consultations.</string>
+
+    <key>NSSpeechRecognitionUsageDescription</key>
+    <string>This app requires speech recognition for dictation services.</string>
+
+    <!-- Optional location keys -->
+    
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>This app requires location services for finding nearby medical facilities.</string>
+
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>This app requires location services for finding nearby medical facilities.</string>
 </dict>
 </plist>
