@@ -102,11 +102,11 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     switch (state) {
       case AppLifecycleState.resumed:
         debugPrint("App resumed");
-        Navigator.push(
+        /*    Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => Numscreen()),
         );
-
+*/
         print('resumed');
         break;
       case AppLifecycleState.paused:

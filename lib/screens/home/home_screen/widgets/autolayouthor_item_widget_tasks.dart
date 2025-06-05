@@ -8,7 +8,8 @@ import 'package:flutter/material.dart';
 // ignore: must_be_immutable
 class AutolayouthorItemWidgetTasks extends StatelessWidget {
   int index;
-  Map<String, dynamic> item;
+//  Map<String, dynamic> item;
+  dynamic item;
   AutolayouthorItemWidgetTasks(
       {Key? key, required this.index, required this.item})
       : super(key: key);
@@ -18,20 +19,22 @@ class AutolayouthorItemWidgetTasks extends StatelessWidget {
     return Container(
       width: MediaQuery.of(context).size.width / 3,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(
-          getHorizontalSize(
-            16.00,
+          borderRadius: BorderRadius.circular(
+            getHorizontalSize(
+              16.00,
+            ),
           ),
-        ),
-        color: index % 2 == 0
+          color: getColor(
+              item) /*index % 2 == 0
             ? ColorConstant.fromHex("C8E0FF")
-            : ColorConstant.fromHex("FFFCBB"),
-      ),
+            : ColorConstant.fromHex("FFFCBB"),*/
+          ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          //Text(item.toString()),
           Container(
             margin: EdgeInsets.all(8.0), // Отступы
             padding: EdgeInsets.symmetric(
@@ -41,7 +44,10 @@ class AutolayouthorItemWidgetTasks extends StatelessWidget {
               borderRadius: BorderRadius.circular(20.0), // Радиус для овала
             ),
             child: Text(
-              "Чт. 26",
+              //   item.date.toString(),
+              "${_getShortWeekday(item.date.weekday)}. ${item.date.day}",
+
+              //  "Чт. 26",
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 16.0,
@@ -51,9 +57,9 @@ class AutolayouthorItemWidgetTasks extends StatelessWidget {
           Container(
               padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
               child: RichText(
-                text: const TextSpan(
+                text: TextSpan(
                   //item['name'] +
-                  text: "Онлайн прием" + '\n',
+                  text: '${getCategoryName(item.category)}\n',
                   style: TextStyle(
                     fontSize: 10,
                     color: Colors.black,
@@ -62,7 +68,7 @@ class AutolayouthorItemWidgetTasks extends StatelessWidget {
                   ),
                   children: <TextSpan>[
                     TextSpan(
-                      text: 'Врач аллерголог',
+                      text: item.title,
                       style: TextStyle(
                         fontSize: 10,
                         color: Colors.black,
@@ -93,4 +99,34 @@ class AutolayouthorItemWidgetTasks extends StatelessWidget {
       ),
     );
   }
+}
+
+Color getColor(dynamic record) {
+  if (record.category == 'Cat1') {
+    return Color.fromARGB(255, 138, 234, 205);
+  } else if (record.category == 'Cat2') {
+    return ColorConstant.fromHex("C8E0FF");
+  } else if (record.category == 'Cat3') {
+    return ColorConstant.fromHex("FFFCBB");
+  } else {
+    return Color.fromARGB(255, 138, 234, 205);
+  }
+}
+
+String getCategoryName(String category) {
+  switch (category) {
+    case 'Cat1':
+      return 'Приемы';
+    case 'Cat2':
+      return 'Лекарства';
+    case 'Cat3':
+      return 'Упражнения';
+    default:
+      return 'Попробуйте воспользоваться дневником';
+  }
+}
+
+String _getShortWeekday(int weekday) {
+  const weekdays = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
+  return weekdays[weekday - 1];
 }

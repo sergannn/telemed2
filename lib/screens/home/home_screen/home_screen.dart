@@ -6,6 +6,7 @@ import 'package:doctorq/screens/home/home_screen/widgets/autolayouthor_item_widg
 import 'package:doctorq/screens/home/home_screen/widgets/autolayouthor_item_widget_zapisi.dart';
 import 'package:doctorq/screens/home/home_screen/widgets/doctor_item.dart';
 import 'package:doctorq/screens/home/home_screen/widgets/story_item_widget.dart';
+import 'package:doctorq/screens/medcard/create_record_page_lib.dart';
 import 'package:doctorq/screens/webviews/someWebPage.dart';
 import 'package:doctorq/screens/profile/main_notification.dart';
 import 'package:doctorq/screens/profile/main_profile.dart';
@@ -13,6 +14,7 @@ import 'package:doctorq/screens/profile/popular_doctors.dart';
 import 'package:doctorq/screens/profile/search_doctors.dart';
 import 'package:doctorq/screens/profile/settings/appearance_screen/appearance_screen.dart';
 import 'package:doctorq/screens/stories/story_scren.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import "package:story_view/story_view.dart";
 import 'package:animate_do/animate_do.dart';
 import 'package:doctorq/extensions.dart';
@@ -43,6 +45,24 @@ class ItemController extends GetxController {
   var cats = [].obs; // Reactive list to store fetched items
   var users = [].obs; // Reactive list to store fetched items
   var articles = [].obs;
+
+  var _filteredRecords = <CalendarRecordData>[].obs;
+
+  void filterRecordsByDate(DateTime date) {
+    _filteredRecords.value = _calendarRecords.where((record) {
+      return record.date.year == date.year &&
+          record.date.month == date.month &&
+          record.date.day == date.day;
+    }).toList();
+    if (_filteredRecords.isEmpty) {
+      _filteredRecords.add(CalendarRecordData(
+          date: date,
+          title: "На этот день заметки отсутствуют",
+          category: "Приемы"));
+    }
+  }
+
+  var _calendarRecords = <CalendarRecordData>[].obs;
   final storyItems = <StoryItem>[].obs;
   @override
   void onInit() {
@@ -50,6 +70,25 @@ class ItemController extends GetxController {
     refreshData();
     fetchStories();
     fetchArticles();
+    _loadCalendarRecords();
+  }
+
+  Future<void> _loadCalendarRecords() async {
+    final prefs = await SharedPreferences.getInstance();
+    final recordsString = prefs.getString('calendar_records');
+    if (recordsString != null) {
+      try {
+        final List<dynamic> jsonList = jsonDecode(recordsString);
+        _calendarRecords.value =
+            jsonList.map((item) => CalendarRecordData.fromJson(item)).toList();
+        // Initialize with today's records
+        filterRecordsByDate(DateTime.now());
+      } catch (e) {
+        print('Error decoding calendar records: $e');
+        _calendarRecords.value = [];
+        _filteredRecords.value = [];
+      }
+    }
   }
 
   Future<void> fetchArticles() async {
@@ -104,6 +143,7 @@ class ItemController extends GetxController {
     fetchStories();
     fetchArticles();
     getDoctors();
+    _loadCalendarRecords();
     // Simulating fetching data from an API
     var response = await http.get(Uri.parse(
       'https://www.onlinedoctor.su/api/specializations',
@@ -336,6 +376,8 @@ class HomeScreen extends StatelessWidget {
                                 ),
                                 selectedTextColor: Colors.white,
                                 onDateChange: (date) {
+                                  print("home tap $date");
+                                  itemController.filterRecordsByDate(date);
                                   //setState(() {});
                                   // New date selected
                                   //setState(() {
@@ -343,8 +385,30 @@ class HomeScreen extends StatelessWidget {
                                   //});
                                 },
                               ))))),
-
                       Obx(() {
+                        return FadeInUp(
+                          delay: const Duration(milliseconds: 300),
+                          child: SizedBox(
+                            height: getVerticalSize(160.00),
+                            width: getHorizontalSize(528.00),
+                            child: ListView.separated(
+                              padding: getPadding(left: 20, right: 20, top: 10),
+                              scrollDirection: Axis.horizontal,
+                              physics: const BouncingScrollPhysics(),
+                              itemCount: itemController._filteredRecords.length,
+                              separatorBuilder: (context, index) =>
+                                  HorizontalSpace(width: 16),
+                              itemBuilder: (context, index) {
+                                return AutolayouthorItemWidgetTasks(
+                                  item: itemController._filteredRecords[index],
+                                  index: index,
+                                );
+                              },
+                            ),
+                          ),
+                        );
+                      }),
+                      /*    Obx(() {
                         //print(itemController.storyItems.length);
                         return FadeInUp(
                           delay: const Duration(milliseconds: 300),
@@ -367,12 +431,13 @@ class HomeScreen extends StatelessWidget {
                               ),
                               scrollDirection: Axis.horizontal,
                               physics: const BouncingScrollPhysics(),
-                              itemCount: itemController.cats.length,
+                              itemCount: itemController._calendarRecords.length,
                               separatorBuilder: (context, index) {
                                 return HorizontalSpace(width: 16);
                               },
                               itemBuilder: (context, index) {
-                                var cats = itemController.cats;
+                                var cats = itemController._calendarRecords;
+                                //_calendarRecords
                                 //return Text("a");
 
                                 return AutolayouthorItemWidgetTasks(
@@ -383,7 +448,7 @@ class HomeScreen extends StatelessWidget {
                             ),
                           ),
                         );
-                      }),
+                      }),*/
                       //  Frame2087326464(),
 
                       CustomSearchView(

@@ -1,3 +1,4 @@
+import 'package:doctorq/extensions.dart';
 import 'package:flutter/material.dart';
 
 class DoctorInfoScreen extends StatelessWidget {
@@ -77,6 +78,7 @@ class DoctorInfoScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               // Описание
+                              Text(context.selectedDoctor.toString()),
                               Padding(
                                 padding: EdgeInsets.only(top: 2),
                                 child: Text(

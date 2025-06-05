@@ -48,7 +48,18 @@ class _SearchDoctorScreenState extends State<SearchDoctorScreen> {
         _filteredDoctors = _allDoctors;
       } else {
         _filteredDoctors = _allDoctors.where((doctor) {
-          return doctor['username'].toLowerCase().contains(query);
+          print(doctor);
+          // Check specializations
+          final specializations = doctor['specializations'] as List?;
+          final nameMatch =
+              doctor['username']?.toString().toLowerCase().contains(query) ??
+                  false;
+          final specMatch = specializations?.any((spec) =>
+                  spec['name']?.toString().toLowerCase().contains(query) ??
+                  false) ??
+              false;
+
+          return nameMatch || specMatch;
         }).toList();
       }
     });

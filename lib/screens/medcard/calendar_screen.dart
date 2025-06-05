@@ -29,25 +29,29 @@ class _CalendarScreenState extends State<CalendarScreen> {
     if (recordsString != null) {
       try {
         final List<dynamic> jsonList = jsonDecode(recordsString);
-        _calendarRecords = jsonList.map((item) => CalendarRecordData.fromJson(item)).toList();
+        _calendarRecords =
+            jsonList.map((item) => CalendarRecordData.fromJson(item)).toList();
       } catch (e) {
         print('Error decoding calendar records: $e');
         _calendarRecords = [];
       }
     }
     setState(() {
-      printLog('_calendarRecords after load: ${_calendarRecords.map((e) => e.toJson()).toList()}');
+      printLog(
+          '_calendarRecords after load: ${_calendarRecords.map((e) => e.toJson()).toList()}');
     });
   }
 
   Future<void> _saveCalendarRecords() async {
     final prefs = await SharedPreferences.getInstance();
-    final recordsString = jsonEncode(_calendarRecords.map((record) => record.toJson()).toList());
+    final recordsString =
+        jsonEncode(_calendarRecords.map((record) => record.toJson()).toList());
     await prefs.setString('calendar_records', recordsString);
   }
 
   void _addRecord(CalendarRecordData newEvent) {
-    print('newEvent.date: ${newEvent.date}, _calendarRecords: ${_calendarRecords.map((e) => e.date)}');
+    print(
+        'newEvent.date: ${newEvent.date}, _calendarRecords: ${_calendarRecords.map((e) => e.date)}');
     setState(() {
       _calendarRecords.add(newEvent);
     });
@@ -55,7 +59,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
   }
 
   void _updateRecord(CalendarRecordData updatedRecord) {
-    final index = _calendarRecords.indexWhere((r) => r.date.compareWithoutTime(updatedRecord.date));
+    final index = _calendarRecords
+        .indexWhere((r) => r.date.compareWithoutTime(updatedRecord.date));
     if (index != -1) {
       setState(() {
         _calendarRecords[index] = updatedRecord;
@@ -79,34 +84,36 @@ class _CalendarScreenState extends State<CalendarScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.blue,
-        child: const Icon(Icons.add),
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => CreateRecordPage(
-                onRecordAdd: _addRecord,
-              ),
-            ),
-          );
-        },
-      ),
-      body: TableCalendar(
-        onCalendarCreated: (pageController) {},
-        calendarBuilders: CalendarBuilders(
-          defaultBuilder: dayBuilder,
-          todayBuilder: dayBuilder,
+      body: Column(children: [
+        TableCalendar(
+          onCalendarCreated: (pageController) {},
+          calendarBuilders: CalendarBuilders(
+            defaultBuilder: dayBuilder,
+            todayBuilder: dayBuilder,
+          ),
+          locale: 'ru_RU',
+          focusedDay: DateTime.now(),
+          firstDay: DateTime.utc(2010, 10, 16),
+          lastDay: DateTime.utc(2030, 3, 14),
+          onDaySelected: (selectedDay, focusedDay) {
+            printLog('Selected day: $selectedDay');
+          },
         ),
-        locale: 'ru_RU',
-        focusedDay: DateTime.now(),
-        firstDay: DateTime.utc(2010, 10, 16),
-        lastDay: DateTime.utc(2030, 3, 14),
-        onDaySelected: (selectedDay, focusedDay) {
-          printLog('Selected day: $selectedDay');
-        },
-      ),
+        FloatingActionButton(
+          backgroundColor: Colors.blue,
+          child: const Icon(Icons.add),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CreateRecordPage(
+                  onRecordAdd: _addRecord,
+                ),
+              ),
+            );
+          },
+        )
+      ]),
     );
   }
 
@@ -126,7 +133,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
       orElse: () => CalendarRecordData(title: '', date: day, category: null),
     );
 
-    if (record.category == 'Cat1') {
+    if (record.category == 'Приемы') {
       backgroundColor = Colors.red;
     } else if (record.category == 'Cat2') {
       backgroundColor = Colors.yellow;
