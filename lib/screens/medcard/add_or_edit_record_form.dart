@@ -76,7 +76,8 @@ class _AddOrEditRecordFormState extends State<AddOrEditRecordForm> {
                   ),
                   initialDateTime: _startDate,
                   onSelect: (date) {
-                    if (date.withoutTime.withoutTime.isAfter(_endDate.withoutTime)) {
+                    if (date.withoutTime.withoutTime
+                        .isAfter(_endDate.withoutTime)) {
                       _endDate = date.withoutTime;
                     }
                     _startDate = date.withoutTime;
@@ -144,7 +145,7 @@ class _AddOrEditRecordFormState extends State<AddOrEditRecordForm> {
                 },
               ),
               Text(
-                'Cat1',
+                getCategoryName('Cat1'),
                 style: TextStyle(
                   color: AppColors.black,
                   fontSize: 17,
@@ -162,7 +163,7 @@ class _AddOrEditRecordFormState extends State<AddOrEditRecordForm> {
                 },
               ),
               Text(
-                'Cat2',
+                getCategoryName('Cat2'),
                 style: TextStyle(
                   color: AppColors.black,
                   fontSize: 17,
@@ -180,7 +181,7 @@ class _AddOrEditRecordFormState extends State<AddOrEditRecordForm> {
                 },
               ),
               Text(
-                'Cat3',
+                getCategoryName('Cat3'),
                 style: TextStyle(
                   color: AppColors.black,
                   fontSize: 17,
@@ -261,13 +262,15 @@ class DateTimeSelectorFormField extends StatefulWidget {
   });
 
   @override
-  _DateTimeSelectorFormFieldState createState() => _DateTimeSelectorFormFieldState();
+  _DateTimeSelectorFormFieldState createState() =>
+      _DateTimeSelectorFormFieldState();
 }
 
 class _DateTimeSelectorFormFieldState extends State<DateTimeSelectorFormField> {
   late var _minimumDate = CalendarConstants.minDate.withoutTime;
 
-  late var _textEditingController = widget.controller ?? TextEditingController();
+  late var _textEditingController =
+      widget.controller ?? TextEditingController();
   late var _focusNode = _getFocusNode();
 
   late DateTime? _selectedDate;
@@ -292,7 +295,8 @@ class _DateTimeSelectorFormFieldState extends State<DateTimeSelectorFormField> {
       _textEditingController = widget.controller ?? TextEditingController();
     }
 
-    if (_selectedDate != oldWidget.initialDateTime || widget.minimumDateTime != oldWidget.minimumDateTime) {
+    if (_selectedDate != oldWidget.initialDateTime ||
+        widget.minimumDateTime != oldWidget.minimumDateTime) {
       _setDates();
     }
   }
@@ -332,7 +336,9 @@ class _DateTimeSelectorFormFieldState extends State<DateTimeSelectorFormField> {
 
     date = await _showDateSelector();
 
-    _textEditingController.text = (date ?? _selectedDate)?.dateToStringWithFormat(format: "dd/MM/yyyy") ?? '';
+    _textEditingController.text =
+        (date ?? _selectedDate)?.dateToStringWithFormat(format: "dd/MM/yyyy") ??
+            '';
 
     _selectedDate = date ?? _selectedDate;
 
@@ -360,12 +366,14 @@ class _DateTimeSelectorFormFieldState extends State<DateTimeSelectorFormField> {
     _minimumDate = widget.minimumDateTime ?? CalendarConstants.minDate;
     _selectedDate = widget.initialDateTime;
 
-    if (_selectedDate?.withoutTime.isBefore(_minimumDate.withoutTime) ?? false) {
+    if (_selectedDate?.withoutTime.isBefore(_minimumDate.withoutTime) ??
+        false) {
       throw 'InitialDate is smaller than Minimum date';
     }
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _textEditingController.text = _selectedDate?.dateToStringWithFormat(format: "dd/MM/yyyy") ?? '';
+      _textEditingController.text =
+          _selectedDate?.dateToStringWithFormat(format: "dd/MM/yyyy") ?? '';
     });
   }
 }
@@ -406,5 +414,18 @@ class CustomButton extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+String getCategoryName(String category) {
+  switch (category) {
+    case 'Cat1':
+      return 'Приемы';
+    case 'Cat2':
+      return 'Лекарства';
+    case 'Cat3':
+      return 'Упражнения';
+    default:
+      return 'Попробуйте воспользоваться дневником';
   }
 }

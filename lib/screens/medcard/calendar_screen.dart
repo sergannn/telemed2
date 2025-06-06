@@ -1,5 +1,6 @@
 import 'package:doctorq/screens/medcard/create_record_page.dart';
 import 'package:doctorq/screens/medcard/create_record_page_lib.dart';
+import 'package:doctorq/screens/medcard/event_page.dart';
 import 'package:doctorq/utils/utility.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -105,11 +106,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                builder: (context) => CreateRecordPage(
-                  onRecordAdd: _addRecord,
-                ),
-              ),
+              MaterialPageRoute(builder: (context) => EventPage()
+                  //   builder: (context) => CreateRecordPage(
+                  //     onRecordAdd: _addRecord,
+                  //   ),
+                  ),
             );
           },
         )
@@ -133,7 +134,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
       orElse: () => CalendarRecordData(title: '', date: day, category: null),
     );
 
-    if (record.category == 'Приемы') {
+    if (record.category == 'Cat1') {
       backgroundColor = Colors.red;
     } else if (record.category == 'Cat2') {
       backgroundColor = Colors.yellow;
