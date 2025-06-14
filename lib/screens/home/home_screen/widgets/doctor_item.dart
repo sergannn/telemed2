@@ -1,5 +1,3 @@
-import 'package:doctorq/app_export.dart';
-import 'package:doctorq/data_files/doctors_list.dart';
 import 'package:doctorq/extensions.dart';
 import 'package:doctorq/models/doctors_model.dart';
 import 'package:doctorq/screens/appointments/book_screen/book_screen.dart';
@@ -133,6 +131,7 @@ class DoctorItem extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 8), //
+                  //ниже рейтинг стаж пациенты отзывы
                   //Container(width: double.infinity, child: Frame2()),
                   /* Container(
                       width: double.infinity, // Полная ширина

@@ -68,11 +68,13 @@ Future<bool> getDoctors() async {
                 name
             }
             doctorUser {
+               	description
                 user_id: id 
                 username: full_name
                 first_name
                 last_name
                 photo: profile_image
+                qualifications {  degree university year}
             }
         }
         paginatorInfo {

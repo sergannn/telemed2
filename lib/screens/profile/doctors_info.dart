@@ -22,10 +22,10 @@ class DoctorInfoScreen extends StatelessWidget {
                   icon: const Icon(Icons.arrow_back),
                   onPressed: () => Navigator.pop(context),
                 ),
-                const Text(
-                  'Поддержка',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
+                //const Text(
+                //'Поддержка',
+                // style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                //),
               ],
             ),
           ),
@@ -78,7 +78,8 @@ class DoctorInfoScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               // Описание
-                              Text(context.selectedDoctor.toString()),
+                              // Text(context.selectedDoctor.toString()),
+
                               Padding(
                                 padding: EdgeInsets.only(top: 2),
                                 child: Text(
@@ -143,7 +144,11 @@ class DoctorInfoScreen extends StatelessWidget {
                               Padding(
                                 padding: EdgeInsets.only(top: 2),
                                 child: Text(
-                                  'Михайлюк Галина Ивановна, Санкт-Петербург: онколог-гинеколог, гинеколог, гинеколог-эндокринолог, 47 отзывов пациентов, места работы, кандидат наук, высшая категория, стаж 38 лет, запись на приём. Михайлюк Галина Ивановна, Санкт-Петербург: онколог-гинеколог, гинеколог, гинеколог-эндокринолог, 47 отзывов пациентов, места работы, кандидат наук, высшая категория, стаж 38 лет, запись на приём. Михайлюк Галина Ивановна, Санкт-Петербург: онколог-гинеколог, гинеколог, гинеколог-эндокринолог, 47 отзывов пациентов, места работы, кандидат наук, высшая категория, стаж 38 лет, запись на приём.',
+                                  context.selectedDoctor['qualifications']
+                                          ?.map((qual) =>
+                                              '${qual['degree']} from ${qual['university']} (${qual['year']})')
+                                          ?.join('\n') ??
+                                      '',
                                   style: TextStyle(
                                     color:
                                         const Color.fromARGB(255, 17, 17, 17),
@@ -151,6 +156,7 @@ class DoctorInfoScreen extends StatelessWidget {
                                   ),
                                 ),
                               ),
+
                               SizedBox(height: 12),
                               // Кнопка и время
                               Row(
@@ -204,7 +210,10 @@ class DoctorInfoScreen extends StatelessWidget {
                               Padding(
                                 padding: EdgeInsets.only(top: 2),
                                 child: Text(
-                                  'Михайлюк кцкцуекн рнреор лрпопрлдлодджлжд лрод Михайлюк кцкцуекн рнреор лрпопрлдлодджлжд лрод',
+                                  context.selectedDoctor['specializations']
+                                      .map((e) => e['name'])
+                                      .toString(),
+//                                      .map((e) => e),
                                   style: TextStyle(
                                     color:
                                         const Color.fromARGB(255, 17, 17, 17),

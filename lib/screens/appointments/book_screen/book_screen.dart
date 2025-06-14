@@ -40,13 +40,13 @@ class _AppointmentsBookScreenState extends State<AppointmentsBookScreen> {
     print("ku");
     print("empty");
     print(context.selectedDoctor.isEmpty);
-    if(context.selectedDoctor.isEmpty == true ) {
+    if (context.selectedDoctor.isEmpty == true) {
       context.setSelectedDoctorByIndex(1);
     }
-      print("ku");
+    print("ku");
     print("empty");
     print(context.selectedDoctor.isEmpty);
-    
+
     Map<dynamic, dynamic> doctor = context.selectedDoctor;
     //print(doctor["doctorSession"]["sessionWeekDays"]);
     print(doctor);
@@ -219,7 +219,8 @@ class _AppointmentsBookScreenState extends State<AppointmentsBookScreen> {
                       Padding(
                         padding: EdgeInsets.only(top: 12),
                         child: Text(
-                          'Наш тест на важные показатели здоровья покажет вам , на что обратить свое внимание и носит рекомендательный характер. Пройдите по ссылке, чтобы ознакомиться и уже сейчас сделать свой организм выносливее и крепче',
+                          context.selectedDoctor['description'] ??
+                              '...Наш тест на важные показатели здоровья покажет вам , на что обратить свое внимание и носит рекомендательный характер. Пройдите по ссылке, чтобы ознакомиться и уже сейчас сделать свой организм выносливее и крепче',
                           style: TextStyle(
                             color: const Color.fromARGB(255, 17, 17, 17),
                             fontSize: 12,
@@ -244,6 +245,7 @@ class _AppointmentsBookScreenState extends State<AppointmentsBookScreen> {
                 ),
                 child: SingleChildScrollView(
                     child: DatePicker(
+                  locale: 'ru_RU',
                   //activeDates: [],
                   inactiveDates: _generateInactiveDates(),
                   DateTime.now(),

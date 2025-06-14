@@ -16,7 +16,7 @@ class PopularDoctorsScreen extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: [
-          ...topBack(text:"Популярные",context: context),
+          ...topBack(text: "Популярные", context: context),
           Expanded(
             child: Container(
               margin: const EdgeInsets.only(bottom: 6),
@@ -91,8 +91,8 @@ class PopularDoctorsScreen extends StatelessWidget {
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              const Row(
+                            children: const [
+                              Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
@@ -121,7 +121,7 @@ class PopularDoctorsScreen extends StatelessWidget {
                           ),
                         ),
                         DoctorsSilder20(),
-                      /*
+                        /*
                         Container(
                           margin: const EdgeInsets.only(bottom: 8),
                           padding: const EdgeInsets.symmetric(
@@ -524,7 +524,8 @@ class PopularDoctorsScreen extends StatelessWidget {
                             ],
                           ),
                         ),
-                    */  ],
+                    */
+                      ],
                     ),
                   ),
                 ],

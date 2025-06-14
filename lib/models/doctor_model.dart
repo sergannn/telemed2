@@ -9,19 +9,47 @@ class DoctorModel {
       this.firstName,
       this.lastName,
       this.photo,
+      this.description,
+      this.qualifications,
       this.schedule});
 
   String? doctorId;
   List<String>? specializations;
+  List<dynamic>? qualifications; // Changed to store raw qualification objects
   String? userId;
   String? userName;
   String? firstName;
   String? lastName;
   String? photo;
+  String? description;
   List<int>? schedule;
 
   DoctorModel.fromJson(Map json) {
     doctorId = json['doctor_id'];
+
+    // Handle qualifications - store the complete objects
+    if (json['doctorUser']?['qualifications'] != null) {
+      qualifications = [];
+      for (var qual in json['doctorUser']['qualifications']) {
+        qualifications!.add({
+          '__typename': qual['__typename'] ?? 'Qualification',
+          'degree': qual['degree'],
+          'university': qual['university'],
+          'year': qual['year'],
+        });
+      }
+    } else if (json['qualifications'] != null) {
+      // Fallback if qualifications are at root level
+      qualifications = [];
+      for (var qual in json['qualifications']) {
+        qualifications!.add({
+          '__typename': qual['__typename'] ?? 'Qualification',
+          'degree': qual['degree'],
+          'university': qual['university'],
+          'year': qual['year'],
+        });
+      }
+    }
 
     if (json['specializations'] != null) {
       specializations = [];
@@ -39,13 +67,15 @@ class DoctorModel {
         if (wd["start_time"] != '*') schedule!.add(wd["day_of_week"]);
       });
     }
-    print(json['doctor_id']);
-    print(json['doctorUser']['user_id']);
+//    print(json['doctor_id']);
+//    print(json['doctorUser']['user_id']);
     userId = json['doctorUser']['user_id'];
     userName = json['doctorUser']['username'];
     firstName = json['doctorUser']['first_name'];
     lastName = json['doctorUser']['last_name'];
     photo = json['doctorUser']['photo'];
+    description = json['doctorUser']['description'];
+    qualifications = json['doctorUser']['qualifications'];
   }
 
   Map toJson() {
@@ -63,6 +93,15 @@ class DoctorModel {
         });
       }
     }
+    final qualificationsList = (qualifications ?? [])
+        .map((qual) => {
+              '__typename': qual['__typename'],
+              'degree': qual['degree'],
+              'university': qual['university'],
+              'year': qual['year'],
+            })
+        .toList();
+
     var map = {
       'doctor_id': doctorId,
       'specializations': specializationsList,
@@ -71,7 +110,9 @@ class DoctorModel {
       'first_name': firstName,
       'last_name': lastName,
       'photo': photo,
-      'schedule': days
+      'description': description,
+      'schedule': days,
+      'qualifications': qualificationsList
     };
 
     return map;
