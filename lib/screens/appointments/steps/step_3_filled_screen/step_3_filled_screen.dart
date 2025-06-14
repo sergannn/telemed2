@@ -2,6 +2,7 @@ import 'package:doctorq/extensions.dart';
 import 'package:doctorq/screens/appointments/steps/step_2_filled_screen/step_2_filled_screen.dart';
 import 'package:doctorq/screens/appointments/steps/step_3_filled_screen/proffit.dart';
 import 'package:doctorq/screens/appointments/upcoming_appointments/UpcomingAppointments.dart';
+import 'package:doctorq/screens/medcard/create_record_page_lib.dart';
 import 'package:doctorq/services/api_service.dart';
 import 'package:doctorq/stores/user_store.dart';
 import 'package:doctorq/utils/utility.dart';
@@ -234,7 +235,7 @@ class _AppointmentsStep3FilledScreenState
                                 Padding(
                                   padding: EdgeInsets.only(top: 12),
                                   child: Text(
-                                    'Вставить отображение выбранных даты/времени для записи',
+                                   "${DateFormat('dd-MM-yyyy').format(widget.date)}, ${widget.time}",
                                     style: TextStyle(
                                       color:
                                           const Color.fromARGB(255, 17, 17, 17),

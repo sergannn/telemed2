@@ -245,13 +245,14 @@ class _AppointmentsBookScreenState extends State<AppointmentsBookScreen> {
                 ),
                 child: SingleChildScrollView(
                     child: DatePicker(
-                  locale: 'ru_RU',
-                  //activeDates: [],
-                  inactiveDates: _generateInactiveDates(),
                   DateTime.now(),
+                  //activeDates: [],
+                  locale: 'ru_RU',
+                  
+                  activeDates: _generateInactiveDates(),
                   deactivatedColor: Colors.grey,
 
-                  initialSelectedDate: DateTime.now(),
+                  initialSelectedDate: _generateInactiveDates().first,// ?? ,
                   selectionColor: ColorConstant.fromHex(
                       "C8E0FF"), // ColorConstant.blueA400,
                   height: MediaQuery.of(context).size.height * 0.15,

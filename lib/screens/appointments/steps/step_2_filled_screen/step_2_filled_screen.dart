@@ -42,6 +42,7 @@ class AppointmentManager {
       final response = await http.get(Uri.parse(apiUrl));
       if (response.statusCode == 200) {
         final jsonResponse = json.decode(response.body)['data']['slots'];
+        print(jsonResponse);
         availableTimes = jsonResponse;
       } else {
         availableTimes = ['No dates'];
@@ -230,44 +231,22 @@ class _AppointmentsStep2FilledScreenState
               ),
             ),
             SizedBox(
-              height: getVerticalSize(280),
-              child: GridView.builder(
-                padding: getPadding(
-                  left: 20,
-                  top: 10,
-                  right: 20,
-                ),
-                physics: const BouncingScrollPhysics(),
-                shrinkWrap: true,
-                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                  childAspectRatio: 2.767,
-                  // mainAxisExtent: getVerticalSize(
-                  //   158.00,
-                  // ),
-                  maxCrossAxisExtent: 170,
-                  mainAxisSpacing: getHorizontalSize(
-                    10.00,
-                  ),
-                  crossAxisSpacing: getHorizontalSize(
-                    10.00,
-                  ),
-                ),
-                itemCount: availableTimesList.length,
-                itemBuilder: (context, index) {
-                  return InkWell(
-                    onTap: () {
-                      setState(() {
+  height: 60.0, // Фиксированная высота для горизонтального списка
+  child: ListView.builder(
+    scrollDirection: Axis.horizontal,
+    itemCount: availableTimesList.length,
+    itemBuilder: (context, index) {
+      return Padding(
+        padding: EdgeInsets.only(left:10.0,right: 10.0),
+        child:
+       ElevatedButton(
+                      onPressed: (){
+                           setState(() {
                         selectedTime = index;
                       });
-                    },
-                    child: Container(
-                      padding: getPadding(
-                        left: 20,
-                        top: 8,
-                        right: 20,
-                        bottom: 8,
-                      ),
-                      decoration: BoxDecoration(
+                      },
+                      
+                   /*   decoration: BoxDecoration(
                         color: selectedTime == index
                             ? ColorConstant.blueA400
                             : Colors.transparent,
@@ -282,13 +261,13 @@ class _AppointmentsStep2FilledScreenState
                             0.5,
                           ),
                         ),
-                      ),
+                      ),*/
                       child: Text(
                         availableTimesList[0] != 'No dates'
                             ? availableTimesList[index]
-                                .split('-')
-                                .map((e) => e + '\n')
-                                .join()
+                               // .split('-')
+                              //  .map((e) => e + '\n')
+                              //  .join()
                             : 'Свободных мест на \n ${appointmentManager.formattedDate} нет',
                         // availableTimesList[index] +
                         //     '${isMorning ? ' AM' : ' PM'}',
@@ -296,8 +275,8 @@ class _AppointmentsStep2FilledScreenState
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: selectedTime == index
-                              ? Colors.white
-                              : ColorConstant.blueA400,
+                              ? Colors.black
+                              : Colors.blueGrey,
                           fontSize: getFontSize(
                             12,
                           ),
