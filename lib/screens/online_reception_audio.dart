@@ -1,6 +1,9 @@
+import 'package:doctorq/extensions.dart';
 import 'package:doctorq/screens/articles/articles.dart';
 import 'package:doctorq/screens/online_reception_audio_start.dart';
+import 'package:doctorq/services/api_service.dart';
 import 'package:flutter/material.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 
 class OnlineReceptionAudio extends StatelessWidget {
   @override
@@ -430,7 +433,19 @@ Row(
                                 
                                 
                                ElevatedButton(
-  onPressed: () {},
+  
+    onPressed: () async {
+                           context.loaderOverlay.show();
+await cancelAppointment(
+  context.selectedAppointment['id']
+);
+                           context.loaderOverlay.hide();
+Navigator.pop(context);
+    //  cancelAppointment(id)
+
+  },
+  
+  
   style: ElevatedButton.styleFrom(
     backgroundColor: const Color.fromARGB(255, 96, 159, 222),
     shape: RoundedRectangleBorder(

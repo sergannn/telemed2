@@ -410,7 +410,7 @@ class _AppointmentsStep3FilledScreenState
                 printLog('date ${DateFormat('yy-MM-dd').format(widget.date)}');
                 printLog('time ${widget.time}');
                 printLog('time ${userData}');
-
+print(widget.time);
                 bool result = await setAppointment(
                     doctor_id: selectedDoctor['doctor_id'],
                     date: DateFormat('yyyy-MM-dd').format(widget.date),
@@ -418,10 +418,10 @@ class _AppointmentsStep3FilledScreenState
                     status: "1",
                     from_time: widget.time.split('-')[0].trim().split(' ')[0],
                     from_time_type:
-                        widget.time.split('-')[0].trim().split(' ')[1],
+                        widget.time.split('-')[0].trim(),//.split(' ')[1],
                     to_time: widget.time.split('-')[1].trim().split(' ')[0],
                     to_time_type:
-                        widget.time.split('-')[1].trim().split(' ')[1],
+                        widget.time.split('-')[1].trim(),//split(' ')[1],
                     description: widget.contactMethod.toString(),
                     service_id: "1",
                     payment_type: "1",

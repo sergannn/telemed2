@@ -17,6 +17,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:number_pad_keyboard/number_pad_keyboard.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'theme/theme_constants.dart';
@@ -160,7 +161,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     return ScreenUtilInit(
       designSize: const Size(360, 800),
       builder: (context, child) {
-        return MaterialApp(
+        return GlobalLoaderOverlay(child: MaterialApp(
           theme: ThemeData(
             scaffoldBackgroundColor: Colors.white,
             colorScheme: ColorScheme.fromSeed(
@@ -200,7 +201,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
               ),
             ),
           ),
-        );
+        ));
       },
     );
   }
