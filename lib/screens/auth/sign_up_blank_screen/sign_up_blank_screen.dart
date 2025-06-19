@@ -8,6 +8,7 @@ import 'package:doctorq/widgets/boxshadow.dart';
 import 'package:doctorq/widgets/custom_button.dart';
 import 'package:doctorq/widgets/custom_checkbox.dart';
 import 'package:doctorq/widgets/custom_text_form_field.dart';
+import 'package:doctorq/widgets/loading_overlay.dart';
 import 'package:doctorq/widgets/spacing.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -227,6 +228,7 @@ class _SignUpBlankScreenState extends State<SignUpBlankScreen> {
                     right: 24,
                   ),
                   onTap: () async {
+                    MyOverlay.show(context);
                     setState(() {
                       _showValidationErrors = true;
                     });
@@ -236,14 +238,20 @@ class _SignUpBlankScreenState extends State<SignUpBlankScreen> {
 
                       return null;
                     }
-                      var regRes = await regUser(context, emailController.text,
-                        '123456',"patient");
-                        //passwordController.text, "patient"); //_selectedRole ?? 
+                    var regRes = await regUser(
+                        context,
+                        emailController.text,
+                        '123456',
+                        "patient",
+                        RegFields.getAll()['full_name']['controller'].text,
+                        "");
+                    //passwordController.text, "patient"); //_selectedRole ??
+                    MyOverlay.hide();
                     if (regRes) {
                       //authRes == true) {
                       print("ok");
                       var code = generateRandomCode();
-                    //  var smsRes = await sendSMS(phoneController.text, code);
+                      //  var smsRes = await sendSMS(phoneController.text, code);
                       var emailRes =
                           await sendEmail(emailController.text, code);
                       //print(smsRes?['code']);

@@ -18,7 +18,7 @@ import 'package:doctorq/daily/main.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:daily_flutter/daily_flutter.dart';
+//import 'package:daily_flutter/daily_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:date_count_down/date_count_down.dart';
 
@@ -52,7 +52,7 @@ class AppointmentListItem extends StatelessWidget {
       var room_url = jsonDecode(item['room_data'])['url'];
       print(room_url);
       var prefs = await SharedPreferences.getInstance();
-      final client = await CallClient.create();
+/*      final client = await CallClient.create();
       //await prefs.setString(
       //    item['d21ec1e9-8004-11ef-a4b8-02420a000404'], room_url);
       Navigator.push(
@@ -65,9 +65,9 @@ class AppointmentListItem extends StatelessWidget {
             callClient: client,
           ),
         ),
-      );
+      );*/
     } else {
-      var prefs = await SharedPreferences.getInstance();
+      /* var prefs = await SharedPreferences.getInstance();
       final client = await CallClient.create();
 
       Navigator.push(
@@ -80,7 +80,7 @@ class AppointmentListItem extends StatelessWidget {
             callClient: client,
           ),
         ),
-      );
+      );*/
       print("no room");
 
       //https://ser-tele-med.daily.co/test_room
@@ -105,7 +105,7 @@ class AppointmentListItem extends StatelessWidget {
           break;
         case "ContactMethods.videoCall":
           try {
-            var prefs = await SharedPreferences.getInstance();
+            /*     var prefs = await SharedPreferences.getInstance();
             final client = await CallClient.create();
 
             Navigator.push(
@@ -118,7 +118,7 @@ class AppointmentListItem extends StatelessWidget {
                   callClient: client,
                 ),
               ),
-            );
+            );*/
           } catch (e) {
             print('Error during video call setup: $e');
             // Optionally show an error message to the user here

@@ -15,11 +15,14 @@ import 'package:http/http.dart' as http;
 
 GetIt getIt = GetIt.instance;
 
-Future<bool> regUser(
-    BuildContext context, String username, String password, String role) async {
+Future<bool> regUser(BuildContext context, String email, String password,
+    String role, String fullName, String unused) async {
   // try {
-  printLog(username);
+  printLog(email);
   printLog(password);
+
+  // Use the fullName directly as the name field
+  String name = fullName;
 
   // String loginString = '''
   //       mutation LoginUser {
@@ -30,9 +33,9 @@ Future<bool> regUser(
 
          mutation {
     registerUser(input: {
-        email: "$username"
-        name:  "$username"
-        password:  "$password"
+        email: "$email"
+        name: "$name"
+        password: "$password"
         password_confirmation: "$password"
         role: "$role"
         verification_url: {
@@ -67,21 +70,20 @@ Future<bool> regUser(
   print(result.exception.toString());
   print(result.toString());
   if (result.exception.toString().contains("already been") &&
-      username.contains("pan_")) {
+      email.contains("pan_")) {
     print("already");
     return true;
   }
   print("Data: ${jsonEncode(result.data)}");
 
   print(result.data?['graphqlErrors']);
-    print(result);
-    print(jsonEncode(result));
-//  print("Errors: ${result.ex .errors?.map((e) => jsonEncode(e)).toList() ?? []}");
+  print(result);
+
   printLog(result.toString());
-  /*ßif (result.data!["registerUser"]["status"] == 'MUST_VERIFY_EMAIL') {
-    await authUser(context, username, password);
+  if (result.data!["registerUser"]["status"] == 'MUST_VERIFY_EMAIL') {
+    await authUser(context, email, password);
     return true;
-  }*/
+  }
   if (result.hasException) {
     printLog(result.exception.toString());
     //УДАЛЕНИЕ ТУТ И ТАМ и проверить что всякое такое как популярные категории удалилось

@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:daily_flutter/daily_flutter.dart';
+//import 'package:daily_flutter/daily_flutter.dart';
 import 'package:doctorq/app_export.dart';
 import 'package:doctorq/daily/main.dart';
 import 'package:doctorq/screens/appointments/AppointmentsScreenDoctor.dart';
@@ -138,12 +138,12 @@ class _SignInBlankScreenState extends State<SignInBlankScreen> {
 
   @override
   Widget build(BuildContext context) {
-    inspectTheme(context);
+    // inspectTheme(context);
     bool isDark = Theme.of(context).brightness == Brightness.dark;
     Color color = Theme.of(context).scaffoldBackgroundColor;
     //Theme.of(context).scaffoldBackgroundColor = 'red';
-    print("default scaf color");
-    print(color);
+    // print("default scaf color");
+    // print(color);
     return Scaffold(
         resizeToAvoidBottomInset: true,
         backgroundColor: Colors.white,
