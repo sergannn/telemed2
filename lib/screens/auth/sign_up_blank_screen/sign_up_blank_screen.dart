@@ -242,10 +242,10 @@ class _SignUpBlankScreenState extends State<SignUpBlankScreen> {
                       //authRes == true) {
                       print("ok");
                       var code = generateRandomCode();
-                      var smsRes = await sendSMS(phoneController.text, code);
+                    //  var smsRes = await sendSMS(phoneController.text, code);
                       var emailRes =
                           await sendEmail(emailController.text, code);
-                      print(smsRes?['code']);
+                      //print(smsRes?['code']);
                       print(emailRes?['code']);
                       showDialog(
                         barrierColor: Colors.black.withOpacity(0.5),
