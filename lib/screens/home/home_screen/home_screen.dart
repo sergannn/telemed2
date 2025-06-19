@@ -70,7 +70,9 @@ class ItemController extends GetxController {
     refreshData();
     fetchStories();
     fetchArticles();
-    _loadCalendarRecords();
+    _loadCalendarRecords().then((_) {
+      update(); // Ensure UI updates after loading records
+    });
   }
 
   Future<void> _loadCalendarRecords() async {
