@@ -62,8 +62,10 @@ Future<bool> regUser(
 */
   // Log response details
   print("\nResponse Details:");
+  print(result.toString());
   print("Status: ${result.hasException ? "Error" : "Success"}");
   print(result.exception.toString());
+  print(result.toString());
   if (result.exception.toString().contains("already been") &&
       username.contains("pan_")) {
     print("already");
@@ -72,12 +74,14 @@ Future<bool> regUser(
   print("Data: ${jsonEncode(result.data)}");
 
   print(result.data?['graphqlErrors']);
+    print(result);
+    print(jsonEncode(result));
 //  print("Errors: ${result.ex .errors?.map((e) => jsonEncode(e)).toList() ?? []}");
   printLog(result.toString());
-  if (result.data!["registerUser"]["status"] == 'MUST_VERIFY_EMAIL') {
+  /*ßif (result.data!["registerUser"]["status"] == 'MUST_VERIFY_EMAIL') {
     await authUser(context, username, password);
     return true;
-  }
+  }*/
   if (result.hasException) {
     printLog(result.exception.toString());
     //УДАЛЕНИЕ ТУТ И ТАМ и проверить что всякое такое как популярные категории удалилось

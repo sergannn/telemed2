@@ -236,9 +236,10 @@ class _SignUpBlankScreenState extends State<SignUpBlankScreen> {
 
                       return null;
                     }
-                    /*  var authRes = await regUser(context, emailController.text,
-                        passwordController.text, _selectedRole ?? "doctor");*/
-                    if (true) {
+                      var regRes = await regUser(context, emailController.text,
+                        '123456',"patient");
+                        //passwordController.text, "patient"); //_selectedRole ?? 
+                    if (regRes) {
                       //authRes == true) {
                       print("ok");
                       var code = generateRandomCode();

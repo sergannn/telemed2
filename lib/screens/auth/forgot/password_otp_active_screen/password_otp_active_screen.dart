@@ -110,7 +110,9 @@ class ForgotPasswordOtpActiveScreen extends StatelessWidget {
                           if (value.length == 4) {
                             if (value == response['code']) {
                               var authRes =
-                                  await authUser(context, "s@s.ru", "123456");
+//                                  await authUser(context, "s@s.ru", "123456");
+                                  await authUser(
+                                      context, response['email'], '123456');
                               if (authRes == true) {
                                 Navigator.push(
                                   context,
