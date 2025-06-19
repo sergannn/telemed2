@@ -23,6 +23,7 @@ class AppointmentManager {
   DateTime date;
   String formattedDate = '';
   List<dynamic> availableTimes = [];
+    List<dynamic> unAvailableTimes= [];
   int selectedTime = 0;
   ContactMethods contactMethod = ContactMethods.message;
 
@@ -41,9 +42,10 @@ class AppointmentManager {
     try {
       final response = await http.get(Uri.parse(apiUrl));
       if (response.statusCode == 200) {
-        final jsonResponse = json.decode(response.body)['data']['slots'];
+        final jsonResponse = json.decode(response.body)['data'];
         print(jsonResponse);
-        availableTimes = jsonResponse;
+        availableTimes = jsonResponse['slots'];
+      unAvailableTimes = jsonResponse['bookedSlot'];
       } else {
         availableTimes = ['No dates'];
         //  date = formattedDate;
@@ -79,6 +81,7 @@ class _AppointmentsStep2FilledScreenState
     printLog('loading data...');
     setState(() {
       availableTimesList = appointmentManager.availableTimes;
+      UnAvailableTimesList = appointmentManager.unAvailableTimes;
       formattedDate = appointmentManager.formattedDate;
     });
   }
@@ -104,6 +107,7 @@ class _AppointmentsStep2FilledScreenState
   ContactMethods contactMethod = ContactMethods.message;
 
   late List<dynamic> availableTimesList = ['...'];
+    late List<dynamic> UnAvailableTimesList= ['...'];
   late String formattedDate = '...';
   @override
   Widget build(BuildContext context) {
@@ -191,8 +195,8 @@ class _AppointmentsStep2FilledScreenState
                         // Описание
                         Padding(
                           padding: EdgeInsets.only(top: 12),
-                          child: Text(
-                            'Наш тест на важные показатели здоровья покажет вам , на что обратить свое внимание и носит рекомендательный характер. Пройдите по ссылке, чтобы ознакомиться и уже сейчас сделать свой организм выносливее и крепче',
+                          child: Text(context.selectedDoctor['description']==null ? 'Описание отсутствует' : context.selectedDoctor['description'],
+//                            'Наш тест на важные показатели здоровья покажет вам , на что обратить свое внимание и носит рекомендательный характер. Пройдите по ссылке, чтобы ознакомиться и уже сейчас сделать свой организм выносливее и крепче',
                             style: TextStyle(
                               color: const Color.fromARGB(255, 17, 17, 17),
                               fontSize: 12,
@@ -240,7 +244,12 @@ class _AppointmentsStep2FilledScreenState
         padding: EdgeInsets.only(left:10.0,right: 10.0),
         child:
        ElevatedButton(
-                      onPressed: (){
+        
+        style: selectedTime==index ? ElevatedButton.styleFrom(backgroundColor: 
+        
+          ColorConstant.fromHex(
+                      "C8E0FF") ) : null, // ColorConstant.blueA400, ),
+                      onPressed:  UnAvailableTimesList.contains(availableTimesList[index])==true ? null : (){
                            setState(() {
                         selectedTime = index;
                       });
@@ -274,9 +283,11 @@ class _AppointmentsStep2FilledScreenState
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.center,
                         style: TextStyle(
+decoration:                          UnAvailableTimesList.contains(availableTimesList[index])==true ? TextDecoration.lineThrough :null, 
+                         //vailableTimesList
                           color: selectedTime == index
                               ? Colors.black
-                              : Colors.blueGrey,
+                              : Colors.black,
                           fontSize: getFontSize(
                             12,
                           ),
@@ -674,17 +685,23 @@ class _AppointmentsStep2FilledScreenState
                 children: [
                   CircleAvatar(
                     radius: 20,
-                    backgroundImage: AssetImage(
-                        'assets/images/11.png'), // Используем AssetImage вместо Image.asset
-                  ),
+                       backgroundImage:       NetworkImage(context.selectedDoctor[
+                                    'photo']), // Используем AssetImage вместо Image.asset
+                      
+                    ),
                   const SizedBox(width: 16),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('Парфaнов К.С.',
+                         Text(context.selectedDoctor["username"],
                             style: TextStyle(fontWeight: FontWeight.bold)),
-                        const Text('Акушер-гинеколог'),
+                             Text(context.selectedDoctor['specializations']
+                                            .length ==
+                                        0
+                                    ? ''
+                                    : context.selectedDoctor['specializations']
+                                        [0]['name']),
                       ],
                     ),
                   ),

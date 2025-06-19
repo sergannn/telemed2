@@ -9,6 +9,7 @@ import 'package:doctorq/utils/utility.dart';
 import 'package:doctorq/widgets/boxshadow.dart';
 import 'package:doctorq/widgets/top_back.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 import '../../../../widgets/bkBtn.dart';
 import '../../../../widgets/custom_drop_down.dart';
 import '../../../../widgets/spacing.dart';
@@ -411,6 +412,7 @@ class _AppointmentsStep3FilledScreenState
                 printLog('time ${widget.time}');
                 printLog('time ${userData}');
 print(widget.time);
+context.loaderOverlay.show();
                 bool result = await setAppointment(
                     doctor_id: selectedDoctor['doctor_id'],
                     date: DateFormat('yyyy-MM-dd').format(widget.date),
@@ -431,6 +433,7 @@ print(widget.time);
                   //endpoint в graph ---
                   snackBar(context, message: 'Вы успешно записались на прием');
                 } else {
+                  print(result);
                   snackBar(context, message: 'Ошибка');
                 }
                 Future.delayed(Duration(seconds: 3), () {

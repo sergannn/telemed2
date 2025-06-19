@@ -68,11 +68,11 @@ class ItemController extends GetxController {
   void onInit() {
     super.onInit();
     refreshData();
-    fetchStories();
-    fetchArticles();
-    _loadCalendarRecords().then((_) {
-      update(); // Ensure UI updates after loading records
-    });
+    //fetchStories();
+    //fetchArticles();
+    //_loadCalendarRecords().then((_) {
+    //  update(); // Ensure UI updates after loading records
+    //});
   }
 
   Future<void> _loadCalendarRecords() async {
@@ -145,7 +145,11 @@ class ItemController extends GetxController {
     fetchStories();
     fetchArticles();
     getDoctors();
-    _loadCalendarRecords();
+    _loadCalendarRecords().then((res) {
+       
+      filterRecordsByDate(DateTime.now());
+       }
+       );
     // Simulating fetching data from an API
     var response = await http.get(Uri.parse(
       'https://www.onlinedoctor.su/api/specializations',

@@ -62,10 +62,14 @@ class _AppointmentsBookScreenState extends State<AppointmentsBookScreen> {
       // Add current week
       for (int day = 1; day <= 70; day++) {
         DateTime date = DateTime.now().add(Duration(days: day - 1));
-        print(date.weekday);
+        //print(date.weekday);
         if (daysOfWeek.contains(date.weekday)) inactiveDates.add(date);
       }
-
+      if(inactiveDates.isEmpty) { 
+        
+        //inactiveDates.add(DateTime.now());
+      }
+      else { selectedDate=inactiveDates.first;}
       return inactiveDates;
     }
 
@@ -252,7 +256,7 @@ class _AppointmentsBookScreenState extends State<AppointmentsBookScreen> {
                   activeDates: _generateInactiveDates(),
                   deactivatedColor: Colors.grey,
 
-                  initialSelectedDate: _generateInactiveDates().first,// ?? ,
+                  initialSelectedDate: _generateInactiveDates().isEmpty ? null : _generateInactiveDates().first ,
                   selectionColor: ColorConstant.fromHex(
                       "C8E0FF"), // ColorConstant.blueA400,
                   height: MediaQuery.of(context).size.height * 0.15,
@@ -282,7 +286,9 @@ class _AppointmentsBookScreenState extends State<AppointmentsBookScreen> {
                   },
                 )),
               )),
+              _generateInactiveDates().isNotEmpty ?
           CustomButton(
+            
               isDark: isDark,
               width: size.width,
               text: "Записаться",
@@ -302,6 +308,22 @@ class _AppointmentsBookScreenState extends State<AppointmentsBookScreen> {
                       builder: (context) =>
                           AppointmentsStep2FilledScreen(date: selectedDate)),
                 );
+              }) :  CustomButton(
+            
+              isDark: isDark,
+              width: size.width,
+              text: "Нет дат для записи",
+              margin: getMargin(
+                left: 24,
+                top: 22,
+                right: 24,
+              ),
+              variant: ButtonVariant.FillBlueA400,
+              fontStyle: ButtonFontStyle.SourceSansProSemiBold18,
+              alignment: Alignment.center,
+              onTap: () {
+                print(selectedDate);
+               
               }),
         ],
       ),

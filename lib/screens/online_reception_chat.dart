@@ -439,7 +439,10 @@ Row(
 await cancelAppointment(
   context.selectedAppointment['id']
 );
+
                            context.loaderOverlay.hide();
+
+
 Navigator.pop(context);
     //  cancelAppointment(id)
 
