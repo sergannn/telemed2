@@ -23,7 +23,7 @@ class AppointmentManager {
   DateTime date;
   String formattedDate = '';
   List<dynamic> availableTimes = [];
-    List<dynamic> unAvailableTimes= [];
+  dynamic unAvailableTimes= [];
   int selectedTime = 0;
   ContactMethods contactMethod = ContactMethods.message;
 
@@ -45,8 +45,10 @@ class AppointmentManager {
         final jsonResponse = json.decode(response.body)['data'];
         print(jsonResponse);
         availableTimes = jsonResponse['slots'];
-      unAvailableTimes = jsonResponse['bookedSlot'];
+      unAvailableTimes = jsonResponse['bookedSlot'] ?? [];
+      print('there are dates');
       } else {
+        print("else");
         availableTimes = ['No dates'];
         //  date = formattedDate;
       }
@@ -107,7 +109,7 @@ class _AppointmentsStep2FilledScreenState
   ContactMethods contactMethod = ContactMethods.message;
 
   late List<dynamic> availableTimesList = ['...'];
-    late List<dynamic> UnAvailableTimesList= ['...'];
+    late dynamic UnAvailableTimesList= ['...'];
   late String formattedDate = '...';
   @override
   Widget build(BuildContext context) {

@@ -300,7 +300,7 @@ print(context.selectedAppointment);
                               fontWeight: FontWeight.w600,
                             ),
                           ),
-                          Text(item['doctor']['specializations'][0]['name']),
+                        if (item['doctor']['specializations'].isNotEmpty) Text(item['doctor']['specializations'][0]['name']),
                           Text(getContactMethod(item)),
                           /*  CountDownText(
                             due: DateTime.parse(item["date"]),

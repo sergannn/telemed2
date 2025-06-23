@@ -26,11 +26,43 @@ class AppointmentsBookScreen extends StatefulWidget {
 
   @override
   State<AppointmentsBookScreen> createState() => _AppointmentsBookScreenState();
+
+
+
 }
 
 class _AppointmentsBookScreenState extends State<AppointmentsBookScreen> {
   DateTime selectedDate = DateTime.now();
   bool isFav = false;
+  bool firstFound = false;
+
+List<DateTime> _generateInactiveDates(daysOfWeek) {
+      List<DateTime> inactiveDates = [];
+
+      // Add current week
+      for (int day = 1; day <= 70; day++) {
+        DateTime date = DateTime.now().add(Duration(days: day - 1));
+        //print(date.weekday);
+        if (daysOfWeek.contains(date.weekday)) inactiveDates.add(date);
+      }
+      if(inactiveDates.isEmpty) { 
+        
+        //inactiveDates.add(DateTime.now());
+      }
+      else { 
+        if(firstFound==false) {
+        selectedDate=inactiveDates.first;
+        firstFound=true;}
+      }
+      return inactiveDates;
+ }
+
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,25 +88,12 @@ class _AppointmentsBookScreenState extends State<AppointmentsBookScreen> {
     print("kuku");
     print(daysOfWeek);
     //[0]["sessionWeekDays"].map((e) => e['day_of_week']).toList();
-    List<DateTime> _generateInactiveDates() {
-      List<DateTime> inactiveDates = [];
-
-      // Add current week
-      for (int day = 1; day <= 70; day++) {
-        DateTime date = DateTime.now().add(Duration(days: day - 1));
-        //print(date.weekday);
-        if (daysOfWeek.contains(date.weekday)) inactiveDates.add(date);
-      }
-      if(inactiveDates.isEmpty) { 
-        
-        //inactiveDates.add(DateTime.now());
-      }
-      else { selectedDate=inactiveDates.first;}
-      return inactiveDates;
-    }
+    
 
     print('Days of week: $daysOfWeek');
-    print(_generateInactiveDates());
+    print("sel");
+    print(selectedDate);
+    print(_generateInactiveDates(daysOfWeek));
     return Scaffold(
         body:
             // floatingActionButton: const FloatingActionButton(onPressed: null, child: Text("2")),
@@ -253,10 +272,10 @@ class _AppointmentsBookScreenState extends State<AppointmentsBookScreen> {
                   //activeDates: [],
                   locale: 'ru_RU',
                   
-                  activeDates: _generateInactiveDates(),
+                  activeDates: _generateInactiveDates(doctor["schedule"].map((e) => e['day']).toList()),
                   deactivatedColor: Colors.grey,
 
-                  initialSelectedDate: _generateInactiveDates().isEmpty ? null : _generateInactiveDates().first ,
+                  initialSelectedDate: _generateInactiveDates(doctor["schedule"].map((e) => e['day']).toList()).isEmpty ? null : _generateInactiveDates(doctor["schedule"].map((e) => e['day']).toList()).first ,
                   selectionColor: ColorConstant.fromHex(
                       "C8E0FF"), // ColorConstant.blueA400,
                   height: MediaQuery.of(context).size.height * 0.15,
@@ -276,13 +295,16 @@ class _AppointmentsBookScreenState extends State<AppointmentsBookScreen> {
                   selectedTextColor: Colors.white,
                   onDateChange: (date) {
                     // New date selected
+                    print(date);
+                    print(selectedDate);
+                    print("changed");
                     setState(() {
                       selectedDate = date;
                     });
                   },
                 )),
               )),
-              _generateInactiveDates().isNotEmpty ?
+              _generateInactiveDates(doctor["schedule"].map((e) => e['day']).toList()).isNotEmpty ?
           CustomButton(
             
               isDark: isDark,
@@ -298,6 +320,7 @@ class _AppointmentsBookScreenState extends State<AppointmentsBookScreen> {
               alignment: Alignment.center,
               onTap: () {
                 print(selectedDate);
+                print("se date<<");
                 Navigator.push(
                   context,
                   MaterialPageRoute(

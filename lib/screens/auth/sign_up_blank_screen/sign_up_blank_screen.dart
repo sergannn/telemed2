@@ -228,7 +228,7 @@ class _SignUpBlankScreenState extends State<SignUpBlankScreen> {
                     right: 24,
                   ),
                   onTap: () async {
-                    MyOverlay.show(context);
+                  
                     setState(() {
                       _showValidationErrors = true;
                     });
@@ -238,6 +238,7 @@ class _SignUpBlankScreenState extends State<SignUpBlankScreen> {
 
                       return null;
                     }
+                      MyOverlay.show(context);
                     var regRes = await regUser(
                         context,
                         emailController.text,

@@ -510,7 +510,8 @@ class _SignInBlankScreenState extends State<SignInBlankScreen> {
                       alignment: Alignment.center,
                       onTap: () async {
                         print("tap");
-                        /*if (forceUserLogin) {
+                        forceUserLogin=false;
+                        if (forceUserLogin) {
                       emailController.text = testUserLogin;
                       passwordController.text = testUserPassword;
                     }
@@ -519,7 +520,7 @@ class _SignInBlankScreenState extends State<SignInBlankScreen> {
                         if (authRes == true) {
                           gogo(isDark);
                         }
-                        */
+                        
                       });
                 }),
             Align(
