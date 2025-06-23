@@ -114,7 +114,7 @@ class _SignInBlankScreenState extends State<SignInBlankScreen> {
             ));
       },
     );
-    var authRes = await authUser(context, "s@s.ru", "123456");
+    var authRes = await authUser(context, "f@a.ru", "123456");
     if (authRes == true) {
       gogo(false);
     }
@@ -132,7 +132,7 @@ class _SignInBlankScreenState extends State<SignInBlankScreen> {
 
   @override
   Widget build(BuildContext context) {
-    inspectTheme(context);
+   // inspectTheme(context);
     bool isDark = Theme.of(context).brightness == Brightness.dark;
     Color color = Theme.of(context).scaffoldBackgroundColor;
     //Theme.of(context).scaffoldBackgroundColor = 'red';

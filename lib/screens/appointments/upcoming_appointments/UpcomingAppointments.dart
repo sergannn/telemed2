@@ -29,6 +29,7 @@ class UpcomingAppointments extends StatelessWidget {
     Map<String, List<Map<dynamic, dynamic>>> groupedAppointments = {};
     final formatter = DateFormat('EEEE', 'ru_RU');
     for (var appointment in appointmentsList) {
+        if(appointment['status']=='0') { continue;}
       String ad = appointment['date'];
       String at = appointment['from_time'];
       DateTime appDateTime =

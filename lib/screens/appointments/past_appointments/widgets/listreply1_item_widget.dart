@@ -236,7 +236,8 @@ class AppointmentListItem extends StatelessWidget {
                             maxLines: 2, // Allow up to 2 lines
                             item["doctor"]["username"] +
                                 "\n" +
-                                item['doctor']['specializations'][0]['name'],
+                          item['doctor']['specializations'].isNotEmpty ? 
+                             item['doctor']['specializations'][0]['name'] : "",
 //                                item['patient']['username'],
                             overflow: TextOverflow.ellipsis,
                             textAlign: TextAlign.start,

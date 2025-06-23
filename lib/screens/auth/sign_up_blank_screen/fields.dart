@@ -30,7 +30,7 @@ class RegFields {
   };
 
   static final Map<String, dynamic> _fields = {
-    'ФИО': {
+    'full_name': {
       "*": true,
       'controller': TextEditingController(),
       'label': 'ФИО',

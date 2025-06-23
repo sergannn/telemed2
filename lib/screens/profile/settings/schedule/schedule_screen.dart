@@ -419,6 +419,7 @@ class _ProfileSettingsAppearanceScreenState
               ]);
             }),
             CustomButton(
+              variant: ButtonVariant.FillBlueA400,
               isDark: isDark,
               width: size.width,
               text: "Сохранить",

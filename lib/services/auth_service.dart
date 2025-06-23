@@ -15,12 +15,15 @@ import 'package:http/http.dart' as http;
 
 GetIt getIt = GetIt.instance;
 
-Future<bool> regUser(
-    BuildContext context, String username, String password, String role) async {
+Future<bool> regUser(BuildContext context, String email, String password,
+    String role, String fullName, String unused) async {
   // try {
-  printLog(username);
+  printLog(email);
   printLog(password);
 
+  // Use the fullName directly as the name field
+  String name = fullName;
+  print(fullName);
   // String loginString = '''
   //       mutation LoginUser {
 
@@ -30,9 +33,9 @@ Future<bool> regUser(
 
          mutation {
     registerUser(input: {
-        email: "$username"
-        name:  "$username"
-        password:  "$password"
+        email: "$email"
+        name: "$name"
+        password: "$password"
         password_confirmation: "$password"
         role: "$role"
         verification_url: {
@@ -62,20 +65,22 @@ Future<bool> regUser(
 */
   // Log response details
   print("\nResponse Details:");
+  print(result.toString());
   print("Status: ${result.hasException ? "Error" : "Success"}");
   print(result.exception.toString());
-  if (result.exception.toString().contains("already been") &&
-      username.contains("pan_")) {
+  print(result.toString());
+  if (result.exception.toString().contains("already been") ) {
     print("already");
-    return true;
+    return false;
   }
   print("Data: ${jsonEncode(result.data)}");
 
   print(result.data?['graphqlErrors']);
-//  print("Errors: ${result.ex .errors?.map((e) => jsonEncode(e)).toList() ?? []}");
+  print(result);
+
   printLog(result.toString());
   if (result.data!["registerUser"]["status"] == 'MUST_VERIFY_EMAIL') {
-    await authUser(context, username, password);
+    await authUser(context, email, password);
     return true;
   }
   if (result.hasException) {

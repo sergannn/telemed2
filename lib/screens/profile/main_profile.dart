@@ -17,6 +17,7 @@ import 'package:doctorq/screens/profile/questions_screen.dart';
 import 'package:doctorq/screens/profile/questions_screen.dart';
 import 'package:doctorq/screens/profile/settings/appearance_screen/appearance_screen.dart';
 import 'package:doctorq/screens/profile/settings/logout_modal_bottomsheet/logout_modal_bottomsheet.dart';
+import 'package:doctorq/screens/profile/settings/schedule/schedule_screen.dart';
 import 'package:doctorq/screens/profile/settings/settings_all.dart';
 import 'package:doctorq/screens/profile/settings/settings_screen.dart';
 import 'package:doctorq/screens/profile/widgets/autolayouthor_item_widget_profile_tasks.dart';
@@ -293,6 +294,33 @@ class MainProfileScreen extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                                     GestureDetector(
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.wallet,
+                                          color: ColorConstant.bluegray800),
+                                      HorizontalSpace(width: 16),
+                                      Text(
+                                        "Мое расписание",
+                                        style: TextStyle(
+                                          fontSize: getFontSize(14),
+                                          fontFamily: 'Source Sans Pro',
+                                          color: ColorConstant.bluegray800,
+                                        ),
+                                      ),
+                                      Expanded(child: Container()),
+                                      Icon(Icons.chevron_right,
+                                          color: ColorConstant.bluegray800),
+                                    ],
+                                  ),
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ScheduleSettingsScreen()));
+                                  }),
+                              VerticalSpace(height: 16),
                               GestureDetector(
                                   child: Row(
                                     children: [

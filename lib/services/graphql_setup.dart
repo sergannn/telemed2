@@ -35,6 +35,7 @@ class MyAppAuthLib {
     Link link = httpLink;
     print(link.toString());
     GraphQLClient graphqlClient = GraphQLClient(
+      queryRequestTimeout: Duration(seconds: 30),
       /// **NOTE** The default store is the InMemoryStore, which does NOT persist to disk
       cache: GraphQLCache(),
       link: link,

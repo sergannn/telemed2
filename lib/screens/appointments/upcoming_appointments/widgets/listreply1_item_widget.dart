@@ -256,7 +256,7 @@ class AppointmentListItem extends StatelessWidget {
                             ),
                           ),
                           child: Image.network(
-                            item["doctor"]["photo"],
+                            item["patient"]["photo"],
                             fit: BoxFit.contain,
                             width: getSize(160),
                             height: getSize(160),
@@ -285,9 +285,9 @@ class AppointmentListItem extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Text(
-                            item["doctor"]["username"],
+//                            item["doctor"]["username"],
 
-//                                item['patient']['username'],
+                                item['patient']['username'],
                             overflow: TextOverflow.ellipsis,
                             textAlign: TextAlign.start,
                             style: TextStyle(
@@ -298,7 +298,7 @@ class AppointmentListItem extends StatelessWidget {
                               fontWeight: FontWeight.w600,
                             ),
                           ),
-                          Text(item['doctor']['specializations'][0]['name']),
+                       if(item['doctor']['specializations'].isNotEmpty) Text(item['doctor']['specializations'][0]['name']),
                           Text(getContactMethod(item)),
                           /*  CountDownText(
                             due: DateTime.parse(item["date"]),

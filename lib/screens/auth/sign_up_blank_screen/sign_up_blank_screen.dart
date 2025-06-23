@@ -8,6 +8,7 @@ import 'package:doctorq/widgets/boxshadow.dart';
 import 'package:doctorq/widgets/custom_button.dart';
 import 'package:doctorq/widgets/custom_checkbox.dart';
 import 'package:doctorq/widgets/custom_text_form_field.dart';
+import 'package:doctorq/widgets/loading_overlay.dart';
 import 'package:doctorq/widgets/spacing.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -227,6 +228,8 @@ class _SignUpBlankScreenState extends State<SignUpBlankScreen> {
                     right: 24,
                   ),
                   onTap: () async {
+                    MyOverlay.show(context);
+                    print('tap');
                     setState(() {
                       _showValidationErrors = true;
                     });
@@ -236,16 +239,19 @@ class _SignUpBlankScreenState extends State<SignUpBlankScreen> {
 
                       return null;
                     }
-                    /*  var authRes = await regUser(context, emailController.text,
-                        passwordController.text, _selectedRole ?? "doctor");*/
-                    if (true) {
+                      var regRes = await regUser(context, emailController.text,
+                        '123456', "doctor", 
+                         RegFields.getAll()['full_name']['controller'].text,
+                        "");
+                    if (regRes) {
+                      MyOverlay.hide();
                       //authRes == true) {
                       print("ok");
                       var code = generateRandomCode();
-                      var smsRes = await sendSMS(phoneController.text, code);
+               //       var smsRes = await sendSMS(phoneController.text, code);
                       var emailRes =
                           await sendEmail(emailController.text, code);
-                      print(smsRes?['code']);
+               //       print(smsRes?['code']);
                       print(emailRes?['code']);
                       showDialog(
                         barrierColor: Colors.black.withOpacity(0.5),
@@ -290,6 +296,12 @@ class _SignUpBlankScreenState extends State<SignUpBlankScreen> {
                               ));
                         },
                       );
+                    }
+                       else {
+                         MyOverlay.hide();
+                     ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("Ошибка")));
                     }
                   },
                   variant: ButtonVariant.FillBlueA400,
@@ -462,11 +474,13 @@ class _SignUpBlankScreenState extends State<SignUpBlankScreen> {
 
       if (validator != null) {
         final error = validator(controller.text);
+        print(error);
         if (error != null) {
           isValid = false;
           last_error = error;
         }
       }
+      else { print('ok');}
     }
     // Показываем ошибку пользователю
     if (!isValid) {
