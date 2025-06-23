@@ -14,15 +14,16 @@ bool withSentry = const bool.fromEnvironment('WITH_SENTRY',
 bool forceSentry =
     true; // Принудительно включить Sentry не принимая во внимание параметры запуска
 
-
 bool forceUserLogin = debugMode;
 String testUserLogin = "doctor@infycare.com";
 String testUserPassword = "123456";
 
 const String kApiDomain = 'https://onlinedoctor.su';
+const String kApiDomain2 = 'https://admin.onlinedoctor.su';
 //https://graph.free-dharma.ru/public';
 
 MyAppAuthLib graphqlAPI = MyAppAuthLib(kApiDomain);
+MyAppAuthLib graphqlAPI2 = MyAppAuthLib(kApiDomain2);
 
 bool printedLog = true;
 bool printedResult = true;

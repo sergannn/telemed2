@@ -48,6 +48,7 @@ Future<bool> getSpecs() async {
 
   return true;
 }
+
 Future<bool> cancelAppointment(id) async {
   var query = """mutation {
   cancelAppointment(id: "$id") {
@@ -59,18 +60,18 @@ Future<bool> cancelAppointment(id) async {
     }
   }
 }""";
- final QueryOptions options = QueryOptions(
+  final QueryOptions options = QueryOptions(
     document: gql(query),
   );
   GraphQLClient graphqlClient = await graphqlAPI.noauthClient();
   debugPrintTransactionStart('cancel appointment');
   final QueryResult result = await graphqlClient.query(options);
   debugPrintTransactionEnd('query doctors');
-print(result);
-  if (result.hasException) {
+  print(result);
+  if (result.hasException) {}
+  return true;
 }
-return true;
-}
+
 Future<bool> getDoctors() async {
   printLog('Getting doctors');
   print("getdoctors");
@@ -111,6 +112,7 @@ Future<bool> getDoctors() async {
   final QueryOptions options = QueryOptions(
     document: gql(getDoctors),
   );
+  // GraphQLClient graphqlClient = await graphqlAPI2.noauthClient();
   GraphQLClient graphqlClient = await graphqlAPI.noauthClient();
   debugPrintTransactionStart('query doctors');
   final QueryResult result = await graphqlClient.query(options);
