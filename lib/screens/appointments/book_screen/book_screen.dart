@@ -260,11 +260,7 @@ class _AppointmentsBookScreenState extends State<AppointmentsBookScreen> {
                   selectionColor: ColorConstant.fromHex(
                       "C8E0FF"), // ColorConstant.blueA400,
                   height: MediaQuery.of(context).size.height * 0.15,
-                  dateTextStyle: TextStyle(
-                      fontFamily: 'Source Sans Pro',
-                      color: ColorConstant.black900,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 23),
+                
                   dayTextStyle: TextStyle(
                     fontWeight: FontWeight.w400,
                     fontSize: 14,
@@ -275,7 +271,7 @@ class _AppointmentsBookScreenState extends State<AppointmentsBookScreen> {
                     fontFamily: 'Source Sans Pro',
                     color: ColorConstant.black900,
                     fontWeight: FontWeight.w400,
-                    fontSize: 14,
+                    fontSize: 12,
                   ),
                   selectedTextColor: Colors.white,
                   onDateChange: (date) {

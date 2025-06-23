@@ -67,7 +67,7 @@ class ForgotPasswordOtpActiveScreen extends StatelessWidget {
                       top: 40,
                     ),
                     child: Text(
-                      "Код подтверждения был выслан на email и по sms \n" +
+                      "Код подтверждения был выслан\n на email и по sms \n" +
                           "Временно показываем:" +
                           response['code'].toString()
                       //   context.userData['email']

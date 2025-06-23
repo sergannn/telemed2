@@ -300,6 +300,12 @@ class _SignUpBlankScreenState extends State<SignUpBlankScreen> {
                         },
                       );
                     }
+                    else {
+                         MyOverlay.hide();
+                     ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("Ошибка")));
+                    }
                   },
                   variant: ButtonVariant.FillBlueA400,
                   fontStyle: ButtonFontStyle.SourceSansProSemiBold18,

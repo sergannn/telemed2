@@ -73,7 +73,7 @@ class PastAppointments extends StatelessWidget {
                           physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           //надо исправить позже
-                          itemCount: 5,//groupedAppointments.length,
+                          itemCount: groupedAppointments.length,
                           itemBuilder: (context, index) {
                             String date =
                                 groupedAppointments.keys.elementAt(index);

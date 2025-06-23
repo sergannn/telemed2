@@ -69,10 +69,10 @@ Future<bool> regUser(BuildContext context, String email, String password,
   print("Status: ${result.hasException ? "Error" : "Success"}");
   print(result.exception.toString());
   print(result.toString());
-  if (result.exception.toString().contains("already been") &&
-      email.contains("pan_")) {
+  if (result.exception.toString().contains("already been") //&&email.contains("pan_")
+      ) {
     print("already");
-    return true;
+    return false;
   }
   print("Data: ${jsonEncode(result.data)}");
 
