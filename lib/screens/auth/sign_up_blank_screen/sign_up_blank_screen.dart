@@ -38,6 +38,7 @@ class _SignUpBlankScreenState extends State<SignUpBlankScreen> {
 //    bool isRtl = context.locale == Constants.arLocal;
 //    return Text("a");
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: SizedBox(
           width: size.width,
@@ -305,7 +306,7 @@ class _SignUpBlankScreenState extends State<SignUpBlankScreen> {
                          MyOverlay.hide();
                      ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text("Ошибка")));
+        content: Text("Такой пользователь уже зарегистрирован. Введите другие данные.")));
                     }
                   },
                   variant: ButtonVariant.FillBlueA400,

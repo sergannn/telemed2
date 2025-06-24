@@ -28,6 +28,7 @@ class _ForgotPasswordMethodScreenState
     bool isDark = Theme.of(context).brightness == Brightness.dark;
     bool isRtl = context.locale == Constants.arLocal;
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
             mainAxisSize: MainAxisSize.max,

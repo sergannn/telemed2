@@ -56,7 +56,7 @@ class NotificationsSupportTestsScreen extends StatelessWidget {
                   onPressed: () => Navigator.pop(context),
                 ),
                 const Text(
-                  'Поддержка',
+                  'Поддержка', 
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ],

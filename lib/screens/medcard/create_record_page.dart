@@ -25,16 +25,16 @@ class _CreateRecordPageState extends State<CreateRecordPage> {
         leading: IconButton(
           onPressed: context.pop,
           icon: Icon(
-            Icons.arrow_back,
-            color: AppColors.black,
+            Icons.arrow_back_ios_new,
+            color: const Color.fromARGB(255, 0, 0, 0),
           ),
-        ),
+        ), 
         title: Text(
           widget.event == null ? "Создать новую запись" : "Обновить запись",
           style: TextStyle(
-            color: AppColors.black,
+            color: const Color.fromARGB(255, 2, 2, 2),
             fontSize: 20.0,
-            fontWeight: FontWeight.bold,
+           
           ),
         ),
       ),

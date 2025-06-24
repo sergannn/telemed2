@@ -41,6 +41,10 @@ class _AkkInfoScreenState extends State<AkkEditScreen> {
                     decoration: BoxDecoration(
                       color: const Color.fromARGB(255, 255, 255, 255)
                           .withOpacity(0.95),
+                          borderRadius: BorderRadius.only(
+      topLeft: Radius.circular(22), // Скругление верхнего левого угла
+      topRight: Radius.circular(22), // Скругление верхнего правого угла
+    ),
                     ),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
@@ -346,6 +350,10 @@ Row(
                     decoration: BoxDecoration(
                       color: const Color.fromARGB(255, 255, 255, 255)
                           .withOpacity(0.95),
+                          borderRadius: BorderRadius.only(
+      bottomLeft: Radius.circular(22), // Скругление нижнего левого угла
+      bottomRight: Radius.circular(22), // Скругление нижнего правого угла
+    ),
                     ),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,

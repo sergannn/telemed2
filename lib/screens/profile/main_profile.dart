@@ -126,7 +126,7 @@ class MainProfileScreen extends StatelessWidget {
                                   ),
                                   children: <TextSpan>[
                                     TextSpan(
-                                      text: '3 близких' +
+                                      text: '' +
                                           // context.userData['patient_id'] +
                                           "",
                                       style: TextStyle(
@@ -707,9 +707,9 @@ Widget fourThings(titles, images) {
       itemBuilder: (context, index) {
         return GestureDetector(
             onTap: () {
-              Navigator.pushNamed(context, '/webview',
+              Navigator.pushNamed(context, '',
                   arguments:
-                      'https://admin.onlinedoctor.su/articles/symptom.html');
+                      '');
             },
             child: Container(
               decoration: BoxDecoration(

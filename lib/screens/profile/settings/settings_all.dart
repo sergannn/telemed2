@@ -40,6 +40,10 @@ class _SettingsAllScreenState extends State<SettingsAllScreen> {
                       padding: const EdgeInsets.only(bottom: 12),
                       decoration: BoxDecoration(
                         color: const Color.fromARGB(255, 255, 255, 255).withOpacity(0.95),
+                        borderRadius: BorderRadius.only(
+      topLeft: Radius.circular(22), // Скругление верхнего левого угла
+      topRight: Radius.circular(22), // Скругление верхнего правого угла
+    ),
                       ),
                       child: GestureDetector(
                         child: Container(
@@ -309,6 +313,10 @@ GestureDetector(onTap:() {
                       padding: const EdgeInsets.only(bottom: 12),
                       decoration: BoxDecoration(
                         color: const Color.fromARGB(255, 255, 255, 255).withOpacity(0.95),
+                        borderRadius: BorderRadius.only(
+      bottomLeft: Radius.circular(22), // Скругление нижнего левого угла
+      bottomRight: Radius.circular(22), // Скругление нижнего правого угла
+    ),
                       ),
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),

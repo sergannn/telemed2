@@ -16,12 +16,13 @@ class PopularDoctorsScreen extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: [
+          SizedBox(height: 15),
           ...topBack(text: "Популярные", context: context),
-          Expanded(
+          Expanded( 
             child: Container(
               margin: const EdgeInsets.only(bottom: 6),
               padding: const EdgeInsets.all(6),
-              decoration: BoxDecoration(
+              decoration: BoxDecoration( 
                 color:
                     const Color.fromARGB(255, 236, 236, 236).withOpacity(0.95),
                 border: Border(top: BorderSide(color: Colors.grey.shade300)),

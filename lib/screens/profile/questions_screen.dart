@@ -33,7 +33,7 @@ class FAQState extends State<FAQScreen> {
       collapsedBackgroundColor: Colors.white,
       backgroundColor: Colors.white,
       trailing: Transform.rotate(
-        angle: _expansionStates[index] ? math.pi / 5 : 0,
+        angle: _expansionStates[index] ? math.pi / 2 : 0,
         child: Icon(
           Icons.arrow_forward_ios,
           color: _expansionStates[index] ? Colors.black : Colors.grey,
@@ -45,6 +45,10 @@ class FAQState extends State<FAQScreen> {
         padding: const EdgeInsets.only(bottom: 12),
         decoration: BoxDecoration(
           color: const Color.fromARGB(255, 255, 255, 255).withOpacity(0.95),
+          borderRadius: BorderRadius.only(
+      topLeft: Radius.circular(22), // Скругление верхнего левого угла
+      topRight: Radius.circular(22), // Скругление верхнего правого угла
+    ),
         ),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
@@ -172,7 +176,11 @@ class FAQState extends State<FAQScreen> {
     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
     decoration: BoxDecoration(
       color: const Color.fromARGB(255, 255, 255, 255),
-      borderRadius: BorderRadius.circular(20.0),
+      borderRadius: BorderRadius.only(
+      bottomLeft: Radius.circular(22), // Скругление нижнего левого угла
+      bottomRight: Radius.circular(22), // Скругление нижнего правого угла
+    ),
+      
     ),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.center,

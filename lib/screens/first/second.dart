@@ -34,7 +34,7 @@ class CustomContainer extends StatelessWidget {
   final String imageUrl =
       'assets/images/a_gal.jpg'; // Replace with your image path
   final String bottomText =
-      'Возможность записи на онлайн-консультацию писаться к врачу 24/7';
+      'Возможность записи на онлайн-консультацию записаться к врачу 24/7';
 
   @override
   Widget build(BuildContext context) {

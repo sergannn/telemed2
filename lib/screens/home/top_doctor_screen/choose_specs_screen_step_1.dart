@@ -78,9 +78,9 @@ class _TopDoctorScreenState extends State<ChooseSpecsScreen>
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.end,
-          children: [
+          children: [ 
+            SizedBox(height: 15),
             ...topBack(text: "Записи", context: context),
-
             VerticalSpace(height: 24),
             Container(
               width: double.infinity, // Makes the container full width
@@ -89,14 +89,14 @@ class _TopDoctorScreenState extends State<ChooseSpecsScreen>
                 decoration: InputDecoration(
                   contentPadding:
                       EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                  hintText: 'Search...',
+                  hintText: 'Поиск...',
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(32),
                     borderSide: BorderSide(color: Colors.grey.shade300),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(color: Colors.blue, width: 2),
+                    borderRadius: BorderRadius.circular(32),
+                    borderSide: BorderSide(color:const Color.fromARGB(255, 96, 159, 222), width: 1),
                   ),
                   prefixIcon: Icon(Icons.search, color: Colors.grey),
                 ),

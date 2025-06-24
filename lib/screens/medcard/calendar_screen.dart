@@ -101,8 +101,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
           },
         ),
         FloatingActionButton(
-          backgroundColor: Colors.blue,
-          child: const Icon(Icons.add),
+          backgroundColor: const Color.fromARGB(255, 96, 159, 222),
+          shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(30), // Устанавливаем радиус скругления
+  ),
+          child: const Icon(Icons.add,
+          color: Colors.white,),
           onPressed: () {
             Navigator.push(
               context,
@@ -136,11 +140,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
     );
 
     if (record.category == 'Cat1') {
-      backgroundColor = Colors.red;
+      backgroundColor = Color(0xFFC8E0FF);
     } else if (record.category == 'Cat2') {
-      backgroundColor = Colors.yellow;
+      backgroundColor = const Color.fromARGB(255, 255, 245, 155);
     } else if (record.category == 'Cat3') {
-      backgroundColor = Colors.green;
+      backgroundColor = Color.fromARGB(255, 255, 218, 245);
     } else {
       backgroundColor = Color.fromARGB(255, 255, 255, 255);
     }

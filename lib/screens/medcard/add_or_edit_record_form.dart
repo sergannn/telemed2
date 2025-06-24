@@ -47,6 +47,7 @@ class _AddOrEditRecordFormState extends State<AddOrEditRecordForm> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          SizedBox(height: 15),
           TextFormField(
             controller: _titleController,
             decoration: AppConstants.inputDecoration.copyWith(
@@ -54,7 +55,7 @@ class _AddOrEditRecordFormState extends State<AddOrEditRecordForm> {
             ),
             style: TextStyle(
               color: AppColors.black,
-              fontSize: 17.0,
+              fontSize: 17.0, 
             ),
             validator: (value) {
               final title = value?.trim();
@@ -124,12 +125,13 @@ class _AddOrEditRecordFormState extends State<AddOrEditRecordForm> {
               hintText: "Текст записи",
             ),
           ),
+          SizedBox(height: 15),
           Align(
             alignment: Alignment.centerLeft,
             child: Text(
               'Категория записи',
               style: TextStyle(
-                color: AppColors.black,
+                color: const Color.fromARGB(255, 0, 0, 0),
                 fontWeight: FontWeight.w500,
                 fontSize: 17,
               ),
@@ -147,8 +149,8 @@ class _AddOrEditRecordFormState extends State<AddOrEditRecordForm> {
               Text(
                 getCategoryName('Cat1'),
                 style: TextStyle(
-                  color: AppColors.black,
-                  fontSize: 17,
+                  color: const Color.fromARGB(255, 0, 0, 0),
+                  fontSize: 16,
                 ),
               ),
             ],
@@ -165,8 +167,8 @@ class _AddOrEditRecordFormState extends State<AddOrEditRecordForm> {
               Text(
                 getCategoryName('Cat2'),
                 style: TextStyle(
-                  color: AppColors.black,
-                  fontSize: 17,
+                  color: const Color.fromARGB(255, 0, 0, 0),
+                  fontSize: 16,
                 ),
               )
             ],
@@ -183,17 +185,31 @@ class _AddOrEditRecordFormState extends State<AddOrEditRecordForm> {
               Text(
                 getCategoryName('Cat3'),
                 style: TextStyle(
-                  color: AppColors.black,
-                  fontSize: 17,
+                  color: const Color.fromARGB(255, 0, 0, 0),
+                  fontSize: 16,
                 ),
               ),
             ],
           ),
-          SizedBox(height: 15),
-          CustomButton(
-            onTap: _createEvent,
-            title: widget.event == null ? "Добавить запись" : "Обновить запись",
-          ),
+          SizedBox(height: 30),
+          ElevatedButton(
+  onPressed: widget.event == null ? _createEvent : null,
+  style: ElevatedButton.styleFrom(
+    backgroundColor: const Color.fromARGB(255, 96, 159, 222),
+    shape: RoundedRectangleBorder( 
+      borderRadius: BorderRadius.circular(32),
+    ),
+    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+    minimumSize: const Size(260, 56),
+  ),
+  child: Text(
+    widget.event == null ? "Добавить запись" : "Обновить запись",
+    style: const TextStyle(
+      color: Colors.white,
+      fontSize: 14,
+    ),
+  ),
+)
         ],
       ),
     );
