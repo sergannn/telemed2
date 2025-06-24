@@ -106,11 +106,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => EventPage()
-                  //   builder: (context) => CreateRecordPage(
-                  //     onRecordAdd: _addRecord,
-                  //   ),
-                  ),
+              MaterialPageRoute(
+                //builder: (context) => EventPage()
+                builder: (context) => CreateRecordPage(
+                  onRecordAdd: _addRecord,
+                ),
+              ),
             );
           },
         )
