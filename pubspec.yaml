@@ -108,6 +108,7 @@ dependencies:
   flutter_timezone: ^4.1.0
   intl: ^0.19.0
   loader_overlay: ^5.0.0
+  supabase_flutter: ^2.5.6
   
   
 #  analyzer: ^6.11.0
