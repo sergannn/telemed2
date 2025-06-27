@@ -132,7 +132,7 @@ print(context.selectedAppointment);
           isPast==false ?
           
           Navigator.push(
-             // context, MaterialPageRoute(builder: (context) => ChatScreen()));
+             // context, MaterialPageRoute(builder: (context) => ChatScreen()))
              context, MaterialPageRoute(builder: (context) => OnlineReceptionChat()))
       
       :
@@ -173,18 +173,18 @@ print(context.selectedAppointment);
             final client = await CallClient.create();
 
 
-                isPast==false ?
+            if(    isPast==false ) {
       
-                   Navigator.push(
+             //      Navigator.push(
              // context, MaterialPageRoute(builder: (context) => ChatScreen()));
-             context, MaterialPageRoute(builder: (context) => OnlineReceptionVideo()))
-             :
-                    Navigator.push(
+             //context, MaterialPageRoute(builder: (context) => OnlineReceptionVideo()))
+             //:
+              /*      Navigator.push(
              // context, MaterialPageRoute(builder: (context) => ChatScreen()));
-             context, MaterialPageRoute(builder: (context) => VideoResolution()));
+             context, MaterialPageRoute(builder: (context) => VideoResolution()));*/
           
              //start video commented
-/*
+
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -195,7 +195,8 @@ print(context.selectedAppointment);
                   callClient: client,
                 ),
               ),
-            );*/
+            );
+            }
           } catch (e) {
             print('Error during video call setup: $e');
             // Optionally show an error message to the user here

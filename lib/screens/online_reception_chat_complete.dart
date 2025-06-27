@@ -194,7 +194,7 @@ const SizedBox(width: 8),
                                   CircleAvatar(
                                     radius: 30,
                                     backgroundImage:
-                                        AssetImage('assets/images/11.png'),
+                                        NetworkImage( context.selectedAppointment['doctor']['photo'])
                                   ),
                                   const SizedBox(width: 16),
                                   Expanded(
@@ -202,10 +202,14 @@ const SizedBox(width: 8),
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        const Text('Парфенов К.С.',
+                                         Text( context.selectedAppointment['doctor']['username'],
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold)),
-                                        const Text('Акушер-гинеколог'),
+                                          if( context.selectedAppointment['doctor']['specializations'].isNotEmpty)
+                                     Text(
+                                     context.selectedAppointment['doctor']['specializations'][0]['name'],
+                                      style: TextStyle(fontSize: 12),
+                                    ),
                                         const Text(
 'О враче    Был в сети 1 мин назад',
 style: TextStyle(

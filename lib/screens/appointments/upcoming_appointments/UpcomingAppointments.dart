@@ -34,10 +34,10 @@ class UpcomingAppointments extends StatelessWidget {
       String at = appointment['from_time'];
       DateTime appDateTime =
           DateFormat('yyyy-MM-dd HH:mm').parse(ad + " " + at);
-      print(appDateTime);
+   //   print(appDateTime);
       bool isPast = appDateTime.isBefore(DateTime.now());
-      print(
-          "Is ${DateFormat('yyyy-MM-dd HH:mm').format(appDateTime)} past? ${isPast ? 'Yes' : 'No'}");
+   //   print(
+   //       "Is ${DateFormat('yyyy-MM-dd HH:mm').format(appDateTime)} past? ${isPast ? 'Yes' : 'No'}");
 
       if (!isPast) {
         String date = appointment['date'];
@@ -114,11 +114,11 @@ class UpcomingAppointments extends StatelessWidget {
                                     DateTime appDateTime =
                                         DateFormat('yyyy-MM-dd HH:mm')
                                             .parse(ad + " " + at);
-                                    print(appDateTime);
+                                 //   print(appDateTime);
                                     bool isPast =
                                         appDateTime.isBefore(DateTime.now());
-                                    print(
-                                        "Is ${DateFormat('yyyy-MM-dd HH:mm').format(appDateTime)} past? ${isPast ? 'Yes' : 'No'}");
+                                //    print(
+                                //        "Is ${DateFormat('yyyy-MM-dd HH:mm').format(appDateTime)} past? ${isPast ? 'Yes' : 'No'}");
 var status=appointmentsList[index]['status'];
                                     if (status!='0' && !isPast &&
                                         appointmentsList[index]['date'] == date)

@@ -23,7 +23,7 @@ class PastAppointments extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("its past??");
+    //print("its past??");
     // loadData();
     bool isDark = Theme.of(context).brightness == Brightness.dark;
 
@@ -36,10 +36,10 @@ class PastAppointments extends StatelessWidget {
       String at = appointment['from_time'];
       DateTime appDateTime =
           DateFormat('yyyy-MM-dd HH:mm').parse(ad + " " + at);
-      print(appDateTime);
+    //  print(appDateTime);
       bool isPast = appDateTime.isBefore(DateTime.now());
-      print(
-          "Is ${DateFormat('yyyy-MM-dd HH:mm').format(appDateTime)} past? ${isPast ? 'Yes' : 'No'}");
+     // print(
+     //     "Is ${DateFormat('yyyy-MM-dd HH:mm').format(appDateTime)} past? ${isPast ? 'Yes' : 'No'}");
 
       if (isPast) {
         String date = appointment['date'];
@@ -116,11 +116,11 @@ class PastAppointments extends StatelessWidget {
                                     DateTime appDateTime =
                                         DateFormat('yyyy-MM-dd HH:mm')
                                             .parse(ad + " " + at);
-                                    print(appDateTime);
+                                //    print(appDateTime);
                                     bool isPast =
                                         appDateTime.isBefore(DateTime.now());
-                                    print(
-                                        "Is ${DateFormat('yyyy-MM-dd HH:mm').format(appDateTime)} past? ${isPast ? 'Yes' : 'No'}");
+                                //    print(
+                                //        "Is ${DateFormat('yyyy-MM-dd HH:mm').format(appDateTime)} past? ${isPast ? 'Yes' : 'No'}");
 
                                     if (isPast &&
                                         appointmentsList[index]['date'] == date)

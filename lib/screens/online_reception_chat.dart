@@ -214,7 +214,7 @@ SizedBox(height: 20),
                                 CircleAvatar(
                                   radius: 30,
                                   backgroundImage:
-                                      AssetImage('assets/images/11.png'),
+NetworkImage(context.selectedAppointment['doctor']['photo']),
                                 ),
                                 const SizedBox(width: 16),
                                 Expanded(
@@ -222,8 +222,8 @@ SizedBox(height: 20),
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      const Text(
-                                         'Парфенов К.С.',
+                                       Text(
+                                         context.selectedAppointment['doctor']['username'],
                                         style: TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.bold,
