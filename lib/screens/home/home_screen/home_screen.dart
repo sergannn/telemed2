@@ -5,6 +5,7 @@ import 'package:doctorq/screens/history/video_call_page/video_call_page.dart';
 import 'package:doctorq/screens/home/home_screen/widgets/autolayouthor_item_widget_tasks.dart';
 import 'package:doctorq/screens/home/home_screen/widgets/autolayouthor_item_widget_zapisi.dart';
 import 'package:doctorq/screens/home/home_screen/widgets/doctor_item.dart';
+import 'package:doctorq/screens/home/home_screen/widgets/recommendation_item_widget.dart';
 import 'package:doctorq/screens/home/home_screen/widgets/story_item_widget.dart';
 import 'package:doctorq/screens/medcard/create_record_page_lib.dart';
 import 'package:doctorq/screens/webviews/someWebPage.dart';
@@ -39,13 +40,14 @@ import 'package:story_view/story_view.dart';
 //import 'package:random_text_reveal/random_text_reveal.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:doctorq/models/recommendation_model.dart';
 //final GlobalKey<RandomTextRevealState> globalKey = GlobalKey();
 
 class ItemController extends GetxController {
   var cats = [].obs; // Reactive list to store fetched items
   var users = [].obs; // Reactive list to store fetched items
   var articles = [].obs;
-
+  var recommendations = <RecommendationModel>[].obs; // Reactive list for recommendations
   var _filteredRecords = <CalendarRecordData>[].obs;
 
   void filterRecordsByDate(DateTime date) {
@@ -140,10 +142,26 @@ class ItemController extends GetxController {
     }
   }
 
+
+  Future<void> fetchRecommendations() async {
+    final response = await http.get(Uri.parse('https://admin.onlinedoctor.su/api/recommendations'));
+
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body);
+      final List<dynamic> data = jsonData['data'];
+      recommendations.value = data.map((item) => RecommendationModel.fromJson(item) as RecommendationModel).toList();
+      print('Loaded ${recommendations.length} recommendations');
+    } else {
+      // Handle error
+      print('Failed to load recommendations: ${response.statusCode}');
+    }
+  }
+
   Future<void> refreshData() async {
     // fetchDoctors();
     fetchStories();
     fetchArticles();
+        fetchRecommendations();
     getDoctors();
     _loadCalendarRecords().then((res) {
        
@@ -152,7 +170,7 @@ class ItemController extends GetxController {
        );
     // Simulating fetching data from an API
     var response = await http.get(Uri.parse(
-      'https://www.onlinedoctor.su/api/specializations',
+      'https://www.admin.onlinedoctor.su/api/specializations',
     ));
 
     if (response.statusCode == 200) {
@@ -790,6 +808,16 @@ class HomeScreen extends StatelessWidget {
                                 ),
                               ),
                               SizedBox(height: 16),
+                                     Obx(() {
+                                return itemController.recommendations.isEmpty
+                                    ? Container(
+                                        height: getVerticalSize(120.00),
+                                        child: Center(
+                                          child: CircularProgressIndicator(),
+                                        ),
+                                      )
+                                    : recommendationsList(itemController.recommendations.toList());
+                              }),
                               fourThings(titles, images)
                             ],
                           ),
@@ -968,6 +996,32 @@ class DoctorsSliderHeader extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget recommendationsList(List<RecommendationModel> recommendations) {
+  return SizedBox(
+    height: getVerticalSize(120.00),
+    width: getHorizontalSize(528.00),
+    child: ListView.separated(
+      padding: getPadding(
+        left: 20,
+        right: 20,
+        top: 17,
+      ),
+      scrollDirection: Axis.horizontal,
+      physics: const BouncingScrollPhysics(),
+      itemCount: recommendations.length,
+      separatorBuilder: (context, index) {
+        return HorizontalSpace(width: 16);
+      },
+      itemBuilder: (context, index) {
+        return RecommendationItemWidget(
+          recommendation: recommendations[index],
+          index: index,
+        );
+      },
+    ),
+  );
 }
 
 Widget fourThings(titles, images) {

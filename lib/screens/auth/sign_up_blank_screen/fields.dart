@@ -1,8 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RegFields {
   static getAll() {
     return _fields;
+  }
+
+  static Future<void> saveFields() async {
+    final prefs = await SharedPreferences.getInstance();
+    
+    for (var entry in _fields.entries) {
+      final key = entry.key;
+      final field = entry.value;
+      final controller = field['controller'] as TextEditingController;
+      
+      await prefs.setString('reg_$key', controller.text);
+    }
+  }
+   static Future<void> loadFields() async {
+    final prefs = await SharedPreferences.getInstance();
+    
+    for (var entry in _fields.entries) {
+      final key = entry.key;
+      final field = entry.value;
+      final controller = field['controller'] as TextEditingController;
+      
+      controller.text = prefs.getString('reg_$key') ?? '';
+    }
   }
 
   static final Map<String, dynamic> _tmpfields = {

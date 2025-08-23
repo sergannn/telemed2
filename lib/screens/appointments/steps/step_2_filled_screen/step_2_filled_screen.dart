@@ -36,7 +36,7 @@ class AppointmentManager {
 
     // Simulating fetching data from an API
     String apiUrl =
-        'https://onlinedoctor.su/doctor-session-time?adminAppointmentDoctorId=$doctorId&date=$formattedDate&timezone_offset_minutes=180';
+        'https://admin.onlinedoctor.su/doctor-session-time?adminAppointmentDoctorId=$doctorId&date=$formattedDate&timezone_offset_minutes=180';
     print(apiUrl);
     printLog(apiUrl);
     try {
@@ -657,6 +657,7 @@ decoration:                          UnAvailableTimesList.contains(availableTime
                 );
               },
             ),
+            Container(height: 200,)
           ],
         ),
       ),

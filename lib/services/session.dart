@@ -25,6 +25,9 @@ class Session {
     String? lastName = data.getString("last_name");
     String? photo = data.getString("photo");
     String? authToken = data.getString("authToken");
+    String? snils = data.getString("snils");
+    String? phone = data.getString("phone");
+    String? birthDate = data.getString("birth_date");
 
     // Create and return UserModel if all data is available
     if (userId != null &&
@@ -44,6 +47,9 @@ class Session {
         lastName: lastName,
         photo: photo,
         authToken: authToken,
+        snils: snils,
+        phone: phone,
+        birthDate: birthDate,
       );
     }
 
@@ -82,6 +88,15 @@ class Session {
       case 'auth_token':
         user.authToken = newValue.toString();
         break;
+      case 'snils':
+        user.snils = newValue.toString();
+        break;
+      case 'phone':
+        user.phone = newValue.toString();
+        break;
+      case 'birth_date':
+        user.birthDate = newValue.toString();
+        break;
       default:
         throw Exception('Invalid field name');
     }
@@ -102,6 +117,9 @@ class Session {
     data.getString("last_name");
     data.getString("photo");
     data.getString("authToken");
+    data.getString("snils");
+    data.getString("phone");
+    data.getString("birth_date");
   }
 
   Future saveUser(UserModel user, {String cookie = ''}) async {
@@ -115,6 +133,9 @@ class Session {
     data.setString("last_name", user.lastName!);
     data.setString("photo", user.photo ?? '');
     data.setString("authToken", user.authToken!);
+    data.setString("snils", user.snils ?? '');
+    data.setString("phone", user.phone ?? '');
+    data.setString("birth_date", user.birthDate ?? '');
     print(data);
     print(user.photo);
     return true;
@@ -132,6 +153,9 @@ class Session {
     data.remove("authToken");
     data.remove("doctor_id");
     data.remove('patient_id');
+    data.remove('snils');
+    data.remove('phone');
+    data.remove('birth_date');
     print("user saved");
   }
 

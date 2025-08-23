@@ -16,7 +16,7 @@ import 'package:http/http.dart' as http;
 GetIt getIt = GetIt.instance;
 
 Future<bool> regUser(BuildContext context, String email, String password,
-    String role, String fullName, String unused) async {
+    String role, String fullName, String snils) async {
   // try {
   printLog(email);
   printLog(password);
@@ -38,6 +38,7 @@ Future<bool> regUser(BuildContext context, String email, String password,
         password: "$password"
         password_confirmation: "$password"
         role: "$role"
+        snils: "$snils"
         verification_url: {
           url: "https://onlinedoctor.su/api/verify-email?id=__ID__&token=__HASH__&expires=__EXPIRES__&signature=__SIGNATURE__"
         }
@@ -52,7 +53,7 @@ Future<bool> regUser(BuildContext context, String email, String password,
   final MutationOptions options = MutationOptions(
     document: gql(loginString),
   );
-  GraphQLClient graphqlClient = await graphqlAPI.noauthClient();
+  GraphQLClient graphqlClient = await graphqlAPI2.noauthClient();
   debugPrintTransactionStart('mutation login');
 
   final QueryResult result = await graphqlClient.mutate(options);
@@ -167,6 +168,9 @@ Future<bool> authUser(
                         photo: profile_image
                         patient_id
                         doctor_id
+                        snils
+                        phone: contact
+                        birth_date: dob
                     }
 
                 }
@@ -177,7 +181,7 @@ Future<bool> authUser(
   final MutationOptions options = MutationOptions(
     document: gql(loginString),
   );
-  GraphQLClient graphqlClient = await graphqlAPI.noauthClient();
+  GraphQLClient graphqlClient = await graphqlAPI2.noauthClient();
 
   debugPrintTransactionStart('mutation login');
 

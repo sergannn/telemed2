@@ -15,7 +15,8 @@ import 'package:doctorq/services/auth_service.dart';
 
 class ForgotPasswordOtpActiveScreen extends StatelessWidget {
   final dynamic response;
-  ForgotPasswordOtpActiveScreen({Key? key, this.response}) : super(key: key);
+  final dynamic password;
+  ForgotPasswordOtpActiveScreen({Key? key, this.response, this.password}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +113,7 @@ class ForgotPasswordOtpActiveScreen extends StatelessWidget {
                               var authRes =
 //                                  await authUser(context, "s@s.ru", "123456");
                                   await authUser(
-                                      context, response['email'], '123456');
+                                      context, response['email'], password);
                               if (authRes == true) {
                                 Navigator.push(
                                   context,

@@ -175,16 +175,16 @@ print(context.selectedAppointment);
 
             if(    isPast==false ) {
       
-             //      Navigator.push(
+                   Navigator.push(
              // context, MaterialPageRoute(builder: (context) => ChatScreen()));
-             //context, MaterialPageRoute(builder: (context) => OnlineReceptionVideo()))
+             context, MaterialPageRoute(builder: (context) => OnlineReceptionVideo()));
              //:
-              /*      Navigator.push(
+             //       Navigator.push(
              // context, MaterialPageRoute(builder: (context) => ChatScreen()));
-             context, MaterialPageRoute(builder: (context) => VideoResolution()));*/
+             //context, MaterialPageRoute(builder: (context) => VideoResolution()));
           
              //start video commented
-
+/*
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -195,7 +195,7 @@ print(context.selectedAppointment);
                   callClient: client,
                 ),
               ),
-            );
+            );*/
             }
           } catch (e) {
             print('Error during video call setup: $e');

@@ -2,15 +2,98 @@ import 'package:doctorq/screens/articles/articles.dart';
 import 'package:doctorq/screens/online_reception_video_complete.dart';
 import 'package:doctorq/screens/online_reception_video_start_two.dart';
 import 'package:flutter/material.dart';
+import 'package:jitsi_meet_flutter_sdk/jitsi_meet_flutter_sdk.dart';
+
+
+
 
 class OnlineReceptionVideoStart extends StatefulWidget {
-  const OnlineReceptionVideoStart({Key? key}) : super(key: key);
+  const OnlineReceptionVideoStart({super.key, required this.title});
+  final String title;
 
   @override
-  State<OnlineReceptionVideoStart> createState() => _OnlineReceptionVideoStartState();
+  State<OnlineReceptionVideoStart> createState() => _MyHomePageState();
 }
 
-class _OnlineReceptionVideoStartState extends State<OnlineReceptionVideoStart> {
+class _MyHomePageState extends State<OnlineReceptionVideoStart> {
+  final meetingNameController = TextEditingController();
+  final jitsiMeet = JitsiMeet();
+  void join() {
+
+    var options = JitsiMeetConferenceOptions(
+      serverURL: "https://meet.engagemedia.org",
+      room: "test0987test",
+      configOverrides: {
+        "startWithAudioMuted": true,
+        "startWithVideoMuted": true,
+        "subject" : "JitsiwithFlutter",
+        "localSubject" : "localJitsiwithFlutter",
+      },
+      featureFlags: {
+        "unsaferoomwarning.enabled": false,
+        "security-options.enabled": false
+      },
+      userInfo: JitsiMeetUserInfo(
+          displayName: "Flutter user",
+          email: "user@example.com"
+      ),
+    );
+    jitsiMeet.join(options);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: Text(widget.title),
+      ),
+      body: Center(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            SizedBox(
+              width: 250,
+              height: 50,
+              child: TextField(
+                controller: meetingNameController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: 'Введите имя',
+                ),
+              ),
+            ),
+            SizedBox(
+              width: 100,
+              height: 50,
+              child: FilledButton(
+                onPressed: join,
+                style: ButtonStyle(
+                  shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0))),
+                ),
+                child: const Text("Подключиться")
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+
+
+
+class OnlineReceptionVideoStart2 extends StatefulWidget {
+  const OnlineReceptionVideoStart2({Key? key}) : super(key: key);
+
+  @override
+  State<OnlineReceptionVideoStart2> createState() => _OnlineReceptionVideoStartState();
+}
+
+class _OnlineReceptionVideoStartState extends State<OnlineReceptionVideoStart2> {
 
 
   

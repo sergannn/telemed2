@@ -216,22 +216,22 @@ class _HighPressureScreenState extends State<HighPressureScreen> with SingleTick
       children: [
         _buildVideoItem(
           title: "Высокое давление - миф?",
-          imageUrl: "assets/images/oneforvideo.png",
+          imageUrl: "assets/images/davlenie.jpg",
         ),
         SizedBox(height: 16),
         _buildVideoItem(
           title: "Все о давлении",
-          imageUrl: "assets/images/twoforvideo.png",
+          imageUrl: "assets/images/davlenie2.jpg",
         ),
         SizedBox(height: 16),
         _buildVideoItem(
           title: "Все о давлении",
-          imageUrl: "assets/images/threeforvideo.png",
+          imageUrl: "assets/images/gol.png",
         ),
         SizedBox(height: 16),
         _buildVideoItem(
           title: "Все о давлении",
-          imageUrl: "assets/images/fourforvideo.png",
+          imageUrl: "assets/images/forvideo.png",
         ),
         SizedBox(height: 16),
         _buildVideoItem(

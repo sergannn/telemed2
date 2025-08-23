@@ -186,11 +186,11 @@ class _HealthScreenState extends State<HealthScreen>
           title: "Важное про беременность",
           images: [
             ArticleImage(
-              imageUrl: "assets/images/screening.png",
+              imageUrl: "assets/images/sc.jpg",
               title: "Зачем нужны скрининги",
             ),
             ArticleImage(
-              imageUrl: "assets/images/how.png",
+              imageUrl: "assets/images/sc2.jpg",
               title: "Как подготовиться к родам",
             ),
           ],

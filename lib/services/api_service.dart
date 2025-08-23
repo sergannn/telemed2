@@ -8,6 +8,7 @@ import 'package:doctorq/extensions.dart';
 import 'package:doctorq/models/appointment_model.dart';
 import 'package:doctorq/models/doctor_model.dart';
 import 'package:doctorq/models/doctor_session_model.dart';
+import 'package:doctorq/models/recommendation_model.dart';
 import 'package:doctorq/models/user_model.dart';
 import 'package:doctorq/screens/appointments/steps/step_2_filled_screen/step_2_filled_screen.dart';
 import 'package:doctorq/services/session.dart';
@@ -31,7 +32,7 @@ Future<bool> getSpecs() async {
   print("get specs");
 
   final response =
-      await http.get(Uri.parse('https://onlinedoctor.su/api/specializations'));
+      await http.get(Uri.parse('https://admin.onlinedoctor.su/api/specializations'));
 
   if (response.statusCode == 200) {
     List jsonResponse = json.decode(response.body)['data'];
@@ -63,7 +64,7 @@ Future<bool> cancelAppointment(id) async {
   final QueryOptions options = QueryOptions(
     document: gql(query),
   );
-  GraphQLClient graphqlClient = await graphqlAPI.noauthClient();
+  GraphQLClient graphqlClient = await graphqlAPI2.noauthClient();
   debugPrintTransactionStart('cancel appointment');
   final QueryResult result = await graphqlClient.query(options);
   debugPrintTransactionEnd('query doctors');
@@ -113,7 +114,7 @@ Future<bool> getDoctors() async {
     document: gql(getDoctors),
   );
   // GraphQLClient graphqlClient = await graphqlAPI2.noauthClient();
-  GraphQLClient graphqlClient = await graphqlAPI.noauthClient();
+  GraphQLClient graphqlClient = await graphqlAPI2.noauthClient();
   debugPrintTransactionStart('query doctors');
   final QueryResult result = await graphqlClient.query(options);
   debugPrintTransactionEnd('query doctors');
@@ -123,7 +124,7 @@ Future<bool> getDoctors() async {
     // snackBar(context, message: result.exception.toString());
     return false;
   }
-
+print(result.data);
   final json = result.data!["doctors"]["data"];
 
   DoctorsStore storeDoctorsStore = getIt.get<DoctorsStore>();
@@ -181,7 +182,7 @@ Future<bool> setAppointment(
   final QueryOptions options = QueryOptions(
     document: gql(setAppointments),
   );
-  GraphQLClient graphqlClient = await graphqlAPI.noauthClient();
+  GraphQLClient graphqlClient = await graphqlAPI2.noauthClient();
   debugPrintTransactionStart('mutation Appointments');
   final QueryResult result = await graphqlClient.query(options);
   debugPrintTransactionEnd('mutation Appointments');
@@ -267,7 +268,7 @@ Future<bool> getAppointmentsD({required String doctorId}) async {
     document: gql(getAppointments),
   );
 
-  GraphQLClient graphqlClient = await graphqlAPI.noauthClient();
+  GraphQLClient graphqlClient = await graphqlAPI2.noauthClient();
 
   debugPrintTransactionStart('query appointments');
   final QueryResult result = await graphqlClient.query(options);
@@ -334,7 +335,7 @@ Future<bool> getSessionsD({required String doctorId}) async {
     document: gql(getSessions),
   );
 
-  GraphQLClient graphqlClient = await graphqlAPI.noauthClient();
+  GraphQLClient graphqlClient = await graphqlAPI2.noauthClient();
 
   debugPrintTransactionStart('query sessions');
   final QueryResult result = await graphqlClient.query(options);
@@ -399,7 +400,7 @@ Future<bool> setSessionsD({required String doctorId}) async {
     document: gql(setDoctorSessions),
   );
 
-  GraphQLClient graphqlClient = await graphqlAPI.noauthClient();
+  GraphQLClient graphqlClient = await graphqlAPI2.noauthClient();
 
   debugPrintTransactionStart('mutation upsertSessionsCustom');
   final QueryResult result = await graphqlClient.query(options);
@@ -464,7 +465,7 @@ Future<bool> getAppointments({required String patientId}) async {
     document: gql(getAppointments),
   );
 
-  GraphQLClient graphqlClient = await graphqlAPI.noauthClient();
+  GraphQLClient graphqlClient = await graphqlAPI2.noauthClient();
 
   debugPrintTransactionStart('query appointments');
   final QueryResult result = await graphqlClient.query(options);
@@ -513,7 +514,19 @@ Future<bool> updateProfileFields(BuildContext context,
     String? imagePath,
     String? phone,
     String? email}) async {
-//  print(first_name + "," + email );
+  // Get current user data to extract user_id
+  final currentUser = await Session.getCurrentUser();
+  if (currentUser == null) {
+    print('No current user found');
+    return false;
+  }
+
+  String? userId = currentUser.userId;
+  if (userId == null) {
+    print('User ID is null');
+    return false;
+  }
+
   //lk
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String? token = prefs.getString('authToken');
@@ -535,6 +548,7 @@ mutation UpdateUserProfile(\$input: UpdateUserProfileInput!) {
 // Usage example:
   final variables = {
     'input': {
+      'user_id': userId, // Add the required user_id field
       'first_name': first_name,
       'last_name': last_name,
       'gender': sex,
@@ -760,5 +774,24 @@ Future<bool> updateProfileWithDocument(BuildContext context, String imagePath,
     print('Error: ${response.statusCode}');
     print(response.body);
     return false;
+  }
+}
+
+Future<List<RecommendationModel>> fetchRecommendations() async {
+  printLog('Fetching recommendations');
+  
+  final response = await http.get(Uri.parse('https://admin.onlinedoctor.su/api/recommendations'));
+
+  if (response.statusCode == 200) {
+    final jsonData = json.decode(response.body);
+    final data = (jsonData['data'] as List<dynamic>)
+        .map((e) => RecommendationModel.fromJson(e))
+        .toList();
+    
+    printLog('Successfully fetched ${data.length} recommendations');
+    return data;
+  } else {
+    printLog('Failed to load recommendations: ${response.statusCode}');
+    throw Exception('Failed to load recommendations');
   }
 }

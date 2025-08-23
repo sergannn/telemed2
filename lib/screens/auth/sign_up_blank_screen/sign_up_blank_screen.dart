@@ -13,8 +13,10 @@ import 'package:doctorq/widgets/spacing.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:doctorq/services/auth_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'fields.dart';
+import 'password_dialog.dart';
 
 class SignUpBlankScreen extends StatefulWidget {
   SignUpBlankScreen({Key? key}) : super(key: key);
@@ -236,14 +238,27 @@ class _SignUpBlankScreenState extends State<SignUpBlankScreen> {
 
                     if (!validateForm()) {
                       print("problem");
-
                       return null;
                     }
-                      MyOverlay.show(context);
+
+                    final password = await showDialog<String>(
+                      context: context,
+                      builder: (context) => PasswordDialog(
+                        email: emailController.text,
+                        phone: phoneController.text,
+                        onPasswordEntered: (password) => Navigator.pop(context, password),
+                      ),
+                    );
+
+                    if (password == null) return null;
+
+                    MyOverlay.show(context);
+                    await RegFields.saveFields();
+           
                     var regRes = await regUser(
                         context,
                         emailController.text,
-                        '123456',
+                        password,
                         "patient",
                         RegFields.getAll()['full_name']['controller'].text,
                         "");
@@ -269,7 +284,7 @@ class _SignUpBlankScreenState extends State<SignUpBlankScreen> {
                                 MaterialPageRoute(
                                     builder: (context) =>
                                         ForgotPasswordOtpActiveScreen(
-                                            response: emailRes)
+                                            response: emailRes,password:password)
                                     //const ProfileBlankScreen()
                                     ));
                             //(Route<dynamic> route) => false);
