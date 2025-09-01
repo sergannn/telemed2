@@ -1,3 +1,4 @@
+import 'package:doctorq/extensions.dart';
 import 'package:doctorq/screens/articles/articles.dart';
 import 'package:doctorq/screens/online_reception_video_complete.dart';
 import 'package:doctorq/screens/online_reception_video_start_two.dart';
@@ -137,22 +138,23 @@ class _OnlineReceptionVideoStartState extends State<OnlineReceptionVideoStart2> 
                                       CircleAvatar(
                                   radius: 30,
                                   backgroundImage:
-                                      AssetImage('assets/images/11.png'),
+                                      NetworkImage(context.selectedAppointment['doctor']['photo']),
                                 ),
                                 const SizedBox(width: 16),
-                                      const Text(
-                                         'Трофимова Е.С.',
+                                      Text(
+                                         context.selectedAppointment['doctor']['username'],
                                         style: TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                      const Text(
-                                        'Психотерапевт',
-                                        style: TextStyle(
-                                          color: Color.fromARGB(255, 136, 136, 136),
-                                         fontSize: 12 
-                                        )),
+                                      if(context.selectedAppointment['doctor']['specializations'].isNotEmpty)
+                                        Text(
+                                          context.selectedAppointment['doctor']['specializations'][0]['name'],
+                                          style: TextStyle(
+                                            color: Color.fromARGB(255, 136, 136, 136),
+                                            fontSize: 12 
+                                          )),
                                       const SizedBox(height: 4), // Добавляем отступ между строками
 const Text(
 'Звонит по видео ...',

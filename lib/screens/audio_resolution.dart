@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:doctorq/screens/appointments/book_screen/book_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:doctorq/widgets/custom_button.dart';
+import 'package:doctorq/extensions.dart';
 
 class AudioResolution extends StatefulWidget {
   const AudioResolution({Key? key}) : super(key: key);
@@ -68,7 +69,9 @@ class _AudioResolutionState extends State<AudioResolution> {
                         children: [
                           CircleAvatar(
                             radius: 30,
-                            backgroundImage: const AssetImage('assets/images/11.png'),
+                            backgroundImage: context.selectedAppointment['doctor']?['profile_image'] != null
+                                ? NetworkImage(context.selectedAppointment['doctor']?['profile_image'])
+                                : AssetImage('assets/images/11.png') as ImageProvider,
                           ),
                           const SizedBox(width: 12),
                           // Информация о враче
@@ -76,15 +79,17 @@ class _AudioResolutionState extends State<AudioResolution> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  'Парфенов К.С.',
+                                Text(
+                                  context.selectedAppointment['doctor']['username'],
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                const Text(
-                                  'Акушер-гинеколог',
+                                Text(
+                                  context.selectedAppointment['doctor']['specializations'].isNotEmpty 
+                                    ? context.selectedAppointment['doctor']['specializations'][0]['name']
+                                    : 'Врач',
                                   style: TextStyle(
                                     fontSize: 12,
                                   ),

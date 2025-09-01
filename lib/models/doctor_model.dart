@@ -11,7 +11,8 @@ class DoctorModel {
       this.photo,
       this.description,
       this.qualifications,
-      this.schedule});
+      this.schedule,
+      this.reviews});
 
   String? doctorId;
   List<String>? specializations;
@@ -23,6 +24,7 @@ class DoctorModel {
   String? photo;
   String? description;
   List<int>? schedule;
+  List<dynamic>? reviews; // Store review objects
 
   DoctorModel.fromJson(Map json) {
     doctorId = json['doctor_id'];
@@ -76,6 +78,25 @@ class DoctorModel {
     photo = json['doctorUser']['photo'];
     description = json['doctorUser']['description'];
     qualifications = json['doctorUser']['qualifications'];
+    
+    // Handle reviews
+    if (json['reviews'] != null) {
+      reviews = [];
+      for (var review in json['reviews']) {
+        reviews!.add({
+          'id': review['id'],
+          'review': review['review'],
+          'rating': review['rating'],
+          'created_at': review['created_at'],
+          'patient': review['patient'] != null ? {
+            'patientUser': review['patient']['patientUser'] != null ? {
+              'first_name': review['patient']['patientUser']['first_name'],
+              'last_name': review['patient']['patientUser']['last_name'],
+            } : null
+          } : null
+        });
+      }
+    }
   }
 
   Map toJson() {
@@ -102,6 +123,16 @@ class DoctorModel {
             })
         .toList();
 
+    final reviewsList = (reviews ?? [])
+        .map((review) => {
+              'id': review['id'],
+              'review': review['review'],
+              'rating': review['rating'],
+              'created_at': review['created_at'],
+              'patient': review['patient'],
+            })
+        .toList();
+
     var map = {
       'doctor_id': doctorId,
       'specializations': specializationsList,
@@ -112,7 +143,8 @@ class DoctorModel {
       'photo': photo,
       'description': description,
       'schedule': days,
-      'qualifications': qualificationsList
+      'qualifications': qualificationsList,
+      'reviews': reviewsList
     };
 
     return map;

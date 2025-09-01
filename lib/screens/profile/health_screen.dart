@@ -6,7 +6,8 @@ import 'package:doctorq/widgets/top_back.dart';
 import 'package:doctorq/app_export.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:table_calendar/table_calendar.dart';
+//import 'package:table_calendar/TableCalendar.dart';
+import 'dart:convert';
 
 class HealthScreen extends StatefulWidget {
   const HealthScreen({Key? key}) : super(key: key);
@@ -18,11 +19,43 @@ class HealthScreen extends StatefulWidget {
 class _HealthScreenState extends State<HealthScreen>
     with SingleTickerProviderStateMixin {
   TabController? tabController;
+  List<dynamic> articles = [];
+  bool isLoading = true;
+  String? errorMessage;
 
   @override
   void initState() {
     super.initState();
     tabController = TabController(length: 2, vsync: this);
+    _fetchArticles();
+  }
+
+  Future<void> _fetchArticles() async {
+    try {
+      final response = await http.get(
+        Uri.parse('https://admin.onlinedoctor.su/api/articles'),
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = json.decode(response.body);
+        final List<dynamic> fetchedArticles = responseData['data'] ?? [];
+        
+        setState(() {
+          articles = fetchedArticles;
+          isLoading = false;
+        });
+      } else {
+        setState(() {
+          errorMessage = 'Failed to load articles: ${response.statusCode}';
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        errorMessage = 'Error loading articles: $e';
+        isLoading = false;
+      });
+    }
   }
 
   @override
@@ -37,7 +70,6 @@ class _HealthScreenState extends State<HealthScreen>
       body: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
-          //   mainAxisAlignment: MainAxisAlignment.end,
           children: [
             ...topBack(
                 text: "Здоровье",
@@ -50,11 +82,13 @@ class _HealthScreenState extends State<HealthScreen>
               child: _buildTabBar(tabController),
             ),
             Expanded(
-//              height: height / 2,
               child: TabBarView(
                 controller: tabController,
                 children: [
-                  ArticlesSection(),
+                  RefreshIndicator(
+                    onRefresh: _fetchArticles,
+                    child: ArticlesSection(),
+                  ),
                   Container(), // Пустой трекер
                 ],
               ),
@@ -125,87 +159,50 @@ class _HealthScreenState extends State<HealthScreen>
   }
 
   Widget ArticlesSection() {
-    return Expanded(
-        child: ListView(
+    if (isLoading) {
+      return Center(child: CircularProgressIndicator());
+    }
+    
+    if (errorMessage != null) {
+      return Center(child: Text(errorMessage!));
+    }
+
+    if (articles.isEmpty) {
+      return Center(child: Text('Нет статей'));
+    }
+
+    // Group articles by category for better organization
+    final Map<String, List<dynamic>> articlesByCategory = {};
+    
+    for (var article in articles) {
+      final categoryName = article['category'] != null && article['category']['title'] != null
+          ? article['category']['title']
+          : 'Без категории';
+      
+      if (!articlesByCategory.containsKey(categoryName)) {
+        articlesByCategory[categoryName] = [];
+      }
+      articlesByCategory[categoryName]!.add(article);
+    }
+
+    return ListView(
       shrinkWrap: true,
-//      scrollDirection: Axis.vertical,
       padding: EdgeInsets.all(16),
-      children: [
-        GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const HighPressureScreen()),
-            );
-          },
-          child: ArticleSection(
-            title: "Важные советы от врачей",
-            images: [
-              ArticleImage(
-                imageUrl: "assets/images/ad.png",
-                title: "Высокое давление",
-              ),
-              ArticleImage(
-                imageUrl: "assets/images/abouthealth.png",
-                title: "5 причин заболеваний",
-              ),
-            ],
-          ),
-        ),
-        // VerticalSpace(height: 24),
-        ArticleSection(
-          title: "Все про симптомы",
-          images: [
-            ArticleImage(
-              imageUrl: "assets/images/pain.png",
-              title: "Головная боль",
-            ),
-            ArticleImage(
-              imageUrl: "assets/images/vomiting.png",
-              title: "Рвота и тошнота",
-            ),
-          ],
-        ),
-        //  VerticalSpace(height: 24),
-        ArticleSection(
-          title: "В чем смысл здорового образа жизни",
-          images: [
-            ArticleImage(
-              imageUrl: "assets/images/backpain.png",
-              title: "Спинная боль",
-            ),
-            ArticleImage(
-              imageUrl: "assets/images/vitamins.png",
-              title: "Витамины: миф или реальность",
-            ),
-          ],
-        ),
-        //   VerticalSpace(height: 24),
-        ArticleSection(
-          title: "Важное про беременность",
-          images: [
-            ArticleImage(
-              imageUrl: "assets/images/sc.jpg",
-              title: "Зачем нужны скрининги",
-            ),
-            ArticleImage(
-              imageUrl: "assets/images/sc2.jpg",
-              title: "Как подготовиться к родам",
-            ),
-          ],
-        ),
-        SizedBox(height: 38),
-      ],
-    ));
+      children: articlesByCategory.entries.map((entry) {
+        final categoryName = entry.key;
+        final categoryArticles = entry.value;
+        
+        return ArticleSection(
+          title: categoryName,
+          articles: categoryArticles,
+        );
+      }).toList(),
+    );
   }
 
-  Widget ArticleSection(
-      {required String title, required List<ArticleImage> images}) {
-    ///    return ...List.generate(100, (index) {
-//      return Text("a");
-    //   });
+  Widget ArticleSection({required String title, required List<dynamic> articles}) {
     return Container(
+      margin: EdgeInsets.only(bottom: 24),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
@@ -233,47 +230,70 @@ class _HealthScreenState extends State<HealthScreen>
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
-              children: images
-                  .map((image) => Padding(
-                        padding: EdgeInsets.only(right: 16),
-                        child: Column(
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
-                              child: Image.asset(
-                                image.imageUrl,
+              children: articles.map((article) => Padding(
+                padding: EdgeInsets.only(right: 16),
+                child: GestureDetector(
+                  onTap: () {
+                    // Navigate to article detail screen
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => HighPressureScreen(
+                          articleId: article['id'],
+                          articleTitle: article['title'],
+                        ),
+                      ),
+                    );
+                  },
+                  child: Column(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: article['image'] != null
+                            ? Image.network('https://admin.onlinedoctor.su/storage/'+
+                                article['image'],
                                 width: 160,
                                 height: 100,
                                 fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Container(
+                                    width: 160,
+                                    height: 100,
+                                    color: Colors.grey[300],
+                                    child: Icon(Icons.error),
+                                  );
+                                },
+                              )
+                            : Container(
+                                width: 160,
+                                height: 100,
+                                color: Colors.grey[300],
+                                child: Icon(Icons.article),
                               ),
-                            ),
-                            SizedBox(height: 8),
-                            Text(
-                              image.title,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: getFontSize(12),
-                                fontFamily: 'Source Sans Pro',
-                              ),
-                            ),
-                          ],
+                      ),
+                      SizedBox(height: 8),
+                      Container(
+                        width: 160,
+                        child: Text(
+                          article['title'] ?? 'Без названия',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: getFontSize(12),
+                            fontFamily: 'Source Sans Pro',
+                            fontWeight: FontWeight.w500,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                      ))
-                  .toList(),
+                      ),
+                    ],
+                  ),
+                ),
+              )).toList(),
             ),
           ),
         ],
       ),
     );
   }
-}
-
-class ArticleImage {
-  final String imageUrl;
-  final String title;
-
-  ArticleImage({
-    required this.imageUrl,
-    required this.title,
-  });
 }

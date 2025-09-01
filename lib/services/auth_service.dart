@@ -195,18 +195,19 @@ Future<bool> authUser(
 
   if (result.hasException) {
     printLog(result.exception.toString());
-    //УДАЛЕНИЕ ТУТ И ТАМ и проверить что всякое такое как популярные категории удалилось
-    final errorMessages = {
-      'incorrect_password': 'Неверный пароль.',
-      'invalid_email': 'Неверный email.',
-      'Internal server error': 'Ошибка сети или сервера.',
-    };
-    print(result.exception.toString());
-    snackBar(context,
-        message: "error",
-//        message: errorMessages[result.exception] as String,
-//            errorMessages[result.exception?.graphqlErrors[0].message] as String,
-        color: Colors.red);
+    
+    // Проверяем наличие ошибки "The provided credentials are incorrect"
+    final exceptionString = result.exception.toString();
+    if (exceptionString.contains("The provided credentials are incorrect")) {
+      snackBar(context,
+          message: "Неверный email или пароль. Пожалуйста, проверьте введенные данные.",
+          color: Colors.red);
+    } else {
+      // Обработка других ошибок
+      snackBar(context,
+          message: "Произошла ошибка при входе. Пожалуйста, попробуйте позже.",
+          color: Colors.red);
+    }
     return false;
   }
 
@@ -278,4 +279,37 @@ Future<String?> logOut() async {
   Session().removeUser();
   printLog('Logging out');
   return 'logged out';
+}
+Future<bool> checkEmailExists(String email) async {
+  try {
+    String checkEmailQuery = '''
+      query CheckEmail(\$email: String) {
+        users(email: \$email, first:100) {
+          data {
+            id
+            email
+          }
+        }
+      }
+    ''';
+    
+    final QueryOptions options = QueryOptions(
+      document: gql(checkEmailQuery),
+      variables: {'email': email},
+    );
+    GraphQLClient graphqlClient = await graphqlAPI2.noauthClient();
+    
+    final QueryResult result = await graphqlClient.query(options);
+    
+    if (result.hasException) {
+      printLog('Email check error: ${result.exception}');
+      return false; // Assume email doesn't exist if there's an error
+    }
+    
+    final users = result.data?['users']['data'] ?? [];
+    return users.isNotEmpty;
+  } catch (e) {
+    printLog('Email check failed: $e');
+    return false;
+  }
 }

@@ -129,8 +129,8 @@ class _AppointmentsStep3FilledScreenState
                                 children: [
                                   CircleAvatar(
                                     radius: 20,
-                                    backgroundImage: AssetImage(
-                                        'assets/images/11.png'), // Используем AssetImage вместо Image.asset
+                                    backgroundImage: NetworkImage(
+                                        context.selectedDoctor['photo']),
                                   ),
                                   const SizedBox(width: 16),
                                   Expanded(
@@ -138,10 +138,12 @@ class _AppointmentsStep3FilledScreenState
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        const Text('Парфенов К.С.',
+                                        Text(context.selectedDoctor['username'],
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold)),
-                                        const Text('Акушер-гинеколог'),
+                                        Text(context.selectedDoctor['specializations'].isNotEmpty 
+                                          ? context.selectedDoctor['specializations'][0]['name']
+                                          : 'Врач'),
                                       ],
                                     ),
                                   ),

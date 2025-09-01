@@ -127,8 +127,8 @@ Container(
                                           Expanded(
                                             flex: 3,
                                             child: Container(
-                                              child: const Text(
-                                                '26.01.25',
+                                              child: Text(
+                                                _formatDate(context.selectedAppointment['date']),
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Color.fromARGB(
@@ -188,8 +188,8 @@ Container(
                                           Expanded(
                                             flex: 3,
                                             child: Container(
-                                              child: const Text(
-                                                '14:00',
+                                              child: Text(
+                                                _formatTime(context.selectedAppointment['from_time']),
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Color.fromARGB(
@@ -213,7 +213,7 @@ SizedBox(height: 20),
                                 CircleAvatar(
                                   radius: 30,
                                   backgroundImage:
-                                      AssetImage('assets/images/11.png'),
+                                      NetworkImage(context.selectedAppointment['doctor']['photo']),
                                 ),
                                 const SizedBox(width: 16),
                                 Expanded(
@@ -221,18 +221,19 @@ SizedBox(height: 20),
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      const Text(
-                                         'Парфенов К.С.',
+                                      Text(
+                                         context.selectedAppointment['doctor']['username'],
                                         style: TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                      const Text(
-                                        'Акушер-гинеколог',
-                                        style: TextStyle(
-                                         fontSize: 12 
-                                        )),
+                                      if(context.selectedAppointment['doctor']['specializations'].isNotEmpty)
+                                        Text(
+                                          context.selectedAppointment['doctor']['specializations'][0]['name'],
+                                          style: TextStyle(
+                                           fontSize: 12 
+                                          )),
                                       const SizedBox(height: 4), // Добавляем отступ между строками
 const Text(
 'Аудио / онлайн консультация',
@@ -478,5 +479,22 @@ Navigator.pop(context);
                   ),)
               );
         
+  }
+  
+  String _formatDate(String dateString) {
+    try {
+      final date = DateTime.parse(dateString);
+      return '${date.day.toString().padLeft(2, '0')}.${date.month.toString().padLeft(2, '0')}.${date.year.toString().substring(2)}';
+    } catch (e) {
+      return dateString;
+    }
+  }
+  
+  String _formatTime(String timeString) {
+    try {
+      return timeString; // Возвращаем время как есть, предполагая формат "HH:mm"
+    } catch (e) {
+      return timeString;
+    }
   }
 }

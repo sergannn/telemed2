@@ -60,8 +60,17 @@ class CustomButton extends StatelessWidget {
       ),
     );
   }
+  
+  String _formatDate(String dateString) {
+    try {
+      final date = DateTime.parse(dateString);
+      return '${date.day.toString().padLeft(2, '0')}.${date.month.toString().padLeft(2, '0')}.${date.year.toString().substring(2)}';
+    } catch (e) {
+      return dateString;
+    }
+  }
+  
 }
-
 // ignore: must_be_immutable
 class ProffitScreen extends StatefulWidget {
   ContactMethods contactMethod;
@@ -193,7 +202,7 @@ class _AppointmentsStep3FilledScreenState extends State<ProffitScreen> {
                                   CircleAvatar(
                                     radius: 20,
                                     backgroundImage:
-                                        AssetImage('assets/images/11.png'),
+                                        NetworkImage(context.selectedDoctor['photo']),
                                   ),
                                   const SizedBox(width: 16),
                                   Expanded(
@@ -201,10 +210,12 @@ class _AppointmentsStep3FilledScreenState extends State<ProffitScreen> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        const Text('Парфенов К.С.',
+                                        Text(context.selectedDoctor['username'],
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold)),
-                                        const Text('Акушер-гинеколог'),
+                                        Text(context.selectedDoctor['specializations'].isNotEmpty 
+                                          ? context.selectedDoctor['specializations'][0]['name']
+                                          : 'Врач'),
                                       ],
                                     ),
                                   ),
@@ -274,15 +285,15 @@ class _AppointmentsStep3FilledScreenState extends State<ProffitScreen> {
                                             Expanded(
                                               flex: 3,
                                               child: Container(
-                                                child: const Text(
-                                                  '26.01.25',
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Color.fromARGB(
-                                                        255, 16, 16, 16),
-                                                    fontSize: 10,
-                                                  ),
+                                              child: Text(
+                                                _formatDate(context.selectedAppointment['date']),
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color.fromARGB(
+                                                      255, 16, 16, 16),
+                                                  fontSize: 10,
                                                 ),
+                                              ),
                                               ),
                                             ),
                                           ],
@@ -337,15 +348,15 @@ class _AppointmentsStep3FilledScreenState extends State<ProffitScreen> {
                                             Expanded(
                                               flex: 3,
                                               child: Container(
-                                                child: const Text(
-                                                  '14:00',
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Color.fromARGB(
-                                                        255, 16, 16, 16),
-                                                    fontSize: 10,
-                                                  ),
+                                              child: Text(
+                                                _formatTime(context.selectedAppointment['from_time']),
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color.fromARGB(
+                                                      255, 16, 16, 16),
+                                                  fontSize: 10,
                                                 ),
+                                              ),
                                               ),
                                             ),
                                           ],
@@ -434,8 +445,24 @@ class _AppointmentsStep3FilledScreenState extends State<ProffitScreen> {
       ),
     );
   }
+  
+  String _formatDate(String dateString) {
+    try {
+      final date = DateTime.parse(dateString);
+      return '${date.day.toString().padLeft(2, '0')}.${date.month.toString().padLeft(2, '0')}.${date.year.toString().substring(2)}';
+    } catch (e) {
+      return dateString;
+    }
+  }
+  
+  String _formatTime(String timeString) {
+    try {
+      return timeString; // Возвращаем время как есть, предполагая формат "HH:mm"
+    } catch (e) {
+      return timeString;
+    }
+  }
 }
-
 void showCancelDialog(BuildContext context) {
   showDialog(
     context: context,

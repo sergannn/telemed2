@@ -83,7 +83,7 @@ class DoctorInfoScreen extends StatelessWidget {
                               Padding(
                                 padding: EdgeInsets.only(top: 2),
                                 child: Text(
-                                  'Михайлюк Галина Ивановна, Санкт-Петербург: онколог-гинеколог, гинеколог, гинеколог-эндокринолог, 47 отзывов пациентов, места работы, кандидат наук, высшая категория, стаж 38 лет, запись на приём.',
+                                  '${context.selectedDoctor['username'] ?? 'Врач'}${context.selectedDoctor['description'] != null ? ', ${context.selectedDoctor['description']}' : ''}',
                                   style: TextStyle(
                                     color:
                                         const Color.fromARGB(255, 17, 17, 17),
@@ -144,11 +144,13 @@ class DoctorInfoScreen extends StatelessWidget {
                               Padding(
                                 padding: EdgeInsets.only(top: 2),
                                 child: Text(
-                                  context.selectedDoctor['qualifications']
-                                          ?.map((qual) =>
-                                              '${qual['degree']} from ${qual['university']} (${qual['year']})')
-                                          ?.join('\n') ??
-                                      '',
+                                  context.selectedDoctor['qualifications'] != null && context.selectedDoctor['qualifications'].isNotEmpty
+                                      ? context.selectedDoctor['qualifications']
+                                          .map<String>((qual) =>
+                                              '${qual['degree'] ?? ''}${qual['university'] != null ? ', ${qual['university']}' : ''}${qual['year'] != null ? ' (${qual['year']})' : ''}')
+                                          .where((text) => (text as String).isNotEmpty)
+                                          .join('\n')
+                                      : 'Информация об образовании отсутствует',
                                   style: TextStyle(
                                     color:
                                         const Color.fromARGB(255, 17, 17, 17),
@@ -210,10 +212,11 @@ class DoctorInfoScreen extends StatelessWidget {
                               Padding(
                                 padding: EdgeInsets.only(top: 2),
                                 child: Text(
-                                  context.selectedDoctor['specializations']
-                                      .map((e) => e['name'])
-                                      .toString(),
-//                                      .map((e) => e),
+                                  context.selectedDoctor['specializations'] != null && context.selectedDoctor['specializations'].isNotEmpty
+                                      ? context.selectedDoctor['specializations'].
+                                          map((spec) => spec['name'] ?? '')
+                                          .join(', ')
+                                      : 'Специальности не указаны',
                                   style: TextStyle(
                                     color:
                                         const Color.fromARGB(255, 17, 17, 17),
@@ -335,7 +338,9 @@ class DoctorInfoScreen extends StatelessWidget {
                               Padding(
                                 padding: EdgeInsets.only(top: 2),
                                 child: Text(
-                                  'Михайлюк Галина Ивановна, Санкт-Петербург: онколог-гинеколог, гинеколог, гинеколог-эндокринолог, 47 ',
+                                  context.selectedDoctor['experience'] != null
+                                      ? 'Стаж работы: ${context.selectedDoctor['experience']} ${_getExperienceYearsText(context.selectedDoctor['experience'])}'
+                                      : 'Информация о стаже работы отсутствует',
                                   style: TextStyle(
                                     color:
                                         const Color.fromARGB(255, 17, 17, 17),
@@ -394,98 +399,7 @@ class DoctorInfoScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               // Row с иконкой и текстом
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Icon(Icons.star,
-                                      color: Color(0xFFFFD700), size: 24),
-                                  const SizedBox(width: 8),
-                                  Expanded(
-                                    child: Text(
-                                      '4.3',
-                                      style: TextStyle(
-                                        color: const Color.fromARGB(
-                                            255, 17, 17, 17),
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const SizedBox(width: 8),
-                                  Expanded(
-                                    child: Text(
-                                      'Мнение пациентов',
-                                      style: TextStyle(
-                                        color: const Color.fromARGB(
-                                            255, 17, 17, 17),
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 28),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Icon(Icons.star,
-                                      color: Color(0xFFFFD700), size: 18),
-                                  Icon(Icons.star,
-                                      color: Color(0xFFFFD700), size: 18),
-                                  Icon(Icons.star,
-                                      color: Color(0xFFFFD700), size: 18),
-                                  Icon(Icons.star,
-                                      color: Color(0xFFFFD700), size: 18),
-                                  const SizedBox(width: 8),
-                                  Expanded(
-                                    child: Text(
-                                      '5 февраля 2024',
-                                      style: TextStyle(
-                                        color: const Color.fromARGB(
-                                            255, 17, 17, 17),
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 4),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      'Комментарии',
-                                      style: TextStyle(
-                                        color: const Color.fromARGB(
-                                            255, 17, 17, 17),
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      'Сразу понятно что врач очень грамотный и компетентный. Консультация прошла на 5 баллов - я все узнала о своем здоровье!',
-                                      style: TextStyle(
-                                        color: const Color.fromARGB(
-                                            255, 17, 17, 17),
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                              _buildReviewsSection(context),
                             ],
                           ),
                         ),
@@ -582,5 +496,180 @@ class DoctorInfoScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+  
+  Widget _buildReviewsSection(BuildContext context) {
+    final reviews = context.selectedDoctor['reviews'] as List<dynamic>?;
+    final hasReviews = reviews != null && reviews.isNotEmpty;
+    
+    if (!hasReviews) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(Icons.star, color: Color(0xFFFFD700), size: 24),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  '0.0',
+                  style: TextStyle(
+                    color: const Color.fromARGB(255, 17, 17, 17),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  'Отзывов пока нет',
+                  style: TextStyle(
+                    color: const Color.fromARGB(255, 17, 17, 17),
+                    fontSize: 12,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      );
+    }
+
+    // Calculate average rating
+    final averageRating = reviews!
+        .map((review) => (review['rating'] as num?)?.toDouble() ?? 0.0)
+        .reduce((a, b) => a + b) / reviews.length;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Average rating
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(Icons.star, color: Color(0xFFFFD700), size: 24),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                averageRating.toStringAsFixed(1),
+                style: TextStyle(
+                  color: const Color.fromARGB(255, 17, 17, 17),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+              ),
+            ),
+          ],
+        ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                'Мнение пациентов (${reviews.length})',
+                style: TextStyle(
+                  color: const Color.fromARGB(255, 17, 17, 17),
+                  fontSize: 12,
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        
+        // Display first review
+        ...reviews.take(1).map((review) => Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Stars
+                ...List.generate(5, (index) => Icon(
+                  Icons.star,
+                  color: index < (review['rating'] as int? ?? 0) 
+                      ? Color(0xFFFFD700) 
+                      : Colors.grey[300],
+                  size: 18,
+                )),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    _formatDate(review['created_at']),
+                    style: TextStyle(
+                      color: const Color.fromARGB(255, 17, 17, 17),
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 4),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Text(
+                    'Комментарии',
+                    style: TextStyle(
+                      color: const Color.fromARGB(255, 17, 17, 17),
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Text(
+                    review['review']?.toString() ?? 'Без комментария',
+                    style: TextStyle(
+                      color: const Color.fromARGB(255, 17, 17, 17),
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        )).toList(),
+      ],
+    );
+  }
+
+  String _formatDate(dynamic date) {
+    if (date == null) return 'Дата не указана';
+    
+    try {
+      final dateStr = date.toString();
+      if (dateStr.length >= 10) {
+        return '${dateStr.substring(8, 10)}.${dateStr.substring(5, 7)}.${dateStr.substring(0, 4)}';
+      }
+      return dateStr;
+    } catch (e) {
+      return date.toString();
+    }
+  }
+
+  String _getExperienceYearsText(dynamic experience) {
+    if (experience == null) return 'лет';
+    
+    final exp = experience is int ? experience : int.tryParse(experience.toString());
+    if (exp == null) return 'лет';
+    
+    if (exp % 10 == 1 && exp % 100 != 11) return 'год';
+    if (exp % 10 >= 2 && exp % 10 <= 4 && (exp % 100 < 10 || exp % 100 >= 20)) return 'года';
+    return 'лет';
   }
 }

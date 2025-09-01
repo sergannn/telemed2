@@ -100,6 +100,18 @@ Future<bool> getDoctors() async {
                 photo: profile_image
                 qualifications {  degree university year}
             }
+            reviews {
+                id
+                review
+                rating
+                created_at
+                patient {
+                    patientUser {
+                        first_name
+                        last_name
+                    }
+                }
+            }
         }
         paginatorInfo {
           total
@@ -617,10 +629,13 @@ Future<bool> updateProfileWithImage(BuildContext context, String imagePath,
   //lk
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String? token = prefs.getString('authToken');
+  final currentUser = await Session.getCurrentUser();
+   String? userId = currentUser!.userId;
   var UPDATE_USER_PROFILE = '''
     mutation {
       updateUserProfile(
         input: {
+          user_id:  "$userId",
           first_name: "$firstName",
           email: "$email",
           profile_image: null
@@ -643,7 +658,7 @@ Future<bool> updateProfileWithImage(BuildContext context, String imagePath,
     }
   ''';
   print(UPDATE_USER_PROFILE);
-  final uri = Uri.parse('https://onlinedoctor.su/graphql');
+  final uri = Uri.parse('https://admin.onlinedoctor.su/graphql');
 
   final request = http.MultipartRequest('post', uri);
 
@@ -794,4 +809,48 @@ Future<List<RecommendationModel>> fetchRecommendations() async {
     printLog('Failed to load recommendations: ${response.statusCode}');
     throw Exception('Failed to load recommendations');
   }
+}
+
+Future<bool> createReview({required String doctorId, required int rating, required String review}) async {
+  printLog('Creating review for doctor: $doctorId');
+  
+  String createReviewMutation = '''
+    mutation CreateReview(\$input: CreateReviewInput!) {
+      createReview(input: \$input) {
+        review {
+          id
+          rating
+          review
+          created_at
+        }
+        status
+      }
+    }
+  ''';
+
+  final variables = {
+    'input': {
+      'doctor_id': doctorId,
+      'rating': rating,
+      'review': review,
+    }
+  };
+
+  final QueryOptions options = QueryOptions(
+    document: gql(createReviewMutation),
+    variables: variables,
+  );
+
+  GraphQLClient graphqlClient = await graphqlAPI2.authClient();
+  debugPrintTransactionStart('mutation createReview');
+  final QueryResult result = await graphqlClient.query(options);
+  debugPrintTransactionEnd('mutation createReview');
+
+  if (result.hasException) {
+    printLog(result.exception.toString(), name: 'mutation createReview');
+    return false;
+  }
+
+  printLog('Review created successfully: ${result.data}');
+  return true;
 }

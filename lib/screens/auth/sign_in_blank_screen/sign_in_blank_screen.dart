@@ -11,6 +11,7 @@ import 'package:doctorq/services/api_service.dart';
 import 'package:doctorq/services/auth_service.dart';
 import 'package:doctorq/theme/svg_constant.dart';
 import 'package:doctorq/utils/pub.dart';
+import 'package:doctorq/utils/utility.dart';
 import 'package:doctorq/widgets/custom_button.dart';
 import 'package:doctorq/widgets/custom_checkbox.dart';
 import 'package:doctorq/widgets/custom_text_form_field.dart';
@@ -39,6 +40,7 @@ class _SignInBlankScreenState extends State<SignInBlankScreen> {
   bool checkbox = false;
   bool obscure = true;
   String _token = '';
+  bool _showValidationErrors = false;
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -134,6 +136,69 @@ class _SignInBlankScreenState extends State<SignInBlankScreen> {
     print('On Primary: ${theme.colorScheme.onPrimary}');
     print('Typography: ${theme.textTheme}');
     print('=====================\n');
+  }
+
+  bool validateForm() {
+    bool isValid = true;
+    String lastError = '';
+
+    // Validate email
+    final emailError = validateEmail(emailController.text);
+    if (emailError != null) {
+      isValid = false;
+      lastError = emailError;
+    }
+
+    // Validate password
+    final passwordError = validatePassword(passwordController.text);
+    if (passwordError != null) {
+      isValid = false;
+      lastError = passwordError;
+    }
+
+    // Show error message if validation failed
+    if (!isValid) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(lastError)),
+      );
+    }
+
+    return isValid;
+  }
+
+  String? validateEmail(String value) {
+    if (value.isEmpty) {
+      return 'Введите email';
+    }
+    
+    final emailRegex = RegExp(
+      r'^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$'
+    );
+    
+    if (!emailRegex.hasMatch(value)) {
+      return 'Введите корректный email';
+    }
+    
+    return null;
+  }
+
+  String? validatePassword(String value) {
+    if (value.isEmpty) {
+      return 'Введите пароль';
+    }
+    
+    if (value.length < 6) {
+      return 'Пароль должен содержать не менее 6 символов';
+    }
+    
+    return null;
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
   }
 
   @override
@@ -515,6 +580,14 @@ class _SignInBlankScreenState extends State<SignInBlankScreen> {
                       emailController.text = testUserLogin;
                       passwordController.text = testUserPassword;
                     }
+                        setState(() {
+                          _showValidationErrors = true;
+                        });
+
+                        if (!validateForm()) {
+                          return null;
+                        }
+                        
                         var authRes = await authUser(context,
                             emailController.text, passwordController.text);
                         if (authRes == true) {

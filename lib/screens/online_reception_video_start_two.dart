@@ -1,3 +1,4 @@
+import 'package:doctorq/extensions.dart';
 import 'package:doctorq/screens/articles/articles.dart';
 import 'package:doctorq/screens/online_reception_video_complete.dart';
 import 'package:flutter/material.dart';
@@ -46,18 +47,19 @@ class _OnlineReceptionVideoStartTwoState
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text(
-                                      'Трофимова Е.С.',
+                                    Text(
+                                      context.selectedAppointment['doctor']['username'],
                                       style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                    const Text('    Психотерапевт',
-                                        style: TextStyle(
-                                            color: Color.fromARGB(
-                                                255, 136, 136, 136),
-                                            fontSize: 12)),
+                                    if(context.selectedAppointment['doctor']['specializations'].isNotEmpty)
+                                      Text('    ${context.selectedAppointment['doctor']['specializations'][0]['name']}',
+                                          style: TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 136, 136, 136),
+                                              fontSize: 12)),
                                     const SizedBox(height: 4),
                                   ],
                                 ),

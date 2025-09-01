@@ -11,6 +11,9 @@ import 'package:doctorq/screens/medcard/create_record_page_lib.dart';
 import 'package:doctorq/screens/webviews/someWebPage.dart';
 import 'package:doctorq/screens/profile/main_notification.dart';
 import 'package:doctorq/screens/profile/main_profile.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:doctorq/screens/profile/popular_doctors.dart';
 import 'package:doctorq/screens/profile/search_doctors.dart';
 import 'package:doctorq/screens/profile/settings/appearance_screen/appearance_screen.dart';
@@ -25,6 +28,7 @@ import 'package:doctorq/screens/home/search_doctor_screen/search_doctor_screen.d
 import 'package:doctorq/screens/home/specialist_doctor_screen/specialist_doctor_screen.dart';
 import 'package:doctorq/screens/home/top_doctor_screen/choose_specs_screen_step_1.dart';
 import 'package:doctorq/services/api_service.dart';
+import 'package:doctorq/services/session.dart';
 import 'package:doctorq/utils/utility.dart';
 import 'package:doctorq/widgets/spacing.dart';
 import 'widgets/autolayouthor1_item_widget.dart';
@@ -183,11 +187,57 @@ class ItemController extends GetxController {
 }
 
 // ignore: must_be_immutable
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   TextEditingController autoLayoutVerController = TextEditingController();
   final ItemController itemController = Get.put(ItemController());
+  File? _image;
 
-  HomeScreen({Key? key}) : super(key: key);
+  Future<void> pickImage() async {
+    var pr = await SharedPreferences.getInstance();
+    print(pr.getString('user_id'));
+    print(pr.getString('photo'));
+    print("prefs");
+    var status = await Permission.photos.request().isGranted;
+    await Permission.mediaLibrary.request().isGranted;
+
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    print(pickedFile);
+
+    if (pickedFile != null) {
+      _image = File(pickedFile.path);
+      if (_image != null) {
+        bool success = await updateProfileWithImage(
+          context,
+          pickedFile.path,
+          context.userData['first_name'],
+          context.userData['email'],
+        );
+
+        if (success) {
+          // После успешного обновления, перезагружаем данные пользователя
+          final updatedUser = await Session.getCurrentUser();
+          if (updatedUser != null) {
+            // Обновляем контекст с новыми данными пользователя
+            context.userData['photo'] = updatedUser.photo;
+            setState(() {
+              // Принудительно обновляем UI
+            });
+          }
+        }
+      }
+    } else {
+      print('No image selected');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var titles = [
@@ -239,10 +289,13 @@ class HomeScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          CircleAvatar(
-                            radius: getVerticalSize(25),
-                            backgroundImage:
-                                NetworkImage(context.userData['photo']),
+                          GestureDetector(
+                            onTap: pickImage,
+                            child: CircleAvatar(
+                              radius: getVerticalSize(25),
+                              backgroundImage:
+                                  NetworkImage(context.userData['photo']),
+                            ),
                           ),
 
                           HorizontalSpace(width: 20),

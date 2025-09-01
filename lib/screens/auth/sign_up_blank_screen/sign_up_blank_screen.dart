@@ -231,13 +231,35 @@ class _SignUpBlankScreenState extends State<SignUpBlankScreen> {
                     right: 24,
                   ),
                   onTap: () async {
-                  
                     setState(() {
                       _showValidationErrors = true;
                     });
 
                     if (!validateForm()) {
                       print("problem");
+                      return null;
+                    }
+                              
+                    if (!checkbox) {
+                      MyOverlay.hide();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("Необходимо согласие на обработку персональных данных")),
+                      );
+                      return null;
+                    }
+                    
+                    // Check if email already exists before showing password dialog
+                    MyOverlay.show(context);
+                    bool emailExists = await checkEmailExists(emailController.text);
+                    MyOverlay.hide();
+                    
+                    if (emailExists) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("Этот email уже зарегистрирован. Пожалуйста, используйте другой email или войдите в систему."),
+                          duration: Duration(seconds: 5),
+                        ),
+                      );
                       return null;
                     }
 
@@ -321,7 +343,9 @@ class _SignUpBlankScreenState extends State<SignUpBlankScreen> {
                          MyOverlay.hide();
                      ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text("Такой пользователь уже зарегистрирован. Введите другие данные.")));
+        content: Text("Ошибка регистрации. Пожалуйста, попробуйте снова."),
+        duration: Duration(seconds: 3),
+      ));
                     }
                   },
                   variant: ButtonVariant.FillBlueA400,

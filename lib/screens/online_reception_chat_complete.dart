@@ -5,6 +5,7 @@ import 'package:doctorq/screens/appointments/book_screen/book_screen.dart';
 import 'package:doctorq/screens/appointments/steps/step_2_filled_screen/step_2_filled_screen.dart';
 import 'package:doctorq/screens/home/home_screen/home_screen.dart';
 import 'package:doctorq/services/auth_service.dart';
+import 'package:doctorq/services/api_service.dart';
 import 'package:doctorq/widgets/top_back.dart';
 import '../../../../widgets/spacing.dart';
 import 'package:doctorq/app_export.dart';
@@ -81,6 +82,15 @@ class OnlineReceptionChatComplete extends StatefulWidget {
 }
 
 class _AppointmentsStep3FilledScreenState extends State<OnlineReceptionChatComplete> {
+  int _selectedRating = 5;
+  final TextEditingController _reviewController = TextEditingController();
+  bool _isSubmitting = false;
+
+  @override
+  void dispose() {
+    _reviewController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     bool isDark = Theme.of(context).brightness == Brightness.dark;
@@ -375,115 +385,174 @@ color: Color.fromARGB(255, 91, 91, 91),
       barrierColor: Colors.black.withOpacity(0.5),
       isScrollControlled: true,
       builder: (BuildContext context) {
-        return Container(
-          height: MediaQuery.of(context).size.height * 0.75,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(24),
-              topRight: Radius.circular(24),
-            ),
-          ),
-          child: Column(
-            children: [
-              // Стрелка для свайпа вниз
-              Container(
-                height: 4,
-                width: 40,
-                margin: EdgeInsets.only(top: 8, bottom: 16),
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(2),
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Container(
+              height: MediaQuery.of(context).size.height * 0.75,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(24),
+                  topRight: Radius.circular(24),
                 ),
               ),
-              
-              // Звездочки
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(5, (_) => Icon(Icons.star, color: Colors.yellow[700], size: 28)),
-              ),
-              
-              // Текст вопроса
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24,vertical: 14),
-                child: Text(
-                  'Как прошел ваш онлайн прием с врачом?',
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                ),
-              ),
-              
-              // Подсказка о количестве символов
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24),
-                child: Text(
-                  'не более 250 символов',
-                  style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-                ),
-              ),
-              
-              // Контейнер с отзывом
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Color.fromRGBO(244, 248, 255, 1),
-                    borderRadius: BorderRadius.circular(16),
+              child: Column(
+                children: [
+                  // Стрелка для свайпа вниз
+                  Container(
+                    height: 4,
+                    width: 40,
+                    margin: EdgeInsets.only(top: 8, bottom: 16),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(2),
+                    ),
                   ),
-                  padding: EdgeInsets.all(16),
-                  child: Text(
-                    'Мне понравился врач . Сразу запросил доступ к моей медкарте и на этом мы сэкономили время, учитывая, что сама консультация стоит недешево. Диагноз поставил предварительный . В целом, буду теперь консультироваться у него периодически в целях профилактики.',
-                    style: TextStyle(color: Colors.black54),
+                  
+                  // Звездочки для рейтинга
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(5, (index) {
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _selectedRating = index + 1;
+                          });
+                        },
+                        child: Icon(
+                          Icons.star,
+                          color: index < _selectedRating 
+                              ? Colors.yellow[700] 
+                              : Colors.grey[300],
+                          size: 28,
+                        ),
+                      );
+                    }),
                   ),
-                ),
-              ),
-              
-              // Секция для файлов
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24),
-                child: Row(
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                  
+                  // Текст вопроса
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                    child: Text(
+                      'Как прошел ваш онлайн прием с врачом?',
+                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  
+                  // Подсказка о количестве символов
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 24),
+                    child: Text(
+                      'не более 250 символов',
+                      style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                    ),
+                  ),
+                  
+                  // Поле для ввода отзыва
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Color.fromRGBO(244, 248, 255, 1),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      padding: EdgeInsets.all(16),
+                      child: TextField(
+                        controller: _reviewController,
+                        maxLines: 4,
+                        maxLength: 250,
+                        decoration: InputDecoration(
+                          hintText: 'Напишите ваш отзыв здесь...',
+                          border: InputBorder.none,
+                          counterText: '',
+                        ),
+                        style: TextStyle(color: Colors.black87),
+                      ),
+                    ),
+                  ),
+                  
+                  // Секция для файлов
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 24),
+                    child: Row(
                       children: [
-                        Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            color: Color.fromRGBO(228, 240, 255, 1),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Icon(Icons.add, color: Colors.blue),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: Color.fromRGBO(228, 240, 255, 1),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Icon(Icons.add, color: Colors.blue),
+                            ),
+                            SizedBox(height: 4),
+                            Text(
+                              'Добавить файл',
+                              style: TextStyle(fontSize: 10),
+                            ),
+                          ],
                         ),
-                        SizedBox(height: 4),
-                        Text(
-                          'Добавить файл',
-                          style: TextStyle(fontSize: 10),
-                        ),
+                        Expanded(child: Container()),
                       ],
                     ),
-                    Expanded(child: Container()), // Пространство для будущих файлов
-                  ],
-                ),
+                  ),
+                  
+                  // Кнопка отправки отзыва
+                  Padding(
+                    padding: EdgeInsets.all(24),
+                    child: _isSubmitting
+                        ? CircularProgressIndicator()
+                        : CustomButton(
+                            width: double.infinity,
+                            text: "Оставить отзыв",
+                            variant: ButtonVariant.FillBlueA400,
+                            fontStyle: ButtonFontStyle.SourceSansProSemiBold18,
+                            alignment: Alignment.center,
+                            onPressed: () async {
+                              if (_reviewController.text.isEmpty) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text('Пожалуйста, напишите отзыв')),
+                                );
+                                return;
+                              }
+                              
+                              setState(() {
+                                _isSubmitting = true;
+                              });
+                              
+                              // Используем реальный ID доктора из данных консультации
+                              String doctorId = context.selectedAppointment['doctor']['doctor_id']?.toString() ?? 
+                                              context.selectedAppointment['doctor']['id']?.toString() ?? 
+                                              "1";
+                              
+                              bool success = await createReview(
+                                doctorId: doctorId,
+                                rating: _selectedRating,
+                                review: _reviewController.text,
+                              );
+                              
+                              setState(() {
+                                _isSubmitting = false;
+                              });
+                              
+                              if (success) {
+                                Navigator.pop(context);
+                                _showReviewSuccessDialog(context);
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text('Ошибка при отправке отзыва')),
+                                );
+                              }
+                            },
+                          ),
+                  ),
+                ],
               ),
-              
-              // Кнопка отправки отзыва
-              Padding(
-                padding: EdgeInsets.all(24),
-                child: CustomButton(
-                 
-                  width: double.infinity,
-                  text: "Оставить отзыв",
-                  variant: ButtonVariant.FillBlueA400,
-                  fontStyle: ButtonFontStyle.SourceSansProSemiBold18,
-                  alignment: Alignment.center,
-                  onPressed: () {
-                    Navigator.pop(context);
-                    _showReviewSuccessDialog(context);
-                  },
-                ),
-              ),
-            ],
-          ),
+            );
+          },
         );
       },
     );
