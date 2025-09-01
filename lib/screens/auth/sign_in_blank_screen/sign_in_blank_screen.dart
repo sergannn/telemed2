@@ -33,6 +33,9 @@ class _SignInBlankScreenState extends State<SignInBlankScreen> {
   bool checkbox = false;
   bool obscure = true;
   String _token = '';
+  bool _showValidationErrors = false;
+  String? _emailError;
+  String? _passwordError;
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -114,7 +117,7 @@ class _SignInBlankScreenState extends State<SignInBlankScreen> {
             ));
       },
     );
-    var authRes = await authUser(context, "f@a.ru", "123456");
+    var authRes = await authUser(context, "haus@haus.ru", "123123123");
     if (authRes == true) {
       gogo(false);
     }
@@ -128,6 +131,27 @@ class _SignInBlankScreenState extends State<SignInBlankScreen> {
     print('On Primary: ${theme.colorScheme.onPrimary}');
     print('Typography: ${theme.textTheme}');
     print('=====================\n');
+  }
+
+  String? _validateEmail(String email) {
+    if (email.isEmpty) return 'Введите email';
+    
+    final emailRegex = RegExp(
+      r'^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$'
+    );
+    
+    if (!emailRegex.hasMatch(email)) {
+      return 'Введите корректный email';
+    }
+    
+    return null;
+  }
+
+  bool _validateForm() {
+    _emailError = _validateEmail(emailController.text);
+    _passwordError = passwordController.text.isEmpty ? 'Введите пароль' : null;
+    
+    return _emailError == null && _passwordError == null;
   }
 
   @override
@@ -504,6 +528,25 @@ class _SignInBlankScreenState extends State<SignInBlankScreen> {
                       alignment: Alignment.center,
                       onTap: () async {
                         print("tap");
+                        
+                        setState(() {
+                          _showValidationErrors = true;
+                        });
+                        
+                        if (!_validateForm()) {
+                          // Показываем первую ошибку
+                          if (_emailError != null) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(_emailError!)),
+                            );
+                          } else if (_passwordError != null) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(_passwordError!)),
+                            );
+                          }
+                          return;
+                        }
+                        
                         /*if (forceUserLogin) {
                       emailController.text = testUserLogin;
                       passwordController.text = testUserPassword;

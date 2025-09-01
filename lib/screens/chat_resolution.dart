@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:doctorq/screens/appointments/book_screen/book_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:doctorq/widgets/custom_button.dart';
+import 'package:doctorq/extensions.dart';
 
 class ChatResolution extends StatefulWidget {
   const ChatResolution({Key? key}) : super(key: key);
@@ -67,8 +68,9 @@ class _ChatResolutionState extends State<ChatResolution> {
                         children: [
                           CircleAvatar(
                             radius: 30,
-                            backgroundImage:
-                                const AssetImage('assets/images/11.png'),
+                            backgroundImage: context.selectedAppointment['patient']?['profile_image'] != null
+                                ? NetworkImage(context.selectedAppointment['patient']?['profile_image'])
+                                : AssetImage('assets/images/11.png') as ImageProvider,
                           ),
                           const SizedBox(width: 12),
                           // Информация о враче
@@ -76,19 +78,19 @@ class _ChatResolutionState extends State<ChatResolution> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  'Парфенова К.С.',
+                                Text(
+                                  '${context.selectedAppointment['patient']?['first_name'] ?? ''} ${context.selectedAppointment['patient']?['last_name'] ?? ''}',
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                const Text(
-                                  'Женщина, 71',
+                                /* Text(
+                                  '${context.selectedAppointment['patient']?['gender'] ?? 'Не указан'}, ${context.selectedAppointment['patient']?['age'] ?? 'Не указан'}',
                                   style: TextStyle(
                                     fontSize: 12,
                                   ),
-                                ),
+                                ), */
                                 const SizedBox(height: 4),
                                 const Text(
                                   '10:00 - 10:45',

@@ -1,5 +1,6 @@
 import 'package:doctorq/screens/articles/articles.dart';
 import 'package:doctorq/screens/online_reception_chat_complete.dart';
+import 'package:doctorq/extensions.dart';
 import 'package:flutter/material.dart';
 
 class OnlineReceptionChatStart extends StatefulWidget {
@@ -69,23 +70,25 @@ class _OnlineReceptionChatStartState extends State<OnlineReceptionChatStart> {
                 children: [
                   CircleAvatar(
                     radius: 30,
-                    backgroundImage: AssetImage('assets/images/11.png'),
+                    backgroundImage: context.selectedAppointment['patient']?['profile_image'] != null
+                        ? NetworkImage(context.selectedAppointment['patient']?['profile_image'])
+                        : AssetImage('assets/images/11.png') as ImageProvider,
                   ),
                   const SizedBox(width: 12),
                   // Информация о враче
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                       const Text(
-                                        'Парфенова К.С.',
+                                      children: [
+                                       Text(
+                                        '${context.selectedAppointment['patient']?['first_name'] ?? ''} ${context.selectedAppointment['patient']?['last_name'] ?? ''}',
                                         style: TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                         const Text(
-                                        'Женщина, 71',
+                         Text(
+                                        '${context.selectedAppointment['patient']?['gender'] ?? 'Не указан'}, ${context.selectedAppointment['patient']?['age'] ?? 'Не указан'}',
                                         style: TextStyle(
                                          fontSize: 12 
                                         ),),

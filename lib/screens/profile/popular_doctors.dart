@@ -4,13 +4,57 @@ import 'package:animate_do/animate_do.dart';
 import 'package:doctorq/extensions.dart';
 import 'package:doctorq/screens/home/home_screen/home_screen.dart';
 import 'package:doctorq/screens/home/home_screen/widgets/doctor_item.dart';
+import 'package:doctorq/services/api_service.dart';
+import 'package:doctorq/services/session.dart';
+import 'package:doctorq/stores/doctors_store.dart';
 import 'package:doctorq/utils/size_utils.dart';
 import 'package:doctorq/widgets/spacing.dart';
 import 'package:doctorq/widgets/top_back.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 
-class PopularPatientsScreen extends StatelessWidget {
+class PopularPatientsScreen extends StatefulWidget {
   const PopularPatientsScreen({Key? key}) : super(key: key);
+
+  @override
+  _PopularPatientsScreenState createState() => _PopularPatientsScreenState();
+}
+
+class _PopularPatientsScreenState extends State<PopularPatientsScreen> {
+  bool _isLoading = true;
+  List<Map<String, dynamic>> _patients = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPatients();
+  }
+
+  Future<void> _loadPatients() async {
+    // Get current doctor ID from user data
+    final currentUser = await Session.getCurrentUser();
+    if (currentUser != null && currentUser.doctorId != null) {
+      bool success = await getPatientsForDoctor(doctorId: currentUser.doctorId!);
+      
+      if (success) {
+        // Get patients from doctors store (temporarily stored there)
+        DoctorsStore storeDoctorsStore = GetIt.instance.get<DoctorsStore>();
+        setState(() {
+          _patients = List<Map<String, dynamic>>.from(storeDoctorsStore.doctorsDataList);
+          _isLoading = false;
+        });
+      } else {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    } else {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -120,411 +164,20 @@ class PopularPatientsScreen extends StatelessWidget {
                             ],
                           ),
                         ),
-                        DoctorsSilder20(),
-                      /*
-                        Container(
-                          margin: const EdgeInsets.only(bottom: 8),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 0),
-                          decoration: BoxDecoration(
-                            color: Colors.red.withOpacity(0),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              const Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment
-                                        .start, // выравнивание всех чилдренов внутри коламн по левому краю
-                                    children: [
-                                      SizedBox(
-                                          height:
-                                              10), // добавлен SizedBox с отступом 16 пикселей
-                                      Text(
-                                        'Женщина, 71',
-                                        style: TextStyle(
-                                          color:
-                                              Color.fromARGB(255, 12, 12, 12),
-                                          fontFamily: 'Source Sans Pro',
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-
-                              // Зеленый контейнер
-                              Container(
-                                margin: const EdgeInsets.only(top: 8),
-                                padding: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  color:
-                                      const Color.fromARGB(255, 247, 247, 247)
-                                          .withOpacity(0.8),
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        const CircleAvatar(
-                                          radius: 20,
-                                          backgroundImage: AssetImage(
-                                              'assets/images/11.png'), // Используем AssetImage вместо Image.asset
-                                        ),
-                                        const SizedBox(width: 16),
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              const Text('Парфенова К.С.',
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold)),
-                                              const Text('Женщина, 71'),
-                                            ],
-                                          ),
-                                        ),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.end,
-                                          children: [
-                                            Container(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 2,
-                                                      vertical: 2),
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.rectangle,
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                                color: const Color.fromARGB(
-                                                    255, 176, 214, 254),
-                                              ),
-                                              constraints: const BoxConstraints(
-                                                  minWidth: 10, minHeight: 4),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  Icon(
-                                                    Icons.currency_ruble,
-                                                    size: 12,
-                                                    color: Color.fromARGB(
-                                                        255, 16, 16, 16),
-                                                  ),
-                                                  const Text('2300',
-                                                      style: TextStyle(
-                                                          color: Color.fromARGB(
-                                                              255, 16, 16, 16),
-                                                          fontSize: 11)),
-                                                ],
-                                              ),
-                                            ),
-                                            const SizedBox(height: 4),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(
-                                        height: 8), // Отступ между строками
-                                    Container(
-                                      width: double.infinity, // Полная ширина
-                                      height: 40, // Высота изображения
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(
-                                            12), // Закругленные углы
-                                        image: DecorationImage(
-                                          image: AssetImage(
-                                              'assets/images/icons.png'),
-                                          fit: BoxFit.contain,
-                                        ),
+                        _isLoading
+                            ? Center(child: CircularProgressIndicator())
+                            : _patients.isEmpty
+                                ? Center(
+                                    child: Text(
+                                      'У вас пока нет пациентов',
+                                      style: TextStyle(
+                                        color: Colors.grey[600],
+                                        fontSize: 16,
                                       ),
                                     ),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.only(bottom: 8),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 0),
-                          decoration: BoxDecoration(
-                            color: Colors.red.withOpacity(0),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment
-                                        .start, // выравнивание всех чилдренов внутри коламн по левому краю
-                                    children: [
-                                      const SizedBox(
-                                          height:
-                                              10), // добавлен SizedBox с отступом 16 пикселей
-                                      Text(
-                                        'Анколог',
-                                        style: TextStyle(
-                                          color: const Color.fromARGB(
-                                              255, 12, 12, 12),
-                                          fontFamily: 'Source Sans Pro',
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-
-                              // Зеленый контейнер
-                              Container(
-                                margin: const EdgeInsets.only(top: 8),
-                                padding: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  color:
-                                      const Color.fromARGB(255, 247, 247, 247)
-                                          .withOpacity(0.8),
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        CircleAvatar(
-                                          radius: 20,
-                                          backgroundImage: AssetImage(
-                                              'assets/images/11.png'), // Используем AssetImage вместо Image.asset
-                                        ),
-                                        const SizedBox(width: 16),
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              const Text('Парфенова К.С.',
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold)),
-                                              const Text('Женщина, 71'),
-                                            ],
-                                          ),
-                                        ),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.end,
-                                          children: [
-                                            Container(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 2,
-                                                      vertical: 2),
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.rectangle,
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                                color: const Color.fromARGB(
-                                                    255, 176, 214, 254),
-                                              ),
-                                              constraints: const BoxConstraints(
-                                                  minWidth: 10, minHeight: 4),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  Icon(
-                                                    Icons.currency_ruble,
-                                                    size: 12,
-                                                    color: Color.fromARGB(
-                                                        255, 16, 16, 16),
-                                                  ),
-                                                  const Text('2300',
-                                                      style: TextStyle(
-                                                          color: Color.fromARGB(
-                                                              255, 16, 16, 16),
-                                                          fontSize: 11)),
-                                                ],
-                                              ),
-                                            ),
-                                            const SizedBox(height: 4),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(
-                                        height: 8), // Отступ между строками
-                                    Container(
-                                      width: double.infinity, // Полная ширина
-                                      height: 40, // Высота изображения
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(
-                                            12), // Закругленные углы
-                                        image: DecorationImage(
-                                          image: AssetImage(
-                                              'assets/images/icons.png'),
-                                          fit: BoxFit.contain,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.only(bottom: 8),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 0),
-                          decoration: BoxDecoration(
-                            color: Colors.red.withOpacity(0),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment
-                                        .start, // выравнивание всех чилдренов внутри коламн по левому краю
-                                    children: [
-                                      const SizedBox(
-                                          height:
-                                              10), // добавлен SizedBox с отступом 16 пикселей
-                                      Text(
-                                        'Бактериолог',
-                                        style: TextStyle(
-                                          color: const Color.fromARGB(
-                                              255, 12, 12, 12),
-                                          fontFamily: 'Source Sans Pro',
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-
-                              // Зеленый контейнер
-                              Container(
-                                margin: const EdgeInsets.only(top: 8),
-                                padding: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  color:
-                                      const Color.fromARGB(255, 247, 247, 247)
-                                          .withOpacity(0.8),
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        CircleAvatar(
-                                          radius: 20,
-                                          backgroundImage: AssetImage(
-                                              'assets/images/11.png'), // Используем AssetImage вместо Image.asset
-                                        ),
-                                        const SizedBox(width: 16),
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              const Text('Парфенова К.С.',
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold)),
-                                              const Text('Женщина, 71'),
-                                            ],
-                                          ),
-                                        ),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.end,
-                                          children: [
-                                            Container(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 2,
-                                                      vertical: 2),
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.rectangle,
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                                color: const Color.fromARGB(
-                                                    255, 176, 214, 254),
-                                              ),
-                                              constraints: const BoxConstraints(
-                                                  minWidth: 10, minHeight: 4),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  Icon(
-                                                    Icons.currency_ruble,
-                                                    size: 12,
-                                                    color: Color.fromARGB(
-                                                        255, 16, 16, 16),
-                                                  ),
-                                                  const Text('2300',
-                                                      style: TextStyle(
-                                                          color: Color.fromARGB(
-                                                              255, 16, 16, 16),
-                                                          fontSize: 11)),
-                                                ],
-                                              ),
-                                            ),
-                                            const SizedBox(height: 4),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(
-                                        height: 8), // Отступ между строками
-                                    Container(
-                                      width: double.infinity, // Полная ширина
-                                      height: 40, // Высота изображения
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(
-                                            12), // Закругленные углы
-                                        image: DecorationImage(
-                                          image: AssetImage(
-                                              'assets/images/icons.png'),
-                                          fit: BoxFit.contain,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                    */  ],
+                                  )
+                                : PatientsSilder(patients: _patients),
+                      ],
                     ),
                   ),
                 ],
@@ -537,21 +190,69 @@ class PopularPatientsScreen extends StatelessWidget {
   }
 }
 
-class DoctorsSilder20 extends StatelessWidget {
-  const DoctorsSilder20({
+class PatientsSilder extends StatelessWidget {
+  final List<Map<String, dynamic>> patients;
+
+  const PatientsSilder({
     Key? key,
+    required this.patients,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    print("doctors");
-    print(context.doctorsData.length);
     return Column(
-        children: List.generate(context.doctorsData.length, (index) {
-      return DoctorItem(
-        item: context.doctorsData[index],
-        index: index,
-      );
-    }));
+      children: patients.map((patient) {
+        return Container(
+          margin: const EdgeInsets.only(bottom: 12),
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: const Color.fromARGB(255, 247, 247, 247).withOpacity(0.8),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CircleAvatar(
+                radius: 24,
+                backgroundImage: patient['profile_image'] != null && patient['profile_image'].isNotEmpty
+                    ? NetworkImage(patient['profile_image'])
+                    : AssetImage('assets/images/default_patient.png') as ImageProvider,
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      patient['full_name'] ?? 'Неизвестный пациент',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      patient['first_name'] != null && patient['first_name'].isNotEmpty
+                          ? 'Имя: ${patient['first_name']}'
+                          : 'Информация о пациенте',
+                      style: TextStyle(
+                        color: Colors.grey[600],
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              IconButton(
+                icon: Icon(Icons.chat, color: Colors.blue),
+                onPressed: () {
+                  // TODO: Implement chat functionality
+                },
+              ),
+            ],
+          ),
+        );
+      }).toList(),
+    );
   }
 }

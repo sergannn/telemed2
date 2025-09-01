@@ -5,6 +5,7 @@ import 'package:doctorq/models/user_model.dart';
 import 'package:doctorq/stores/appointments_store.dart';
 import 'package:doctorq/stores/doctor_sessions_store.dart';
 import 'package:doctorq/stores/doctors_store.dart';
+import 'package:doctorq/stores/patients_store.dart';
 import 'package:doctorq/stores/user_store.dart';
 
 import 'package:doctorq/stores/specs_store.dart';
@@ -22,6 +23,7 @@ extension BuildContextExt on BuildContext {
       getIt.get<AppointmentsStore>();
   static DoctorSessionsStore storeDoctorSessionsStore =
       getIt.get<DoctorSessionsStore>();
+  static PatientsStore storePatientsStore = getIt.get<PatientsStore>();
 
   // All about user
   Map<dynamic, dynamic> get userData {
@@ -48,6 +50,22 @@ extension BuildContextExt on BuildContext {
 
   Map<dynamic, dynamic> get selectedDoctor {
     return storeDoctorsStore.selectedDoctor;
+  }
+
+  // All about patients
+  List get patientsData {
+    return storePatientsStore.patientsDataList;
+  }
+
+  void setSelectedPatientByIndex(int index) {
+    print('setSelectedPatientByIndex');
+    print(storePatientsStore.patientsDataList[index]);
+    storePatientsStore
+        .setSelectedPatient(storePatientsStore.patientsDataList[index]);
+  }
+
+  Map<dynamic, dynamic> get selectedPatient {
+    return storePatientsStore.selectedPatient;
   }
 
   // All about appointments
@@ -81,5 +99,27 @@ extension BuildContextExt on BuildContext {
     UserModel userModel = UserModel.fromJson(data);
     storeUserStore.setUserData(userModel.toJson());
 //        .addDoctorSessionToDoctorSessionsData(sessionModel.toJson());
+  }
+
+  // Calculate duration between two time strings in format "HH:MM"
+  int calculateDuration(String? fromTime, String? toTime) {
+    if (fromTime == null || toTime == null) return 45;
+    
+    try {
+      final fromParts = fromTime.split(':');
+      final toParts = toTime.split(':');
+      
+      final fromHour = int.parse(fromParts[0]);
+      final fromMinute = int.parse(fromParts[1]);
+      final toHour = int.parse(toParts[0]);
+      final toMinute = int.parse(toParts[1]);
+      
+      final fromTotalMinutes = fromHour * 60 + fromMinute;
+      final toTotalMinutes = toHour * 60 + toMinute;
+      
+      return toTotalMinutes - fromTotalMinutes;
+    } catch (e) {
+      return 45; // Default duration if parsing fails
+    }
   }
 }

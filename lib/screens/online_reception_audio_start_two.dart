@@ -1,5 +1,6 @@
 import 'package:doctorq/screens/articles/articles.dart';
 import 'package:doctorq/screens/online_reception_audio_complete.dart';
+import 'package:doctorq/extensions.dart';
 import 'package:flutter/material.dart';
 
 class OnlineReceptionAudioStartTwo extends StatefulWidget {
@@ -18,7 +19,7 @@ class _OnlineReceptionAudioStartTwoState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Аудио с врачом'),
+        title: const Text('Аудио с пациентом'),
       ),
       body: SafeArea(
         child: Column(
@@ -53,19 +54,20 @@ class _OnlineReceptionAudioStartTwoState
                                     children: [
                                       CircleAvatar(
                                   radius: 30,
-                                  backgroundImage:
-                                      AssetImage('assets/images/11.png'),
+                                  backgroundImage: context.selectedAppointment['doctor']?['profile_image'] != null
+                                      ? NetworkImage(context.selectedAppointment['doctor']?['profile_image'])
+                                      : AssetImage('assets/images/11.png') as ImageProvider,
                                 ),
                                 const SizedBox(width: 16),
-                                      const Text(
-                                         'Трофимова Е.С.',
+                                      Text(
+                                        '${context.selectedAppointment['doctor']?['first_name'] ?? ''} ${context.selectedAppointment['doctor']?['last_name'] ?? ''}',
                                         style: TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                      const Text(
-                                        'Психотерапевт',
+                                      Text(
+                                        context.selectedAppointment['doctor']?['specialization'] ?? 'Врач',
                                         style: TextStyle(
                                           color: Color.fromARGB(255, 136, 136, 136),
                                          fontSize: 12 

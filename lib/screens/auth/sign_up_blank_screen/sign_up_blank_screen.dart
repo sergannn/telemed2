@@ -1,5 +1,6 @@
 import 'package:doctorq/app_export.dart';
 import 'package:doctorq/screens/auth/forgot/password_otp_active_screen/password_otp_active_screen.dart';
+import 'package:doctorq/screens/auth/sign_up_blank_screen/password_dialog.dart';
 import 'package:doctorq/screens/profile/blank_screen/blank_screen.dart';
 import 'package:doctorq/screens/auth/sign_in_blank_screen/doctor_screen.dart';
 import 'package:doctorq/screens/auth/sign_in_blank_screen/sign_in_blank_screen.dart';
@@ -236,11 +237,48 @@ class _SignUpBlankScreenState extends State<SignUpBlankScreen> {
 
                     if (!validateForm()) {
                       print("problem");
-
+                      MyOverlay.hide();
                       return null;
                     }
+                    
+                    if (!checkbox) {
+                      MyOverlay.hide();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("Необходимо согласие на обработку персональных данных")),
+                      );
+                      return null;
+                    }
+                    
+                    // Check if email already exists before showing password dialog
+                    MyOverlay.show(context);
+                    bool emailExists = await checkEmailExists(emailController.text);
+                    MyOverlay.hide();
+                    
+                    if (emailExists) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("Этот email уже зарегистрирован. Пожалуйста, используйте другой email или войдите в систему."),
+                          duration: Duration(seconds: 5),
+                        ),
+                      );
+                      return null;
+                    }
+                    
+                    final password = await showDialog<String>(
+                      context: context,
+                      builder: (context) => PasswordDialog(
+                        email: emailController.text,
+                        phone: phoneController.text,
+                        onPasswordEntered: (password) => Navigator.pop(context, password),
+                      ),
+                    );
+
+                    if (password == null) return null;
+                          MyOverlay.show(context);
+                    await RegFields.saveFields();
+
                       var regRes = await regUser(context, emailController.text,
-                        '123456', "doctor", 
+                          password, "doctor", 
                          RegFields.getAll()['full_name']['controller'].text,
                         "");
                     if (regRes) {
@@ -263,8 +301,8 @@ class _SignUpBlankScreenState extends State<SignUpBlankScreen> {
                             Navigator.of(context).push(//AndRemoveUntil(
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        ForgotPasswordOtpActiveScreen(
-                                            response: emailRes)
+                                          ForgotPasswordOtpActiveScreen(
+                                            response: emailRes,password:password)
                                     //const ProfileBlankScreen()
                                     ));
                             //(Route<dynamic> route) => false);
@@ -301,7 +339,9 @@ class _SignUpBlankScreenState extends State<SignUpBlankScreen> {
                          MyOverlay.hide();
                      ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text("Ошибка")));
+        content: Text("Ошибка регистрации. Пожалуйста, попробуйте снова."),
+        duration: Duration(seconds: 3),
+      ));
                     }
                   },
                   variant: ButtonVariant.FillBlueA400,

@@ -518,7 +518,7 @@ mutation UpdateUserProfile(\$input: UpdateUserProfileInput!) {
   };
   print(UPDATE_USER_PROFILE);
 
-  final uri = Uri.parse('https://onlinedoctor.su/graphql');
+  final uri = Uri.parse('https://admin.onlinedoctor.su/graphql');
 
   final request = http.MultipartRequest('post', uri);
 
@@ -577,10 +577,13 @@ Future<bool> updateProfileWithImage(BuildContext context, String imagePath,
   //lk
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String? token = prefs.getString('authToken');
+  final currentUser = await Session.getCurrentUser();
+   String? userId = currentUser!.userId;
   var UPDATE_USER_PROFILE = '''
     mutation {
       updateUserProfile(
         input: {
+          user_id:  "$userId",
           first_name: "$firstName",
           email: "$email",
           profile_image: null
@@ -603,7 +606,7 @@ Future<bool> updateProfileWithImage(BuildContext context, String imagePath,
     }
   ''';
   print(UPDATE_USER_PROFILE);
-  final uri = Uri.parse('https://onlinedoctor.su/graphql');
+  final uri = Uri.parse('https://admin.onlinedoctor.su/graphql');
 
   final request = http.MultipartRequest('post', uri);
 
@@ -686,7 +689,7 @@ Future<bool> updateProfileWithDocument(BuildContext context, String imagePath,
     }
   ''';
   print(UPDATE_USER_PROFILE);
-  final uri = Uri.parse('https://onlinedoctor.su/graphql');
+  final uri = Uri.parse('https://admin.onlinedoctor.su/graphql');
 
   final request = http.MultipartRequest('post', uri);
 
@@ -735,4 +738,98 @@ Future<bool> updateProfileWithDocument(BuildContext context, String imagePath,
     print(response.body);
     return false;
   }
+}
+
+Future<bool> createDoctorReview({required String patientId, required int rating, required String review}) async {
+  printLog('Creating doctor review for patient: $patientId');
+  
+  String createDoctorReviewMutation = '''
+    mutation CreateDoctorReview(\$input: CreateDoctorReviewInput!) {
+      createDoctorReview(input: \$input) {
+        review {
+          id
+          rating
+          review
+          created_at
+        }
+        status
+      }
+    }
+  ''';
+
+  final variables = {
+    'input': {
+      'patient_id': patientId,
+      'rating': rating,
+      'review': review,
+    }
+  };
+
+  final QueryOptions options = QueryOptions(
+    document: gql(createDoctorReviewMutation),
+    variables: variables,
+  );
+
+  GraphQLClient graphqlClient = await graphqlAPI.authClient();
+  debugPrintTransactionStart('mutation createDoctorReview');
+  final QueryResult result = await graphqlClient.query(options);
+  debugPrintTransactionEnd('mutation createDoctorReview');
+
+  if (result.hasException) {
+    printLog(result.exception.toString(), name: 'mutation createDoctorReview');
+    return false;
+  }
+
+  printLog('Doctor review created successfully: ${result.data}');
+  return true;
+}
+
+Future<bool> getPatientsForDoctor({required String doctorId}) async {
+  printLog('Getting patients for doctor: $doctorId');
+  
+  // First get appointments for the doctor
+  bool success = await getAppointmentsD(doctorId: doctorId);
+  
+  if (!success) {
+    return false;
+  }
+  
+  // Get the appointments store to extract patients
+  AppointmentsStore storeAppointmentsStore = getIt.get<AppointmentsStore>();
+  List<dynamic> appointments = storeAppointmentsStore.appointmentsDataList;
+  
+  // Extract unique patients from appointments
+  Set<String> uniquePatientIds = {};
+  List<Map<String, dynamic>> patients = [];
+  
+  for (var appointment in appointments) {
+    if (appointment['patient'] != null && 
+        appointment['patient']['patientUser'] != null) {
+      var patientUser = appointment['patient']['patientUser'];
+      String patientId = patientUser['id'].toString();
+      
+      // Check if we've already added this patient
+      if (!uniquePatientIds.contains(patientId)) {
+        uniquePatientIds.add(patientId);
+        patients.add({
+          'id': patientId,
+          'full_name': patientUser['full_name'] ?? 'Неизвестный пациент',
+          'first_name': patientUser['first_name'] ?? '',
+          'profile_image': patientUser['profile_image'] ?? '',
+        });
+      }
+    }
+  }
+  
+  // Store patients in a dedicated store (we'll need to create this)
+  // For now, we'll store them in the doctors store temporarily
+  DoctorsStore storeDoctorsStore = getIt.get<DoctorsStore>();
+  storeDoctorsStore.clearDoctorsData();
+  
+  for (var patient in patients) {
+    storeDoctorsStore.addDoctorToDoctorsData(patient);
+  }
+  
+  printLog('Found ${patients.length} unique patients for doctor $doctorId');
+  return true;
 }

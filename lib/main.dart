@@ -23,6 +23,7 @@ import 'theme/theme_constants.dart';
 import 'theme/theme_manager.dart';
 import 'package:doctorq/screens/main_screen.dart';
 import 'package:another_flutter_splash_screen/another_flutter_splash_screen.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -160,7 +161,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     return ScreenUtilInit(
       designSize: const Size(360, 800),
       builder: (context, child) {
-        return MaterialApp(
+        return GlobalLoaderOverlay(child: MaterialApp(
           theme: ThemeData(
             scaffoldBackgroundColor: Colors.white,
             colorScheme: ColorScheme.fromSeed(
@@ -200,7 +201,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
               ),
             ),
           ),
-        );
+        ));
       },
     );
   }

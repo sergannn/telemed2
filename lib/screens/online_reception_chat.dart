@@ -1,8 +1,53 @@
 import 'package:doctorq/screens/articles/articles.dart';
 import 'package:doctorq/screens/online_reception_chat_start.dart';
+import 'package:doctorq/extensions.dart';
 import 'package:flutter/material.dart';
 
 class OnlineReceptionChat extends StatelessWidget {
+  
+  String _formatDate(dynamic date) {
+    if (date == null) return 'Дата не указана';
+    
+    try {
+      DateTime dateTime;
+      if (date is String) {
+        dateTime = DateTime.parse(date);
+      } else if (date is DateTime) {
+        dateTime = date;
+      } else {
+        return 'Неверный формат даты';
+      }
+      
+      return '${dateTime.day.toString().padLeft(2, '0')}.${dateTime.month.toString().padLeft(2, '0')}.${dateTime.year.toString().substring(2)}';
+    } catch (e) {
+      return 'Ошибка даты';
+    }
+  }
+
+  String _formatTime(dynamic time) {
+    if (time == null) return 'Время не указано';
+    
+    try {
+      if (time is String) {
+        // Проверяем, является ли время валидным форматом времени
+        final timeRegex = RegExp(r'^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$');
+        if (timeRegex.hasMatch(time)) {
+          return time;
+        }
+        
+        // Пробуем распарсить как DateTime
+        final parsedTime = DateTime.tryParse(time);
+        if (parsedTime != null) {
+          return '${parsedTime.hour.toString().padLeft(2, '0')}:${parsedTime.minute.toString().padLeft(2, '0')}';
+        }
+      }
+      
+      return 'Неверный формат времени';
+    } catch (e) {
+      return 'Ошибка времени';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -124,8 +169,8 @@ Container(
                                           Expanded(
                                             flex: 3,
                                             child: Container(
-                                              child: const Text(
-                                                '26.01.25',
+                                              child: Text(
+                                                _formatDate(context.selectedAppointment['date']),
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Color.fromARGB(
@@ -185,8 +230,8 @@ Container(
                                           Expanded(
                                             flex: 3,
                                             child: Container(
-                                              child: const Text(
-                                                '14:00',
+                                              child: Text(
+                                                _formatTime(context.selectedAppointment['appointment_time']),
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Color.fromARGB(
@@ -209,8 +254,9 @@ SizedBox(height: 20),
                               children: [
                                 CircleAvatar(
                                   radius: 30,
-                                  backgroundImage:
-                                      AssetImage('assets/images/11.png'),
+                                  backgroundImage: context.selectedAppointment['patient']?['profile_image'] != null
+                                      ? NetworkImage(context.selectedAppointment['patient']?['profile_image'])
+                                      : AssetImage('assets/images/11.png') as ImageProvider,
                                 ),
                                 const SizedBox(width: 16),
                                 Expanded(
@@ -218,15 +264,15 @@ SizedBox(height: 20),
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      const Text(
-                                         'Парфенова К.С.',
+                                      Text(
+                                        '${context.selectedAppointment['patient']?['first_name'] ?? ''} ${context.selectedAppointment['patient']?['last_name'] ?? ''}',
                                         style: TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                      const Text(
-                                        'Женщина, 71',
+                                      Text(
+                                        '${context.selectedAppointment['patient']?['gender'] ?? 'Не указан'}, ${context.selectedAppointment['patient']?['age'] ?? 'Не указан'}',
                                         style: TextStyle(
                                          fontSize: 12 
                                         )),

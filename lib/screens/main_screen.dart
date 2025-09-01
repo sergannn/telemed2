@@ -96,7 +96,7 @@ class Main extends StatelessWidget {
       PersistentTabConfig(
           screen: MainProfileScreen(),
           item: ItemConfig(
-            title: "Чаты",
+            title: "Профиль",
             icon: Icon(Icons.account_box,
                 color: const Color.fromARGB(255, 92, 92, 92)), // Image.asset(
             inactiveIcon: Icon(Icons.account_box,

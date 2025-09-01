@@ -16,13 +16,14 @@ bool forceSentry =
 
 
 bool forceUserLogin = debugMode;
-String testUserLogin = "doctor@infycare.com";
-String testUserPassword = "123456";
+String testUserLogin = "haus@haus.ru";
+String testUserPassword = "123123123";
 
-const String kApiDomain = 'https://onlinedoctor.su';
+const String kApiDomain = 'https://admin.onlinedoctor.su';
 //https://graph.free-dharma.ru/public';
 
 MyAppAuthLib graphqlAPI = MyAppAuthLib(kApiDomain);
+MyAppAuthLib graphqlAPI2 = MyAppAuthLib(kApiDomain);
 
 bool printedLog = true;
 bool printedResult = true;

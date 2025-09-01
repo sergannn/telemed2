@@ -5,19 +5,25 @@ import 'package:doctorq/screens/home/home_screen/widgets/autolayouthor_item_widg
 import 'package:doctorq/screens/home/home_screen/widgets/autolayouthor_item_widget_zapisi.dart';
 import 'package:doctorq/screens/home/home_screen/widgets/doctor_item.dart';
 import 'package:doctorq/screens/home/home_screen/widgets/story_item_widget.dart';
+import 'package:doctorq/screens/medcard/create_record_page_lib.dart';
 import 'package:doctorq/screens/webviews/someWebPage.dart';
 import 'package:doctorq/screens/profile/main_notification.dart';
 import 'package:doctorq/screens/profile/main_profile.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:doctorq/screens/profile/popular_doctors.dart';
 import 'package:doctorq/screens/profile/search_doctors.dart';
 import 'package:doctorq/screens/profile/settings/appearance_screen/appearance_screen.dart';
 import 'package:doctorq/screens/stories/story_scren.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import "package:story_view/story_view.dart";
 import 'package:animate_do/animate_do.dart';
 import 'package:doctorq/extensions.dart';
 import 'package:doctorq/screens/home/specialist_doctor_screen/specialist_doctor_screen.dart';
 import 'package:doctorq/screens/home/top_doctor_screen/choose_specs_screen_step_1.dart';
 import 'package:doctorq/services/api_service.dart';
+import 'package:doctorq/services/session.dart';
 import 'package:doctorq/utils/utility.dart';
 import 'package:doctorq/widgets/spacing.dart';
 import 'widgets/autolayouthor1_item_widget.dart';
@@ -28,11 +34,151 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
+import 'package:doctorq/models/recommendation_model.dart';
 //import 'package:random_text_reveal/random_text_reveal.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 //final GlobalKey<RandomTextRevealState> globalKey = GlobalKey();
 
 class ItemController extends GetxController {
+  var cats = [].obs; // Reactive list to store fetched items
+  var users = [].obs; // Reactive list to store fetched items
+  var articles = [].obs;
+  var recommendations = <RecommendationModel>[].obs; // Reactive list for recommendations
+  var _filteredRecords = <CalendarRecordData>[].obs;
+
+  void filterRecordsByDate(DateTime date) {
+    _filteredRecords.value = _calendarRecords.where((record) {
+      return record.date.year == date.year &&
+          record.date.month == date.month &&
+          record.date.day == date.day;
+    }).toList();
+    if (_filteredRecords.isEmpty) {
+      _filteredRecords.add(CalendarRecordData(
+          date: date,
+          title: "На этот день заметки отсутствуют",
+          category: "Приемы"));
+    }
+  }
+
+  var _calendarRecords = <CalendarRecordData>[].obs;
+  final storyItems = <StoryItem>[].obs;
+  @override
+  void onInit() {
+    super.onInit();
+    refreshData();
+    //fetchStories();
+    //fetchArticles();
+    //_loadCalendarRecords().then((_) {
+    //  update(); // Ensure UI updates after loading records
+    //});
+  }
+
+  Future<void> _loadCalendarRecords() async {
+    final prefs = await SharedPreferences.getInstance();
+    final recordsString = prefs.getString('calendar_records');
+    if (recordsString != null) {
+      try {
+        final List<dynamic> jsonList = jsonDecode(recordsString);
+        _calendarRecords.value =
+            jsonList.map((item) => CalendarRecordData.fromJson(item)).toList();
+        // Initialize with today's records
+        filterRecordsByDate(DateTime.now());
+      } catch (e) {
+        print('Error decoding calendar records: $e');
+        _calendarRecords.value = [];
+        _filteredRecords.value = [];
+      }
+    }
+  }
+
+  Future<void> fetchArticles() async {
+    print('fetching articles');
+    var response = await http.get(Uri.parse(
+      'https://admin.onlinedoctor.su/api/articles',
+    ));
+
+    if (response.statusCode == 200) {
+      List jsonResponse = json.decode(response.body)['data'];
+      // items = jsonResponse;
+      articles.value = jsonResponse;
+//      jsonResponse.map((item) => SpecialistModel.fromJson(item)).toList();
+    }
+  }
+
+  Future<void> fetchStories() async {
+    final response =
+        await http.get(Uri.parse('https://admin.onlinedoctor.su/api/stories'));
+
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body);
+      print('https://admin.onlinedoctor.su/storage/' +
+          jsonData['data'][0]['image']);
+      // Extract data from JSON
+      final data = (jsonData['data'] as List<dynamic>)
+          .map((e) => StoryItem.inlineImage(
+                imageFit: BoxFit.cover,
+                url: 'https://admin.onlinedoctor.su/storage/' + e['image'],
+                controller: StoryController(),
+                caption: Text(
+                  e['title'],
+                  style: const TextStyle(
+                    color: Colors.white,
+                    backgroundColor: Colors.black,
+                    fontSize: 17,
+                  ),
+                ),
+              ))
+          .toList();
+      //print(data);
+      //storyItems.value = data;
+      storyItems.value = data;
+    } else {
+      // Handle error
+      print('Failed to load stories');
+    }
+  }
+
+
+  Future<void> fetchRecommendations() async {
+    final response = await http.get(Uri.parse('https://admin.onlinedoctor.su/api/recommendations'));
+
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body);
+      final List<dynamic> data = jsonData['data'];
+      recommendations.value = data.map((item) => RecommendationModel.fromJson(item) as RecommendationModel).toList();
+      print('Loaded ${recommendations.length} recommendations');
+    } else {
+      // Handle error
+      print('Failed to load recommendations: ${response.statusCode}');
+    }
+  }
+
+  Future<void> refreshData() async {
+    // fetchDoctors();
+    fetchStories();
+    fetchArticles();
+        fetchRecommendations();
+    getDoctors();
+    _loadCalendarRecords().then((res) {
+       
+      filterRecordsByDate(DateTime.now());
+       }
+       );
+    // Simulating fetching data from an API
+    var response = await http.get(Uri.parse(
+      'https://www.admin.onlinedoctor.su/api/specializations',
+    ));
+
+    if (response.statusCode == 200) {
+      List jsonResponse = json.decode(response.body)['data'];
+      // items = jsonResponse;
+      cats.value = jsonResponse;
+//      jsonResponse.map((item) => SpecialistModel.fromJson(item)).toList();
+    }
+  }
+}
+//проверить разницу
+class ItemControllerDoctorOld extends GetxController {
   var cats = [].obs; // Reactive list to store fetched items
   var users = [].obs; // Reactive list to store fetched items
   var articles = [].obs;
@@ -112,11 +258,57 @@ class ItemController extends GetxController {
 }
 
 // ignore: must_be_immutable
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   TextEditingController autoLayoutVerController = TextEditingController();
   final ItemController itemController = Get.put(ItemController());
+  File? _image;
 
-  HomeScreen({Key? key}) : super(key: key);
+  Future<void> pickImage() async {
+    var pr = await SharedPreferences.getInstance();
+    print(pr.getString('user_id'));
+    print(pr.getString('photo'));
+    print("prefs");
+    var status = await Permission.photos.request().isGranted;
+    await Permission.mediaLibrary.request().isGranted;
+
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    print(pickedFile);
+
+    if (pickedFile != null) {
+      _image = File(pickedFile.path);
+      if (_image != null) {
+        bool success = await updateProfileWithImage(
+          context,
+          pickedFile.path,
+          context.userData['first_name'],
+          context.userData['email'],
+        );
+
+        if (success) {
+          // После успешного обновления, перезагружаем данные пользователя
+          final updatedUser = await Session.getCurrentUser();
+          if (updatedUser != null) {
+            // Обновляем контекст с новыми данными пользователя
+            context.userData['photo'] = updatedUser.photo;
+            setState(() {
+              // Принудительно обновляем UI
+            });
+          }
+        }
+      }
+    } else {
+      print('No image selected');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var titles = [
@@ -168,10 +360,13 @@ class HomeScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          CircleAvatar(
-                            radius: getVerticalSize(25),
-                            backgroundImage:
-                                NetworkImage(context.userData['photo']),
+                          GestureDetector(
+                            onTap: pickImage,
+                            child: CircleAvatar(
+                              radius: getVerticalSize(25),
+                              backgroundImage:
+                                  NetworkImage(context.userData['photo']),
+                            ),
                           ),
 
                           HorizontalSpace(width: 20),
@@ -359,7 +554,7 @@ class HomeScreen extends StatelessWidget {
                                 top: 10,
                               ),
                               scrollDirection: Axis.horizontal,
-                              physics: const BouncingScrollPhysics(),
+                              physics: const ClampingScrollPhysics(),
                               itemCount: itemController.cats.length,
                               separatorBuilder: (context, index) {
                                 return HorizontalSpace(width: 16);
@@ -472,7 +667,7 @@ class HomeScreen extends StatelessWidget {
                                 top: 17,
                               ),
                               scrollDirection: Axis.horizontal,
-                              physics: const BouncingScrollPhysics(),
+                              physics: const ClampingScrollPhysics(),
                               itemCount: itemController.cats.length,
                               separatorBuilder: (context, index) {
                                 return HorizontalSpace(width: 16);
@@ -892,18 +1087,18 @@ class DoctorsSliderHeader extends StatelessWidget {
 }
 
 Widget fourThings(titles, images) {
-  return SizedBox(
-    height: getVerticalSize(120.00),
-    width: getHorizontalSize(528.00),
-    child: ListView.separated(
-      padding: getPadding(
-        left: 20,
-        right: 20,
-        top: 17,
-      ),
-      scrollDirection: Axis.horizontal,
-      physics: const BouncingScrollPhysics(),
-      itemCount: 4,
+    return SizedBox(
+      height: getVerticalSize(120.00),
+      width: getHorizontalSize(528.00),
+      child: ListView.separated(
+        padding: getPadding(
+          left: 20,
+          right: 20,
+          top: 17,
+        ),
+        scrollDirection: Axis.horizontal,
+        physics: const ClampingScrollPhysics(),
+        itemCount: 4,
       separatorBuilder: (context, index) {
         return HorizontalSpace(width: 16);
       },
@@ -994,7 +1189,7 @@ class DoctorsSilder extends StatelessWidget {
             top: 26,
           ),
           scrollDirection: Axis.horizontal,
-          physics: const BouncingScrollPhysics(),
+          physics: const ClampingScrollPhysics(),
           itemCount: context.doctorsData.length,
           separatorBuilder: (context, index) {
             return HorizontalSpace(width: 16);
@@ -1032,7 +1227,7 @@ Widget someObxList(context, itemController) {
             top: 27,
           ),
           scrollDirection: Axis.horizontal,
-          physics: const BouncingScrollPhysics(),
+          physics: const ClampingScrollPhysics(),
           itemCount: itemController.articles.length,
           separatorBuilder: (context, index) {
             return HorizontalSpace(width: 16);
@@ -1254,7 +1449,7 @@ Widget specsBody(context, isDark, itemController) {
             top: 27,
           ),
           scrollDirection: Axis.horizontal,
-          physics: const BouncingScrollPhysics(),
+          physics: const ClampingScrollPhysics(),
           itemCount: itemController.cats.length,
           separatorBuilder: (context, index) {
             return HorizontalSpace(width: 16);

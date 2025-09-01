@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RegFields {
   static getAll() {
     return _fields;
   }
 
-  static final Map<String, dynamic> _tmpfields = {
+  /*static final Map<String, dynamic> _tmpfields = {
     'email': {
       'controller': TextEditingController(),
       'label': 'Email!',
@@ -27,7 +28,7 @@ class RegFields {
       'obscure': false,
       'validator': (value) => validateName(value) as String?,
     },
-  };
+  };*/
 
   static final Map<String, dynamic> _fields = {
     'full_name': {
@@ -36,7 +37,7 @@ class RegFields {
       'label': 'ФИО',
       'hint': 'Иванов Иван Иванович',
       'obscure': false,
-      'validator': (value) => validatePhone(value) as String?,
+      'validator': (value) => validateName(value) as String?,
     },
     'birthday': {
       'type': 'date',
@@ -47,6 +48,7 @@ class RegFields {
       'validator': (value) => validateName(value) as String?,
     },
     'email': {
+      "*": true,
       'controller': TextEditingController(),
       'label': 'Электронная почта',
       'hint': 'example@mail.ru',
@@ -84,7 +86,27 @@ class RegFields {
   }
 
   static validateEmail(v) {
-    //return 'ploho';
+    if (v.isEmpty) return 'Введите email';
+    
+    final emailRegex = RegExp(
+      r'^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$'
+    );
+    
+    if (!emailRegex.hasMatch(v)) {
+      return 'Введите корректный email';
+    }
+    
     return null;
+  }
+    static Future<void> saveFields() async {
+    final prefs = await SharedPreferences.getInstance();
+    
+    for (var entry in _fields.entries) {
+      final key = entry.key;
+      final field = entry.value;
+      final controller = field['controller'] as TextEditingController;
+      
+      await prefs.setString('reg_$key', controller.text);
+    }
   }
 }

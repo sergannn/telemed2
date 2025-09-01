@@ -11,6 +11,7 @@ import 'package:doctorq/utils/size_utils.dart';
 import 'package:doctorq/widgets/custom_button.dart';
 import 'package:doctorq/widgets/top_back.dart';
 import 'package:flutter/material.dart';
+import 'package:doctorq/extensions.dart';
 
 class CustomButton extends StatelessWidget {
   final VoidCallback? onPressed;
@@ -100,6 +101,10 @@ class _AkkInfoScreenState extends State<AkkInfoScreen> {
                     decoration: BoxDecoration(
                       color: const Color.fromARGB(255, 255, 255, 255)
                           .withOpacity(0.95),
+                          borderRadius: BorderRadius.only(
+      topLeft: Radius.circular(22), // Скругление верхнего левого угла
+      topRight: Radius.circular(22), // Скругление верхнего правого угла
+    ),
                     ),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
@@ -138,8 +143,8 @@ class _AkkInfoScreenState extends State<AkkInfoScreen> {
                           ),
                           child: Row(
                             children: [
-                              const Text(
-                                'Симонова Алла Витальевна',
+                              Text(
+                                '${context.userData['first_name'] ?? ''} ${context.userData['last_name'] ?? ''}',
                                 style: TextStyle(
                                   fontSize: 14,
                                   color: Colors.black,
@@ -215,85 +220,8 @@ class _AkkInfoScreenState extends State<AkkInfoScreen> {
                           ),
                           child: Row(
                             children: [
-                              const Text(
-                                '+7 916 123 45 67',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.black,
-                                ),
-                              ),
-                              const Spacer(),
-                              Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  Container(
-                                    width: 24,
-                                    height: 24,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      shape: BoxShape.circle,
-                                    ),
-                                  ),
-                                  Icon(
-                                    Icons.create,
-                                    color: Colors.black,
-                                    size: 16,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 12),
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 255, 255, 255)
-                          .withOpacity(0.95),
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 2,
-                          ),
-                          decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 255, 255, 255),
-                            borderRadius: BorderRadius.circular(20.0),
-                          ),
-                          child: Row(
-                            children: [
-                              const Text(
-                                'Город',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Color.fromARGB(255, 70, 70, 70),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          height: 46,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 2,
-                          ),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFF4F8FF),
-                            borderRadius: BorderRadius.circular(20.0),
-                          ),
-                          child: Row(
-                            children: [
-                              const Text(
-                                'Санкт-Петербург',
+                              Text(
+                                context.userData['phone'] ?? 'Номер не указан',
                                 style: TextStyle(
                                   fontSize: 14,
                                   color: Colors.black,
@@ -369,8 +297,8 @@ class _AkkInfoScreenState extends State<AkkInfoScreen> {
                           ),
                           child: Row(
                             children: [
-                              const Text(
-                                'Start782@yandex.ru',
+                              Text(
+                                context.userData['email'] ?? 'Email не указан',
                                 style: TextStyle(
                                   fontSize: 14,
                                   color: Colors.black,
@@ -446,8 +374,8 @@ class _AkkInfoScreenState extends State<AkkInfoScreen> {
                           ),
                           child: Row(
                             children: [
-                              const Text(
-                                '142-667-877 31',
+                              Text(
+                                context.userData['snils'] ?? 'СНИЛС не указан',
                                 style: TextStyle(
                                   fontSize: 14,
                                   color: Colors.black,
@@ -534,6 +462,10 @@ class _AkkInfoScreenState extends State<AkkInfoScreen> {
                       decoration: BoxDecoration(
                         color: const Color.fromARGB(255, 255, 255, 255)
                             .withOpacity(0.95),
+                            borderRadius: BorderRadius.only(
+      bottomLeft: Radius.circular(22), // Скругление нижнего левого угла
+      bottomRight: Radius.circular(22), // Скругление нижнего правого угла
+    ),
                       ),
                       child: Container(
                         padding: const EdgeInsets.symmetric(

@@ -114,6 +114,9 @@ class AppointmentListItem extends StatelessWidget {
 
   void navigateToScreenWithTypes(BuildContext context,bool isPast) async {
     print("Navigating...");
+    context.setSelectedAppointmentByIndex(index);
+    print(item['id']);
+    print(context.selectedAppointment);
 
     try {
       // Check if item exists

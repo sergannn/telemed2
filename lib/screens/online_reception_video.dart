@@ -1,5 +1,6 @@
 import 'package:doctorq/screens/articles/articles.dart';
 import 'package:doctorq/screens/online_reception_video_start.dart';
+import 'package:doctorq/extensions.dart';
 import 'package:flutter/material.dart';
 
 class OnlineReceptionVideo extends StatelessWidget {
@@ -124,8 +125,8 @@ Container(
                                           Expanded(
                                             flex: 3,
                                             child: Container(
-                                              child: const Text(
-                                                '26.01.25',
+                                              child: Text(
+                                                context.selectedAppointment['date'] ?? '26.01.25',
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Color.fromARGB(
@@ -185,8 +186,8 @@ Container(
                                           Expanded(
                                             flex: 3,
                                             child: Container(
-                                              child: const Text(
-                                                '14:00',
+                                              child: Text(
+                                                context.selectedAppointment['from_time'] ?? '14:00',
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Color.fromARGB(
@@ -209,8 +210,9 @@ SizedBox(height: 20),
                               children: [
                                 CircleAvatar(
                                   radius: 30,
-                                  backgroundImage:
-                                      AssetImage('assets/images/11.png'),
+                                  backgroundImage: context.selectedAppointment['doctor']?['profile_image'] != null
+                                      ? NetworkImage(context.selectedAppointment['doctor']?['profile_image'])
+                                      : AssetImage('assets/images/11.png') as ImageProvider,
                                 ),
                                 const SizedBox(width: 16),
                                 Expanded(
@@ -218,15 +220,15 @@ SizedBox(height: 20),
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      const Text(
-                                         'Трофимова Е.С.',
+                                      Text(
+                                        '${context.selectedAppointment['doctor']?['first_name'] ?? ''} ${context.selectedAppointment['doctor']?['last_name'] ?? ''}',
                                         style: TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                      const Text(
-                                        'Психотерапевт',
+                                      Text(
+                                        context.selectedAppointment['doctor']?['specialization'] ?? 'Врач',
                                         style: TextStyle(
                                          fontSize: 12 
                                         )),
@@ -249,7 +251,7 @@ color: Color.fromARGB(255, 0, 0, 0),
 ),
 const SizedBox(width: 4),
 Text(
-'45 мин',
+'${context.calculateDuration(context.selectedAppointment['from_time'], context.selectedAppointment['to_time'])} мин',
 style: TextStyle(
 fontSize: 11,
 color: Color.fromARGB(255, 0, 0, 0),

@@ -1,6 +1,7 @@
 import 'package:doctorq/screens/articles/articles.dart';
 import 'package:doctorq/screens/online_reception_audio_start.dart';
 import 'package:flutter/material.dart';
+import 'package:doctorq/extensions.dart';
 
 class OnlineReceptionAudio extends StatelessWidget {
   @override
@@ -209,8 +210,9 @@ SizedBox(height: 20),
                               children: [
                                 CircleAvatar(
                                   radius: 30,
-                                  backgroundImage:
-                                      AssetImage('assets/images/11.png'),
+                                  backgroundImage: context.selectedAppointment['patient']?['profile_image'] != null
+                                      ? NetworkImage(context.selectedAppointment['patient']?['profile_image'])
+                                      : AssetImage('assets/images/11.png') as ImageProvider,
                                 ),
                                 const SizedBox(width: 16),
                                 Expanded(
@@ -218,18 +220,18 @@ SizedBox(height: 20),
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      const Text(
-                                         'Парфенова К.С.',
+                                      Text(
+                                        '${context.selectedAppointment['patient']?['first_name'] ?? ''} ${context.selectedAppointment['patient']?['last_name'] ?? ''}',
                                         style: TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                      const Text(
-                                        'Женщина, 71',
+                                      /* Text(
+                                        '${context.selectedAppointment['patient']?['gender'] ?? 'Не указан'}, ${context.selectedAppointment['patient']?['age'] ?? 'Не указан'}',
                                         style: TextStyle(
                                          fontSize: 12 
-                                        )),
+                                        )), */
                                       const SizedBox(height: 4), // Добавляем отступ между строками
 const Text(
 'Аудио / онлайн консультация',

@@ -1,5 +1,6 @@
 import 'package:doctorq/screens/articles/articles.dart';
 import 'package:doctorq/screens/online_reception_video_complete.dart';
+import 'package:doctorq/extensions.dart';
 import 'package:flutter/material.dart';
 
 class OnlineReceptionVideoStartTwo extends StatefulWidget {
@@ -18,7 +19,7 @@ class _OnlineReceptionVideoStartTwoState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Видео с врачом'),
+        title: const Text('Видео с пациентом'),
       ),
       body: SafeArea(
         child: Column(
@@ -46,14 +47,14 @@ class _OnlineReceptionVideoStartTwoState
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text(
-                                      'Трофимова Е.С.',
+                                    Text(
+                                      '${context.selectedAppointment['doctor']?['first_name'] ?? ''} ${context.selectedAppointment['doctor']?['last_name'] ?? ''}',
                                       style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                    const Text('    Психотерапевт',
+                                    Text('    ${context.selectedAppointment['doctor']?['specialization'] ?? 'Врач'}',
                                         style: TextStyle(
                                             color: Color.fromARGB(
                                                 255, 136, 136, 136),

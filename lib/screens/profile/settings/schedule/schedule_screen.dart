@@ -62,13 +62,13 @@ class _ProfileSettingsAppearanceScreenState
     0,
   ];
   List<String> daysOfWeekStartTime = [
-    "*",
-    "*",
-    "*",
-    "*",
-    "*",
-    "*",
-    "*",
+    "06:00",
+    "06:00",
+    "06:00",
+    "06:00",
+    "06:00",
+    "06:00",
+    "06:00",
   ];
   List<String> daysOfWeekStartTimeType = [
     "*",
@@ -80,13 +80,13 @@ class _ProfileSettingsAppearanceScreenState
     "*",
   ];
   List<String> daysOfWeekEndTime = [
-    "*",
-    "*",
-    "*",
-    "*",
-    "*",
-    "*",
-    "*",
+    "19:00",
+    "19:00",
+    "19:00",
+    "19:00",
+    "19:00",
+    "19:00",
+    "19:00",
   ];
   List<String> daysOfWeekEndTimeType = [
     "*",
