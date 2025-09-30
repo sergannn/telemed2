@@ -39,8 +39,8 @@ class DoctorModel {
         if (wd["start_time"] != '*') schedule!.add(wd["day_of_week"]);
       });
     }
-    print(json['doctor_id']);
-    print(json['doctorUser']['user_id']);
+//    print(json['doctor_id']);
+//    print(json['doctorUser']['user_id']);
     userId = json['doctorUser']['user_id'];
     userName = json['doctorUser']['username'];
     firstName = json['doctorUser']['first_name'];

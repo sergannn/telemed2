@@ -1,11 +1,9 @@
-import 'dart:developer';
+
 import 'package:doctorq/numScreen.dart';
-import 'package:doctorq/screens/auth/forgot/password_otp_active_screen/guess_code_screen.dart';
-import 'package:doctorq/screens/auth/sign_in_blank_screen/doctor_screen.dart';
-import 'package:doctorq/screens/auth/sign_in_blank_screen/sign_in_blank_screen.dart';
 import 'package:doctorq/screens/first/figmasample.dart';
 import 'package:doctorq/screens/first/first.dart';
 import 'package:doctorq/screens/webviews/someWebPage.dart';
+import 'package:doctorq/screens/test/notification_test_screen.dart';
 import 'package:doctorq/services/api_service.dart';
 import 'package:doctorq/services/session.dart';
 import 'package:doctorq/services/startup_service.dart';
@@ -60,6 +58,7 @@ void main() async {
         //'/': (context) => const FirstScreen(),
         // When navigating to the "/second" route, build the SecondScreen widget.
         '/webview': (context) => const SomeWebView(),
+        '/test_notifications': (context) => const NotificationTestScreen(),
       },
       title: "App",
       theme: ThemeData(

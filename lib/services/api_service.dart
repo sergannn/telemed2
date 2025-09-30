@@ -833,3 +833,51 @@ Future<bool> getPatientsForDoctor({required String doctorId}) async {
   printLog('Found ${patients.length} unique patients for doctor $doctorId');
   return true;
 }
+
+Future<List<Map<String, dynamic>>> fetchFAQs({String? category}) async {
+  printLog('Fetching FAQs${category != null ? ' for category: $category' : ''}');
+  
+  String url = 'https://admin.onlinedoctor.su/api/faqs';
+  if (category != null && (category == 'doctor' || category == 'patient')) {
+    url += '?category=$category';
+  }
+
+  final response = await http.get(Uri.parse(url));
+
+  if (response.statusCode == 200) {
+    final jsonData = json.decode(response.body);
+    final data = (jsonData['data'] as List<dynamic>)
+        .map((e) => e as Map<String, dynamic>)
+        .toList();
+    
+    printLog('Successfully fetched ${data.length} FAQs');
+    return data;
+  } else {
+    printLog('Failed to load FAQs: ${response.statusCode}');
+    throw Exception('Failed to load FAQs');
+  }
+}
+
+Future<List<Map<String, dynamic>>> fetchLegalInfos({String? type}) async {
+  printLog('Fetching Legal Infos${type != null ? ' for type: $type' : ''}');
+  
+  String url = 'https://admin.onlinedoctor.su/api/legal-infos';
+  if (type != null && (type == 'terms' || type == 'privacy' || type == 'license' || type == 'other')) {
+    url += '?type=$type';
+  }
+
+  final response = await http.get(Uri.parse(url));
+
+  if (response.statusCode == 200) {
+    final jsonData = json.decode(response.body);
+    final data = (jsonData['data'] as List<dynamic>)
+        .map((e) => e as Map<String, dynamic>)
+        .toList();
+    
+    printLog('Successfully fetched ${data.length} legal infos');
+    return data;
+  } else {
+    printLog('Failed to load legal infos: ${response.statusCode}');
+    throw Exception('Failed to load legal infos');
+  }
+}

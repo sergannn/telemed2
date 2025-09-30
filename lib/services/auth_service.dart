@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:doctorq/models/user_model.dart';
+import 'package:doctorq/services/notification_service.dart';
 import 'package:doctorq/services/session.dart';
 import 'package:doctorq/stores/user_store.dart';
 import 'package:doctorq/utils/utility.dart';
@@ -251,6 +252,16 @@ Future<bool> authUser(
 
   final userStore = getIt<UserStore>();
   userStore.setUserData(user.toJson());
+  print("we are authing");
+  // Start checking for new appointments if user is a doctor
+  if (user.doctorId != null) {
+    print("not null");
+    final notificationService = getIt<NotificationService>();
+    print("initing");
+    await notificationService.initialize();
+    await notificationService.startCheckingForNewAppointments(user.doctorId!);
+    print('Started appointment checking for doctor: ${user.doctorId}');
+  }
 
   return true;
 }
