@@ -33,7 +33,7 @@ class DoctorItem extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Row(
+            /*Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Column(
@@ -57,7 +57,7 @@ class DoctorItem extends StatelessWidget {
                   ],
                 ),
               ],
-            ),
+            ),*/
 
             // Зеленый контейнер
             Container(
@@ -118,7 +118,7 @@ class DoctorItem extends StatelessWidget {
                                   size: 12,
                                   color: Color.fromARGB(255, 16, 16, 16),
                                 ),
-                                const Text('2.300',
+                                 Text(item['price'] ?? '1000',
                                     style: TextStyle(
                                         color: Color.fromARGB(255, 16, 16, 16),
                                         fontSize: 11)),

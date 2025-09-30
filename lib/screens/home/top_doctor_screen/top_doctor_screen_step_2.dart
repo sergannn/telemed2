@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:doctorq/extensions.dart';
 import 'package:doctorq/screens/home/home_screen/widgets/autolayouthor1_item_widget.dart';
+import 'package:doctorq/screens/home/home_screen/widgets/doctor_item.dart';
+import 'package:doctorq/screens/profile/popular_doctors.dart';
 
 import 'package:doctorq/widgets/spacing.dart';
 import 'package:doctorq/widgets/top_back.dart';
@@ -157,7 +159,7 @@ class _TopDoctorScreenState extends State<ChooseSpecScreen2>
     );
   }
 
-  Widget CatDoctorsList(doctorData, tabController, height) {
+  Widget CatDoctorsList(specsData, tabController, height) {
     return SizedBox(
       height: height,
 
@@ -165,7 +167,7 @@ class _TopDoctorScreenState extends State<ChooseSpecScreen2>
       child: TabBarView(
         controller: tabController,
         children: [
-          ...doctorData.map((spec) => ListView.builder(
+          ...specsData.map((spec) => ListView.builder(
                 padding: getPadding(
                   left: 20,
                   right: 20,
@@ -174,22 +176,37 @@ class _TopDoctorScreenState extends State<ChooseSpecScreen2>
                 ),
                 physics: const BouncingScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: doctorData.length, // doctorList.length,
+                itemCount: context.doctorsData.length, // Use actual doctors count
+                
                 itemBuilder: (context, index) {
                   if (context.doctorsData[index] != null) {
+                    // Debug print to see what's happening
+                    print('Checking doctor ${context.doctorsData[index]['username']} for spec ${spec.name}');
+                    print('Doctor specializations: ${context.doctorsData[index]['specializations']}');
+                    
                     if (context.doctorsData[index]['specializations']
                         .map((e) => e['name'])
                         .toList()
                         .contains(spec.name)) {
-                      return DoctorsSliderItem(
+                      print('Doctor ${context.doctorsData[index]['specializations']} matches spec ${spec.name}');
+                      // return Column(
+       // children: List.generate(context.doctorsData.length, (index) {
+      return DoctorItem(
+        item: context.doctorsData[index],
+        index: index,
+      );
+    
+                      return Text(context.doctorsData[index]['username']);
+                   /*   return DoctorsSliderItem(
                         item: context.doctorsData[index],
                         index: index,
-                      );
+                      );*/
+                    } else {
+                      print('Doctor ${context.doctorsData[index]['specializations']} does NOT match spec ${spec.name}');
+                      return Container();
                     }
                   } else {
-                    print(context.doctorsData[index]['specializations']
-                        .map((e) => e['name'])
-                        .toList());
+                    print('Doctor at index $index is null');
                     return Container();
                   }
                 },

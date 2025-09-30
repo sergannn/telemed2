@@ -12,7 +12,8 @@ class DoctorModel {
       this.description,
       this.qualifications,
       this.schedule,
-      this.reviews});
+      this.reviews,
+      this.price});
 
   String? doctorId;
   List<String>? specializations;
@@ -25,6 +26,7 @@ class DoctorModel {
   String? description;
   List<int>? schedule;
   List<dynamic>? reviews; // Store review objects
+  String? price;
 
   DoctorModel.fromJson(Map json) {
     doctorId = json['doctor_id'];
@@ -78,7 +80,7 @@ class DoctorModel {
     photo = json['doctorUser']['photo'];
     description = json['doctorUser']['description'];
     qualifications = json['doctorUser']['qualifications'];
-    
+    price = json['price'];
     // Handle reviews
     if (json['reviews'] != null) {
       reviews = [];
@@ -144,7 +146,8 @@ class DoctorModel {
       'description': description,
       'schedule': days,
       'qualifications': qualificationsList,
-      'reviews': reviewsList
+      'reviews': reviewsList,
+      'price':price
     };
 
     return map;

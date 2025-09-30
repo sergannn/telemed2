@@ -4,7 +4,7 @@ List<Widget> topBack(
     {String text = '',
     required BuildContext context,
     double height = 40,
-    Icon icon = const Icon(Icons.settings_input_component, size: 20),
+    Icon icon = const Icon(Icons.settings_input_component, size: 0), //убрал временно
     bool back = true}) {
   return [
     SizedBox(height: height), // фиксированный отступ

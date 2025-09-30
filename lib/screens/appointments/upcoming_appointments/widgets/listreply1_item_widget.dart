@@ -260,7 +260,7 @@ print(context.selectedAppointment);
                           ),
                           child: Image.network(
                             item["doctor"]["photo"],
-                            fit: BoxFit.contain,
+                            fit: BoxFit.cover,
                             width: getSize(160),
                             height: getSize(160),
                           ),

@@ -236,7 +236,7 @@ class DoctorInfoScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Container(
+                     /*  Container(
                     margin: const EdgeInsets.only(bottom: 6),
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
@@ -262,7 +262,7 @@ class DoctorInfoScreen extends StatelessWidget {
                             ),
                           ],
                         ),
-                        // Зеленый контейнер
+                
                         Container(
                           margin: const EdgeInsets.only(top: 8),
                           padding: const EdgeInsets.all(8),
@@ -296,7 +296,7 @@ class DoctorInfoScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                  ),
+                  ),*/
                   Container(
                     margin: const EdgeInsets.only(bottom: 6),
                     padding: const EdgeInsets.all(12),

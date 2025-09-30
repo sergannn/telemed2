@@ -80,7 +80,7 @@ class _TopDoctorScreenState extends State<ChooseSpecsScreen>
           mainAxisAlignment: MainAxisAlignment.end,
           children: [ 
             SizedBox(height: 15),
-            ...topBack(text: "Записи", context: context),
+            ...topBack(text: "Специализации", context: context),
             VerticalSpace(height: 24),
             Container(
               width: double.infinity, // Makes the container full width
@@ -103,7 +103,7 @@ class _TopDoctorScreenState extends State<ChooseSpecsScreen>
               ),
             ),
             VerticalSpace(height: 24),
-            Padding(
+            /*Padding(
               padding: EdgeInsets.only(left: 16),
               child: Text(
                 'Специализации врача',
@@ -112,7 +112,7 @@ class _TopDoctorScreenState extends State<ChooseSpecsScreen>
                   fontWeight: FontWeight.bold,
                 ),
               ),
-            ),
+            ),*/
             specsList(),
             //Text(context.specsData.length.toString()),
             //SpecsTabBar(context.specsData, tabController),

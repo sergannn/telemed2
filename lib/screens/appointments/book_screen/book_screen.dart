@@ -175,7 +175,7 @@ List<DateTime> _generateInactiveDates(daysOfWeek) {
                                       size: 12,
                                       color: Color.fromARGB(255, 16, 16, 16),
                                     ),
-                                    const Text('2300',
+                                    Text(context.selectedDoctor['price'] ?? '1000',
                                         style: TextStyle(
                                             color:
                                                 Color.fromARGB(255, 16, 16, 16),
@@ -243,7 +243,7 @@ List<DateTime> _generateInactiveDates(daysOfWeek) {
                         padding: EdgeInsets.only(top: 12),
                         child: Text(
                           context.selectedDoctor['description'] ??
-                              '...Наш тест на важные показатели здоровья покажет вам , на что обратить свое внимание и носит рекомендательный характер. Пройдите по ссылке, чтобы ознакомиться и уже сейчас сделать свой организм выносливее и крепче',
+                              'описание отсутствует',
                           style: TextStyle(
                             color: const Color.fromARGB(255, 17, 17, 17),
                             fontSize: 12,

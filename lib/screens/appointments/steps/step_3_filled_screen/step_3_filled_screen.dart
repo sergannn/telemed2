@@ -171,7 +171,7 @@ class _AppointmentsStep3FilledScreenState
                                               color: Color.fromARGB(
                                                   255, 16, 16, 16),
                                             ),
-                                            const Text('2300',
+                                            Text(context.selectedDoctor['price'] ?? 1000,
                                                 style: TextStyle(
                                                     color: Color.fromARGB(
                                                         255, 16, 16, 16),
