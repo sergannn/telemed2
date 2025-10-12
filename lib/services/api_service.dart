@@ -10,7 +10,6 @@ import 'package:doctorq/models/doctor_model.dart';
 import 'package:doctorq/models/doctor_session_model.dart';
 import 'package:doctorq/models/user_model.dart';
 import 'package:doctorq/screens/appointments/steps/step_2_filled_screen/step_2_filled_screen.dart';
-import 'package:doctorq/services/fake_data_service.dart';
 import 'package:doctorq/services/session.dart';
 import 'package:doctorq/stores/appointments_store.dart';
 import 'package:doctorq/stores/doctor_sessions_store.dart';
@@ -382,22 +381,70 @@ Future<bool> setSessionsD({required String doctorId}) async {
 }
 
 Future<bool> getAppointments({required String patientId}) async {
-  // Генерируем фейковые данные для записей пациента
-  List<Map<String, dynamic>> fakeAppointments = FakeDataService.generateFakeAppointments(patientId, 'patient');
+  print("DEBUG: Getting appointments for patient: $patientId");
   
   AppointmentsStore storeAppointmentsStore = getIt.get<AppointmentsStore>();
-
   storeAppointmentsStore.clearAppointmentsData();
-  
-  printLog("Loading fake appointments data for patient: $patientId");
 
-  fakeAppointments.forEach((appointment) {
-    AppointmentModel appointmentModel = AppointmentModel.fromJson(appointment);
-    storeAppointmentsStore
-        .addAppointmentToAppointmentsData(appointmentModel.toJson());
-  });
+  try {
+    final result = await client.query(QueryOptions(
+      document: gql('''
+        query appointments {
+          appointmentsbypatient(patient_id: "$patientId") {
+            id
+            date
+            appointment_unique_id
+            patient {
+              patientUser {
+                id
+                full_name 
+                first_name
+                profile_image
+              }
+            }
+            doctor {
+              doctor_id: id
+              specializations {
+                name
+              }
+            }
+            status
+            from_time
+            from_time_type
+            to_time
+            to_time_type
+            description
+          }
+        }
+      '''),
+    ));
 
-  return true;
+    if (result.hasException) {
+      print("DEBUG: GraphQL error: ${result.exception}");
+      return false;
+    }
+
+    print("DEBUG: GraphQL result: ${result.data}");
+    
+    if (result.data != null && result.data!['appointmentsbypatient'] != null) {
+      List<dynamic> appointments = result.data!['appointmentsbypatient'];
+      print("DEBUG: Found ${appointments.length} appointments");
+      
+      appointments.forEach((appointment) {
+        AppointmentModel appointmentModel = AppointmentModel.fromJson(appointment);
+        storeAppointmentsStore.addAppointmentToAppointmentsData(appointmentModel.toJson());
+      });
+      
+      print("DEBUG: Added ${storeAppointmentsStore.appointmentsDataList.length} appointments to store");
+      return true;
+    } else {
+      print("DEBUG: No appointments data found");
+      return false;
+    }
+  } catch (e) {
+    print("DEBUG: Error getting appointments: $e");
+    return false;
+  }
 }
 
 Future<UserModel?> getCurrentUserDataAndReplaceField(
