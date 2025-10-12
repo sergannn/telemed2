@@ -22,7 +22,7 @@ class PatientModel {
   PatientModel.fromJson(Map json) {
     patientId = json['doctor_id'];
 
-    userId = json['id'];
+    userId = json['id']?.toString();
     userName = json['full_name'];
     firstName = json['first_name'];
     lastName = json['last_name'];

@@ -26,11 +26,17 @@ class UpcomingAppointments extends StatelessWidget {
     bool isDark = Theme.of(context).brightness == Brightness.dark;
 
     List<Map<dynamic, dynamic>> appointmentsList = context.appointmentsData;
+    print("DEBUG: Total appointments from store: ${appointmentsList.length}");
+    
     // Группировка по дате
     Map<String, List<Map<dynamic, dynamic>>> groupedAppointments = {};
     final formatter = DateFormat('EEEE', 'ru_RU');
     for (var appointment in appointmentsList) {
-        if(appointment['status']=='0') { continue;}
+        print("DEBUG: Processing appointment: ${appointment['id']}, status: ${appointment['status']}, date: ${appointment['date']}");
+        if(appointment['status']=='0') { 
+          print("DEBUG: Skipping appointment ${appointment['id']} - status is 0");
+          continue;
+        }
       String ad = appointment['date'];
       String at = appointment['from_time'];
       DateTime appDateTime =
@@ -41,11 +47,14 @@ class UpcomingAppointments extends StatelessWidget {
           "Is ${DateFormat('yyyy-MM-dd HH:mm').format(appDateTime)} past? ${isPast ? 'Yes' : 'No'}");
 
       if (!isPast) {
+        print("DEBUG: Adding appointment ${appointment['id']} to upcoming - date: ${appointment['date']}");
         String date = appointment['date'];
         if (!groupedAppointments.containsKey(date)) {
           groupedAppointments[date] = [];
         }
         groupedAppointments[date]!.add(appointment);
+      } else {
+        print("DEBUG: Skipping appointment ${appointment['id']} - it's in the past");
       }
     }
     print("grouped:");
