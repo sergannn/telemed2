@@ -173,25 +173,33 @@ class AppointmentListItem extends StatelessWidget {
             var prefs = await SharedPreferences.getInstance();
             final client = await CallClient.create();
 
-
-              //  isPast==false ?
-      
-       /*            Navigator.push(
-             // context, MaterialPageRoute(builder: (context) => ChatScreen()));
-             context, MaterialPageRoute(builder: (context) => OnlineReceptionVideo()))
-             :
-                    Navigator.push(
-             // context, MaterialPageRoute(builder: (context) => ChatScreen()));
-             context, MaterialPageRoute(builder: (context) => VideoResolution()));
-        */  
-             //start video commented
+            // Generate room URL if room_data is null
+            String roomUrl;
+            if (item['room_data'] != null && item['room_data'] is Map) {
+              // Extract room URL from room_data if available
+              final roomData = item['room_data'] as Map<String, dynamic>;
+              if (roomData['url'] != null && roomData['url'].toString().isNotEmpty) {
+                roomUrl = roomData['url'].toString();
+              } else {
+                // Fallback to test room if no URL in room_data
+                roomUrl = 'https://ser-tele-med.daily.co/test_room';
+              }
+            } else {
+              // Use test room as fallback when room_data is null
+              roomUrl = 'https://ser-tele-med.daily.co/test_room';
+            }
+            
+            print('DEBUG: Starting video call for appointment: ${item['appointment_unique_id']}');
+            print('DEBUG: Room data: ${item['room_data']}');
+            print('DEBUG: Room data type: ${item['room_data']?.runtimeType ?? 'null'}');
+            print('DEBUG: Room URL: $roomUrl');
 
             Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => DailyApp(
                   appointment_unique_id: item['appointment_unique_id'],
-                  room: item['room_data'],
+                  room: roomUrl,
                   prefs: prefs,
                   callClient: client,
                 ),
@@ -310,7 +318,14 @@ class AppointmentListItem extends StatelessWidget {
                             ),
                           ),
                        if(item['doctor']['specializations'].isNotEmpty) Text(item['doctor']['specializations'][0]['name']),
-                          Text(getContactMethod(item)),
+                          Row(
+                            children: [
+                              Text(getContactMethod(item)),
+                              SizedBox(width: 8),
+                              // Индикация статуса записи и комнаты
+                              _buildAppointmentStatusIndicator(item),
+                            ],
+                          ),
                           /*  CountDownText(
                             due: DateTime.parse(item["date"]),
                             finishedText: ' Done',
@@ -460,4 +475,89 @@ getImagePathByContactMethod(Map<dynamic, dynamic> item) {
   }
 
   return Icons.calendar_today;
+}
+
+  // Метод для создания индикатора статуса записи
+  Widget _buildAppointmentStatusIndicator(Map<dynamic, dynamic> item) {
+    // Проверяем статус записи
+    bool isAppointmentValid = item['status'] != null && item['status'].toString() == '1';
+    bool hasRoomData = item['room_data'] != null && item['room_data'] is Map;
+    
+    if (isAppointmentValid && hasRoomData) {
+      // Запись валидна и комната создана
+      return Container(
+        padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+        decoration: BoxDecoration(
+          color: Colors.green[100],
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.green[300]!, width: 1),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.check_circle, size: 12, color: Colors.green[700]),
+            SizedBox(width: 4),
+            Text(
+              'Готово',
+              style: TextStyle(
+                fontSize: 10,
+                color: Colors.green[700],
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+      );
+    } else if (isAppointmentValid && !hasRoomData) {
+      // Запись валидна, но комната не создана
+      return Container(
+        padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+        decoration: BoxDecoration(
+          color: Colors.orange[100],
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.orange[300]!, width: 1),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.warning, size: 12, color: Colors.orange[700]),
+            SizedBox(width: 4),
+            Text(
+              'Без комнаты',
+              style: TextStyle(
+                fontSize: 10,
+                color: Colors.orange[700],
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+      );
+    } else {
+      // Запись невалидна
+      return Container(
+        padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+        decoration: BoxDecoration(
+          color: Colors.grey[100],
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.grey[300]!, width: 1),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.cancel, size: 12, color: Colors.grey[700]),
+            SizedBox(width: 4),
+            Text(
+              'Неактивна',
+              style: TextStyle(
+                fontSize: 10,
+                color: Colors.grey[700],
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+  }
 }
