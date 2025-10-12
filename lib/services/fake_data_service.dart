@@ -73,8 +73,8 @@ class FakeDataService {
         'appointment_type': _random.nextBool() ? 'VIDEO' : 'AUDIO',
         'description': _generateSessionDescription(),
         'room_data': 'room_${i + 1}',
-        'patient': userType == 'patient' ? null : _generateFakePatient(),
-        'doctor': userType == 'doctor' ? null : _generateFakeDoctor(),
+        'patient': userType == 'patient' ? _generateFakePatient() : _generateFakePatient(),
+        'doctor': userType == 'doctor' ? _generateFakeDoctor() : _generateFakeDoctor(),
         'created_at': DateTime.now().subtract(Duration(days: _random.nextInt(30))).toIso8601String(),
         'updated_at': DateTime.now().subtract(Duration(days: _random.nextInt(7))).toIso8601String()
       });
@@ -109,8 +109,8 @@ class FakeDataService {
         'appointment_type': _random.nextBool() ? 'VIDEO' : 'AUDIO',
         'description': _generateSessionDescription(),
         'room_data': 'room_upcoming_${i + 1}',
-        'patient': userType == 'patient' ? null : _generateFakePatient(),
-        'doctor': userType == 'doctor' ? null : _generateFakeDoctor(),
+        'patient': userType == 'patient' ? _generateFakePatient() : _generateFakePatient(),
+        'doctor': userType == 'doctor' ? _generateFakeDoctor() : _generateFakeDoctor(),
         'created_at': DateTime.now().subtract(Duration(days: _random.nextInt(7))).toIso8601String(),
         'updated_at': DateTime.now().subtract(Duration(days: _random.nextInt(3))).toIso8601String()
       });
