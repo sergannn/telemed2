@@ -381,70 +381,22 @@ Future<bool> setSessionsD({required String doctorId}) async {
 }
 
 Future<bool> getAppointments({required String patientId}) async {
-  print("DEBUG: Getting appointments for patient: $patientId");
+  // Генерируем фейковые данные для записей пациента
+  List<Map<String, dynamic>> fakeAppointments = FakeDataService.generateFakeAppointments(patientId, 'patient');
   
   AppointmentsStore storeAppointmentsStore = getIt.get<AppointmentsStore>();
+
   storeAppointmentsStore.clearAppointmentsData();
+  
+  printLog("Loading fake appointments data for patient: $patientId");
 
-  try {
-    final result = await client.query(QueryOptions(
-      document: gql('''
-        query appointments {
-          appointments(patient_id: "$patientId") {
-            id
-            date
-            appointment_unique_id
-            patient {
-              patientUser {
-                id
-                full_name 
-                first_name
-                profile_image
-              }
-            }
-            doctor {
-              doctor_id: id
-              specializations {
-                name
-              }
-            }
-            status
-            from_time
-            from_time_type
-            to_time
-            to_time_type
-            description
-          }
-        }
-      '''),
-    ));
+  fakeAppointments.forEach((appointment) {
+    AppointmentModel appointmentModel = AppointmentModel.fromJson(appointment);
+    storeAppointmentsStore
+        .addAppointmentToAppointmentsData(appointmentModel.toJson());
+  });
 
-    if (result.hasException) {
-      print("DEBUG: GraphQL error: ${result.exception}");
-      return false;
-    }
-
-    print("DEBUG: GraphQL result: ${result.data}");
-    
-    if (result.data != null && result.data!['appointments'] != null) {
-      List<dynamic> appointments = result.data!['appointments'];
-      print("DEBUG: Found ${appointments.length} appointments");
-      
-      appointments.forEach((appointment) {
-        AppointmentModel appointmentModel = AppointmentModel.fromJson(appointment);
-        storeAppointmentsStore.addAppointmentToAppointmentsData(appointmentModel.toJson());
-      });
-      
-      print("DEBUG: Added ${storeAppointmentsStore.appointmentsDataList.length} appointments to store");
-      return true;
-    } else {
-      print("DEBUG: No appointments data found");
-      return false;
-    }
-  } catch (e) {
-    print("DEBUG: Error getting appointments: $e");
-    return false;
-  }
+  return true;
 }
 
 Future<UserModel?> getCurrentUserDataAndReplaceField(
@@ -703,16 +655,16 @@ Future<bool> updateProfileWithDocument(BuildContext context, String imagePath,
 //    if (updatedUserData != null) {
 //      print(updatedUserData.toJson());
 //      print("it was updated data");
-     // User data has been successfully updated
+    // User data has been successfully updated
 //      UserStore uStore = getIt.get<UserStore>();
 //      uStore.setUserData(updatedUserData.toJson());
 //      Session().saveUser(updatedUserData);
-     // Session().saveUser(user);
-     //  } else {
-     // Error occurred during update
-     //   print('Failed to update user data');
-     //    return false;
-     //  }
+    // Session().saveUser(user);
+    //  } else {
+    // Error occurred during update
+    //   print('Failed to update user data');
+    //    return false;
+    //  }
     return true;
   } else {
     print('Error: ${response.statusCode}');
