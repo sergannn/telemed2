@@ -193,10 +193,13 @@ class FakeDataService {
       'patient_id': _generatePatientId(),
       'photo': 'https://via.placeholder.com/100',
       'patientUser': {
+        'id': _generatePatientId(),
         'user_id': _generatePatientId(),
         'username': '${firstNames[_random.nextInt(firstNames.length)]} ${lastNames[_random.nextInt(lastNames.length)]}',
+        'full_name': '${firstNames[_random.nextInt(firstNames.length)]} ${lastNames[_random.nextInt(lastNames.length)]}',
         'first_name': firstNames[_random.nextInt(firstNames.length)],
         'last_name': lastNames[_random.nextInt(lastNames.length)],
+        'profile_image': 'https://via.placeholder.com/100',
         'photo': 'https://via.placeholder.com/100'
       }
     };
