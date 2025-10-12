@@ -2,8 +2,49 @@ import 'package:doctorq/screens/articles/articles.dart';
 import 'package:doctorq/screens/online_reception_video_start.dart';
 import 'package:doctorq/extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:doctorq/daily/main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:daily_flutter/daily_flutter.dart';
+import 'dart:convert';
 
-class OnlineReceptionVideo extends StatelessWidget {
+class OnlineReceptionVideo extends StatefulWidget {
+  @override
+  State<OnlineReceptionVideo> createState() => _OnlineReceptionVideoState();
+}
+
+class _OnlineReceptionVideoState extends State<OnlineReceptionVideo> {
+  
+  Future<void> _startVideoCall(BuildContext context) async {
+    try {
+      var prefs = await SharedPreferences.getInstance();
+      final client = await CallClient.create();
+
+      // Для демонстрации используем тестовую комнату
+      // В реальном приложении здесь должна быть логика получения room_data из контекста
+      String roomUrl = 'https://ser-tele-med.daily.co/test_room';
+      
+      print('DEBUG: Starting video call with room: $roomUrl');
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => DailyApp(
+            appointment_unique_id: 'test_appointment',
+            room: roomUrl,
+            prefs: prefs,
+            callClient: client,
+          ),
+        ),
+      );
+    } catch (e) {
+      print('Error starting video call: $e');
+      // Показать ошибку пользователю
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Ошибка запуска видеозвонка: $e')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -373,13 +414,8 @@ class OnlineReceptionVideo extends StatelessWidget {
                                     children: [
                                       // Основная кнопка слева
                                       ElevatedButton(
-                                        onPressed: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    OnlineReceptionVideoStart()),
-                                          );
+                                        onPressed: () async {
+                                          await _startVideoCall(context);
                                         },
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor: const Color.fromARGB(
