@@ -13,7 +13,6 @@ class OnlineReceptionVideoStart extends StatefulWidget {
 
 class _OnlineReceptionVideoStartState extends State<OnlineReceptionVideoStart> {
 
-
   
   @override
   Widget build(BuildContext context) {

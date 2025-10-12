@@ -169,46 +169,13 @@ class AppointmentListItem extends StatelessWidget {
                       )));*/
           break;
         case "ContactMethods.videoCall":
-          try {
-            var prefs = await SharedPreferences.getInstance();
-            final client = await CallClient.create();
-
-            // Generate room URL if room_data is null
-            String roomUrl;
-            if (item['room_data'] != null && item['room_data'] is Map) {
-              // Extract room URL from room_data if available
-              final roomData = item['room_data'] as Map<String, dynamic>;
-              if (roomData['url'] != null && roomData['url'].toString().isNotEmpty) {
-                roomUrl = roomData['url'].toString();
-              } else {
-                // Fallback to test room if no URL in room_data
-                roomUrl = 'https://ser-tele-med.daily.co/test_room';
-              }
-            } else {
-              // Use test room as fallback when room_data is null
-              roomUrl = 'https://ser-tele-med.daily.co/test_room';
-            }
-            
-            print('DEBUG: Starting video call for appointment: ${item['appointment_unique_id']}');
-            print('DEBUG: Room data: ${item['room_data']}');
-            print('DEBUG: Room data type: ${item['room_data']?.runtimeType ?? 'null'}');
-            print('DEBUG: Room URL: $roomUrl');
-
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => DailyApp(
-                  appointment_unique_id: item['appointment_unique_id'],
-                  room: roomUrl,
-                  prefs: prefs,
-                  callClient: client,
-                ),
-              ),
-            );
-          } catch (e) {
-            print('Error during video call setup: $e');
-            // Optionally show an error message to the user here
-          }
+          // Переход к экрану с информацией о записи
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => OnlineReceptionVideo(),
+            ),
+          );
           break;
         default:
           print('Unknown navigation option: $description');
@@ -481,7 +448,7 @@ getImagePathByContactMethod(Map<dynamic, dynamic> item) {
   Widget _buildAppointmentStatusIndicator(Map<dynamic, dynamic> item) {
     // Проверяем статус записи
     bool isAppointmentValid = item['status'] != null && item['status'].toString() == '1';
-    bool hasRoomData = item['room_data'] != null && item['room_data'] is Map;
+    bool hasRoomData = item['room_data'] != null && item['room_data'].toString().isNotEmpty;
     
     if (isAppointmentValid && hasRoomData) {
       // Запись валидна и комната создана

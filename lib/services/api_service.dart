@@ -255,6 +255,15 @@ Future<bool> getAppointmentsD({required String doctorId}) async {
       List<dynamic> appointments = result.data!['appointmentsbydoctor'];
       print("DEBUG: Found ${appointments.length} appointments");
       
+      // Детальная проверка структуры данных
+      if (appointments.isNotEmpty) {
+        final firstAppointment = appointments[0];
+        print("DEBUG: First appointment structure: ${firstAppointment}");
+        print("DEBUG: First appointment keys: ${firstAppointment.keys.toList()}");
+        print("DEBUG: Room data in first appointment: ${firstAppointment['room_data']}");
+        print("DEBUG: Room data type: ${firstAppointment['room_data']?.runtimeType}");
+      }
+      
       appointments.forEach((appointment) {
         print("DEBUG: Processing appointment: ${appointment['id']}");
         try {
