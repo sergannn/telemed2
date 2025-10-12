@@ -31,24 +31,33 @@ class _PopularPatientsScreenState extends State<PopularPatientsScreen> {
   }
 
   Future<void> _loadPatients() async {
+    print('Loading patients...');
     // Get current doctor ID from user data
     final currentUser = await Session.getCurrentUser();
+    print('Current user: $currentUser');
+    print('Doctor ID: ${currentUser?.doctorId}');
+    
     if (currentUser != null && currentUser.doctorId != null) {
       bool success = await getPatientsForDoctor(doctorId: currentUser.doctorId!);
+      print('getPatientsForDoctor success: $success');
       
       if (success) {
         // Get patients from doctors store (temporarily stored there)
         DoctorsStore storeDoctorsStore = GetIt.instance.get<DoctorsStore>();
+        print('Doctors store has ${storeDoctorsStore.doctorsDataList.length} items');
         setState(() {
           _patients = List<Map<String, dynamic>>.from(storeDoctorsStore.doctorsDataList);
           _isLoading = false;
         });
+        print('Loaded ${_patients.length} patients');
       } else {
+        print('Failed to load patients');
         setState(() {
           _isLoading = false;
         });
       }
     } else {
+      print('No current user or doctor ID');
       setState(() {
         _isLoading = false;
       });
