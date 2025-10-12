@@ -254,8 +254,16 @@ Future<bool> getAppointmentsD({required String doctorId}) async {
       print("DEBUG: Found ${appointments.length} appointments");
       
       appointments.forEach((appointment) {
-        AppointmentModel appointmentModel = AppointmentModel.fromJson(appointment);
-        storeAppointmentsStore.addAppointmentToAppointmentsData(appointmentModel.toJson());
+        print("DEBUG: Processing appointment: ${appointment['id']}");
+        try {
+          AppointmentModel appointmentModel = AppointmentModel.fromJson(appointment);
+          print("DEBUG: AppointmentModel created successfully");
+          storeAppointmentsStore.addAppointmentToAppointmentsData(appointmentModel.toJson());
+          print("DEBUG: Appointment added to store");
+        } catch (e) {
+          print("DEBUG: Error creating AppointmentModel: $e");
+          print("DEBUG: Appointment data: $appointment");
+        }
       });
       
       print("DEBUG: Added ${storeAppointmentsStore.appointmentsDataList.length} appointments to store");
