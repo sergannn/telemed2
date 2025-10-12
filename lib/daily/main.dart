@@ -419,6 +419,20 @@ class _MyAppState extends State<DailyApp> {
                       fontStyle: FontStyle.italic
                     ),
                   ),
+                  if (isExpired) ...[
+                    const SizedBox(height: 8),
+                    ElevatedButton.icon(
+                      onPressed: () => _navigateToTestRoom(),
+                      icon: Icon(Icons.science, size: 16),
+                      label: Text('Тестовая комната'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.orange,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        textStyle: const TextStyle(fontSize: 12),
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ),
@@ -443,6 +457,39 @@ class _MyAppState extends State<DailyApp> {
         ],
       ),
     );
+  }
+
+  void _navigateToTestRoom() async {
+    try {
+      const testRoomUrl = 'https://telemed2.daily.co/lFxg9A2Hi3PLrMdYKF81';
+      
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => DailyApp(
+            appointment_unique_id: widget.appointment_unique_id,
+            room: testRoomUrl,
+            prefs: widget.prefs,
+            callClient: widget.callClient,
+          ),
+        ),
+      );
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Переход в тестовую комнату'),
+          backgroundColor: Colors.orange,
+        ),
+      );
+    } catch (e) {
+      print('Error navigating to test room: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Ошибка перехода в тестовую комнату: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   bottomDailyNavBar() {

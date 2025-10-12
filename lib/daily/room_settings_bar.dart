@@ -5,6 +5,7 @@ import 'package:collection/collection.dart';
 import 'package:daily_flutter/daily_flutter.dart';
 import 'package:doctorq/daily/logging.dart';
 import 'package:doctorq/daily/room_parameters_bottom_sheet.dart';
+import 'package:doctorq/daily/main.dart';
 import 'package:doctorq/models/appointment_model.dart';
 import 'package:doctorq/models/appointments_model.dart';
 import 'package:doctorq/screens/appointments/list/messaging_ended_screen/messaging_ended_screen.dart';
@@ -156,6 +157,90 @@ class _RoomSettingsBarState extends State<RoomSettingsBar> {
     }
   }
 
+  void _showExpiredRoomDialog(BuildContext context, DateTime expDate) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Row(
+            children: [
+              Icon(Icons.error, color: Colors.red),
+              const SizedBox(width: 8),
+              Text('Комната истекла'),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Основная комната истекла в ${expDate.toString().substring(0, 19)}'),
+              const SizedBox(height: 12),
+              Text('Вы можете:'),
+              const SizedBox(height: 8),
+              Text('• Создать новую запись с новой комнатой'),
+              const SizedBox(height: 4),
+              Text('• Перейти в тестовую комнату для отладки'),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Отмена'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _navigateToTestRoom();
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.orange,
+                foregroundColor: Colors.white,
+              ),
+              child: Text('Тестовая комната'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _navigateToTestRoom() async {
+    try {
+      // Импортируем DailyConfig
+      const testRoomUrl = 'https://telemed2.daily.co/lFxg9A2Hi3PLrMdYKF81';
+      
+      // Создаем новый DailyApp с тестовой комнатой
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => DailyApp(
+            appointment_unique_id: widget.appointment_unique_id,
+            room: testRoomUrl,
+            prefs: widget.prefs,
+            callClient: widget.client,
+          ),
+        ),
+      );
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Переход в тестовую комнату'),
+          backgroundColor: Colors.orange,
+        ),
+      );
+    } catch (e) {
+      print('Error navigating to test room: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Ошибка перехода в тестовую комнату: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
   serJoin(canJoin) async {
     print("joining..");
     print(canJoin);
@@ -175,12 +260,7 @@ class _RoomSettingsBarState extends State<RoomSettingsBar> {
             
             if (expDate.isBefore(now)) {
               print("Room expired at: ${expDate.toString()}");
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Комната истекла в ${expDate.toString().substring(0, 19)}'),
-                  backgroundColor: Colors.red,
-                ),
-              );
+              _showExpiredRoomDialog(context, expDate);
               return;
             }
           }
