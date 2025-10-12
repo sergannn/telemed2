@@ -259,10 +259,18 @@ class AppointmentListItem extends StatelessWidget {
                             ),
                           ),
                           child: Image.network(
-                            item["patient"]["photo"],
+                            item["patient"]["photo"] ?? 'https://via.placeholder.com/160',
                             fit: BoxFit.contain,
                             width: getSize(160),
                             height: getSize(160),
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                width: getSize(160),
+                                height: getSize(160),
+                                color: Colors.grey[300],
+                                child: Icon(Icons.person, size: 80, color: Colors.grey[600]),
+                              );
+                            },
                           ),
                         )),
                       ),
