@@ -61,6 +61,7 @@ class FakeDataService {
       
       appointments.add({
         'id': 'appointment_${userId}_${i + 1}',
+        'appointment_unique_id': 'unique_${userId}_${i + 1}',
         'patient_id': userType == 'patient' ? userId : _generatePatientId(),
         'doctor_id': userType == 'doctor' ? userId : _generateDoctorId(),
         'date': appointmentDate.toIso8601String().split('T')[0],
@@ -70,6 +71,8 @@ class FakeDataService {
         'to_time_type': 'AM',
         'status': isUpcoming ? 'BOOKED' : 'CHECK_OUT',
         'appointment_type': _random.nextBool() ? 'VIDEO' : 'AUDIO',
+        'description': _generateSessionDescription(),
+        'room_data': 'room_${i + 1}',
         'patient': userType == 'patient' ? null : _generateFakePatient(),
         'doctor': userType == 'doctor' ? null : _generateFakeDoctor(),
         'created_at': DateTime.now().subtract(Duration(days: _random.nextInt(30))).toIso8601String(),
@@ -94,6 +97,7 @@ class FakeDataService {
       
       upcomingSessions.add({
         'id': 'upcoming_session_${userId}_${i + 1}',
+        'appointment_unique_id': 'unique_upcoming_${userId}_${i + 1}',
         'patient_id': userType == 'patient' ? userId : _generatePatientId(),
         'doctor_id': userType == 'doctor' ? userId : _generateDoctorId(),
         'date': sessionDate.toIso8601String().split('T')[0],
@@ -103,9 +107,10 @@ class FakeDataService {
         'to_time_type': 'AM',
         'status': 'BOOKED',
         'appointment_type': _random.nextBool() ? 'VIDEO' : 'AUDIO',
+        'description': _generateSessionDescription(),
+        'room_data': 'room_upcoming_${i + 1}',
         'patient': userType == 'patient' ? null : _generateFakePatient(),
         'doctor': userType == 'doctor' ? null : _generateFakeDoctor(),
-        'description': _generateSessionDescription(),
         'created_at': DateTime.now().subtract(Duration(days: _random.nextInt(7))).toIso8601String(),
         'updated_at': DateTime.now().subtract(Duration(days: _random.nextInt(3))).toIso8601String()
       });
