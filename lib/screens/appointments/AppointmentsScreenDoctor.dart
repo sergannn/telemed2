@@ -57,7 +57,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreenDoctor> {
 
     // пример того как грузить много данных
     List<bool> resultOfRequests = await Future.wait([
-      getAppointmentsD(doctorId: '1'), //userData['patient_id']),
+      getAppointmentsD(doctorId: userData['doctor_id']),
     ]);
 
     setState(() {
