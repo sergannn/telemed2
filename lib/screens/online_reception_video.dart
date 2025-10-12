@@ -6,6 +6,7 @@ import 'package:doctorq/daily/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:daily_flutter/daily_flutter.dart';
 import 'dart:convert';
+import 'package:doctorq/config/daily_config.dart';
 
 class OnlineReceptionVideo extends StatefulWidget {
   @override

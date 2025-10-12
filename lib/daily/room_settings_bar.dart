@@ -159,6 +159,8 @@ class _RoomSettingsBarState extends State<RoomSettingsBar> {
   serJoin(canJoin) async {
     print("joining..");
     print(canJoin);
+    print("Room URL: ${widget.room}");
+    print("Token: $_token");
     try {
       //var url = widget.prefs.getString(widget.room);
       await (canJoin
