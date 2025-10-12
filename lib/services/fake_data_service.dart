@@ -72,6 +72,7 @@ class FakeDataService {
         'status': isUpcoming ? 'BOOKED' : 'CHECK_OUT',
         'appointment_type': _random.nextBool() ? 'VIDEO' : 'AUDIO',
         'description': _generateSessionDescription(),
+        'contact_method': _generateContactMethod(),
         'room_data': 'room_${i + 1}',
         'patient': userType == 'patient' ? _generateFakePatient() : _generateFakePatient(),
         'doctor': userType == 'doctor' ? _generateFakeDoctor() : _generateFakeDoctor(),
@@ -108,6 +109,7 @@ class FakeDataService {
         'status': 'BOOKED',
         'appointment_type': _random.nextBool() ? 'VIDEO' : 'AUDIO',
         'description': _generateSessionDescription(),
+        'contact_method': _generateContactMethod(),
         'room_data': 'room_upcoming_${i + 1}',
         'patient': userType == 'patient' ? _generateFakePatient() : _generateFakePatient(),
         'doctor': userType == 'doctor' ? _generateFakeDoctor() : _generateFakeDoctor(),
@@ -163,6 +165,16 @@ class FakeDataService {
     ];
     
     return descriptions[_random.nextInt(descriptions.length)];
+  }
+
+  static String _generateContactMethod() {
+    List<String> contactMethods = [
+      'ContactMethods.videoCall',
+      'ContactMethods.voiceCall',
+      'ContactMethods.message'
+    ];
+    
+    return contactMethods[_random.nextInt(contactMethods.length)];
   }
 
   static String _generatePatientId() {
