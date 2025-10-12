@@ -72,7 +72,7 @@ class _MyAppState extends State<DailyApp> {
     print("its a room data:");
     print(widget.room);
 
-    // НЕ подключаемся автоматически - только настраиваем CallClient
+    // НЕ подключаемся автоматически к комнате - только настраиваем CallClient
     widget.callClient
       ..setUsername("guest")
       ..updateSubscriptionProfiles(
@@ -90,11 +90,11 @@ class _MyAppState extends State<DailyApp> {
           ),
         },
       )
-      ..setInputsEnabled(camera: true, microphone: true);
+      ..setInputsEnabled(camera: true, microphone: true); // Включаем камеру для предварительного просмотра
     _eventSubscription = widget.callClient.events.listen(_handleEvent);
     
     // НЕ вызываем join() автоматически - только по требованию пользователя
-    print("CallClient configured but NOT auto-joining");
+    print("CallClient configured with camera preview but NOT auto-joining room");
   }
 
   @override

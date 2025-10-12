@@ -258,6 +258,8 @@ class _RoomSettingsBarState extends State<RoomSettingsBar> {
     print("Room URL: ${widget.room}");
     print("Token: $_token");
     print("Current call state: ${widget.client.callState}");
+    print("Room URL valid: ${widget.room.isNotEmpty}");
+    print("Room URL starts with https: ${widget.room.startsWith('https://')}");
     
     // Проверяем истечение комнаты перед подключением
     if (canJoin) {
@@ -286,6 +288,21 @@ class _RoomSettingsBarState extends State<RoomSettingsBar> {
       // ЯВНЫЙ контроль подключения - только по требованию пользователя
       if (canJoin) {
         print("User requested JOIN - connecting to room");
+        print("Attempting to join room: ${widget.room}");
+        
+        // Проверяем что URL валидный
+        if (widget.room.isEmpty || !widget.room.startsWith('https://')) {
+          print("ERROR: Invalid room URL");
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Ошибка: Неверный URL комнаты'),
+              backgroundColor: Colors.red,
+            ),
+          );
+          return;
+        }
+        
+        // Камера уже включена для предварительного просмотра
         await widget.client.join(url: Uri.parse(widget.room), token: _token);
         print("Successfully JOINED room");
       } else {
@@ -310,8 +327,23 @@ class _RoomSettingsBarState extends State<RoomSettingsBar> {
       }
     } on OperationFailedException catch (error, trace) {
       print("Operation failed: $error");
+      print("Error details: $trace");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Ошибка подключения: $error'),
+          backgroundColor: Colors.red,
+        ),
+      );
       logger.severe(
           'Failed to ${canJoin ? 'join' : 'leave'} call', error, trace);
+    } catch (e) {
+      print("Unexpected error: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Неожиданная ошибка: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 
@@ -325,6 +357,10 @@ class _RoomSettingsBarState extends State<RoomSettingsBar> {
         callState == CallState.joining || callState == CallState.leaving;
     final canJoin =
         callState == CallState.initialized || callState == CallState.left;
+    
+    // Отладочная информация
+    print("RoomSettingsBar build - callState: $callState, canJoin: $canJoin, isLoading: $isLoading");
+    print("Room URL: ${widget.room}");
     return GestureDetector(
       onTap: isLoading || widget.room == null
           ? null
@@ -422,6 +458,7 @@ class _RoomSettingsBarState extends State<RoomSettingsBar> {
                         onPressed: isLoading || widget.room == null
                             ? null
                             : () {
+                                print("Button pressed - canJoin: $canJoin, callState: $callState");
                                 serJoin(canJoin);
                               },
                         style: TextButton.styleFrom(
