@@ -281,6 +281,34 @@ class _MyAppState extends State<DailyApp> {
     // Проверяем, является ли это тестовой комнатой
     bool isTestRoom = widget.room.contains('lFxg9A2Hi3PLrMdYKF81');
     
+    // Получаем room_data из контекста для отображения времени истечения
+    var appointment = context.selectedAppointment;
+    String expirationInfo = '';
+    bool isExpired = false;
+    
+    if (appointment != null && appointment['room_data'] != null) {
+      try {
+        var roomData = jsonDecode(appointment['room_data'].toString());
+        if (roomData['config'] != null && roomData['config']['exp'] != null) {
+          int expTimestamp = roomData['config']['exp'];
+          DateTime expDate = DateTime.fromMillisecondsSinceEpoch(expTimestamp * 1000);
+          DateTime now = DateTime.now();
+          
+          if (expDate.isBefore(now)) {
+            isExpired = true;
+            expirationInfo = 'Комната истекла: ${expDate.toString().substring(0, 19)}';
+          } else {
+            Duration remaining = expDate.difference(now);
+            int hours = remaining.inHours;
+            int minutes = remaining.inMinutes % 60;
+            expirationInfo = 'Истекает через: ${hours}ч ${minutes}м (${expDate.toString().substring(0, 19)})';
+          }
+        }
+      } catch (e) {
+        print('Error parsing room_data for expiration: $e');
+      }
+    }
+    
     return Container(
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.all(12),
@@ -342,33 +370,52 @@ class _MyAppState extends State<DailyApp> {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.red.withOpacity(0.1),
+                color: isExpired ? Colors.red.withOpacity(0.1) : Colors.blue.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(6),
-                border: Border.all(color: Colors.red.withOpacity(0.3)),
+                border: Border.all(
+                  color: isExpired ? Colors.red.withOpacity(0.3) : Colors.blue.withOpacity(0.3)
+                ),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     children: [
-                      Icon(Icons.schedule, color: Colors.red, size: 14),
+                      Icon(
+                        isExpired ? Icons.error : Icons.schedule, 
+                        color: isExpired ? Colors.red : Colors.blue, 
+                        size: 14
+                      ),
                       const SizedBox(width: 4),
                       Text(
-                        'Время жизни комнаты: 1 час',
-                        style: const TextStyle(
+                        isExpired ? 'Комната истекла' : 'Время жизни комнаты',
+                        style: TextStyle(
                           fontSize: 11,
-                          color: Colors.red,
+                          color: isExpired ? Colors.red : Colors.blue,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 4),
+                  if (expirationInfo.isNotEmpty) ...[
+                    Text(
+                      expirationInfo,
+                      style: TextStyle(
+                        fontSize: 10, 
+                        color: isExpired ? Colors.red : Colors.blue,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                  ],
                   Text(
-                    '⚠️ Если комната истекла, создайте новую запись',
-                    style: const TextStyle(
+                    isExpired 
+                      ? '⚠️ Комната недоступна. Создайте новую запись'
+                      : 'ℹ️ Комната действительна в течение 1 часа',
+                    style: TextStyle(
                       fontSize: 10, 
-                      color: Colors.red, 
+                      color: isExpired ? Colors.red : Colors.blue, 
                       fontStyle: FontStyle.italic
                     ),
                   ),
@@ -485,8 +532,9 @@ class _MyAppState extends State<DailyApp> {
       child: PopScope(
         canPop: false,
         onPopInvoked: (scope) {
-          Navigator.of(context).pop();
-          //return true;
+          if (scope) {
+            Navigator.of(context).pop();
+          }
         },
         child: Scaffold(
           appBar: AppBar(title: const Text('Подготовка к звонку')),

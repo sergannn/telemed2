@@ -161,6 +161,35 @@ class _RoomSettingsBarState extends State<RoomSettingsBar> {
     print(canJoin);
     print("Room URL: ${widget.room}");
     print("Token: $_token");
+    
+    // Проверяем истечение комнаты перед подключением
+    if (canJoin) {
+      var appointment = context.selectedAppointment;
+      if (appointment != null && appointment['room_data'] != null) {
+        try {
+          var roomData = jsonDecode(appointment['room_data'].toString());
+          if (roomData['config'] != null && roomData['config']['exp'] != null) {
+            int expTimestamp = roomData['config']['exp'];
+            DateTime expDate = DateTime.fromMillisecondsSinceEpoch(expTimestamp * 1000);
+            DateTime now = DateTime.now();
+            
+            if (expDate.isBefore(now)) {
+              print("Room expired at: ${expDate.toString()}");
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Комната истекла в ${expDate.toString().substring(0, 19)}'),
+                  backgroundColor: Colors.red,
+                ),
+              );
+              return;
+            }
+          }
+        } catch (e) {
+          print('Error checking room expiration: $e');
+        }
+      }
+    }
+    
     try {
       //var url = widget.prefs.getString(widget.room);
       await (canJoin
