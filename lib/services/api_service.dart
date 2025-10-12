@@ -200,6 +200,7 @@ Future<bool> setAppointment(
 Future<bool> getAppointmentsD({required String doctorId}) async {
   // Генерируем фейковые данные для записей врача
   List<Map<String, dynamic>> fakeAppointments = FakeDataService.generateFakeAppointments(doctorId, 'doctor');
+  printLog("Generated ${fakeAppointments.length} fake appointments");
   
   AppointmentsStore storeAppointmentsStore = getIt.get<AppointmentsStore>();
 
@@ -213,6 +214,7 @@ Future<bool> getAppointmentsD({required String doctorId}) async {
         .addAppointmentToAppointmentsData(appointmentModel.toJson());
   });
 
+  printLog("Added ${storeAppointmentsStore.appointmentsDataList.length} appointments to store");
   return true;
 }
 
