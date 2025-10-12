@@ -68,7 +68,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
     // пример того как грузить много данных
     List<bool> resultOfRequests = await Future.wait([
       userData['patient_id'] != null
-          ? getAppointments(patientId: userData['patient_id'])
+          ? getAppointments(patientId: userData['patient_id'].toString())
           : getAppointmentsD(doctorId: userData['doctor_id'])
     ]);
 
