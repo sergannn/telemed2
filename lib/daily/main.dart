@@ -478,7 +478,7 @@ class _MyAppState extends State<DailyApp> {
         context,
         MaterialPageRoute(
           builder: (context) => DailyApp(
-            appointment_unique_id: widget.appointment_unique_id,
+            appointment_unique_id: 'TEST_ROOM_${widget.appointment_unique_id}',
             room: testRoomUrl,
             prefs: widget.prefs,
             callClient: newCallClient,
