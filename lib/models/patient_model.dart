@@ -21,7 +21,7 @@ class PatientModel {
 
   PatientModel.fromJson(Map json) {
     print("DEBUG: PatientModel.fromJson - Starting with json: $json");
-    patientId = json['doctor_id'];
+    patientId = json['id']?.toString();
 
     userId = json['id']?.toString();
     userName = json['full_name'];
