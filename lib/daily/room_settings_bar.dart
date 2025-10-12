@@ -365,6 +365,8 @@ class _RoomSettingsBarState extends State<RoomSettingsBar> {
       onTap: isLoading || widget.room == null
           ? null
           : () {
+              print("GestureDetector onTap triggered!");
+              print("isLoading: $isLoading, room null: ${widget.room == null}");
               serJoin(canJoin);
             },
       /*widget.client.callState != CallState.initialized &&
@@ -458,7 +460,9 @@ class _RoomSettingsBarState extends State<RoomSettingsBar> {
                         onPressed: isLoading || widget.room == null
                             ? null
                             : () {
+                                print("=== TEXTBUTTON PRESSED ===");
                                 print("Button pressed - canJoin: $canJoin, callState: $callState");
+                                print("isLoading: $isLoading, room null: ${widget.room == null}");
                                 serJoin(canJoin);
                               },
                         style: TextButton.styleFrom(

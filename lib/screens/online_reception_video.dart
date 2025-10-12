@@ -18,7 +18,9 @@ class _OnlineReceptionVideoState extends State<OnlineReceptionVideo> {
   Future<void> _startVideoCall(BuildContext context) async {
     try {
       var prefs = await SharedPreferences.getInstance();
-      final client = await CallClient.create();
+      
+      // НЕ создаем новый CallClient - используем существующий из контекста
+      // final client = await CallClient.create();
 
       // Получаем данные о записи из контекста
       var appointment = context.selectedAppointment;
@@ -47,6 +49,9 @@ class _OnlineReceptionVideoState extends State<OnlineReceptionVideo> {
       print('DEBUG: Starting video call with room: $roomUrl');
       print('DEBUG: Appointment ID: $appointmentId');
 
+      // Создаем CallClient только при переходе к DailyApp
+      final client = await CallClient.create();
+      
       Navigator.push(
         context,
         MaterialPageRoute(
