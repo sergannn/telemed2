@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:doctorq/services/notification_service.dart';
+import 'package:doctorq/services/notification_manager.dart';
+import 'package:doctorq/services/session.dart';
 
 class NotificationTestScreen extends StatefulWidget {
   const NotificationTestScreen({super.key});
@@ -10,7 +12,9 @@ class NotificationTestScreen extends StatefulWidget {
 
 class _NotificationTestScreenState extends State<NotificationTestScreen> {
   final NotificationService _notificationService = NotificationService();
+  final NotificationManager _notificationManager = NotificationManager();
   bool _isInitialized = false;
+  bool _isPollingActive = false;
 
   @override
   void initState() {
@@ -74,6 +78,42 @@ class _NotificationTestScreenState extends State<NotificationTestScreen> {
     );
   }
 
+  Future<void> _startPolling() async {
+    if (!_isInitialized) return;
+
+    await _notificationManager.startPollingForCurrentDoctor();
+    setState(() {
+      _isPollingActive = true;
+    });
+    
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Polling запущен! Проверка каждую минуту.'))
+    );
+  }
+
+  Future<void> _stopPolling() async {
+    if (!_isInitialized) return;
+
+    await _notificationManager.stopPolling();
+    setState(() {
+      _isPollingActive = false;
+    });
+    
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Polling остановлен!'))
+    );
+  }
+
+  Future<void> _testManagerNotification() async {
+    if (!_isInitialized) return;
+
+    await _notificationManager.showTestNotification();
+    
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Тестовое уведомление через Manager отправлено!'))
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -89,6 +129,14 @@ class _NotificationTestScreenState extends State<NotificationTestScreen> {
               'Статус: ${_isInitialized ? "Инициализирован" : "Загрузка..."}',
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
+            Text(
+              'Polling: ${_isPollingActive ? "Активен" : "Неактивен"}',
+              style: TextStyle(
+                fontSize: 14, 
+                fontWeight: FontWeight.bold,
+                color: _isPollingActive ? Colors.green : Colors.red,
+              ),
+            ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _testImmediateNotification,
@@ -98,6 +146,24 @@ class _NotificationTestScreenState extends State<NotificationTestScreen> {
             ElevatedButton(
               onPressed: _testScheduledNotification,
               child: const Text('Тест запланированного напоминания'),
+            ),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: _testManagerNotification,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue,
+                foregroundColor: Colors.white,
+              ),
+              child: const Text('Тест уведомления через Manager'),
+            ),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: _isPollingActive ? _stopPolling : _startPolling,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: _isPollingActive ? Colors.orange : Colors.green,
+                foregroundColor: Colors.white,
+              ),
+              child: Text(_isPollingActive ? 'Остановить Polling' : 'Запустить Polling'),
             ),
             const SizedBox(height: 10),
             ElevatedButton(

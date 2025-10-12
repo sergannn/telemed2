@@ -5,6 +5,7 @@ import 'package:doctorq/widgets/spacing.dart';
 import 'widgets/listreply1_item_widget.dart';
 import 'package:doctorq/app_export.dart';
 import 'package:doctorq/widgets/custom_search_view.dart';
+import 'package:doctorq/widgets/appointments_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:basic_utils/basic_utils.dart';
@@ -49,6 +50,43 @@ class UpcomingAppointments extends StatelessWidget {
     }
     print("grouped:");
     print(groupedAppointments);
+    
+    // Если нет предстоящих сеансов, показываем сообщение
+    if (groupedAppointments.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.event_available,
+              size: 64,
+              color: isDark ? Colors.white70 : ColorConstant.bluegray400,
+            ),
+            SizedBox(height: 16),
+            Text(
+              'Нет предстоящих сеансов',
+              style: TextStyle(
+                fontSize: getFontSize(18),
+                fontFamily: 'Source Sans Pro',
+                fontWeight: FontWeight.w600,
+                color: isDark ? Colors.white : ColorConstant.bluegray800,
+              ),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Ваши предстоящие записи появятся здесь',
+              style: TextStyle(
+                fontSize: getFontSize(14),
+                fontFamily: 'Source Sans Pro',
+                fontWeight: FontWeight.w400,
+                color: isDark ? Colors.white70 : ColorConstant.bluegray400,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+    
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       child: Column(

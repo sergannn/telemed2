@@ -6,6 +6,7 @@ import 'package:doctorq/extensions.dart';
 import 'package:doctorq/screens/appointments/past_appointments/past_appointments.dart';
 import 'package:doctorq/screens/appointments/upcoming_appointments/UpcomingAppointments.dart';
 import 'package:doctorq/services/api_service.dart';
+import 'package:doctorq/widgets/appointments_loader.dart';
 import 'package:doctorq/stores/user_store.dart';
 import 'package:doctorq/utils/utility.dart';
 import 'package:doctorq/widgets/loading_overlay.dart';
@@ -33,6 +34,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
   bool showUpcomming = true;
 //  bool showUpcomming = widget.mode == 'old' ? false : true;
   List myAppointments = [];
+  bool isLoading = false;
 
   @override
   initState() {
@@ -50,6 +52,10 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
   }
 
   loadData() async {
+    setState(() {
+      isLoading = true;
+    });
+    
     printLog('Getting Appointments');
 /*
     Future.delayed(Duration.zero, () {
@@ -68,6 +74,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
 
     setState(() {
       myAppointments = context.appointmentsData;
+      isLoading = false;
     });
 
     inspect(resultOfRequests);
@@ -104,12 +111,14 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                   myAppointments = context.appointmentsData;
                 }); // Simulate network request
               },
-              child: SingleChildScrollView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                child:
-                    showUpcomming ? 
-                    UpcomingAppointments() : PastAppointments(),
-              ),
+              child: isLoading 
+                ? const AppointmentsLoader()
+                : SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    child:
+                        showUpcomming ? 
+                        UpcomingAppointments() : PastAppointments(),
+                  ),
             )),
           ],
         ),

@@ -6,6 +6,7 @@ import 'package:doctorq/screens/appointments/upcoming_appointments/widgets/listr
 import 'package:doctorq/widgets/spacing.dart';
 import 'package:doctorq/app_export.dart';
 import 'package:doctorq/widgets/custom_search_view.dart';
+import 'package:doctorq/widgets/appointments_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 //import '../list/voice_call_screen/voice_call_screen.dart';
@@ -48,6 +49,42 @@ class PastAppointments extends StatelessWidget {
         }
         groupedAppointments[date]!.add(appointment);
       }
+    }
+
+    // Если нет прошедших сеансов, показываем сообщение
+    if (groupedAppointments.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.history,
+              size: 64,
+              color: isDark ? Colors.white70 : ColorConstant.bluegray400,
+            ),
+            SizedBox(height: 16),
+            Text(
+              'Нет прошедших сеансов',
+              style: TextStyle(
+                fontSize: getFontSize(18),
+                fontFamily: 'Source Sans Pro',
+                fontWeight: FontWeight.w600,
+                color: isDark ? Colors.white : ColorConstant.bluegray800,
+              ),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Ваши завершенные записи появятся здесь',
+              style: TextStyle(
+                fontSize: getFontSize(14),
+                fontFamily: 'Source Sans Pro',
+                fontWeight: FontWeight.w400,
+                color: isDark ? Colors.white70 : ColorConstant.blueA400Cc,
+              ),
+            ),
+          ],
+        ),
+      );
     }
 
     return SingleChildScrollView(

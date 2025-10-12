@@ -7,6 +7,7 @@ import 'package:doctorq/screens/test/notification_test_screen.dart';
 import 'package:doctorq/services/api_service.dart';
 import 'package:doctorq/services/session.dart';
 import 'package:doctorq/services/startup_service.dart';
+import 'package:doctorq/services/notification_manager.dart';
 import 'package:doctorq/stores/init_stores.dart';
 import 'package:doctorq/stores/user_store.dart';
 import 'package:doctorq/translations/codegen_loader.g.dart';
@@ -49,6 +50,10 @@ void main() async {
 //    DeviceOrientation.portraitUp,
   ]);
   await Session.init();
+
+  // Initialize notification manager
+  final notificationManager = NotificationManager();
+  await notificationManager.initialize();
 
   initStores();
   await Future.delayed(Duration(milliseconds: 1000));
@@ -133,10 +138,23 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     themeManager.addListener(themeListener);
 
     WidgetsBinding.instance.addObserver(this);
+    
+    // Start notification polling for current doctor
+    _startNotificationPolling();
+    
     // _requestPermissions();
     // _configureDidReceiveLocalNotificationSubject();
     // _configureSelectNotificationSubject();
     // _handleIncomingLinks();
+  }
+
+  Future<void> _startNotificationPolling() async {
+    try {
+      final notificationManager = NotificationManager();
+      await notificationManager.startPollingForCurrentDoctor();
+    } catch (e) {
+      print('Error starting notification polling: $e');
+    }
   }
 
   @override
