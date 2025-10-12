@@ -22,7 +22,7 @@ class _OnlineReceptionVideoState extends State<OnlineReceptionVideo> {
 
       // Для демонстрации используем тестовую комнату
       // В реальном приложении здесь должна быть логика получения room_data из контекста
-      String roomUrl = 'https://ser-tele-med.daily.co/test_room';
+      String roomUrl = DailyConfig.testRoomUrl;
       
       print('DEBUG: Starting video call with room: $roomUrl');
 

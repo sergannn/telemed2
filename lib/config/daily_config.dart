@@ -5,9 +5,9 @@ class DailyConfig {
   // Базовый URL для Daily.co API
   static const String baseUrl = 'https://api.daily.co/v1';
   
-  // Домен для комнат (из Laravel кода)
-  static const String domain = 'ser-tele-med.daily.co';
+  // Домен для комнат (правильный домен)
+  static const String domain = 'telemed2.daily.co';
   
   // Тестовая комната (fallback)
-  static const String testRoomUrl = 'https://ser-tele-med.daily.co/test_room';
+  static const String testRoomUrl = 'https://telemed2.daily.co/test_room';
 }
