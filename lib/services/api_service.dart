@@ -799,6 +799,7 @@ Future<bool> getPatientsForDoctor({required String doctorId}) async {
     // Extract unique patients from appointments
     Set<String> uniquePatientIds = {};
     List<Map<String, dynamic>> patients = [];
+    String? patientId; // Declare patientId outside the loop
     
     for (var appointment in appointments) {
       print('DEBUG: Processing appointment: ${appointment['id']}');
@@ -806,7 +807,7 @@ Future<bool> getPatientsForDoctor({required String doctorId}) async {
       
       if (appointment['patient'] != null) {
         var patient = appointment['patient'];
-        String patientId = patient['user_id']?.toString();
+        patientId = patient['user_id']?.toString();
         String fullName = patient['username'] ?? 'Неизвестный пациент';
         String firstName = patient['first_name'] ?? '';
         String profileImage = patient['photo'] ?? '';
