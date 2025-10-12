@@ -50,10 +50,12 @@ class DoctorModel {
 
   Map toJson() {
     var specializationsList = [];
-    for (var specializationsElement in specializations!) {
-      specializationsList.add({
-        'name': specializationsElement,
-      });
+    if (specializations != null) {
+      for (var specializationsElement in specializations!) {
+        specializationsList.add({
+          'name': specializationsElement,
+        });
+      }
     }
     var days = [];
     if (schedule != null) {
