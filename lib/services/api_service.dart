@@ -18,7 +18,6 @@ import 'package:doctorq/stores/specs_store.dart';
 import 'package:doctorq/stores/user_store.dart';
 import 'package:doctorq/utils/pub.dart';
 import 'package:doctorq/utils/utility.dart';
-import 'package:doctorq/services/fake_data_service.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:get_it/get_it.dart';
@@ -198,48 +197,127 @@ Future<bool> setAppointment(
 }
 
 Future<bool> getAppointmentsD({required String doctorId}) async {
-  // Генерируем фейковые данные для записей врача
-  List<Map<String, dynamic>> fakeAppointments = FakeDataService.generateFakeAppointments(doctorId, 'doctor');
-  print("DEBUG: Generated ${fakeAppointments.length} fake appointments");
+  print("DEBUG: Getting appointments for doctor: $doctorId");
   
   AppointmentsStore storeAppointmentsStore = getIt.get<AppointmentsStore>();
-
   storeAppointmentsStore.clearAppointmentsData();
-  
-  print("DEBUG: Loading fake appointments data for doctor: $doctorId");
-  
-  fakeAppointments.forEach((appointment) {
-    AppointmentModel appointmentModel = AppointmentModel.fromJson(appointment);
-    storeAppointmentsStore
-        .addAppointmentToAppointmentsData(appointmentModel.toJson());
-  });
 
-  print("DEBUG: Added ${storeAppointmentsStore.appointmentsDataList.length} appointments to store");
-  return true;
+  try {
+    final result = await client.query(QueryOptions(
+      document: gql('''
+        query appointments {
+          appointmentsbydoctor(doctor_id: "$doctorId") {
+            id
+            date
+            appointment_unique_id
+            patient {
+              patientUser {
+                id
+                full_name 
+                first_name
+                profile_image
+              }
+            }
+            doctor {
+              doctor_id: id
+              specializations {
+                name
+              }
+            }
+            status
+            from_time
+            from_time_type
+            to_time
+            to_time_type
+            description
+          }
+        }
+      '''),
+    ));
+
+    if (result.hasException) {
+      print("DEBUG: GraphQL error: ${result.exception}");
+      return false;
+    }
+
+    print("DEBUG: GraphQL result: ${result.data}");
+    
+    if (result.data != null && result.data!['appointmentsbydoctor'] != null) {
+      List<dynamic> appointments = result.data!['appointmentsbydoctor'];
+      print("DEBUG: Found ${appointments.length} appointments");
+      
+      appointments.forEach((appointment) {
+        AppointmentModel appointmentModel = AppointmentModel.fromJson(appointment);
+        storeAppointmentsStore.addAppointmentToAppointmentsData(appointmentModel.toJson());
+      });
+      
+      print("DEBUG: Added ${storeAppointmentsStore.appointmentsDataList.length} appointments to store");
+      return true;
+    } else {
+      print("DEBUG: No appointments data found");
+      return false;
+    }
+  } catch (e) {
+    print("DEBUG: Error getting appointments: $e");
+    return false;
+  }
 }
 
 Future<bool> getSessionsD({required String doctorId}) async {
-  print(doctorId);
+  print("DEBUG: Getting sessions for doctor: $doctorId");
   
-  // Генерируем фейковые данные для сеансов
-  List<Map<String, dynamic>> fakeSessions = FakeDataService.generateFakeDoctorSessions(doctorId);
-  
-  DoctorSessionsStore storeDoctorSessionsStore =
-      getIt.get<DoctorSessionsStore>();
-
+  DoctorSessionsStore storeDoctorSessionsStore = getIt.get<DoctorSessionsStore>();
   storeDoctorSessionsStore.clearDoctorSessionsData();
 
-  printLog("Loading fake sessions data");
+  try {
+    final result = await client.query(QueryOptions(
+      document: gql('''
+        query sessions {
+          sessionsBydoctorId(doctor_id: $doctorId) {
+            id
+            doctor_id
+            session_meeting_time
+            session_gap
+            sessionWeekDays {
+              id
+              day_of_week
+              start_time
+              end_time
+              start_time_type
+              end_time_type
+            }
+          }
+        }
+      '''),
+      variables: {'doctorId': doctorId},
+    ));
 
-  fakeSessions.forEach((doctorSession) {
-    DoctorSessionModel doctorSessionModel =
-        DoctorSessionModel.fromJson(doctorSession);
-    storeDoctorSessionsStore
-        .addDoctorSessionToDoctorSessionsData(doctorSessionModel.toJson());
-  });
+    if (result.hasException) {
+      print("DEBUG: GraphQL error: ${result.exception}");
+      return false;
+    }
 
-  printLog("exit from getSessionsD with fake data");
-  return true;
+    print("DEBUG: GraphQL result: ${result.data}");
+    
+    if (result.data != null && result.data!['sessionsBydoctorId'] != null) {
+      List<dynamic> sessions = result.data!['sessionsBydoctorId'];
+      print("DEBUG: Found ${sessions.length} sessions");
+      
+      sessions.forEach((session) {
+        DoctorSessionModel doctorSessionModel = DoctorSessionModel.fromJson(session);
+        storeDoctorSessionsStore.addDoctorSessionToDoctorSessionsData(doctorSessionModel.toJson());
+      });
+      
+      print("DEBUG: Added ${storeDoctorSessionsStore.doctorSessionsDataList.length} sessions to store");
+      return true;
+    } else {
+      print("DEBUG: No sessions data found");
+      return false;
+    }
+  } catch (e) {
+    print("DEBUG: Error getting sessions: $e");
+    return false;
+  }
 }
 
 Future<bool> setSessionsD({required String doctorId}) async {
@@ -296,22 +374,70 @@ Future<bool> setSessionsD({required String doctorId}) async {
 }
 
 Future<bool> getAppointments({required String patientId}) async {
-  // Генерируем фейковые данные для записей пациента
-  List<Map<String, dynamic>> fakeAppointments = FakeDataService.generateFakeAppointments(patientId, 'patient');
+  print("DEBUG: Getting appointments for patient: $patientId");
   
   AppointmentsStore storeAppointmentsStore = getIt.get<AppointmentsStore>();
-
   storeAppointmentsStore.clearAppointmentsData();
-  
-  printLog("Loading fake appointments data for patient: $patientId");
 
-  fakeAppointments.forEach((appointment) {
-    AppointmentModel appointmentModel = AppointmentModel.fromJson(appointment);
-    storeAppointmentsStore
-        .addAppointmentToAppointmentsData(appointmentModel.toJson());
-  });
+  try {
+    final result = await client.query(QueryOptions(
+      document: gql('''
+        query appointments {
+          appointments(patient_id: "$patientId") {
+            id
+            date
+            appointment_unique_id
+            patient {
+              patientUser {
+                id
+                full_name 
+                first_name
+                profile_image
+              }
+            }
+            doctor {
+              doctor_id: id
+              specializations {
+                name
+              }
+            }
+            status
+            from_time
+            from_time_type
+            to_time
+            to_time_type
+            description
+          }
+        }
+      '''),
+    ));
 
-  return true;
+    if (result.hasException) {
+      print("DEBUG: GraphQL error: ${result.exception}");
+      return false;
+    }
+
+    print("DEBUG: GraphQL result: ${result.data}");
+    
+    if (result.data != null && result.data!['appointments'] != null) {
+      List<dynamic> appointments = result.data!['appointments'];
+      print("DEBUG: Found ${appointments.length} appointments");
+      
+      appointments.forEach((appointment) {
+        AppointmentModel appointmentModel = AppointmentModel.fromJson(appointment);
+        storeAppointmentsStore.addAppointmentToAppointmentsData(appointmentModel.toJson());
+      });
+      
+      print("DEBUG: Added ${storeAppointmentsStore.appointmentsDataList.length} appointments to store");
+      return true;
+    } else {
+      print("DEBUG: No appointments data found");
+      return false;
+    }
+  } catch (e) {
+    print("DEBUG: Error getting appointments: $e");
+    return false;
+  }
 }
 
 Future<UserModel?> getCurrentUserDataAndReplaceField(
@@ -570,16 +696,16 @@ Future<bool> updateProfileWithDocument(BuildContext context, String imagePath,
 //    if (updatedUserData != null) {
 //      print(updatedUserData.toJson());
 //      print("it was updated data");
-    // User data has been successfully updated
+     // User data has been successfully updated
 //      UserStore uStore = getIt.get<UserStore>();
 //      uStore.setUserData(updatedUserData.toJson());
 //      Session().saveUser(updatedUserData);
-    // Session().saveUser(user);
-    //  } else {
-    // Error occurred during update
-    //   print('Failed to update user data');
-    //    return false;
-    //  }
+     // Session().saveUser(user);
+     //  } else {
+     // Error occurred during update
+     //   print('Failed to update user data');
+     //    return false;
+     //  }
     return true;
   } else {
     print('Error: ${response.statusCode}');
