@@ -560,4 +560,3 @@ getImagePathByContactMethod(Map<dynamic, dynamic> item) {
       );
     }
   }
-}

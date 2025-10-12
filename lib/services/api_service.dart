@@ -15,7 +15,8 @@ import 'package:doctorq/stores/appointments_store.dart';
 import 'package:doctorq/stores/doctor_sessions_store.dart';
 import 'package:doctorq/stores/doctors_store.dart';
 import 'package:doctorq/stores/specs_store.dart';
-import 'package:doctorq/stores/user_store.dart'
+import 'package:doctorq/stores/user_store.dart';
+//import 'package:doctorq/stores/user_store.dart'
 import 'package:doctorq/utils/pub.dart';
 import 'package:doctorq/utils/utility.dart';
 import 'package:flutter/material.dart';
