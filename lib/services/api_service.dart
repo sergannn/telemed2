@@ -10,6 +10,7 @@ import 'package:doctorq/models/doctor_model.dart';
 import 'package:doctorq/models/doctor_session_model.dart';
 import 'package:doctorq/models/user_model.dart';
 import 'package:doctorq/screens/appointments/steps/step_2_filled_screen/step_2_filled_screen.dart';
+import 'package:doctorq/services/fake_data_service.dart';
 import 'package:doctorq/services/session.dart';
 import 'package:doctorq/stores/appointments_store.dart';
 import 'package:doctorq/stores/doctor_sessions_store.dart';
@@ -22,7 +23,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:get_it/get_it.dart';
 import 'package:graphql/client.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
+//import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 GetIt getIt = GetIt.instance;
