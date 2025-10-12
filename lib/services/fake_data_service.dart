@@ -179,6 +179,7 @@ class FakeDataService {
     
     return {
       'patient_id': _generatePatientId(),
+      'photo': 'https://via.placeholder.com/100',
       'patientUser': {
         'user_id': _generatePatientId(),
         'username': '${firstNames[_random.nextInt(firstNames.length)]} ${lastNames[_random.nextInt(lastNames.length)]}',
