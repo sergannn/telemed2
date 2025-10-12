@@ -97,7 +97,7 @@ final DarwinInitializationSettings initializationSettingsDarwin =
   }
 
   Future<void> _loadInitialAppointments(String doctorId) async {
-    try {
+    //try {
       final success = await getAppointmentsD(doctorId: doctorId);
       if (success) {
         // Проверяем, зарегистрирован ли AppointmentsStore
@@ -111,9 +111,9 @@ final DarwinInitializationSettings initializationSettingsDarwin =
           print('AppointmentsStore not registered, skipping initial load');
         }
       }
-    } catch (e) {
-      print('Error loading initial appointments: $e');
-    }
+     //catch (e) {
+      //print('Error loading initial appointments: $e');
+   // }
   }
 
 

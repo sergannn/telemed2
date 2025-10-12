@@ -174,18 +174,18 @@ class AppointmentListItem extends StatelessWidget {
             final client = await CallClient.create();
 
 
-                isPast==false ?
+              //  isPast==false ?
       
-                   Navigator.push(
+       /*            Navigator.push(
              // context, MaterialPageRoute(builder: (context) => ChatScreen()));
              context, MaterialPageRoute(builder: (context) => OnlineReceptionVideo()))
              :
                     Navigator.push(
              // context, MaterialPageRoute(builder: (context) => ChatScreen()));
              context, MaterialPageRoute(builder: (context) => VideoResolution()));
-          
+        */  
              //start video commented
-/*
+
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -196,7 +196,7 @@ class AppointmentListItem extends StatelessWidget {
                   callClient: client,
                 ),
               ),
-            );*/
+            );
           } catch (e) {
             print('Error during video call setup: $e');
             // Optionally show an error message to the user here
@@ -298,7 +298,7 @@ class AppointmentListItem extends StatelessWidget {
                           Text(
 //                            item["doctor"]["username"],
 
-                                item['patient']['username'],
+                                item['patient']['username'] ?? "Patient",
                             overflow: TextOverflow.ellipsis,
                             textAlign: TextAlign.start,
                             style: TextStyle(
