@@ -806,7 +806,7 @@ Future<bool> getPatientsForDoctor({required String doctorId}) async {
       
       if (appointment['patient'] != null) {
         var patient = appointment['patient'];
-        String patientId = patient['patient_id']?.toString() ?? patient['user_id']?.toString();
+        String patientId = patient['user_id']?.toString();
         String fullName = patient['username'] ?? 'Неизвестный пациент';
         String firstName = patient['first_name'] ?? '';
         String profileImage = patient['photo'] ?? '';
@@ -819,6 +819,7 @@ Future<bool> getPatientsForDoctor({required String doctorId}) async {
             uniquePatientIds.add(patientId);
             patients.add({
               'id': patientId,
+              'user_id': patientId, // Добавляем user_id для совместимости
               'full_name': fullName,
               'first_name': firstName,
               'profile_image': profileImage,
