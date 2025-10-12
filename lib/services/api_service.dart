@@ -804,24 +804,31 @@ Future<bool> getPatientsForDoctor({required String doctorId}) async {
       print('DEBUG: Processing appointment: ${appointment['id']}');
       print('DEBUG: Patient data: ${appointment['patient']}');
       
-      if (appointment['patient'] != null && 
-          appointment['patient']['patientUser'] != null) {
-        var patientUser = appointment['patient']['patientUser'];
-        String patientId = patientUser['id'].toString();
-        print('DEBUG: Found patient: $patientId, name: ${patientUser['full_name']}');
+      if (appointment['patient'] != null) {
+        var patient = appointment['patient'];
+        String patientId = patient['patient_id']?.toString() ?? patient['user_id']?.toString();
+        String fullName = patient['username'] ?? 'Неизвестный пациент';
+        String firstName = patient['first_name'] ?? '';
+        String profileImage = patient['photo'] ?? '';
         
-        // Check if we've already added this patient
-        if (!uniquePatientIds.contains(patientId)) {
-          uniquePatientIds.add(patientId);
-          patients.add({
-            'id': patientId,
-            'full_name': patientUser['full_name'] ?? 'Неизвестный пациент',
-            'first_name': patientUser['first_name'] ?? '',
-            'profile_image': patientUser['profile_image'] ?? '',
-          });
-          print('DEBUG: Added patient: ${patientUser['full_name']}');
+        if (patientId != null && patientId != 'null') {
+          print('DEBUG: Found patient: $patientId, name: $fullName');
+          
+          // Check if we've already added this patient
+          if (!uniquePatientIds.contains(patientId)) {
+            uniquePatientIds.add(patientId);
+            patients.add({
+              'id': patientId,
+              'full_name': fullName,
+              'first_name': firstName,
+              'profile_image': profileImage,
+            });
+            print('DEBUG: Added patient: $fullName');
+          } else {
+            print('DEBUG: Patient $patientId already exists, skipping');
+          }
         } else {
-          print('DEBUG: Patient $patientId already exists, skipping');
+          print('DEBUG: Patient ID is null or invalid');
         }
       } else {
         print('DEBUG: Appointment has no patient data');
