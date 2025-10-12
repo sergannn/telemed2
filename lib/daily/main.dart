@@ -278,26 +278,36 @@ class _MyAppState extends State<DailyApp> {
   }
 
   Widget _buildRoomInfoPanel() {
+    // Проверяем, является ли это тестовой комнатой
+    bool isTestRoom = widget.room.contains('lFxg9A2Hi3PLrMdYKF81');
+    
     return Container(
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.blue.withOpacity(0.1),
+        color: isTestRoom ? Colors.orange.withOpacity(0.1) : Colors.blue.withOpacity(0.1),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.blue, width: 1),
+        border: Border.all(
+          color: isTestRoom ? Colors.orange : Colors.blue, 
+          width: 1
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Icon(Icons.info_outline, color: Colors.blue, size: 16),
+              Icon(
+                isTestRoom ? Icons.warning : Icons.info_outline, 
+                color: isTestRoom ? Colors.orange : Colors.blue, 
+                size: 16
+              ),
               const SizedBox(width: 8),
               Text(
-                'Информация о подключении',
+                isTestRoom ? 'Тестовая комната' : 'Информация о подключении',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: Colors.blue,
+                  color: isTestRoom ? Colors.orange : Colors.blue,
                   fontSize: 14,
                 ),
               ),
@@ -328,24 +338,61 @@ class _MyAppState extends State<DailyApp> {
             ),
           ),
           const SizedBox(height: 8),
-          Row(
-            children: [
-              Icon(
-                widget.room.contains('test_room') ? Icons.warning : Icons.check_circle,
-                color: widget.room.contains('test_room') ? Colors.orange : Colors.green,
-                size: 14,
+          if (!isTestRoom) ...[
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.red.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(6),
+                border: Border.all(color: Colors.red.withOpacity(0.3)),
               ),
-              const SizedBox(width: 4),
-              Text(
-                widget.room.contains('test_room') ? 'Тестовая комната' : 'Реальная комната',
-                style: TextStyle(
-                  fontSize: 11,
-                  color: widget.room.contains('test_room') ? Colors.orange : Colors.green,
-                  fontWeight: FontWeight.bold,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(Icons.schedule, color: Colors.red, size: 14),
+                      const SizedBox(width: 4),
+                      Text(
+                        'Время жизни комнаты: 1 час',
+                        style: const TextStyle(
+                          fontSize: 11,
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    '⚠️ Если комната истекла, создайте новую запись',
+                    style: const TextStyle(
+                      fontSize: 10, 
+                      color: Colors.red, 
+                      fontStyle: FontStyle.italic
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ] else ...[
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.orange.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(6),
+                border: Border.all(color: Colors.orange.withOpacity(0.3)),
+              ),
+              child: Text(
+                'ℹ️ Тестовая комната для отладки',
+                style: const TextStyle(
+                  fontSize: 10, 
+                  color: Colors.orange, 
+                  fontStyle: FontStyle.italic
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ],
       ),
     );

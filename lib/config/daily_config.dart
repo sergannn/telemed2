@@ -9,5 +9,5 @@ class DailyConfig {
   static const String domain = 'telemed2.daily.co';
   
   // Тестовая комната (fallback)
-  static const String testRoomUrl = 'https://telemed2.daily.co/test_room';
+  static const String testRoomUrl = 'https://telemed2.daily.co/lFxg9A2Hi3PLrMdYKF81';
 }
