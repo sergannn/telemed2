@@ -56,60 +56,56 @@ class AppointmentListItem extends StatelessWidget {
     print(item);
     print(item['room_data']);
     dynamic roomData = item['room_data'];
-    if (roomData != null && roomData.isNotEmpty) {
-      // Room data exists, proceed with navigation
-      var roomUrl = jsonDecode(roomData)['url'];
-      print('Room URL: $roomUrl');
+    
+    // Проверяем, что room_data не null и не пустая строка
+    if (roomData != null && roomData.toString().isNotEmpty && roomData.toString() != 'null') {
+      try {
+        // Room data exists, proceed with navigation
+        var roomUrl = jsonDecode(roomData.toString())['url'];
+        print('Room URL: $roomUrl');
 
-      var room_url = jsonDecode(item['room_data'])['url'];
-      print(room_url);
-      var prefs = await SharedPreferences.getInstance();
-      final client = await CallClient.create();
-      //await prefs.setString(
-      //    item['d21ec1e9-8004-11ef-a4b8-02420a000404'], room_url);
-      Navigator.push(
+        var prefs = await SharedPreferences.getInstance();
+        final client = await CallClient.create();
+        
+        Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => AppointmentsListVoiceCallScreen(
-                    appointment: AppointmentsModel(
-                        img: '',
-                        id: '',
-                        name: 'Запись',
-                        contactMethodIcon: '',
-                        status: '',
-                        time: '13-00'),
-                    user: '{"user_id":"1"}',
-                  )));
-      /*Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => DailyApp(
-            appointment_unique_id: item['appointment_unique_id'],
-            room: room_url,
-            prefs: prefs,
-            callClient: client,
+            builder: (context) => DailyApp(
+              appointment_unique_id: item['appointment_unique_id'],
+              room: roomUrl,
+              prefs: prefs,
+              callClient: client,
+            ),
           ),
-        ),
-      );*/
+        );
+        print("Using real room: $roomUrl");
+      } catch (e) {
+        print("Error parsing room_data: $e");
+        // Fallback to test room if parsing fails
+        _navigateToTestRoom(context);
+      }
     } else {
-      var prefs = await SharedPreferences.getInstance();
-      final client = await CallClient.create();
-
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => DailyApp(
-            appointment_unique_id: item['appointment_unique_id'],
-            room: 'https://telemed2.daily.co/test_room',
-            prefs: prefs,
-            callClient: client,
-          ),
-        ),
-      );
-      print("no room");
-
-      //https://telemed2.daily.co/test_room
+      print("No room_data available, using test room");
+      _navigateToTestRoom(context);
     }
+  }
+
+  void _navigateToTestRoom(BuildContext context) async {
+    var prefs = await SharedPreferences.getInstance();
+    final client = await CallClient.create();
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => DailyApp(
+          appointment_unique_id: item['appointment_unique_id'],
+          room: 'https://telemed2.daily.co/test_room',
+          prefs: prefs,
+          callClient: client,
+        ),
+      ),
+    );
+    print("Using test room as fallback");
   }
 
   void navigateToScreenWithTypes(BuildContext context,bool isPast) async {
