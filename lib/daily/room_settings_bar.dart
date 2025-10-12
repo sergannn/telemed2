@@ -93,6 +93,69 @@ class _RoomSettingsBarState extends State<RoomSettingsBar> {
   String? _token;
   final OnlineController onlineController = Get.put(OnlineController());
 
+  // Методы для определения статуса подключения
+  Color _getStatusColor(CallState callState) {
+    switch (callState) {
+      case CallState.joined:
+        return Colors.green;
+      case CallState.joining:
+        return Colors.orange;
+      case CallState.leaving:
+        return Colors.red;
+      case CallState.left:
+        return Colors.grey;
+      case CallState.initialized:
+        return Colors.blue;
+      default:
+        return Colors.grey;
+    }
+  }
+
+  String _getStatusText(CallState callState) {
+    switch (callState) {
+      case CallState.joined:
+        return 'Подключен';
+      case CallState.joining:
+        return 'Подключение...';
+      case CallState.leaving:
+        return 'Отключение...';
+      case CallState.left:
+        return 'Отключен';
+      case CallState.initialized:
+        return 'Готов к подключению';
+      default:
+        return 'Неизвестно';
+    }
+  }
+
+  Color _getButtonColor(CallState callState) {
+    switch (callState) {
+      case CallState.joined:
+        return Colors.red;
+      case CallState.joining:
+        return Colors.orange;
+      case CallState.leaving:
+        return Colors.grey;
+      case CallState.left:
+        return Colors.green;
+      case CallState.initialized:
+        return Colors.blue;
+      default:
+        return Colors.grey;
+    }
+  }
+
+  String _getLoadingText(CallState callState) {
+    switch (callState) {
+      case CallState.joining:
+        return 'Подключение...';
+      case CallState.leaving:
+        return 'Отключение...';
+      default:
+        return 'Загрузка...';
+    }
+  }
+
   serJoin(canJoin) async {
     print("joining..");
     print(canJoin);
@@ -199,23 +262,84 @@ class _RoomSettingsBarState extends State<RoomSettingsBar> {
                                       fontWeight: FontWeight.bold)),
                         )
                       : */
-                  TextButton(
-                    onPressed: isLoading || widget.room == null
-                        ? null
-                        : () {
-                            serJoin(canJoin);
-                          },
-                    child: isLoading
-                        ? const SizedBox(
-                            width: 16,
-                            height: 16,
-                            child: CircularProgressIndicator(strokeWidth: 2))
-                        : Center(
-                            child: Text(canJoin ? 'Подключиться' : 'Выйти',
-                                textAlign: TextAlign.center,
+                  Column(
+                    children: [
+                      // Индикатор статуса подключения
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: _getStatusColor(callState),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              width: 8,
+                              height: 8,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            const SizedBox(width: 6),
+                            Text(
+                              _getStatusText(callState),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      // Кнопка подключения/отключения
+                      TextButton(
+                        onPressed: isLoading || widget.room == null
+                            ? null
+                            : () {
+                                serJoin(canJoin);
+                              },
+                        style: TextButton.styleFrom(
+                          backgroundColor: _getButtonColor(callState),
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child: isLoading
+                            ? Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const SizedBox(
+                                    width: 16,
+                                    height: 16,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    _getLoadingText(callState),
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : Text(
+                                canJoin ? 'Подключиться' : 'Выйти',
                                 style: const TextStyle(
+                                  color: Colors.white,
                                   fontWeight: FontWeight.bold,
-                                ))),
+                                ),
+                              ),
+                      ),
+                    ],
                   ),
                   /* Text(
                     widget.room,

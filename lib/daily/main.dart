@@ -400,31 +400,6 @@ class _MyAppState extends State<DailyApp> {
                             child: CircularProgressIndicator(strokeWidth: 2)),
                         Text("Ожидаем подключения пользователя...")
                       ],
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => OnlineReceptionVideo()),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              const Color.fromARGB(255, 96, 159, 222),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18),
-                          ),
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                        ),
-                        child: Text(
-                          'Переход на экран, который визуально должен быть вместо этого на котором ты сейчас находишься',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ),
                       /*   if (focusedParticipantId != null)
                             Padding(
                               padding:

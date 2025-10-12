@@ -65,34 +65,6 @@ class _OnlineReceptionVideoStartTwoState
                               ),
                             ],
                           ),
-                          const SizedBox(height: 18),
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const OnlineReceptionVideoComplete()),
-                              );
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  const Color.fromARGB(255, 96, 159, 222),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18),
-                              ),
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 12, vertical: 8),
-                            ),
-                            child: Text(
-                              'Кнопка перехода на экран завершения приема в чате, а так следующий экран должен открываться после того, как чат завершен"',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 12,
-                              ),
-                            ), 
-                          ),
-                          const SizedBox(height: 8),
                         Center(
   child: Container(
     width: 230,
