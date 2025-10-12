@@ -20,17 +20,38 @@ class _OnlineReceptionVideoState extends State<OnlineReceptionVideo> {
       var prefs = await SharedPreferences.getInstance();
       final client = await CallClient.create();
 
-      // Для демонстрации используем тестовую комнату
-      // В реальном приложении здесь должна быть логика получения room_data из контекста
-      String roomUrl = DailyConfig.testRoomUrl;
+      // Получаем данные о записи из контекста
+      var appointment = context.selectedAppointment;
+      String roomUrl = DailyConfig.testRoomUrl; // fallback
+      String appointmentId = 'unknown';
+      
+      if (appointment != null) {
+        appointmentId = appointment['appointment_unique_id'] ?? 'unknown';
+        
+        // Пытаемся получить реальную комнату из room_data
+        dynamic roomData = appointment['room_data'];
+        if (roomData != null && roomData.toString().isNotEmpty && roomData.toString() != 'null') {
+          try {
+            var roomInfo = jsonDecode(roomData.toString());
+            roomUrl = roomInfo['url'] ?? DailyConfig.testRoomUrl;
+            print('DEBUG: Found real room: $roomUrl');
+          } catch (e) {
+            print('DEBUG: Error parsing room_data: $e, using test room');
+            roomUrl = DailyConfig.testRoomUrl;
+          }
+        } else {
+          print('DEBUG: No room_data found, using test room');
+        }
+      }
       
       print('DEBUG: Starting video call with room: $roomUrl');
+      print('DEBUG: Appointment ID: $appointmentId');
 
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => DailyApp(
-            appointment_unique_id: 'test_appointment',
+            appointment_unique_id: appointmentId,
             room: roomUrl,
             prefs: prefs,
             callClient: client,
@@ -44,6 +65,92 @@ class _OnlineReceptionVideoState extends State<OnlineReceptionVideo> {
         SnackBar(content: Text('Ошибка запуска видеозвонка: $e')),
       );
     }
+  }
+
+  Widget _buildRoomInfo(BuildContext context) {
+    var appointment = context.selectedAppointment;
+    String roomUrl = 'Не определена';
+    String appointmentId = 'Неизвестно';
+    bool hasRealRoom = false;
+    
+    if (appointment != null) {
+      appointmentId = appointment['appointment_unique_id'] ?? 'Неизвестно';
+      
+      // Пытаемся получить реальную комнату из room_data
+      dynamic roomData = appointment['room_data'];
+      if (roomData != null && roomData.toString().isNotEmpty && roomData.toString() != 'null') {
+        try {
+          var roomInfo = jsonDecode(roomData.toString());
+          roomUrl = roomInfo['url'] ?? DailyConfig.testRoomUrl;
+          hasRealRoom = true;
+        } catch (e) {
+          roomUrl = DailyConfig.testRoomUrl;
+          hasRealRoom = false;
+        }
+      } else {
+        roomUrl = DailyConfig.testRoomUrl;
+        hasRealRoom = false;
+      }
+    }
+    
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: hasRealRoom ? Colors.green.withOpacity(0.1) : Colors.orange.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: hasRealRoom ? Colors.green : Colors.orange,
+          width: 1,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                hasRealRoom ? Icons.check_circle : Icons.warning,
+                color: hasRealRoom ? Colors.green : Colors.orange,
+                size: 16,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                hasRealRoom ? 'Комната готова' : 'Тестовая комната',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: hasRealRoom ? Colors.green : Colors.orange,
+                  fontSize: 12,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'ID записи: $appointmentId',
+            style: const TextStyle(fontSize: 11, color: Colors.grey),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            'URL комнаты:',
+            style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 2),
+          Container(
+            padding: const EdgeInsets.all(6),
+            decoration: BoxDecoration(
+              color: Colors.grey.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Text(
+              roomUrl,
+              style: const TextStyle(fontSize: 10, fontFamily: 'monospace'),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -115,6 +222,11 @@ class _OnlineReceptionVideoState extends State<OnlineReceptionVideo> {
                                 ),
                               ],
                             ),
+                            const SizedBox(height: 16),
+                            
+                            // Информация о комнате
+                            _buildRoomInfo(context),
+                            
                             const SizedBox(height: 26),
 
                             Container(
