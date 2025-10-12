@@ -203,7 +203,9 @@ class FakeDataService {
         'last_name': lastNames[_random.nextInt(lastNames.length)],
         'photo': 'https://via.placeholder.com/100'
       },
-      'specialization': specializations[_random.nextInt(specializations.length)]
+      'specializations': [
+        {'name': specializations[_random.nextInt(specializations.length)]}
+      ]
     };
   }
 }
