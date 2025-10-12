@@ -253,10 +253,11 @@ class _RoomSettingsBarState extends State<RoomSettingsBar> {
   }
 
   serJoin(canJoin) async {
-    print("joining..");
-    print(canJoin);
+    print("=== CONTROLLED JOIN/LEAVE ===");
+    print("canJoin: $canJoin");
     print("Room URL: ${widget.room}");
     print("Token: $_token");
+    print("Current call state: ${widget.client.callState}");
     
     // Проверяем истечение комнаты перед подключением
     if (canJoin) {
@@ -282,13 +283,17 @@ class _RoomSettingsBarState extends State<RoomSettingsBar> {
     }
     
     try {
-      //var url = widget.prefs.getString(widget.room);
-      await (canJoin
-          ? widget.client.join(url: Uri.parse(widget.room), token: _token)
-          : //() {
-          //  print("hmm");
-          widget.client.leave());
-      if (!canJoin) {
+      // ЯВНЫЙ контроль подключения - только по требованию пользователя
+      if (canJoin) {
+        print("User requested JOIN - connecting to room");
+        await widget.client.join(url: Uri.parse(widget.room), token: _token);
+        print("Successfully JOINED room");
+      } else {
+        print("User requested LEAVE - disconnecting from room");
+        await widget.client.leave();
+        print("Successfully LEFT room");
+        
+        // Переход к экрану отзыва после выхода
         AppointmentsModel a = AppointmentsModel(
             img: '',
             name: '',
@@ -300,16 +305,11 @@ class _RoomSettingsBarState extends State<RoomSettingsBar> {
           builder: (context) => AppointmentsListWriteReviewFilledScreen(
             contactMethod: ContactMethods.videoCall,
             appointment: a,
-            //                                   prefs: prefs,
-            //                                   callClient: client,
           ),
         ));
       }
-      print("Successfully ${canJoin ? 'joined' : 'left'} room");
-      //});
-
-      // });
     } on OperationFailedException catch (error, trace) {
+      print("Operation failed: $error");
       logger.severe(
           'Failed to ${canJoin ? 'join' : 'leave'} call', error, trace);
     }

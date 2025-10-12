@@ -70,16 +70,11 @@ class _MyAppState extends State<DailyApp> {
     super.initState();
     print("main state inited");
     print("its a room data:");
-//    widget.room = "a";
     print(widget.room);
-    //widget.pre
 
-    // main();
-    // WidgetsFlutterBinding.ensureInitialized();
-    // initLogging();
+    // НЕ подключаемся автоматически - только настраиваем CallClient
     widget.callClient
       ..setUsername("guest")
-      //..setUsername(widget.prefs.getString('username') ?? 'Guest')
       ..updateSubscriptionProfiles(
         forProfiles: {
           SubscriptionProfile.base: const MediaSubscriptionSettingsUpdate.set(
@@ -97,6 +92,9 @@ class _MyAppState extends State<DailyApp> {
       )
       ..setInputsEnabled(camera: true, microphone: true);
     _eventSubscription = widget.callClient.events.listen(_handleEvent);
+    
+    // НЕ вызываем join() автоматически - только по требованию пользователя
+    print("CallClient configured but NOT auto-joining");
   }
 
   @override

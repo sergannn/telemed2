@@ -155,25 +155,16 @@ class UpcomingAppointments extends StatelessWidget {
                                   itemCount: appointmentsList.length,
                                   itemBuilder: (context, index) {
                                     //print(appointmentsList[index]);
-                                    String ad = appointmentsList[index]['date'];
-                                    String at =
-                                        appointmentsList[index]['from_time'];
-                                    DateTime appDateTime =
-                                        DateFormat('yyyy-MM-dd HH:mm')
-                                            .parse(ad + " " + at);
-                                    print(appDateTime);
-                                    bool isPast =
-                                        appDateTime.isBefore(DateTime.now());
-                                    print(
-                                        "Is ${DateFormat('yyyy-MM-dd HH:mm').format(appDateTime)} past? ${isPast ? 'Yes' : 'No'}");
-
-                                    if (!isPast &&
-                                        appointmentsList[index]['date'] == date)
+                                    // Используем уже обработанные данные из groupedAppointments
+                                    // НЕ дублируем логику определения времени
+                                    if (groupedAppointments.containsKey(date) &&
+                                        groupedAppointments[date]!.any((app) => app['id'] == appointmentsList[index]['id'])) {
                                       return AppointmentListItem(
-                                        isPast: isPast,
+                                        isPast: false, // Все записи в upcoming уже проверены как не прошедшие
                                         index: index,
                                         item: appointmentsList[index],
                                       );
+                                    }
                                     return const SizedBox.shrink();
                                   },
                                 )
