@@ -22,9 +22,16 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:get_it/get_it.dart';
 import 'package:graphql/client.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 GetIt getIt = GetIt.instance;
+
+// GraphQL client for API calls
+GraphQLClient client = GraphQLClient(
+  link: HttpLink('https://admin.onlinedoctor.su/graphql'),
+  cache: GraphQLCache(),
+);
 
 Future<bool> getSpecs() async {
   printLog('Getting doctors');
