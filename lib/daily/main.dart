@@ -277,6 +277,80 @@ class _MyAppState extends State<DailyApp> {
     );
   }
 
+  Widget _buildRoomInfoPanel() {
+    return Container(
+      margin: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.blue.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.blue, width: 1),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.info_outline, color: Colors.blue, size: 16),
+              const SizedBox(width: 8),
+              Text(
+                'Информация о подключении',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue,
+                  fontSize: 14,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'ID записи: ${widget.appointment_unique_id}',
+            style: const TextStyle(fontSize: 12, color: Colors.grey),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            'URL комнаты:',
+            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 2),
+          Container(
+            padding: const EdgeInsets.all(6),
+            decoration: BoxDecoration(
+              color: Colors.grey.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Text(
+              widget.room,
+              style: const TextStyle(fontSize: 11, fontFamily: 'monospace'),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Icon(
+                widget.room.contains('test_room') ? Icons.warning : Icons.check_circle,
+                color: widget.room.contains('test_room') ? Colors.orange : Colors.green,
+                size: 14,
+              ),
+              const SizedBox(width: 4),
+              Text(
+                widget.room.contains('test_room') ? 'Тестовая комната' : 'Реальная комната',
+                style: TextStyle(
+                  fontSize: 11,
+                  color: widget.room.contains('test_room') ? Colors.orange : Colors.green,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   bottomDailyNavBar() {
     return Padding(
       padding: const EdgeInsets.only(left: 20, right: 20, top: 4, bottom: 24),
@@ -377,6 +451,8 @@ class _MyAppState extends State<DailyApp> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      // Информация о комнате
+                      _buildRoomInfoPanel(),
                       bottomDailyNavBar(),
                       // Text('aaaa'),
                       Row(children: [
