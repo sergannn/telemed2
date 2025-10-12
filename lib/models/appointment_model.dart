@@ -33,8 +33,12 @@ class AppointmentModel {
   AppointmentModel.fromJson(Map json) {
     appointmentId = json['id'];
     appointmentUniqueId = json['appointment_unique_id'];
-    doctor = DoctorModel.fromJson(json['doctor']);
-    patient = PatientModel.fromJson(json['patient']['patientUser']);
+    doctor = json['doctor'] != null 
+        ? DoctorModel.fromJson(json['doctor'])
+        : DoctorModel();
+    patient = json['patient'] != null && json['patient']['patientUser'] != null 
+        ? PatientModel.fromJson(json['patient']['patientUser'])
+        : PatientModel();
 
     description = json['description'];
     status = json['status'];
