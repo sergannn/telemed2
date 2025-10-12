@@ -635,65 +635,75 @@ Future<bool> createDoctorReview({required String patientId, required int rating,
 Future<bool> getPatientsForDoctor({required String doctorId}) async {
   printLog('Getting patients for doctor: $doctorId');
   
-  // First get appointments for the doctor
-  bool success = await getAppointmentsD(doctorId: doctorId);
-  printLog('getAppointmentsD success: $success');
-  
-  if (!success) {
-    printLog('Failed to get appointments for doctor');
+  try {
+    // First get appointments for the doctor
+    bool success = await getAppointmentsD(doctorId: doctorId);
+    printLog('getAppointmentsD success: $success');
+    
+    if (!success) {
+      printLog('Failed to get appointments for doctor');
+      return false;
+    }
+  } catch (e) {
+    printLog('Error in getAppointmentsD: $e');
     return false;
   }
   
-  // Get the appointments store to extract patients
-  AppointmentsStore storeAppointmentsStore = getIt.get<AppointmentsStore>();
-  List<dynamic> appointments = storeAppointmentsStore.appointmentsDataList;
-  printLog('Found ${appointments.length} appointments');
-  
-  // Extract unique patients from appointments
-  Set<String> uniquePatientIds = {};
-  List<Map<String, dynamic>> patients = [];
-  
-  for (var appointment in appointments) {
-    printLog('Processing appointment: ${appointment['id']}');
-    printLog('Patient data: ${appointment['patient']}');
+  try {
+    // Get the appointments store to extract patients
+    AppointmentsStore storeAppointmentsStore = getIt.get<AppointmentsStore>();
+    List<dynamic> appointments = storeAppointmentsStore.appointmentsDataList;
+    printLog('Found ${appointments.length} appointments');
     
-    if (appointment['patient'] != null && 
-        appointment['patient']['patientUser'] != null) {
-      var patientUser = appointment['patient']['patientUser'];
-      String patientId = patientUser['id'].toString();
-      printLog('Found patient: $patientId, name: ${patientUser['full_name']}');
+    // Extract unique patients from appointments
+    Set<String> uniquePatientIds = {};
+    List<Map<String, dynamic>> patients = [];
+    
+    for (var appointment in appointments) {
+      printLog('Processing appointment: ${appointment['id']}');
+      printLog('Patient data: ${appointment['patient']}');
       
-      // Check if we've already added this patient
-      if (!uniquePatientIds.contains(patientId)) {
-        uniquePatientIds.add(patientId);
-        patients.add({
-          'id': patientId,
-          'full_name': patientUser['full_name'] ?? 'Неизвестный пациент',
-          'first_name': patientUser['first_name'] ?? '',
-          'profile_image': patientUser['profile_image'] ?? '',
-        });
-        printLog('Added patient: ${patientUser['full_name']}');
+      if (appointment['patient'] != null && 
+          appointment['patient']['patientUser'] != null) {
+        var patientUser = appointment['patient']['patientUser'];
+        String patientId = patientUser['id'].toString();
+        printLog('Found patient: $patientId, name: ${patientUser['full_name']}');
+        
+        // Check if we've already added this patient
+        if (!uniquePatientIds.contains(patientId)) {
+          uniquePatientIds.add(patientId);
+          patients.add({
+            'id': patientId,
+            'full_name': patientUser['full_name'] ?? 'Неизвестный пациент',
+            'first_name': patientUser['first_name'] ?? '',
+            'profile_image': patientUser['profile_image'] ?? '',
+          });
+          printLog('Added patient: ${patientUser['full_name']}');
+        } else {
+          printLog('Patient $patientId already exists, skipping');
+        }
       } else {
-        printLog('Patient $patientId already exists, skipping');
+        printLog('Appointment has no patient data');
       }
-    } else {
-      printLog('Appointment has no patient data');
     }
+    
+    // Store patients in a dedicated store (we'll need to create this)
+    // For now, we'll store them in the doctors store temporarily
+    DoctorsStore storeDoctorsStore = getIt.get<DoctorsStore>();
+    storeDoctorsStore.clearDoctorsData();
+    
+    for (var patient in patients) {
+      storeDoctorsStore.addDoctorToDoctorsData(patient);
+    }
+    
+    printLog('Found ${patients.length} unique patients for doctor $doctorId');
+    printLog('Patients list: $patients');
+    printLog('Doctors store now has ${storeDoctorsStore.doctorsDataList.length} items');
+    return true;
+  } catch (e) {
+    printLog('Error in patient extraction: $e');
+    return false;
   }
-  
-  // Store patients in a dedicated store (we'll need to create this)
-  // For now, we'll store them in the doctors store temporarily
-  DoctorsStore storeDoctorsStore = getIt.get<DoctorsStore>();
-  storeDoctorsStore.clearDoctorsData();
-  
-  for (var patient in patients) {
-    storeDoctorsStore.addDoctorToDoctorsData(patient);
-  }
-  
-  printLog('Found ${patients.length} unique patients for doctor $doctorId');
-  printLog('Patients list: $patients');
-  printLog('Doctors store now has ${storeDoctorsStore.doctorsDataList.length} items');
-  return true;
 }
 
 Future<List<Map<String, dynamic>>> fetchFAQs({String? category}) async {
