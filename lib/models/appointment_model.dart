@@ -31,14 +31,21 @@ class AppointmentModel {
   String? room_data;
 
   AppointmentModel.fromJson(Map json) {
+    print("DEBUG: AppointmentModel.fromJson - Starting");
     appointmentId = json['id'];
     appointmentUniqueId = json['appointment_unique_id'];
+    
+    print("DEBUG: AppointmentModel.fromJson - Creating doctor");
     doctor = json['doctor'] != null 
         ? DoctorModel.fromJson(json['doctor'])
         : DoctorModel();
+    print("DEBUG: AppointmentModel.fromJson - Doctor created");
+    
+    print("DEBUG: AppointmentModel.fromJson - Creating patient");
     patient = json['patient'] != null && json['patient']['patientUser'] != null 
         ? PatientModel.fromJson(json['patient']['patientUser'])
         : PatientModel();
+    print("DEBUG: AppointmentModel.fromJson - Patient created");
 
     description = json['description'];
     status = json['status'];

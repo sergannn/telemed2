@@ -21,6 +21,7 @@ class DoctorModel {
   List<int>? schedule;
 
   DoctorModel.fromJson(Map json) {
+    print("DEBUG: DoctorModel.fromJson - Starting with json: $json");
     doctorId = json['doctor_id'];
 
     if (json['specializations'] != null) {
@@ -29,6 +30,7 @@ class DoctorModel {
         specializations!.add(specializationsElement['name']);
       });
     }
+    print("DEBUG: DoctorModel.fromJson - Specializations processed");
     if (json['doctorSession'] != null && json['doctorSession'].length != 0) {
       schedule = [];
       //print(json['doctorSession'][0]["sessionWeekDays"]);
@@ -46,6 +48,7 @@ class DoctorModel {
     firstName = json['doctorUser']['first_name'];
     lastName = json['doctorUser']['last_name'];
     photo = json['doctorUser']['photo'];
+    print("DEBUG: DoctorModel.fromJson - Completed");
   }
 
   Map toJson() {

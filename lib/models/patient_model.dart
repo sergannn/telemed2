@@ -20,6 +20,7 @@ class PatientModel {
   String? photo;
 
   PatientModel.fromJson(Map json) {
+    print("DEBUG: PatientModel.fromJson - Starting with json: $json");
     patientId = json['doctor_id'];
 
     userId = json['id']?.toString();
@@ -27,6 +28,7 @@ class PatientModel {
     firstName = json['first_name'];
     lastName = json['last_name'];
     photo = json['profile_image'];
+    print("DEBUG: PatientModel.fromJson - Completed");
   }
 
   Map toJson() {
