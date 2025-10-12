@@ -6,6 +6,7 @@ import 'package:daily_flutter/daily_flutter.dart';
 import 'package:doctorq/daily/logging.dart';
 import 'package:doctorq/daily/room_parameters_bottom_sheet.dart';
 import 'package:doctorq/daily/main.dart';
+import 'package:doctorq/extensions.dart';
 import 'package:doctorq/models/appointment_model.dart';
 import 'package:doctorq/models/appointments_model.dart';
 import 'package:doctorq/screens/appointments/list/messaging_ended_screen/messaging_ended_screen.dart';
@@ -226,7 +227,7 @@ class _RoomSettingsBarState extends State<RoomSettingsBar> {
         context,
         MaterialPageRoute(
           builder: (context) => DailyApp(
-            appointment_unique_id: 'TEST_ROOM_${widget.appointment_unique_id}',
+            appointment_unique_id: testRoomUrl,
             room: testRoomUrl,
             prefs: widget.prefs,
             callClient: newCallClient,

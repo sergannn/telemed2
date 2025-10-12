@@ -16,6 +16,7 @@ import 'package:doctorq/daily/participant_list_bottom_sheet.dart';
 import 'package:doctorq/daily/recording_button.dart';
 import 'package:doctorq/daily/remote_participant_view.dart';
 import 'package:doctorq/daily/room_settings_bar.dart';
+import 'package:doctorq/extensions.dart';
 import 'package:doctorq/screens/online_reception_chat.dart';
 import 'package:doctorq/screens/online_reception_video.dart';
 import 'package:flutter/material.dart';
