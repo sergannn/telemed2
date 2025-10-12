@@ -529,14 +529,7 @@ class _MyAppState extends State<DailyApp> {
         //scaffoldMessengerKey: _scaffoldMessengerKey,
         body: CallClientStateProvider(
       callClient: widget.callClient,
-      child: PopScope(
-        canPop: false,
-        onPopInvoked: (scope) {
-          if (scope) {
-            Navigator.of(context).pop();
-          }
-        },
-        child: Scaffold(
+      child: Scaffold(
           appBar: AppBar(title: const Text('Подготовка к звонку')),
           bottomNavigationBar: 1 == 1 ? bottomDailyNavBar() : null,
           body: 1 == 2
@@ -634,7 +627,7 @@ class _MyAppState extends State<DailyApp> {
                 ),
         ),
       ),
-    ));
+    );
   }
 }
 
