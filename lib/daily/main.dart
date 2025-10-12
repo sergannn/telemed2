@@ -463,6 +463,17 @@ class _MyAppState extends State<DailyApp> {
     try {
       const testRoomUrl = 'https://telemed2.daily.co/lFxg9A2Hi3PLrMdYKF81';
       
+      // Корректно закрываем текущий CallClient
+      try {
+        await widget.callClient.leave();
+        await Future.delayed(const Duration(milliseconds: 500)); // Даем время на закрытие
+      } catch (e) {
+        print('Error leaving current room: $e');
+      }
+      
+      // Создаем новый CallClient для тестовой комнаты
+      final newCallClient = await CallClient.create();
+      
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -470,7 +481,7 @@ class _MyAppState extends State<DailyApp> {
             appointment_unique_id: widget.appointment_unique_id,
             room: testRoomUrl,
             prefs: widget.prefs,
-            callClient: widget.callClient,
+            callClient: newCallClient,
           ),
         ),
       );

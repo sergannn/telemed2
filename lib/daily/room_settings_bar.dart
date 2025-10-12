@@ -208,8 +208,18 @@ class _RoomSettingsBarState extends State<RoomSettingsBar> {
 
   void _navigateToTestRoom() async {
     try {
-      // Импортируем DailyConfig
       const testRoomUrl = 'https://telemed2.daily.co/lFxg9A2Hi3PLrMdYKF81';
+      
+      // Корректно закрываем текущий CallClient
+      try {
+        await widget.client.leave();
+        await Future.delayed(const Duration(milliseconds: 500)); // Даем время на закрытие
+      } catch (e) {
+        print('Error leaving current room: $e');
+      }
+      
+      // Создаем новый CallClient для тестовой комнаты
+      final newCallClient = await CallClient.create();
       
       // Создаем новый DailyApp с тестовой комнатой
       Navigator.pushReplacement(
@@ -219,7 +229,7 @@ class _RoomSettingsBarState extends State<RoomSettingsBar> {
             appointment_unique_id: widget.appointment_unique_id,
             room: testRoomUrl,
             prefs: widget.prefs,
-            callClient: widget.client,
+            callClient: newCallClient,
           ),
         ),
       );
