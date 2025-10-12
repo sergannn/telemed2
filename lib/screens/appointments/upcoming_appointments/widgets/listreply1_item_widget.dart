@@ -449,18 +449,15 @@ class AppointmentListItem extends StatelessWidget {
 getImagePathByContactMethod(Map<dynamic, dynamic> item) {
   if (item["description"] == "ContactMethods.videoCall") {
     return Icons.video_call;
-    ImageConstant.videocam;
   }
 
   if (item["description"] == "ContactMethods.voiceCall") {
     return Icons.voice_chat;
-    return ImageConstant.call;
   }
 
   if (item["description"] == "ContactMethods.message") {
     return Icons.message;
-    return ImageConstant.reviews;
   }
 
-  return ImageConstant.empty;
+  return Icons.calendar_today;
 }
