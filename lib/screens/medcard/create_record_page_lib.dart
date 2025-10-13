@@ -290,7 +290,7 @@ class CalendarRecordData<T extends Object?> {
   int get hashCode => description.hashCode ^ descriptionStyle.hashCode ^ titleStyle.hashCode ^ title.hashCode ^ category.hashCode ^ date.hashCode;
 
   factory CalendarRecordData.fromJson(Map<String, dynamic> json) {
-    return CalendarRecordData(
+    return CalendarRecordData<T>(
       title: json['title'] as String,
       date: DateTime.parse(json['date'] as String),
       description: json['description'] as String?,

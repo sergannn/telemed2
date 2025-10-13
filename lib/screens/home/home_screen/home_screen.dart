@@ -556,7 +556,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               },
                               itemBuilder: (context, index) {
                                 return AutolayouthorItemWidgetTasks(
-                                  item: itemController._filteredRecords[index],
+                                  item: itemController._filteredRecords[index].toJson(),
                                   index: index,
                                 );
                               },

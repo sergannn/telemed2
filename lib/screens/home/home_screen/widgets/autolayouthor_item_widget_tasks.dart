@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 // ignore: must_be_immutable
 class AutolayouthorItemWidgetTasks extends StatelessWidget {
   int index;
-  Map<String, dynamic> item;
+  dynamic item; // Изменяем тип на dynamic для поддержки CalendarRecordData
   AutolayouthorItemWidgetTasks(
       {Key? key, required this.index, required this.item})
       : super(key: key);
@@ -41,7 +41,9 @@ class AutolayouthorItemWidgetTasks extends StatelessWidget {
               borderRadius: BorderRadius.circular(20.0), // Радиус для овала
             ),
             child: Text(
-              "Чт. 26",
+              item['date'] != null ? 
+                DateTime.parse(item['date']).day.toString() : 
+                "26",
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 16.0,
@@ -51,9 +53,8 @@ class AutolayouthorItemWidgetTasks extends StatelessWidget {
           Container(
               padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
               child: RichText(
-                text: const TextSpan(
-                  //item['name'] +
-                  text: "Онлайн прием" + '\n',
+                text: TextSpan(
+                  text: (item['title'] ?? "Онлайн прием") + '\n',
                   style: TextStyle(
                     fontSize: 10,
                     color: Colors.black,
@@ -62,7 +63,7 @@ class AutolayouthorItemWidgetTasks extends StatelessWidget {
                   ),
                   children: <TextSpan>[
                     TextSpan(
-                      text: 'Врач аллерголог',
+                      text: item['category'] ?? 'Врач аллерголог',
                       style: TextStyle(
                         fontSize: 10,
                         color: Colors.black,
