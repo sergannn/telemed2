@@ -128,10 +128,9 @@ class ItemController extends GetxController {
             // Создаем запись для календаря
             CalendarRecordData appointmentRecord = CalendarRecordData(
               date: appointmentDate,
-              title: '${appointment['patient']['first_name'] ?? 'Пациент'} - ${appointment['description'] ?? 'Прием'}',
+              title: '${timeStr} - ${appointment['patient']['first_name'] ?? 'Пациент'} - ${appointment['description'] ?? 'Прием'}',
               category: 'Приемы',
-              time: timeStr,
-              appointmentId: appointment['id']?.toString(),
+              description: 'ID: ${appointment['id']?.toString() ?? 'N/A'}',
             );
             
             _calendarRecords.add(appointmentRecord);
