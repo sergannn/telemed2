@@ -66,11 +66,9 @@ class ItemController extends GetxController {
   void onInit() {
     super.onInit();
     refreshData();
-    //fetchStories();
-    //fetchArticles();
-    //_loadCalendarRecords().then((_) {
-    //  update(); // Ensure UI updates after loading records
-    //});
+    _loadCalendarRecords().then((_) {
+      filterRecordsByDate(DateTime.now());
+    });
   }
 
   Future<void> _loadCalendarRecords() async {
@@ -524,11 +522,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 selectedTextColor: Colors.white,
                                 onDateChange: (date) {
-                                  //setState(() {});
-                                  // New date selected
-                                  //setState(() {
-                                  //  selectedDate = date;
-                                  //});
+                                  print("home tap $date");
+                                  itemController.filterRecordsByDate(date);
                                 },
                               ))))),
 
@@ -555,16 +550,13 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               scrollDirection: Axis.horizontal,
                               physics: const ClampingScrollPhysics(),
-                              itemCount: itemController.cats.length,
+                              itemCount: itemController._filteredRecords.length,
                               separatorBuilder: (context, index) {
                                 return HorizontalSpace(width: 16);
                               },
                               itemBuilder: (context, index) {
-                                var cats = itemController.cats;
-                                //return Text("a");
-
                                 return AutolayouthorItemWidgetTasks(
-                                  item: cats[index],
+                                  item: itemController._filteredRecords[index],
                                   index: index,
                                 );
                               },
