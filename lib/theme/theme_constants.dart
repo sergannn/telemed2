@@ -3,7 +3,7 @@ import '../app_export.dart';
 
 ThemeData lightTheme222 = ThemeData(
   primaryColor: Colors.black,
-  dialogTheme: DialogTheme(
+  dialogTheme: DialogThemeData(
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(getHorizontalSize(10))),
       backgroundColor: Colors.white),
