@@ -24,6 +24,7 @@ import 'package:doctorq/screens/home/specialist_doctor_screen/specialist_doctor_
 import 'package:doctorq/screens/home/top_doctor_screen/choose_specs_screen_step_1.dart';
 import 'package:doctorq/services/api_service.dart';
 import 'package:doctorq/services/session.dart';
+import 'package:doctorq/stores/appointments_store.dart';
 import 'package:doctorq/utils/utility.dart';
 import 'package:doctorq/widgets/spacing.dart';
 import 'widgets/autolayouthor1_item_widget.dart';
@@ -74,18 +75,74 @@ class ItemController extends GetxController {
   Future<void> _loadCalendarRecords() async {
     final prefs = await SharedPreferences.getInstance();
     final recordsString = prefs.getString('calendar_records');
+    
+    // Загружаем записи из дневника
+    List<CalendarRecordData> diaryRecords = [];
     if (recordsString != null) {
       try {
         final List<dynamic> jsonList = jsonDecode(recordsString);
-        _calendarRecords.value =
-            jsonList.map((item) => CalendarRecordData.fromJson(item)).toList();
-        // Initialize with today's records
-        filterRecordsByDate(DateTime.now());
+        diaryRecords = jsonList.map((item) => CalendarRecordData.fromJson(item)).toList();
       } catch (e) {
         print('Error decoding calendar records: $e');
-        _calendarRecords.value = [];
-        _filteredRecords.value = [];
       }
+    }
+    
+    // Загружаем предстоящие сеансы
+    await _loadAppointmentsToCalendar();
+    
+    // Объединяем записи
+    _calendarRecords.value = diaryRecords;
+    
+    // Initialize with today's records
+    filterRecordsByDate(DateTime.now());
+  }
+
+  Future<void> _loadAppointmentsToCalendar() async {
+    try {
+      // Получаем предстоящие сеансы из store
+      AppointmentsStore storeAppointmentsStore = getIt.get<AppointmentsStore>();
+      List<Map<String, dynamic>> appointments = storeAppointmentsStore.appointmentsDataList;
+      
+      print("DEBUG: Loading ${appointments.length} appointments to calendar");
+      
+      for (var appointment in appointments) {
+        try {
+          // Парсим дату сеанса
+          String dateStr = appointment['date'] ?? '';
+          String fromTime = appointment['from_time'] ?? '';
+          String fromTimeType = appointment['from_time_type'] ?? '';
+          
+          if (dateStr.isNotEmpty) {
+            DateTime appointmentDate = DateTime.parse(dateStr);
+            
+            // Создаем время
+            String timeStr = fromTime;
+            if (fromTimeType == 'PM' && fromTime != '12:00') {
+              // Конвертируем PM время
+              List<String> timeParts = fromTime.split(':');
+              int hour = int.parse(timeParts[0]);
+              if (hour != 12) hour += 12;
+              timeStr = '${hour.toString().padLeft(2, '0')}:${timeParts[1]}';
+            }
+            
+            // Создаем запись для календаря
+            CalendarRecordData appointmentRecord = CalendarRecordData(
+              date: appointmentDate,
+              title: '${appointment['patient']['first_name'] ?? 'Пациент'} - ${appointment['description'] ?? 'Прием'}',
+              category: 'Приемы',
+              time: timeStr,
+              appointmentId: appointment['id']?.toString(),
+            );
+            
+            _calendarRecords.add(appointmentRecord);
+            print("DEBUG: Added appointment to calendar: ${appointmentRecord.title} on ${appointmentDate.toString()}");
+          }
+        } catch (e) {
+          print("DEBUG: Error processing appointment: $e");
+        }
+      }
+    } catch (e) {
+      print("DEBUG: Error loading appointments to calendar: $e");
     }
   }
 
@@ -155,13 +212,15 @@ class ItemController extends GetxController {
     // fetchDoctors();
     fetchStories();
     fetchArticles();
-        fetchRecommendations();
+    fetchRecommendations();
     getDoctors();
+    
+    // Загружаем предстоящие сеансы
+    await getAppointments();
+    
     _loadCalendarRecords().then((res) {
-       
       filterRecordsByDate(DateTime.now());
-       }
-       );
+    });
     // Simulating fetching data from an API
     var response = await http.get(Uri.parse(
       'https://www.admin.onlinedoctor.su/api/specializations',
