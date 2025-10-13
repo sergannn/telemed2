@@ -19,7 +19,6 @@ import 'package:doctorq/stores/specs_store.dart';
 import 'package:doctorq/stores/user_store.dart';
 import 'package:doctorq/utils/pub.dart';
 import 'package:doctorq/utils/utility.dart';
-import 'package:doctorq/services/fake_data_service.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:get_it/get_it.dart';
@@ -238,16 +237,70 @@ Future<bool> setAppointment(
 }
 
 Future<bool> getAppointmentsD({required String doctorId}) async {
-  // Генерируем фейковые данные для записей врача
-  List<Map<String, dynamic>> fakeAppointments = FakeDataService.generateFakeAppointments(doctorId, 'doctor');
-  
+  // TODO уменьшить клоичество данных за счет спецмалищации и переделать соотыетственно модель доторов
+  String getAppointments = '''
+        query appointments {
+          appointmentsbydoctor(doctor_id: "$doctorId") {
+                    id
+                    date
+                    appointment_unique_id
+                    	patient {
+                      patientUser {
+                        id
+                        full_name 
+                        first_name
+                        profile_image
+                      
+                      }
+                    }
+                    doctor {
+                        doctor_id: id
+                        specializations {
+                            name
+                        }
+                        doctorUser {
+                            user_id: id 
+                            username: full_name
+                            first_name
+                            last_name
+                            photo: profile_image
+                        }
+                    }
+                    description
+                    status
+                    from_time
+                    from_time_type
+                    to_time
+                    to_time_type
+                    room_data
+                }
+              }
+      ''';
+  print(getAppointments);
+  final QueryOptions options = QueryOptions(
+    document: gql(getAppointments),
+  );
+
+  GraphQLClient graphqlClient = await graphqlAPI2.noauthClient();
+
+  debugPrintTransactionStart('query appointments');
+  final QueryResult result = await graphqlClient.query(options);
+  debugPrintTransactionEnd('query appointments');
+
+  if (result.hasException) {
+    printLog(result.exception.toString(), name: 'query appointments');
+    return false;
+  }
+
+  final json = result.data!["appointmentsbydoctor"];
+  printLog("result:");
+  printLog(json);
+
   AppointmentsStore storeAppointmentsStore = getIt.get<AppointmentsStore>();
 
   storeAppointmentsStore.clearAppointmentsData();
-  
-  printLog("Loading fake appointments data for doctor: $doctorId");
-  
-  fakeAppointments.forEach((appointment) {
+  print(json);
+  json.forEach((appointment) {
     AppointmentModel appointmentModel = AppointmentModel.fromJson(appointment);
     storeAppointmentsStore
         .addAppointmentToAppointmentsData(appointmentModel.toJson());
@@ -258,25 +311,71 @@ Future<bool> getAppointmentsD({required String doctorId}) async {
 
 Future<bool> getSessionsD({required String doctorId}) async {
   print(doctorId);
-  
-  // Генерируем фейковые данные для сеансов
-  List<Map<String, dynamic>> fakeSessions = FakeDataService.generateFakeDoctorSessions(doctorId);
-  
+  String getSessions = '''
+        query sessions {
+          sessionsBydoctorId(doctor_id: $doctorId) {
+            id
+            doctor_id
+            doctor {
+              doctor_id: id
+              doctorUser {
+                user_id: id
+                username: full_name
+                first_name
+                last_name
+                photo: profile_image
+              }
+            }
+            session_meeting_time
+            session_gap
+            sessionWeekDays {
+                    day_of_week
+                    start_time
+                    start_time_type
+                    end_time
+                    end_time_type
+
+                }
+            
+            
+          }
+        }
+        
+      ''';
+  print(getSessions);
+  printLog(getSessions);
+  final QueryOptions options = QueryOptions(
+    document: gql(getSessions),
+  );
+
+  GraphQLClient graphqlClient = await graphqlAPI2.noauthClient();
+
+  debugPrintTransactionStart('query sessions');
+  final QueryResult result = await graphqlClient.query(options);
+  debugPrintTransactionEnd('query sessions');
+
+  if (result.hasException) {
+    printLog(result.exception.toString(), name: 'query sessions');
+    return false;
+  }
+  print(result.data);
+  final json = result.data?["sessionsBydoctorId"];
+
   DoctorSessionsStore storeDoctorSessionsStore =
       getIt.get<DoctorSessionsStore>();
 
   storeDoctorSessionsStore.clearDoctorSessionsData();
 
-  printLog("Loading fake sessions data");
+  printLog(json);
 
-  fakeSessions.forEach((doctorSession) {
+  json.forEach((doctorSession) {
     DoctorSessionModel doctorSessionModel =
         DoctorSessionModel.fromJson(doctorSession);
     storeDoctorSessionsStore
         .addDoctorSessionToDoctorSessionsData(doctorSessionModel.toJson());
   });
 
-  printLog("exit from getSessionsD with fake data");
+  printLog("exit from getSessionsD");
   return true;
 }
 
@@ -334,16 +433,71 @@ Future<bool> setSessionsD({required String doctorId}) async {
 }
 
 Future<bool> getAppointments({required String patientId}) async {
-  // Генерируем фейковые данные для записей пациента
-  List<Map<String, dynamic>> fakeAppointments = FakeDataService.generateFakeAppointments(patientId, 'patient');
-  
+  // TODO уменьшить клоичество данных за счет спецмалищации и переделать соотыетственно модель доторов
+  String getAppointments = '''
+        query appointments {
+          appointments(patient_id: "$patientId") {
+                    id
+                    date
+                    appointment_unique_id
+                    	patient {
+                      patientUser {
+                        id
+                        full_name 
+                        first_name
+                        profile_image
+                      
+                      }
+                    }
+                    doctor {
+                        doctor_id: id
+                        specializations {
+                            name
+                        }
+                        doctorUser {
+                            user_id: id 
+                            username: full_name
+                            first_name
+                            last_name
+                            photo: profile_image
+                        }
+                    }
+                    description
+                    status
+                    from_time
+                    from_time_type
+                    to_time
+                    to_time_type
+                      room_data
+                }
+              }
+      ''';
+  print(getAppointments);
+  print("it was query");
+  final QueryOptions options = QueryOptions(
+    document: gql(getAppointments),
+  );
+
+  GraphQLClient graphqlClient = await graphqlAPI2.noauthClient();
+
+  debugPrintTransactionStart('query appointments');
+  final QueryResult result = await graphqlClient.query(options);
+  debugPrintTransactionEnd('query appointments');
+
+  if (result.hasException) {
+    printLog(result.exception.toString(), name: 'query appointments');
+    return false;
+  }
+
+  final json = result.data!["appointments"];
+  printLog("result:");
+  printLog(json);
+
   AppointmentsStore storeAppointmentsStore = getIt.get<AppointmentsStore>();
 
   storeAppointmentsStore.clearAppointmentsData();
-  
-  printLog("Loading fake appointments data for patient: $patientId");
 
-  fakeAppointments.forEach((appointment) {
+  json.forEach((appointment) {
     AppointmentModel appointmentModel = AppointmentModel.fromJson(appointment);
     storeAppointmentsStore
         .addAppointmentToAppointmentsData(appointmentModel.toJson());
