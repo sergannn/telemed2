@@ -22,6 +22,33 @@ import 'package:daily_flutter/daily_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:date_count_down/date_count_down.dart';
 
+// Утилитная функция для проверки истечения комнаты
+bool _isRoomExpired(dynamic roomData) {
+  if (roomData == null || roomData.toString().isEmpty || roomData.toString() == 'null') {
+    return false; // Нет данных о комнате - не истекла
+  }
+  
+  try {
+    var roomInfo = jsonDecode(roomData.toString());
+    if (roomInfo['config'] != null && roomInfo['config']['exp'] != null) {
+      int expTimestamp = roomInfo['config']['exp'];
+      DateTime expDate = DateTime.fromMillisecondsSinceEpoch(expTimestamp * 1000);
+      DateTime now = DateTime.now();
+      
+      print('Room expiration check:');
+      print('  Expiration date: ${expDate.toString()}');
+      print('  Current date: ${now.toString()}');
+      print('  Is expired: ${expDate.isBefore(now)}');
+      
+      return expDate.isBefore(now);
+    }
+  } catch (e) {
+    print('Error checking room expiration: $e');
+  }
+  
+  return false; // Не удалось проверить - считаем не истекшей
+}
+
 class AppointmentListItem extends StatelessWidget {
   final int index;
   final Map<dynamic, dynamic> item;
@@ -45,22 +72,39 @@ class AppointmentListItem extends StatelessWidget {
     print(item['room_data']);
     dynamic roomData = item['room_data'];
     if (roomData != null && roomData.isNotEmpty) {
+      // СНАЧАЛА проверяем истечение комнаты
+      if (_isRoomExpired(roomData)) {
+        print('DEBUG: Room has expired, using test room instead');
+        var prefs = await SharedPreferences.getInstance();
+        final client = await CallClient.create();
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DailyApp(
+              appointment_unique_id: item['appointment_unique_id'],
+              room: 'https://telemed2.daily.co/lFxg9A2Hi3PLrMdYKF81',
+              prefs: prefs,
+              callClient: client,
+            ),
+          ),
+        );
+        return;
+      }
+      
       // Room data exists, proceed with navigation
       var roomUrl = jsonDecode(roomData)['url'];
       print('Room URL: $roomUrl');
 
-      var room_url = jsonDecode(item['room_data'])['url'];
-      print(room_url);
       var prefs = await SharedPreferences.getInstance();
       final client = await CallClient.create();
-      //await prefs.setString(
-      //    item['d21ec1e9-8004-11ef-a4b8-02420a000404'], room_url);
+      
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => DailyApp(
             appointment_unique_id: item['appointment_unique_id'],
-            room: room_url,
+            room: roomUrl,
             prefs: prefs,
             callClient: client,
           ),
@@ -75,15 +119,13 @@ class AppointmentListItem extends StatelessWidget {
         MaterialPageRoute(
           builder: (context) => DailyApp(
             appointment_unique_id: item['appointment_unique_id'],
-            room: 'https://telemed2.daily.co/test_room',
+            room: 'https://telemed2.daily.co/lFxg9A2Hi3PLrMdYKF81',
             prefs: prefs,
             callClient: client,
           ),
         ),
       );
       print("no room");
-
-      //https://telemed2.daily.co/test_room
     }
   }
 

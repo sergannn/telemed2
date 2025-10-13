@@ -32,6 +32,33 @@ import 'package:daily_flutter/daily_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:date_count_down/date_count_down.dart';
 
+// Утилитная функция для проверки истечения комнаты
+bool _isRoomExpired(dynamic roomData) {
+  if (roomData == null || roomData.toString().isEmpty || roomData.toString() == 'null') {
+    return false; // Нет данных о комнате - не истекла
+  }
+  
+  try {
+    var roomInfo = jsonDecode(roomData.toString());
+    if (roomInfo['config'] != null && roomInfo['config']['exp'] != null) {
+      int expTimestamp = roomInfo['config']['exp'];
+      DateTime expDate = DateTime.fromMillisecondsSinceEpoch(expTimestamp * 1000);
+      DateTime now = DateTime.now();
+      
+      print('Room expiration check:');
+      print('  Expiration date: ${expDate.toString()}');
+      print('  Current date: ${now.toString()}');
+      print('  Is expired: ${expDate.isBefore(now)}');
+      
+      return expDate.isBefore(now);
+    }
+  } catch (e) {
+    print('Error checking room expiration: $e');
+  }
+  
+  return false; // Не удалось проверить - считаем не истекшей
+}
+
 class AppointmentListItem extends StatelessWidget {
   final int index;
   final Map<dynamic, dynamic> item;
@@ -59,6 +86,13 @@ class AppointmentListItem extends StatelessWidget {
     
     // Проверяем, что room_data не null и не пустая строка
     if (roomData != null && roomData.toString().isNotEmpty && roomData.toString() != 'null') {
+      // СНАЧАЛА проверяем истечение комнаты
+      if (_isRoomExpired(roomData)) {
+        print('DEBUG: Room has expired, using test room instead');
+        _navigateToTestRoom(context);
+        return;
+      }
+      
       try {
         // Room data exists, proceed with navigation
         var roomUrl = jsonDecode(roomData.toString())['url'];

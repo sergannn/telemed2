@@ -79,12 +79,18 @@ class _MyAppState extends State<DailyApp> {
         forProfiles: {
           SubscriptionProfile.base: const MediaSubscriptionSettingsUpdate.set(
             camera: VideoSubscriptionSettingsUpdate.set(
-              subscriptionState: SubscriptionStateUpdate.unsubscribed,
+              subscriptionState: SubscriptionStateUpdate.subscribed,
+            ),
+            microphone: AudioSubscriptionSettingsUpdate.set(
+              subscriptionState: SubscriptionStateUpdate.subscribed,
             ),
           ),
           SubscriptionProfile.activeRemote:
               const MediaSubscriptionSettingsUpdate.set(
             camera: VideoSubscriptionSettingsUpdate.set(
+              subscriptionState: SubscriptionStateUpdate.subscribed,
+            ),
+            microphone: AudioSubscriptionSettingsUpdate.set(
               subscriptionState: SubscriptionStateUpdate.subscribed,
             ),
           ),
@@ -93,7 +99,7 @@ class _MyAppState extends State<DailyApp> {
       ..setInputsEnabled(camera: true, microphone: true); // Включаем камеру для предварительного просмотра
     _eventSubscription = widget.callClient.events.listen(_handleEvent);
     
-    // НЕ вызываем join() автоматически - только по требованию пользователя
+    // НЕ подключаемся автоматически - только по требованию пользователя
     print("CallClient configured with camera preview but NOT auto-joining room");
   }
 
@@ -110,19 +116,40 @@ class _MyAppState extends State<DailyApp> {
 
   void _handleEvent(Event event) {
     if (!mounted) return;
+    
+    // Расширенное логирование для диагностики
+    print("=== DAILY EVENT RECEIVED ===");
+    print("Event type: ${event.runtimeType}");
+    
     event.whenOrNull<void>(
       callStateUpdated: (callStateData) {
+        print("=== CALL STATE UPDATED ===");
+        print("New call state: ${callStateData.state}");
+        print("Room URL: ${widget.room}");
+        print("Current participants: ${widget.callClient.participants.remote.length}");
+        
         setState(() {
           final callState = callStateData.state;
           callStateData.whenOrNull(
-            joining: () => {}, //unawaited(Wakelock.toggle(enable: true)),
+            joining: () {
+              print("=== JOINING ROOM ===");
+              //unawaited(Wakelock.toggle(enable: true));
+            },
             joined: (config) {
+              print("=== SUCCESSFULLY JOINED ROOM ===");
+              print("Config: $config");
+              print("Initial username: ${config.initialUserName}");
+              print("Initial camera enabled: ${config.initialCameraEnabled}");
+              print("Initial microphone enabled: ${config.initialMicrophoneEnabled}");
+              
               final initialUsername = config.initialUserName;
               if (initialUsername != null && initialUsername.isNotEmpty) {
                 widget.callClient.setUsername(initialUsername);
+                print("Username set to: $initialUsername");
               }
               if (!config.initialCameraEnabled ||
                   !config.initialMicrophoneEnabled) {
+                print("Updating inputs based on config");
                 widget.callClient.updateInputs(
                   inputs: InputSettingsUpdate.set(
                     camera: config.initialCameraEnabled
@@ -138,6 +165,8 @@ class _MyAppState extends State<DailyApp> {
               }
             },
             left: () {
+              print("=== LEFT ROOM ===");
+              print("Left room - no additional details available");
               _participantFocusPriority.clear();
               _messageNotifier.value = [];
               // The camera and mic are automatically disabled after a call, set them back to what they were.
@@ -190,8 +219,12 @@ class _MyAppState extends State<DailyApp> {
         _updateSubscriptions();
       }),
       appMessageReceived: _handleAppMessage,
-      error: (error) => _scaffoldMessengerKey.currentState
-          ?.showSnackBar(SnackBar(content: Text(error))),
+      error: (error) {
+        print("=== DAILY ERROR ===");
+        print("Error: $error");
+        _scaffoldMessengerKey.currentState
+            ?.showSnackBar(SnackBar(content: Text(error)));
+      },
     );
   }
 

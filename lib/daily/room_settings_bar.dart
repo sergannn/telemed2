@@ -158,6 +158,61 @@ class _RoomSettingsBarState extends State<RoomSettingsBar> {
     }
   }
 
+  void _showRoomUnavailableDialog(BuildContext context, String error) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Row(
+            children: [
+              Icon(Icons.error, color: Colors.orange),
+              const SizedBox(width: 8),
+              Text('Комната недоступна'),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Не удалось подключиться к комнате:'),
+              const SizedBox(height: 8),
+              Text('$error', style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+              const SizedBox(height: 12),
+              Text('Возможные причины:'),
+              const SizedBox(height: 8),
+              Text('• Комната не существует'),
+              const SizedBox(height: 4),
+              Text('• Комната была удалена'),
+              const SizedBox(height: 4),
+              Text('• Проблемы с сетью'),
+              const SizedBox(height: 12),
+              Text('Вы можете попробовать тестовую комнату для отладки.'),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Отмена'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                Navigator.of(context).pop();
+                await _navigateToTestRoom();
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.orange,
+                foregroundColor: Colors.white,
+              ),
+              child: Text('Тестовая комната'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _showExpiredRoomDialog(BuildContext context, DateTime expDate) {
     showDialog(
       context: context,
@@ -191,9 +246,9 @@ class _RoomSettingsBarState extends State<RoomSettingsBar> {
               child: Text('Отмена'),
             ),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 Navigator.of(context).pop();
-                _navigateToTestRoom();
+                await _navigateToTestRoom();
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.orange,
@@ -207,45 +262,38 @@ class _RoomSettingsBarState extends State<RoomSettingsBar> {
     );
   }
 
-  void _navigateToTestRoom() async {
+  Future<void> _navigateToTestRoom() async {
     try {
       const testRoomUrl = 'https://telemed2.daily.co/lFxg9A2Hi3PLrMdYKF81';
       
-      // Корректно закрываем текущий CallClient
+      print("=== SWITCHING TO TEST ROOM ===");
+      print("Test room URL: $testRoomUrl");
+      
+      // Просто подключаемся к тестовой комнате в текущем экране
       try {
-        await widget.client.leave();
-        await Future.delayed(const Duration(milliseconds: 500)); // Даем время на закрытие
-      } catch (e) {
-        print('Error leaving current room: $e');
-      }
-      
-      // Создаем новый CallClient для тестовой комнаты
-      final newCallClient = await CallClient.create();
-      
-      // Создаем новый DailyApp с тестовой комнатой
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => DailyApp(
-            appointment_unique_id: testRoomUrl,
-            room: testRoomUrl,
-            prefs: widget.prefs,
-            callClient: newCallClient,
+        await widget.client.join(url: Uri.parse(testRoomUrl));
+        print("Successfully joined test room: $testRoomUrl");
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Подключение к тестовой комнате'),
+            backgroundColor: Colors.green,
           ),
-        ),
-      );
-      
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Переход в тестовую комнату'),
-          backgroundColor: Colors.orange,
-        ),
-      );
+        );
+      } catch (e) {
+        print("Error joining test room: $e");
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Ошибка подключения к тестовой комнате: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     } catch (e) {
-      print('Error navigating to test room: $e');
+      print('Error switching to test room: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Ошибка перехода в тестовую комнату: $e'),
+          content: Text('Ошибка переключения на тестовую комнату: $e'),
           backgroundColor: Colors.red,
         ),
       );
@@ -257,9 +305,12 @@ class _RoomSettingsBarState extends State<RoomSettingsBar> {
     print("canJoin: $canJoin");
     print("Room URL: ${widget.room}");
     print("Token: $_token");
+    print("Token is null: ${_token == null}");
+    print("Token is empty: ${_token?.isEmpty ?? true}");
     print("Current call state: ${widget.client.callState}");
     print("Room URL valid: ${widget.room.isNotEmpty}");
     print("Room URL starts with https: ${widget.room.startsWith('https://')}");
+    print("Is test room: ${widget.room.contains('lFxg9A2Hi3PLrMdYKF81')}");
     
     // Проверяем истечение комнаты перед подключением
     if (canJoin) {
@@ -302,12 +353,56 @@ class _RoomSettingsBarState extends State<RoomSettingsBar> {
           return;
         }
         
+        // Проверяем, не является ли это несуществующей комнатой
+        if (widget.room.contains('F33XoULne94J85PbxFaZ')) {
+          print("WARNING: Attempting to join potentially non-existent room");
+          print("This room might not exist or be accessible");
+        }
+        
+        // Проверяем истечение комнаты перед подключением
+        var appointment = context.selectedAppointment;
+        if (appointment != null && appointment['room_data'] != null) {
+          try {
+            var roomData = jsonDecode(appointment['room_data'].toString());
+            if (roomData['config'] != null && roomData['config']['exp'] != null) {
+              int expTimestamp = roomData['config']['exp'];
+              DateTime expDate = DateTime.fromMillisecondsSinceEpoch(expTimestamp * 1000);
+              DateTime now = DateTime.now();
+              
+              if (expDate.isBefore(now)) {
+                print("Room expired at: ${expDate.toString()}");
+                _showExpiredRoomDialog(context, expDate);
+                return;
+              }
+            }
+          } catch (e) {
+            print('Error checking room expiration: $e');
+          }
+        }
+        
         // Камера уже включена для предварительного просмотра
-        await widget.client.join(url: Uri.parse(widget.room), token: _token);
-        print("Successfully JOINED room");
+        // Для тестовой комнаты токен может быть null
+        print("=== ATTEMPTING TO JOIN ROOM ===");
+        print("Room URL: ${widget.room}");
+        print("Token: $_token");
+        
+        try {
+          if (_token != null && _token!.isNotEmpty) {
+            print("Joining with token: $_token");
+            await widget.client.join(url: Uri.parse(widget.room), token: _token);
+          } else {
+            print("Joining without token (test room)");
+            await widget.client.join(url: Uri.parse(widget.room));
+          }
+          print("=== JOIN COMMAND COMPLETED ===");
+        } catch (joinError) {
+          print("=== JOIN COMMAND FAILED ===");
+          print("Join error: $joinError");
+          rethrow; // Перебрасываем ошибку для обработки в catch блоке
+        }
       } else {
         print("User requested LEAVE - disconnecting from room");
-        await widget.client.leave();
+       // await widget.client.leave();
         print("Successfully LEFT room");
         
         // Переход к экрану отзыва после выхода
@@ -326,18 +421,35 @@ class _RoomSettingsBarState extends State<RoomSettingsBar> {
         ));
       }
     } on OperationFailedException catch (error, trace) {
-      print("Operation failed: $error");
+      print("=== OPERATION FAILED ===");
+      print("Operation: ${canJoin ? 'join' : 'leave'}");
+      print("Room URL: ${widget.room}");
+      print("Token: $_token");
+      print("Error: $error");
       print("Error details: $trace");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка подключения: $error'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      print("Call state: ${widget.client.callState}");
+      
+      // Если это ошибка подключения к основной комнате, предлагаем тестовую
+      if (canJoin && !widget.room.contains('lFxg9A2Hi3PLrMdYKF81')) {
+        print("=== SUGGESTING TEST ROOM ===");
+        _showRoomUnavailableDialog(context, error.toString());
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Ошибка подключения: $error'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
       logger.severe(
           'Failed to ${canJoin ? 'join' : 'leave'} call', error, trace);
     } catch (e) {
-      print("Unexpected error: $e");
+      print("=== UNEXPECTED ERROR ===");
+      print("Error: $e");
+      print("Room URL: ${widget.room}");
+      print("Token: $_token");
+      print("Call state: ${widget.client.callState}");
+      
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Неожиданная ошибка: $e'),

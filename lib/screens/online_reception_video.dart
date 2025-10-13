@@ -8,6 +8,33 @@ import 'package:daily_flutter/daily_flutter.dart';
 import 'dart:convert';
 import 'package:doctorq/config/daily_config.dart';
 
+// Утилитная функция для проверки истечения комнаты
+bool _isRoomExpired(dynamic roomData) {
+  if (roomData == null || roomData.toString().isEmpty || roomData.toString() == 'null') {
+    return false; // Нет данных о комнате - не истекла
+  }
+  
+  try {
+    var roomInfo = jsonDecode(roomData.toString());
+    if (roomInfo['config'] != null && roomInfo['config']['exp'] != null) {
+      int expTimestamp = roomInfo['config']['exp'];
+      DateTime expDate = DateTime.fromMillisecondsSinceEpoch(expTimestamp * 1000);
+      DateTime now = DateTime.now();
+      
+      print('Room expiration check:');
+      print('  Expiration date: ${expDate.toString()}');
+      print('  Current date: ${now.toString()}');
+      print('  Is expired: ${expDate.isBefore(now)}');
+      
+      return expDate.isBefore(now);
+    }
+  } catch (e) {
+    print('Error checking room expiration: $e');
+  }
+  
+  return false; // Не удалось проверить - считаем не истекшей
+}
+
 class OnlineReceptionVideo extends StatefulWidget {
   @override
   State<OnlineReceptionVideo> createState() => _OnlineReceptionVideoState();
@@ -33,13 +60,20 @@ class _OnlineReceptionVideoState extends State<OnlineReceptionVideo> {
         // Пытаемся получить реальную комнату из room_data
         dynamic roomData = appointment['room_data'];
         if (roomData != null && roomData.toString().isNotEmpty && roomData.toString() != 'null') {
-          try {
-            var roomInfo = jsonDecode(roomData.toString());
-            roomUrl = roomInfo['url'] ?? DailyConfig.testRoomUrl;
-            print('DEBUG: Found real room: $roomUrl');
-          } catch (e) {
-            print('DEBUG: Error parsing room_data: $e, using test room');
+          // СНАЧАЛА проверяем истечение комнаты
+          if (_isRoomExpired(roomData)) {
+            print('DEBUG: Room has expired, using test room instead');
             roomUrl = DailyConfig.testRoomUrl;
+          } else {
+            try {
+              var roomInfo = jsonDecode(roomData.toString());
+              String potentialRoomUrl = roomInfo['url'] ?? DailyConfig.testRoomUrl;
+              roomUrl = potentialRoomUrl;
+              print('DEBUG: Found valid room: $roomUrl');
+            } catch (e) {
+              print('DEBUG: Error parsing room_data: $e, using test room');
+              roomUrl = DailyConfig.testRoomUrl;
+            }
           }
         } else {
           print('DEBUG: No room_data found, using test room');
