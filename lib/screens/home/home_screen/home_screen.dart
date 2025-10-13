@@ -216,7 +216,10 @@ class ItemController extends GetxController {
     getDoctors();
     
     // Загружаем предстоящие сеансы
-    await getAppointments();
+    final currentUser = await Session.getCurrentUser();
+    if (currentUser != null && currentUser.doctorId != null) {
+      await getAppointmentsD(doctorId: currentUser.doctorId.toString());
+    }
     
     _loadCalendarRecords().then((res) {
       filterRecordsByDate(DateTime.now());
