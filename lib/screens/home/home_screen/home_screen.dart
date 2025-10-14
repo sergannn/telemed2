@@ -22,7 +22,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:doctorq/extensions.dart';
 import 'package:doctorq/screens/home/specialist_doctor_screen/specialist_doctor_screen.dart';
 import 'package:doctorq/screens/home/top_doctor_screen/choose_specs_screen_step_1.dart';
-import 'package:doctorq/services/api_service.dart';
+import 'package:doctorq/services/api_service.dart' hide getIt;
 import 'package:doctorq/services/session.dart';
 import 'package:doctorq/stores/appointments_store.dart';
 import 'package:doctorq/utils/utility.dart';
@@ -101,7 +101,7 @@ class ItemController extends GetxController {
     try {
       // Получаем предстоящие сеансы из store
       AppointmentsStore storeAppointmentsStore = getIt.get<AppointmentsStore>();
-      List<Map<String, dynamic>> appointments = storeAppointmentsStore.appointmentsDataList;
+      List<Map<String, dynamic>> appointments = storeAppointmentsStore.appointmentsDataList.cast<Map<String, dynamic>>();
       
       print("DEBUG: Loading ${appointments.length} appointments to calendar");
       
