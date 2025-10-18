@@ -134,11 +134,6 @@ class _MainProfileScreenState extends State<MainProfileScreen> {
                    currentUserData['photo'] = updatedUser.photo;
                    userStore.setUserData(currentUserData);
                    print("DEBUG: Updated MobX store with new photo: ${updatedUser.photo}");
-                   
-                   // Принудительно обновляем SharedPreferences
-                   SharedPreferences prefs = await SharedPreferences.getInstance();
-                   await prefs.setString('photo', updatedUser.photo);
-                   print("DEBUG: Updated SharedPreferences photo to: ${updatedUser.photo}");
                  }
 
                  // Обновляем UI после успешного обновления

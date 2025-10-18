@@ -1047,11 +1047,7 @@ Future<bool> updateProfileAvatar(BuildContext context, String imagePath) async {
                    updatedUser.photo = userData['photo'];
                    final session = Session();
                    await session.saveUser(updatedUser);
-                   
-                   // Принудительно обновляем SharedPreferences
-                   SharedPreferences prefs = await SharedPreferences.getInstance();
-                   await prefs.setString('photo', userData['photo']);
-                   print("DEBUG: Updated user photo in SharedPreferences: ${userData['photo']}");
+                   print("DEBUG: Updated user photo in Session: ${userData['photo']}");
                  }
         
         // Показываем сообщение об успехе
