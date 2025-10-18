@@ -33,6 +33,12 @@ class _PopularDoctorsScreenState extends State<PopularDoctorsScreen> {
     print("DEBUG: Loading doctors in PopularDoctorsScreen");
     
     try {
+      // Очищаем локальные данные
+      setState(() {
+        _doctors = [];
+        _isLoading = true;
+      });
+      
       bool success = await getDoctors();
       print("DEBUG: getDoctors() result: $success");
       
@@ -46,6 +52,7 @@ class _PopularDoctorsScreenState extends State<PopularDoctorsScreen> {
           _isLoading = false;
         });
         print("DEBUG: Loaded ${_doctors.length} doctors");
+        print("DEBUG: First doctor: ${_doctors.isNotEmpty ? _doctors[0]['username'] : 'No doctors'}");
       } else {
         print("DEBUG: Failed to load doctors");
         setState(() {
