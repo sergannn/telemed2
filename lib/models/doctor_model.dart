@@ -29,7 +29,7 @@ class DoctorModel {
   String? price;
 
   DoctorModel.fromJson(Map json) {
-    doctorId = json['doctor_id'];
+    doctorId = json['doctor_id']?.toString();
 
     // Handle qualifications - store the complete objects
     if (json['doctorUser']?['qualifications'] != null) {
@@ -73,14 +73,14 @@ class DoctorModel {
     }
 //    print(json['doctor_id']);
 //    print(json['doctorUser']['user_id']);
-    userId = json['doctorUser']['user_id'];
-    userName = json['doctorUser']['username'];
-    firstName = json['doctorUser']['first_name'];
-    lastName = json['doctorUser']['last_name'];
-    photo = json['doctorUser']['photo'];
-    description = json['doctorUser']['description'];
+    userId = json['doctorUser']['user_id']?.toString();
+    userName = json['doctorUser']['username']?.toString();
+    firstName = json['doctorUser']['first_name']?.toString();
+    lastName = json['doctorUser']['last_name']?.toString();
+    photo = json['doctorUser']['photo']?.toString();
+    description = json['doctorUser']['description']?.toString();
     qualifications = json['doctorUser']['qualifications'];
-    price = json['price']; // Может быть null
+    price = json['price']?.toString(); // Может быть null
     // Handle reviews
     if (json['reviews'] != null) {
       reviews = [];
