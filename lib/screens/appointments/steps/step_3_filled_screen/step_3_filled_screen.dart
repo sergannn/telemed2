@@ -4,6 +4,7 @@ import 'package:doctorq/screens/appointments/steps/step_3_filled_screen/proffit.
 import 'package:doctorq/screens/appointments/upcoming_appointments/UpcomingAppointments.dart';
 import 'package:doctorq/screens/medcard/create_record_page_lib.dart';
 import 'package:doctorq/services/api_service.dart';
+import 'package:doctorq/services/session.dart';
 import 'package:doctorq/stores/user_store.dart';
 import 'package:doctorq/utils/utility.dart';
 import 'package:doctorq/widgets/boxshadow.dart';
@@ -408,6 +409,13 @@ class _AppointmentsStep3FilledScreenState
                 // UserStore storeUserStore = getIt.get<UserStore>();
                 Map<dynamic, dynamic> userData = context.userData;
                 Map<dynamic, dynamic> selectedDoctor = context.selectedDoctor;
+                
+                // Получаем актуальный patient_id из Session
+                final currentUser = await Session.getCurrentUser();
+                print('DEBUG: currentUser?.patientId: ${currentUser?.patientId}');
+                print('DEBUG: userData[\'patient_id\']: ${userData['patient_id']}');
+                String patientId = currentUser?.patientId ?? userData['patient_id'].toString();
+                print('DEBUG: Using patientId: $patientId');
 
                 printLog('contactMethod ${widget.contactMethod}');
                 printLog('date ${DateFormat('yy-MM-dd').format(widget.date)}');
@@ -426,7 +434,7 @@ context.loaderOverlay.show();
                 bool result = await setAppointment(
                     doctor_id: selectedDoctor['doctor_id'],
                     date: DateFormat('yyyy-MM-dd').format(widget.date),
-                    patient_id: userData['patient_id'],
+                    patient_id: patientId,
                     status: "1",
                     from_time: fromTime,
                     from_time_type: fromTimeType,
