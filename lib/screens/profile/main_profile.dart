@@ -112,39 +112,17 @@ class _MainProfileScreenState extends State<MainProfileScreen> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           GestureDetector(
-                            onTap: () async {
-                              var status = await Permission.photos.request().isGranted;
-                              await Permission.mediaLibrary.request().isGranted;
-
-                              final pickedFile =
-                                  await ImagePicker().pickImage(source: ImageSource.gallery);
-                              
-                              if (pickedFile != null) {
-                                bool success = await _updateProfileAvatar(
-                                  context,
-                                  pickedFile.path,
-                                );
-                                
-               if (success) {
-                 // Принудительно обновляем данные пользователя
-                 final updatedUser = await Session.getCurrentUser();
-                 if (updatedUser != null) {
-                   // Обновляем MobX store
-                   final userStore = Get.find<UserStore>();
-                   final currentUserData = Map<dynamic, dynamic>.from(context.userData);
-                   currentUserData['photo'] = updatedUser.photo;
-                   userStore.setUserData(currentUserData);
-                   print("DEBUG: Updated MobX store with new photo: ${updatedUser.photo}");
-                 }
-
-                 // Обновляем UI после успешного обновления
-                 setState(() {
-                   // Принудительно обновляем UI
-                 });
-               }
-                              }
+                            onTap: () {
+                              // Обновление аватара временно отключено
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Обновление аватара временно недоступно'),
+                                  duration: Duration(seconds: 2),
+                                ),
+                              );
                             },
                             child: CircleAvatar(
+                              key: ValueKey(context.userData['photo']),
                               radius: getVerticalSize(25),
                               backgroundImage:
                                   NetworkImage(context.userData['photo']),

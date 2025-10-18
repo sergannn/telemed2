@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:flutter/scheduler.dart';
 
 import 'package:doctorq/constant/constants.dart';
 import 'package:doctorq/data_files/specialist_list.dart';
@@ -1030,7 +1031,16 @@ Future<bool> updateProfileAvatar(BuildContext context, String imagePath) async {
                  }
                } catch (e) {
                  print("DEBUG: Error closing dialog: $e");
+                 // Попробуем закрыть диалог через SchedulerBinding
+                 SchedulerBinding.instance.addPostFrameCallback((_) {
+                   if (context.mounted && Navigator.of(context).canPop()) {
+                     Navigator.of(context).pop();
+                     print("DEBUG: Dialog closed via SchedulerBinding");
+                   }
+                 });
                }
+             } else {
+               print("DEBUG: Dialog not closed - dialogShown: $dialogShown, mounted: ${context.mounted}");
              }
     
     if (response.statusCode == 200) {
@@ -1096,6 +1106,8 @@ Future<bool> updateProfileAvatar(BuildContext context, String imagePath) async {
                } catch (popError) {
                  print("DEBUG: Error closing dialog in catch: $popError");
                }
+             } else {
+               print("DEBUG: Dialog not closed in catch - dialogShown: $dialogShown, mounted: ${context.mounted}");
              }
     
     // Показываем сообщение об ошибке

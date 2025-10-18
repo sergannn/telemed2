@@ -53,7 +53,7 @@ class AppointmentListItem extends StatelessWidget {
       MaterialPageRoute(
         builder: (context) => DailyApp(
           appointment_unique_id: item['appointment_unique_id'],
-          room: 'https://ser-tele-med.daily.co/test_room', //room_url,
+          room: 'https://telemed2.daily.co/lFxg9A2Hi3PLrMdYKF81', //room_url,
           prefs: prefs,
           callClient: client,
         ),

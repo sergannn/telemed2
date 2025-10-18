@@ -413,6 +413,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               );
                             },
                             child: CircleAvatar(
+                              key: ValueKey(context.userData['photo']),
                               radius: getVerticalSize(25),
                               backgroundImage:
                                   NetworkImage(context.userData['photo']),
@@ -659,12 +660,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      //  const HomeSearchDoctorScreen()
-                                      //    HistoryVideoCallPage()
-                                      SearchDoctorScreen()));
+                                      PopularDoctorsScreen()));
                         },
                         controller: autoLayoutVerController,
-                        hintText: "Поиск",
+                        hintText: "Найти врача",
                         margin: getMargin(left: 24, right: 24, top: 20),
                         alignment: Alignment.center,
                         suffix: Padding(
@@ -802,6 +801,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       }),
                       //SingleChildScrollView(child: NewsSlider()),
 
+                      // Временно отключен раздел "Избранное"
+                      /*
                       Align(
                         alignment: Alignment.center,
                         child: Padding(
@@ -837,6 +838,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                       ),
+                      */
+                      // Временно отключен блок кнопок избранного
+                      /*
                       // someObxList(context, itemController), фотки докторов - сторисы
                       Align(
                           alignment: Alignment.center,
@@ -956,6 +960,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       Text("Статьи")
                                     ]),
                                   ]))),
+                      */
                       // Раздел "Рекомендуем вам"
                       Align(
                         alignment: Alignment.center,
