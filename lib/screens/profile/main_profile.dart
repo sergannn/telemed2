@@ -24,6 +24,7 @@ import 'package:doctorq/screens/stories/story_scren.dart';
 import 'package:doctorq/services/auth_service.dart';
 import 'package:doctorq/services/api_service.dart';
 import 'package:doctorq/services/session.dart';
+import 'package:doctorq/stores/user_store.dart';
 import "package:story_view/story_view.dart";
 import 'package:animate_do/animate_do.dart';
 import 'package:doctorq/extensions.dart';
