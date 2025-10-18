@@ -38,6 +38,7 @@ class _PopularDoctorsScreenState extends State<PopularDoctorsScreen> {
       // Очищаем локальные данные
       setState(() {
         _doctors = [];
+        _filteredDoctors = [];
         _isLoading = true;
       });
       
@@ -103,16 +104,6 @@ class _PopularDoctorsScreenState extends State<PopularDoctorsScreen> {
         children: [
           SizedBox(height: 15),
           ...topBack(text: "Популярные", context: context),
-          // Кнопка для тестирования
-          ElevatedButton(
-            onPressed: () async {
-              setState(() {
-                _isLoading = true;
-              });
-              await _loadDoctors();
-            },
-            child: Text("Обновить врачей (${_filteredDoctors.length}/${_doctors.length})"),
-          ),
           Expanded( 
             child: Container(
               margin: const EdgeInsets.only(bottom: 6),
@@ -122,9 +113,11 @@ class _PopularDoctorsScreenState extends State<PopularDoctorsScreen> {
                     const Color.fromARGB(255, 236, 236, 236).withOpacity(0.95),
                 border: Border(top: BorderSide(color: Colors.grey.shade300)),
               ),
-              child: ListView(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: RefreshIndicator(
+                onRefresh: _loadDoctors,
+                child: ListView(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 children: [
                   Container(
                     width: double.infinity,
@@ -631,6 +624,7 @@ class _PopularDoctorsScreenState extends State<PopularDoctorsScreen> {
                     ),
                   ),
                 ],
+                ),
               ),
             ),
           ),
