@@ -634,6 +634,11 @@ class DoctorsSilder20 extends StatelessWidget {
       );
     }
     
+    // Показываем информацию о каждом враче
+    for (int i = 0; i < doctors.length; i++) {
+      print("DEBUG: Doctor $i: ${doctors[i]['username'] ?? 'No name'}");
+    }
+    
     return Column(
         children: List.generate(doctors.length, (index) {
       return DoctorItem(

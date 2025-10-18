@@ -157,7 +157,9 @@ print("DEBUG: GraphQL result data: ${result.data}");
 
   DoctorsStore storeDoctorsStore = getIt.get<DoctorsStore>();
 
+  // Принудительно очищаем store перед загрузкой
   storeDoctorsStore.clearDoctorsData();
+  print("DEBUG: Store cleared, now has ${storeDoctorsStore.doctorsDataList.length} items");
 
   json.forEach((doctor) {
     print("DEBUG: Processing doctor: ${doctor['doctorUser']?['username'] ?? 'Unknown'}");
