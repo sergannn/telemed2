@@ -224,13 +224,9 @@ class _TopDoctorScreenState extends State<ChooseSpecsScreen>
                     width: MediaQuery.of(context).size.width / 8,
                     height: MediaQuery.of(context).size.width / 8,
                     margin: EdgeInsets.only(right: 16),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      color: getRandomDarkBackgroundColor(),
-                    ),
                     child: Icon(
                       Icons.medical_services,
-                      color: Colors.white,
+                      color: ColorConstant.blueA400,
                       size: 20,
                     ),
                   ),
