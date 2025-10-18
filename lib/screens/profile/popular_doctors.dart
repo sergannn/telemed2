@@ -7,10 +7,59 @@ import 'package:doctorq/screens/home/home_screen/widgets/doctor_item.dart';
 import 'package:doctorq/utils/size_utils.dart';
 import 'package:doctorq/widgets/spacing.dart';
 import 'package:doctorq/widgets/top_back.dart';
+import 'package:doctorq/services/api_service.dart';
+import 'package:doctorq/stores/doctors_store.dart';
+import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 
-class PopularDoctorsScreen extends StatelessWidget {
+class PopularDoctorsScreen extends StatefulWidget {
   const PopularDoctorsScreen({Key? key}) : super(key: key);
+  
+  @override
+  State<PopularDoctorsScreen> createState() => _PopularDoctorsScreenState();
+}
+
+class _PopularDoctorsScreenState extends State<PopularDoctorsScreen> {
+  bool _isLoading = true;
+  List<Map<String, dynamic>> _doctors = [];
+  
+  @override
+  void initState() {
+    super.initState();
+    _loadDoctors();
+  }
+  
+  Future<void> _loadDoctors() async {
+    print("DEBUG: Loading doctors in PopularDoctorsScreen");
+    
+    try {
+      bool success = await getDoctors();
+      print("DEBUG: getDoctors() result: $success");
+      
+      if (success) {
+        // Get doctors from store
+        DoctorsStore storeDoctorsStore = GetIt.instance.get<DoctorsStore>();
+        print("DEBUG: Doctors store has ${storeDoctorsStore.doctorsDataList.length} items");
+        
+        setState(() {
+          _doctors = List<Map<String, dynamic>>.from(storeDoctorsStore.doctorsDataList);
+          _isLoading = false;
+        });
+        print("DEBUG: Loaded ${_doctors.length} doctors");
+      } else {
+        print("DEBUG: Failed to load doctors");
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      print("DEBUG: Error loading doctors: $e");
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,6 +67,16 @@ class PopularDoctorsScreen extends StatelessWidget {
         children: [
           SizedBox(height: 15),
           ...topBack(text: "Популярные", context: context),
+          // Кнопка для тестирования
+          ElevatedButton(
+            onPressed: () async {
+              setState(() {
+                _isLoading = true;
+              });
+              await _loadDoctors();
+            },
+            child: Text("Обновить врачей (${_doctors.length})"),
+          ),
           Expanded( 
             child: Container(
               margin: const EdgeInsets.only(bottom: 6),
@@ -121,7 +180,7 @@ class PopularDoctorsScreen extends StatelessWidget {
                             ],
                           ),
                         ),
-                        DoctorsSilder20(),
+                        DoctorsSilder20(doctors: _doctors),
                         /*
                         Container(
                           margin: const EdgeInsets.only(bottom: 8),
@@ -540,18 +599,38 @@ class PopularDoctorsScreen extends StatelessWidget {
 }
 
 class DoctorsSilder20 extends StatelessWidget {
+  final List<Map<String, dynamic>> doctors;
+
   const DoctorsSilder20({
     Key? key,
+    required this.doctors,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    print("doctors");
-    print(context.doctorsData.length);
+    print("DEBUG: DoctorsSilder20 - doctors count: ${doctors.length}");
+    print("DEBUG: DoctorsSilder20 - doctors data: $doctors");
+    
+    if (doctors.isEmpty) {
+      return Container(
+        padding: EdgeInsets.all(20),
+        child: Column(
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 16),
+            Text(
+              "Загрузка врачей...",
+              style: TextStyle(fontSize: 16, color: Colors.grey),
+            ),
+          ],
+        ),
+      );
+    }
+    
     return Column(
-        children: List.generate(context.doctorsData.length, (index) {
+        children: List.generate(doctors.length, (index) {
       return DoctorItem(
-        item: context.doctorsData[index],
+        item: doctors[index],
         index: index,
       );
     }));

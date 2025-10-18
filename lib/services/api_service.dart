@@ -75,7 +75,7 @@ Future<bool> cancelAppointment(id) async {
 
 Future<bool> getDoctors() async {
   printLog('Getting doctors');
-  print("getdoctors");
+  print("DEBUG: getDoctors() called");
   String getDoctors = '''
     query doctors {
       doctors(first: 108) {
@@ -129,8 +129,10 @@ Future<bool> getDoctors() async {
   // GraphQLClient graphqlClient = await graphqlAPI2.noauthClient();
   GraphQLClient graphqlClient = await graphqlAPI2.noauthClient();
   debugPrintTransactionStart('query doctors');
+  print("DEBUG: Executing GraphQL query for doctors...");
   final QueryResult result = await graphqlClient.query(options);
   debugPrintTransactionEnd('query doctors');
+  print("DEBUG: GraphQL query completed");
 
   if (result.hasException) {
     printLog(result.exception.toString(), name: 'query doctors');
@@ -139,16 +141,34 @@ Future<bool> getDoctors() async {
   }
 print(result.data);
   final json = result.data!["doctors"]["data"];
+  print("DEBUG: Found ${json.length} doctors in API response");
 
   DoctorsStore storeDoctorsStore = getIt.get<DoctorsStore>();
 
   storeDoctorsStore.clearDoctorsData();
 
   json.forEach((doctor) {
-    DoctorModel doctorModel = DoctorModel.fromJson(doctor);
-    storeDoctorsStore.addDoctorToDoctorsData(doctorModel.toJson());
+    print("DEBUG: Processing doctor: ${doctor['doctorUser']?['username'] ?? 'Unknown'}");
+    print("DEBUG: Doctor data: $doctor");
+    try {
+      DoctorModel doctorModel = DoctorModel.fromJson(doctor);
+      print("DEBUG: DoctorModel created successfully");
+      storeDoctorsStore.addDoctorToDoctorsData(doctorModel.toJson());
+      print("DEBUG: Doctor added to store");
+    } catch (e) {
+      print("DEBUG: Error creating DoctorModel: $e");
+    }
   });
 
+  print("DEBUG: Total doctors in store: ${storeDoctorsStore.doctorsDataList.length}");
+  
+  // Принудительно обновляем store
+  if (storeDoctorsStore.doctorsDataList.isNotEmpty) {
+    print("DEBUG: Doctors loaded successfully!");
+  } else {
+    print("DEBUG: ERROR - No doctors in store after loading!");
+  }
+  
   return true;
 }
 
