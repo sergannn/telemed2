@@ -11,7 +11,7 @@ import 'package:doctorq/screens/home/home_screen/widgets/story_item_widget.dart'
 import 'package:doctorq/screens/profile/edit_profile_information.dart';
 import 'package:doctorq/screens/profile/exit_sure.dart';
 import 'package:doctorq/screens/profile/main_notification.dart';
-import 'package:doctorq/screens/profile/my_wallet.dart';
+import 'package:doctorq/screens/profile/my_wallet.dart'; 
 import 'package:doctorq/screens/profile/promocodes_certificates.dart';
 import 'package:doctorq/screens/profile/questions_screen.dart';
 import 'package:doctorq/screens/profile/questions_screen.dart';
