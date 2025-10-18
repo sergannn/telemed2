@@ -91,7 +91,7 @@ Future<bool> getDoctors() async {
             specializations {
                 name
             }
-              price
+            price
             doctorUser {
                	description
                 user_id: id 
@@ -136,10 +136,22 @@ Future<bool> getDoctors() async {
 
   if (result.hasException) {
     printLog(result.exception.toString(), name: 'query doctors');
+    print("DEBUG: GraphQL Exception: ${result.exception}");
+    print("DEBUG: GraphQL Errors: ${result.exception?.graphqlErrors}");
     // snackBar(context, message: result.exception.toString());
     return false;
   }
-print(result.data);
+print("DEBUG: GraphQL result data: ${result.data}");
+  if (result.data == null) {
+    print("DEBUG: GraphQL result data is null!");
+    return false;
+  }
+  
+  if (result.data!["doctors"] == null) {
+    print("DEBUG: GraphQL result data['doctors'] is null!");
+    return false;
+  }
+  
   final json = result.data!["doctors"]["data"];
   print("DEBUG: Found ${json.length} doctors in API response");
 

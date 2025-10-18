@@ -80,7 +80,7 @@ class DoctorModel {
     photo = json['doctorUser']['photo'];
     description = json['doctorUser']['description'];
     qualifications = json['doctorUser']['qualifications'];
-    price = json['price'];
+    price = json['price']; // Может быть null
     // Handle reviews
     if (json['reviews'] != null) {
       reviews = [];
@@ -147,7 +147,7 @@ class DoctorModel {
       'schedule': days,
       'qualifications': qualificationsList,
       'reviews': reviewsList,
-      'price':price
+      'price': price
     };
 
     return map;
