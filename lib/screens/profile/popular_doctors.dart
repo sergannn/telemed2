@@ -22,6 +22,8 @@ class PopularDoctorsScreen extends StatefulWidget {
 class _PopularDoctorsScreenState extends State<PopularDoctorsScreen> {
   bool _isLoading = true;
   List<Map<String, dynamic>> _doctors = [];
+  List<Map<String, dynamic>> _filteredDoctors = [];
+  TextEditingController _searchController = TextEditingController();
   
   @override
   void initState() {
@@ -49,6 +51,7 @@ class _PopularDoctorsScreenState extends State<PopularDoctorsScreen> {
         
         setState(() {
           _doctors = List<Map<String, dynamic>>.from(storeDoctorsStore.doctorsDataList);
+          _filteredDoctors = List<Map<String, dynamic>>.from(_doctors);
           _isLoading = false;
         });
         print("DEBUG: Loaded ${_doctors.length} doctors");
@@ -68,6 +71,32 @@ class _PopularDoctorsScreenState extends State<PopularDoctorsScreen> {
   }
   
   @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+  
+  void _filterDoctors(String query) {
+    setState(() {
+      if (query.isEmpty) {
+        _filteredDoctors = List<Map<String, dynamic>>.from(_doctors);
+      } else {
+        _filteredDoctors = _doctors.where((doctor) {
+          String lastName = doctor['last_name']?.toString().toLowerCase() ?? '';
+          String firstName = doctor['first_name']?.toString().toLowerCase() ?? '';
+          String username = doctor['username']?.toString().toLowerCase() ?? '';
+          String searchQuery = query.toLowerCase();
+          
+          return lastName.contains(searchQuery) || 
+                 firstName.contains(searchQuery) || 
+                 username.contains(searchQuery);
+        }).toList();
+      }
+    });
+    print("DEBUG: Filtered doctors count: ${_filteredDoctors.length}");
+  }
+  
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
@@ -82,7 +111,7 @@ class _PopularDoctorsScreenState extends State<PopularDoctorsScreen> {
               });
               await _loadDoctors();
             },
-            child: Text("Обновить врачей (${_doctors.length})"),
+            child: Text("Обновить врачей (${_filteredDoctors.length}/${_doctors.length})"),
           ),
           Expanded( 
             child: Container(
@@ -117,16 +146,22 @@ class _PopularDoctorsScreenState extends State<PopularDoctorsScreen> {
                             icon: const Icon(Icons.search,
                                 color: Color.fromARGB(255, 131, 131, 131),
                                 size: 24),
-                            onPressed: () => Navigator.pop(context),
+                            onPressed: () {}, // Поиск уже работает через TextField
                           ),
-                          const Text(
-                            'Найти врача',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Color.fromARGB(255, 131, 131, 131),
+                          Expanded(
+                            child: TextField(
+                              controller: _searchController,
+                              onChanged: _filterDoctors,
+                              decoration: const InputDecoration(
+                                hintText: 'Найти врача',
+                                hintStyle: TextStyle(
+                                  fontSize: 14,
+                                  color: Color.fromARGB(255, 131, 131, 131),
+                                ),
+                                border: InputBorder.none,
+                              ),
                             ),
                           ),
-                          const Spacer(), // раздвигает элементы
                           IconButton(
                             icon: const Icon(Icons.mic,
                                 color: Color.fromARGB(255, 131, 131, 131),
@@ -187,7 +222,7 @@ class _PopularDoctorsScreenState extends State<PopularDoctorsScreen> {
                             ],
                           ),
                         ),
-                        DoctorsSilder20(doctors: _doctors),
+                        DoctorsSilder20(doctors: _filteredDoctors),
                         /*
                         Container(
                           margin: const EdgeInsets.only(bottom: 8),
