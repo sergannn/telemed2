@@ -1020,7 +1020,8 @@ Future<bool> updateProfileAvatar(BuildContext context, String imagePath) async {
         final updatedUser = await Session.getCurrentUser();
         if (updatedUser != null) {
           updatedUser.photo = userData['photo'];
-          await Session.saveUser(updatedUser);
+          final session = Session();
+          await session.saveUser(updatedUser);
         }
         
         // Показываем сообщение об успехе

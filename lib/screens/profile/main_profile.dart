@@ -22,9 +22,12 @@ import 'package:doctorq/screens/profile/settings/settings_screen.dart';
 import 'package:doctorq/screens/profile/widgets/autolayouthor_item_widget_profile_tasks.dart';
 import 'package:doctorq/screens/stories/story_scren.dart';
 import 'package:doctorq/services/auth_service.dart';
+import 'package:doctorq/services/api_service.dart';
 import "package:story_view/story_view.dart";
 import 'package:animate_do/animate_do.dart';
 import 'package:doctorq/extensions.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'package:doctorq/screens/home/specialist_doctor_screen/specialist_doctor_screen.dart';
 import 'package:doctorq/screens/home/top_doctor_screen/choose_specs_screen_step_1.dart';
@@ -41,11 +44,17 @@ import 'package:flutter_animate/flutter_animate.dart';
 //final GlobalKey<RandomTextRevealState> globalKey = GlobalKey();
 
 // ignore: must_be_immutable
-class MainProfileScreen extends StatelessWidget {
+class MainProfileScreen extends StatefulWidget {
+  MainProfileScreen({Key? key}) : super(key: key);
+
+  @override
+  _MainProfileScreenState createState() => _MainProfileScreenState();
+}
+
+class _MainProfileScreenState extends State<MainProfileScreen> {
   TextEditingController autoLayoutVerController = TextEditingController();
   final ItemController itemController = Get.put(ItemController());
 
-  MainProfileScreen({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     var titles = [
