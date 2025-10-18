@@ -938,3 +938,138 @@ Future<List<Map<String, dynamic>>> fetchLegalInfos({String? type}) async {
     throw Exception('Failed to load legal infos');
   }
 }
+
+Future<bool> updateProfileAvatar(BuildContext context, String imagePath) async {
+  try {
+    // Показываем индикатор загрузки
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Row(
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(width: 20),
+              Text("Обновление аватара..."),
+            ],
+          ),
+        );
+      },
+    );
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('authToken');
+    final currentUser = await Session.getCurrentUser();
+    String? userId = currentUser!.userId;
+    
+    var UPDATE_USER_PROFILE = '''
+      mutation {
+        updateUserProfile(
+          input: {
+            user_id: "$userId",
+            profile_image: null
+          }
+        ) {
+          user {
+            username: full_name
+            user_id: id
+            first_name
+            last_name
+            photo: profile_image
+            email
+          }
+          status
+          token
+          role
+        }
+      }
+    ''';
+
+    final uri = Uri.parse('https://admin.onlinedoctor.su/graphql');
+    final request = http.MultipartRequest('post', uri);
+
+    request.headers['Authorization'] = 'Bearer $token';
+    request.headers['Content-Type'] = 'multipart/form-data';
+    request.files.add(await http.MultipartFile.fromBytes(
+      'profile_image',
+      await File(imagePath).readAsBytes(),
+      filename: 'avatar.jpg',
+    ));
+
+    request.fields['operations'] = json.encode({'query': UPDATE_USER_PROFILE});
+    request.fields['map'] = json.encode({
+      '0': ['updateUserProfile.input.profile_image']
+    });
+
+    final streamedResponse = await request.send();
+    final response = await http.Response.fromStream(streamedResponse);
+    
+    // Закрываем диалог загрузки
+    Navigator.of(context).pop();
+    
+    if (response.statusCode == 200) {
+      final responseData = jsonDecode(response.body);
+      
+      if (responseData['data'] != null && 
+          responseData['data']['updateUserProfile'] != null) {
+        
+        final userData = responseData['data']['updateUserProfile']['user'];
+        
+        // Обновляем данные пользователя в сессии
+        final updatedUser = await Session.getCurrentUser();
+        if (updatedUser != null) {
+          updatedUser.photo = userData['photo'];
+          await Session.saveUser(updatedUser);
+        }
+        
+        // Показываем сообщение об успехе
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Аватар успешно обновлен!'),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 2),
+          ),
+        );
+        
+        return true;
+      } else {
+        // Показываем сообщение об ошибке
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Ошибка при обновлении аватара'),
+            backgroundColor: Colors.red,
+            duration: Duration(seconds: 3),
+          ),
+        );
+        return false;
+      }
+    } else {
+      // Закрываем диалог загрузки если он еще открыт
+      Navigator.of(context).pop();
+      
+      // Показываем сообщение об ошибке
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Ошибка сети: ${response.statusCode}'),
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 3),
+        ),
+      );
+      return false;
+    }
+  } catch (e) {
+    // Закрываем диалог загрузки если он еще открыт
+    Navigator.of(context).pop();
+    
+    // Показываем сообщение об ошибке
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Ошибка: $e'),
+        backgroundColor: Colors.red,
+        duration: Duration(seconds: 3),
+      ),
+    );
+    return false;
+  }
+}

@@ -404,7 +404,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           GestureDetector(
-                            onTap: pickImage,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        MainProfileScreen()),
+                              );
+                            },
                             child: CircleAvatar(
                               radius: getVerticalSize(25),
                               backgroundImage:

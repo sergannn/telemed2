@@ -96,10 +96,33 @@ class MainProfileScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          CircleAvatar(
-                            radius: getVerticalSize(25),
-                            backgroundImage:
-                                NetworkImage(context.userData['photo']),
+                          GestureDetector(
+                            onTap: () async {
+                              var status = await Permission.photos.request().isGranted;
+                              await Permission.mediaLibrary.request().isGranted;
+
+                              final pickedFile =
+                                  await ImagePicker().pickImage(source: ImageSource.gallery);
+                              
+                              if (pickedFile != null) {
+                                bool success = await updateProfileAvatar(
+                                  context,
+                                  pickedFile.path,
+                                );
+                                
+                                if (success) {
+                                  // Обновляем UI после успешного обновления
+                                  setState(() {
+                                    // Принудительно обновляем UI
+                                  });
+                                }
+                              }
+                            },
+                            child: CircleAvatar(
+                              radius: getVerticalSize(25),
+                              backgroundImage:
+                                  NetworkImage(context.userData['photo']),
+                            ),
                           ),
 
                           HorizontalSpace(width: 20),
@@ -483,8 +506,10 @@ class MainProfileScreen extends StatelessWidget {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        const Text(
-                                          "Специализации",
+                                        Text(
+                                          index == 0
+                                              ? "Популярные врачи"
+                                              : "Специализации",
                                           style: TextStyle(
                                             fontSize: 16.0,
                                             fontFamily: 'Source Sans Pro',
