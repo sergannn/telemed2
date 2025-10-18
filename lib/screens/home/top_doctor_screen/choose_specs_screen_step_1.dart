@@ -211,45 +211,28 @@ class _TopDoctorScreenState extends State<ChooseSpecsScreen>
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const ChooseSpecScreen2()),
+                    builder: (context) => ChooseSpecScreen2(selectedSpec: specName)),
               );
-              if (tabController != null) {
-                tabController!.animateTo(index);
-              }
             },
             child: Container(
               margin: EdgeInsets.only(bottom: 10),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // Avatar section
+                  // Icon section
                   Container(
                     width: MediaQuery.of(context).size.width / 8,
                     height: MediaQuery.of(context).size.width / 8,
                     margin: EdgeInsets.only(right: 16),
                     decoration: BoxDecoration(
-                      shape: BoxShape.circle,
+                      borderRadius: BorderRadius.circular(12),
                       color: getRandomDarkBackgroundColor(),
                     ),
-                    child: randomDoctorPhoto != null
-                        ? ClipOval(
-                            child: Image.network(
-                              randomDoctorPhoto,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return Icon(
-                                  Icons.medical_services,
-                                  color: Colors.white,
-                                  size: 20,
-                                );
-                              },
-                            ),
-                          )
-                        : Icon(
-                            Icons.medical_services,
-                            color: Colors.white,
-                            size: 20,
-                          ),
+                    child: Icon(
+                      Icons.medical_services,
+                      color: Colors.white,
+                      size: 20,
+                    ),
                   ),
 
                   // Content section

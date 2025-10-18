@@ -11,7 +11,9 @@ import 'package:doctorq/app_export.dart';
 import 'package:flutter/material.dart';
 
 class ChooseSpecScreen2 extends StatefulWidget {
-  const ChooseSpecScreen2({Key? key}) : super(key: key);
+  final String? selectedSpec;
+  
+  const ChooseSpecScreen2({Key? key, this.selectedSpec}) : super(key: key);
 
   @override
   State<ChooseSpecScreen2> createState() => _TopDoctorScreenState();
@@ -22,18 +24,36 @@ class _TopDoctorScreenState extends State<ChooseSpecScreen2>
   TabController? tabController;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    // getSpecs();
-    tabController =
-        TabController(length: context.specsData.length, vsync: this);
+    
+    // Безопасная инициализация TabController
+    int safeLength = context.specsData.isNotEmpty ? context.specsData.length : 1;
+    tabController = TabController(length: safeLength, vsync: this);
+    
+    // Автоматически переключаемся на выбранную специализацию
+    if (widget.selectedSpec != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        int selectedIndex = _findSpecIndex(widget.selectedSpec!);
+        if (selectedIndex != -1 && tabController != null) {
+          tabController!.animateTo(selectedIndex);
+        }
+      });
+    }
+  }
+  
+  int _findSpecIndex(String specName) {
+    for (int i = 0; i < context.specsData.length; i++) {
+      if (context.specsData[i].name == specName) {
+        return i;
+      }
+    }
+    return -1;
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
+    tabController?.dispose();
     super.dispose();
-    tabController!.dispose();
   }
 
   final List<Color?> _darkBackgroundColors = [
