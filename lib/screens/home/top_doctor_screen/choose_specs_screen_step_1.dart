@@ -25,20 +25,62 @@ class ChooseSpecsScreen extends StatefulWidget {
 class _TopDoctorScreenState extends State<ChooseSpecsScreen>
     with SingleTickerProviderStateMixin {
   TabController? tabController;
+  TextEditingController _searchController = TextEditingController();
+  List<Map<String, dynamic>> _filteredSpecs = [];
+  List<Map<String, dynamic>> _allSpecs = [];
+  
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    // getSpecs();
-    tabController =
-        TabController(length: context.specsData.length, vsync: this);
+    _initializeSpecs();
+    _searchController.addListener(_onSearchChanged);
+  }
+  
+  void _initializeSpecs() {
+    // Создаем список специализаций с подсчетом врачей
+    _allSpecs = context.specsData.map((spec) {
+      int doctorCount = _countDoctorsForSpec(spec.name);
+      return {
+        'name': spec.name,
+        'doctorCount': doctorCount,
+        'originalSpec': spec,
+      };
+    }).toList();
+    
+    // Сортируем по количеству врачей (по возрастанию)
+    _allSpecs.sort((a, b) => a['doctorCount'].compareTo(b['doctorCount']));
+    _filteredSpecs = List.from(_allSpecs);
+    
+    // Инициализируем TabController с безопасной длиной
+    int safeLength = _allSpecs.isNotEmpty ? _allSpecs.length : 1;
+    tabController = TabController(length: safeLength, vsync: this);
+  }
+  
+  int _countDoctorsForSpec(String specName) {
+    return context.doctorsData.where((doctor) {
+      if (doctor['specializations'] == null) return false;
+      return doctor['specializations'].any((spec) => spec['name'] == specName);
+    }).length;
+  }
+  
+  void _onSearchChanged() {
+    final query = _searchController.text.toLowerCase();
+    setState(() {
+      if (query.isEmpty) {
+        _filteredSpecs = List.from(_allSpecs);
+      } else {
+        _filteredSpecs = _allSpecs.where((spec) {
+          return spec['name'].toLowerCase().contains(query);
+        }).toList();
+      }
+    });
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
+    _searchController.dispose();
+    tabController?.dispose();
     super.dispose();
-    tabController!.dispose();
   }
 
   final List<Color?> _darkBackgroundColors = [
@@ -86,10 +128,11 @@ class _TopDoctorScreenState extends State<ChooseSpecsScreen>
               width: double.infinity, // Makes the container full width
               margin: EdgeInsets.symmetric(horizontal: 16), // Adds side margins
               child: TextField(
+                controller: _searchController,
                 decoration: InputDecoration(
                   contentPadding:
                       EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                  hintText: 'Поиск...',
+                  hintText: 'Поиск специализаций...',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(32),
                     borderSide: BorderSide(color: Colors.grey.shade300),
@@ -99,6 +142,14 @@ class _TopDoctorScreenState extends State<ChooseSpecsScreen>
                     borderSide: BorderSide(color:const Color.fromARGB(255, 96, 159, 222), width: 1),
                   ),
                   prefixIcon: Icon(Icons.search, color: Colors.grey),
+                  suffixIcon: _searchController.text.isNotEmpty
+                      ? IconButton(
+                          icon: Icon(Icons.clear, color: Colors.grey),
+                          onPressed: () {
+                            _searchController.clear();
+                          },
+                        )
+                      : null,
                 ),
               ),
             ),
@@ -127,7 +178,6 @@ class _TopDoctorScreenState extends State<ChooseSpecsScreen>
 
   Widget specsList() {
     return SizedBox(
-      // height: getVerticalSize(240),
       child: ListView.builder(
         padding: getPadding(
           left: 20,
@@ -136,19 +186,36 @@ class _TopDoctorScreenState extends State<ChooseSpecsScreen>
         ),
         physics: const BouncingScrollPhysics(),
         shrinkWrap: true,
-        itemCount: 9, // availableTimesList.length,
+        itemCount: _filteredSpecs.length,
         itemBuilder: (context, index) {
-          Random random = new Random();
-          int randomNumber = random.nextInt(context.doctorsData.length);
+          final spec = _filteredSpecs[index];
+          final specName = spec['name'];
+          final doctorCount = spec['doctorCount'];
+          
+          // Находим случайного врача этой специализации
+          final doctorsWithSpec = context.doctorsData.where((doctor) {
+            if (doctor['specializations'] == null) return false;
+            return doctor['specializations'].any((spec) => spec['name'] == specName);
+          }).toList();
+          
+          String? randomDoctorPhoto;
+          if (doctorsWithSpec.isNotEmpty) {
+            Random random = Random();
+            int randomIndex = random.nextInt(doctorsWithSpec.length);
+            randomDoctorPhoto = doctorsWithSpec[randomIndex]['photo'];
+          }
+          
           return InkWell(
             onTap: () {
-              print("1");
+              print("Navigating to spec: $specName");
               Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => const ChooseSpecScreen2()),
               );
-              tabController!.animateTo(index);
+              if (tabController != null) {
+                tabController!.animateTo(index);
+              }
             },
             child: Container(
               margin: EdgeInsets.only(bottom: 10),
@@ -162,16 +229,27 @@ class _TopDoctorScreenState extends State<ChooseSpecsScreen>
                     margin: EdgeInsets.only(right: 16),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      //   border: Border.all(color: ColorConstant.blueA400),
+                      color: getRandomDarkBackgroundColor(),
                     ),
-                    child: ClipOval(
-                      child: Image.network(
-                        // Replace with actual avatar URL
-                        context.doctorsData[randomNumber]['photo'],
-                        // 'https://placehold.co/60x60',
-                        fit: BoxFit.cover,
-                      ),
-                    ),
+                    child: randomDoctorPhoto != null
+                        ? ClipOval(
+                            child: Image.network(
+                              randomDoctorPhoto,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Icon(
+                                  Icons.medical_services,
+                                  color: Colors.white,
+                                  size: 20,
+                                );
+                              },
+                            ),
+                          )
+                        : Icon(
+                            Icons.medical_services,
+                            color: Colors.white,
+                            size: 20,
+                          ),
                   ),
 
                   // Content section
@@ -180,7 +258,7 @@ class _TopDoctorScreenState extends State<ChooseSpecsScreen>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          context.specsData[index].name,
+                          specName,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
@@ -190,9 +268,9 @@ class _TopDoctorScreenState extends State<ChooseSpecsScreen>
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        /*SizedBox(height: 4),
+                        SizedBox(height: 4),
                         Text(
-                          'Doctor Description', // Add actual description
+                          '$doctorCount врачей',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
@@ -201,7 +279,7 @@ class _TopDoctorScreenState extends State<ChooseSpecsScreen>
                             fontFamily: 'Source Sans Pro',
                             fontWeight: FontWeight.normal,
                           ),
-                        )*/
+                        ),
                       ],
                     ),
                   ),
