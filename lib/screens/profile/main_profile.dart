@@ -55,6 +55,10 @@ class _MainProfileScreenState extends State<MainProfileScreen> {
   TextEditingController autoLayoutVerController = TextEditingController();
   final ItemController itemController = Get.put(ItemController());
 
+  Future<bool> _updateProfileAvatar(BuildContext context, String imagePath) async {
+    return await updateProfileAvatar(context, imagePath);
+  }
+
   @override
   Widget build(BuildContext context) {
     var titles = [
@@ -114,7 +118,7 @@ class _MainProfileScreenState extends State<MainProfileScreen> {
                                   await ImagePicker().pickImage(source: ImageSource.gallery);
                               
                               if (pickedFile != null) {
-                                bool success = await updateProfileAvatar(
+                                bool success = await _updateProfileAvatar(
                                   context,
                                   pickedFile.path,
                                 );
