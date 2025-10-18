@@ -72,11 +72,12 @@ class ItemController extends GetxController {
     
     print("DEBUG: Filtered records count: ${_filteredRecords.length}");
     
+    // Показываем сообщение только если нет никаких записей
     if (_filteredRecords.isEmpty) {
       _filteredRecords.add(CalendarRecordData(
           date: date,
-          title: "На этот день заметки отсутствуют",
-          category: "Приемы"));
+          title: "Попробуйте воспользоваться дневником",
+          category: "Пусто"));
     }
   }
 
@@ -149,10 +150,13 @@ class ItemController extends GetxController {
               timeStr = '${hour.toString().padLeft(2, '0')}:${timeParts[1]}';
             }
             
+            // Улучшаем отображение типа приема
+            String appointmentType = _getAppointmentTypeDisplay(appointment['description']);
+            
             // Создаем запись для календаря
             CalendarRecordData appointmentRecord = CalendarRecordData(
               date: appointmentDate,
-              title: '${timeStr} - ${appointment['doctor']['first_name'] ?? 'Врач'} - ${appointment['description'] ?? 'Прием'}',
+              title: '${timeStr} - ${appointment['doctor']['first_name'] ?? 'Врач'} - $appointmentType',
               category: 'Приемы',
               description: 'ID: ${appointment['id']?.toString() ?? 'N/A'}',
             );
@@ -174,6 +178,23 @@ class ItemController extends GetxController {
       filterRecordsByDate(DateTime.now());
     } catch (e) {
       print("DEBUG: Error loading appointments to calendar: $e");
+    }
+  }
+  
+  String _getAppointmentTypeDisplay(String? description) {
+    if (description == null) return 'Прием';
+    
+    switch (description) {
+      case 'ContactMethods.voiceCall':
+        return 'Голосовой звонок';
+      case 'ContactMethods.videoCall':
+        return 'Видеозвонок';
+      case 'ContactMethods.audioCall':
+        return 'Аудиозвонок';
+      case 'ContactMethods.textChat':
+        return 'Текстовый чат';
+      default:
+        return description;
     }
   }
 

@@ -16,7 +16,19 @@ class AutolayouthorItemWidgetTasks extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return GestureDetector(
+      onTap: () {
+        // Если это прием, переходим к экрану приема
+        if (item.category == 'Приемы' && item.description != null && item.description.contains('ID:')) {
+          // Извлекаем ID приема из description
+          String appointmentId = item.description.replaceAll('ID: ', '');
+          print("DEBUG: Navigating to appointment with ID: $appointmentId");
+          
+          // Здесь можно добавить навигацию к экрану приема
+          // Navigator.push(context, MaterialPageRoute(builder: (context) => AppointmentDetailScreen(appointmentId: appointmentId)));
+        }
+      },
+      child: Container(
       width: MediaQuery.of(context).size.width / 3,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(
@@ -97,17 +109,20 @@ class AutolayouthorItemWidgetTasks extends StatelessWidget {
           ),
         ],
       ),
+    ),
     );
   }
 }
 
 Color getColor(dynamic record) {
-  if (record.category == 'Cat1') {
+  if (record.category == 'Cat1' || record.category == 'Приемы') {
     return Color.fromARGB(255, 138, 234, 205);
   } else if (record.category == 'Cat2') {
     return ColorConstant.fromHex("C8E0FF");
   } else if (record.category == 'Cat3') {
     return ColorConstant.fromHex("FFFCBB");
+  } else if (record.category == 'Пусто') {
+    return ColorConstant.fromHex("F5F5F5");
   } else {
     return Color.fromARGB(255, 138, 234, 205);
   }
@@ -121,6 +136,10 @@ String getCategoryName(String category) {
       return 'Лекарства';
     case 'Cat3':
       return 'Упражнения';
+    case 'Приемы':
+      return 'Приемы';
+    case 'Пусто':
+      return 'Попробуйте воспользоваться дневником';
     default:
       return 'Попробуйте воспользоваться дневником';
   }
