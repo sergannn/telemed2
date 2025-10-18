@@ -995,9 +995,15 @@ Future<bool> updateProfileAvatar(BuildContext context, String imagePath) async {
 
     request.headers['Authorization'] = 'Bearer $token';
     request.headers['Content-Type'] = 'multipart/form-data';
+    
+    final imageFile = File(imagePath);
+    final imageBytes = await imageFile.readAsBytes();
+    print("DEBUG: Image file size: ${imageBytes.length} bytes");
+    print("DEBUG: Image file path: $imagePath");
+    
     request.files.add(await http.MultipartFile.fromBytes(
       'profile_image',
-      await File(imagePath).readAsBytes(),
+      imageBytes,
       filename: 'avatar.jpg',
     ));
 
@@ -1009,12 +1015,23 @@ Future<bool> updateProfileAvatar(BuildContext context, String imagePath) async {
     final streamedResponse = await request.send();
     final response = await http.Response.fromStream(streamedResponse);
     
-    // Закрываем диалог загрузки
-    print("DEBUG: Closing dialog - dialogShown: $dialogShown, mounted: ${context.mounted}, canPop: ${Navigator.of(context).canPop()}");
-    if (dialogShown && context.mounted && Navigator.of(context).canPop()) {
-      Navigator.of(context).pop();
-      print("DEBUG: Dialog closed successfully");
-    }
+    print("DEBUG: Response status: ${response.statusCode}");
+    print("DEBUG: Response body: ${response.body}");
+    
+             // Закрываем диалог загрузки
+             print("DEBUG: Closing dialog - dialogShown: $dialogShown, mounted: ${context.mounted}, canPop: ${Navigator.of(context).canPop()}");
+             if (dialogShown && context.mounted) {
+               try {
+                 if (Navigator.of(context).canPop()) {
+                   Navigator.of(context).pop();
+                   print("DEBUG: Dialog closed successfully");
+                 } else {
+                   print("DEBUG: Cannot pop - no routes to pop");
+                 }
+               } catch (e) {
+                 print("DEBUG: Error closing dialog: $e");
+               }
+             }
     
     if (response.statusCode == 200) {
       final responseData = jsonDecode(response.body);
@@ -1024,13 +1041,18 @@ Future<bool> updateProfileAvatar(BuildContext context, String imagePath) async {
         
         final userData = responseData['data']['updateUserProfile']['user'];
         
-        // Обновляем данные пользователя в сессии
-        final updatedUser = await Session.getCurrentUser();
-        if (updatedUser != null) {
-          updatedUser.photo = userData['photo'];
-          final session = Session();
-          await session.saveUser(updatedUser);
-        }
+                 // Обновляем данные пользователя в сессии
+                 final updatedUser = await Session.getCurrentUser();
+                 if (updatedUser != null) {
+                   updatedUser.photo = userData['photo'];
+                   final session = Session();
+                   await session.saveUser(updatedUser);
+                   
+                   // Принудительно обновляем SharedPreferences
+                   SharedPreferences prefs = await SharedPreferences.getInstance();
+                   await prefs.setString('photo', userData['photo']);
+                   print("DEBUG: Updated user photo in SharedPreferences: ${userData['photo']}");
+                 }
         
         // Показываем сообщение об успехе
         ScaffoldMessenger.of(context).showSnackBar(
@@ -1064,13 +1086,21 @@ Future<bool> updateProfileAvatar(BuildContext context, String imagePath) async {
       );
       return false;
     }
-  } catch (e) {
-    // Закрываем диалог загрузки если он еще открыт
-    print("DEBUG: Error occurred - dialogShown: $dialogShown, mounted: ${context.mounted}, canPop: ${Navigator.of(context).canPop()}");
-    if (dialogShown && context.mounted && Navigator.of(context).canPop()) {
-      Navigator.of(context).pop();
-      print("DEBUG: Dialog closed in catch block");
-    }
+           } catch (e) {
+             // Закрываем диалог загрузки если он еще открыт
+             print("DEBUG: Error occurred - dialogShown: $dialogShown, mounted: ${context.mounted}, canPop: ${Navigator.of(context).canPop()}");
+             if (dialogShown && context.mounted) {
+               try {
+                 if (Navigator.of(context).canPop()) {
+                   Navigator.of(context).pop();
+                   print("DEBUG: Dialog closed in catch block");
+                 } else {
+                   print("DEBUG: Cannot pop in catch - no routes to pop");
+                 }
+               } catch (popError) {
+                 print("DEBUG: Error closing dialog in catch: $popError");
+               }
+             }
     
     // Показываем сообщение об ошибке
     ScaffoldMessenger.of(context).showSnackBar(

@@ -124,18 +124,28 @@ class _MainProfileScreenState extends State<MainProfileScreen> {
                                   pickedFile.path,
                                 );
                                 
-                                if (success) {
-                                  // Обновляем UI после успешного обновления
-                                  setState(() {
-                                    // Принудительно обновляем UI
-                                  });
-                                  
-                                  // Принудительно обновляем данные пользователя
-                                  final updatedUser = await Session.getCurrentUser();
-                                  if (updatedUser != null) {
-                                    context.userData['photo'] = updatedUser.photo;
-                                  }
-                                }
+               if (success) {
+                 // Принудительно обновляем данные пользователя
+                 final updatedUser = await Session.getCurrentUser();
+                 if (updatedUser != null) {
+                   // Обновляем MobX store
+                   final userStore = Get.find<UserStore>();
+                   final currentUserData = Map<dynamic, dynamic>.from(context.userData);
+                   currentUserData['photo'] = updatedUser.photo;
+                   userStore.setUserData(currentUserData);
+                   print("DEBUG: Updated MobX store with new photo: ${updatedUser.photo}");
+                   
+                   // Принудительно обновляем SharedPreferences
+                   SharedPreferences prefs = await SharedPreferences.getInstance();
+                   await prefs.setString('photo', updatedUser.photo);
+                   print("DEBUG: Updated SharedPreferences photo to: ${updatedUser.photo}");
+                 }
+
+                 // Обновляем UI после успешного обновления
+                 setState(() {
+                   // Принудительно обновляем UI
+                 });
+               }
                               }
                             },
                             child: CircleAvatar(
