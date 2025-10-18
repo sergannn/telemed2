@@ -27,7 +27,7 @@ import 'package:doctorq/screens/home/notification_screen/notification_screen.dar
 import 'package:doctorq/screens/home/search_doctor_screen/search_doctor_screen.dart';
 import 'package:doctorq/screens/home/specialist_doctor_screen/specialist_doctor_screen.dart';
 import 'package:doctorq/screens/home/top_doctor_screen/choose_specs_screen_step_1.dart';
-import 'package:doctorq/services/api_service.dart';
+import 'package:doctorq/services/api_service.dart' hide getIt;
 import 'package:doctorq/services/session.dart';
 import 'package:doctorq/utils/utility.dart';
 import 'package:doctorq/widgets/spacing.dart';
