@@ -128,6 +128,12 @@ class _MainProfileScreenState extends State<MainProfileScreen> {
                                   setState(() {
                                     // Принудительно обновляем UI
                                   });
+                                  
+                                  // Принудительно обновляем данные пользователя
+                                  final updatedUser = await Session.getCurrentUser();
+                                  if (updatedUser != null) {
+                                    context.userData['photo'] = updatedUser.photo;
+                                  }
                                 }
                               }
                             },

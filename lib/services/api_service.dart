@@ -940,23 +940,27 @@ Future<List<Map<String, dynamic>>> fetchLegalInfos({String? type}) async {
 }
 
 Future<bool> updateProfileAvatar(BuildContext context, String imagePath) async {
+  bool dialogShown = false;
   try {
     // Показываем индикатор загрузки
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          content: Row(
-            children: [
-              CircularProgressIndicator(),
-              SizedBox(width: 20),
-              Text("Обновление аватара..."),
-            ],
-          ),
-        );
-      },
-    );
+    if (context.mounted) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          dialogShown = true;
+          return AlertDialog(
+            content: Row(
+              children: [
+                CircularProgressIndicator(),
+                SizedBox(width: 20),
+                Text("Обновление аватара..."),
+              ],
+            ),
+          );
+        },
+      );
+    }
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('authToken');
@@ -1006,8 +1010,10 @@ Future<bool> updateProfileAvatar(BuildContext context, String imagePath) async {
     final response = await http.Response.fromStream(streamedResponse);
     
     // Закрываем диалог загрузки
-    if (Navigator.of(context).canPop()) {
+    print("DEBUG: Closing dialog - dialogShown: $dialogShown, mounted: ${context.mounted}, canPop: ${Navigator.of(context).canPop()}");
+    if (dialogShown && context.mounted && Navigator.of(context).canPop()) {
       Navigator.of(context).pop();
+      print("DEBUG: Dialog closed successfully");
     }
     
     if (response.statusCode == 200) {
@@ -1060,8 +1066,10 @@ Future<bool> updateProfileAvatar(BuildContext context, String imagePath) async {
     }
   } catch (e) {
     // Закрываем диалог загрузки если он еще открыт
-    if (Navigator.of(context).canPop()) {
+    print("DEBUG: Error occurred - dialogShown: $dialogShown, mounted: ${context.mounted}, canPop: ${Navigator.of(context).canPop()}");
+    if (dialogShown && context.mounted && Navigator.of(context).canPop()) {
       Navigator.of(context).pop();
+      print("DEBUG: Dialog closed in catch block");
     }
     
     // Показываем сообщение об ошибке
