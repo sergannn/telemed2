@@ -122,7 +122,7 @@ Color getColor(dynamic record) {
   } else if (record.category == 'Cat3') {
     return ColorConstant.fromHex("FFFCBB");
   } else if (record.category == 'Пусто') {
-    return ColorConstant.fromHex("F5F5F5");
+    return Color(0xFFFFB800);
   } else {
     return Color.fromARGB(255, 138, 234, 205);
   }
@@ -139,9 +139,9 @@ String getCategoryName(String category) {
     case 'Приемы':
       return 'Приемы';
     case 'Пусто':
-      return 'Попробуйте воспользоваться дневником';
+      return 'Дневник';
     default:
-      return 'Попробуйте воспользоваться дневником';
+      return 'Дневник';
   }
 }
 
