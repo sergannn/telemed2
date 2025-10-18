@@ -57,11 +57,21 @@ class ItemController extends GetxController {
   var _filteredRecords = <CalendarRecordData>[].obs;
 
   void filterRecordsByDate(DateTime date) {
+    print("DEBUG: Filtering records for date: ${date.toString()}");
+    print("DEBUG: Total calendar records: ${_calendarRecords.length}");
+    
     _filteredRecords.value = _calendarRecords.where((record) {
-      return record.date.year == date.year &&
+      bool matches = record.date.year == date.year &&
           record.date.month == date.month &&
           record.date.day == date.day;
+      if (matches) {
+        print("DEBUG: Found matching record: ${record.title} on ${record.date}");
+      }
+      return matches;
     }).toList();
+    
+    print("DEBUG: Filtered records count: ${_filteredRecords.length}");
+    
     if (_filteredRecords.isEmpty) {
       _filteredRecords.add(CalendarRecordData(
           date: date,
@@ -98,11 +108,11 @@ class ItemController extends GetxController {
       }
     }
     
-    // Загружаем предстоящие сеансы
-    await _loadAppointmentsToCalendar();
-    
-    // Объединяем записи
+    // Инициализируем записи дневника
     _calendarRecords.value = diaryRecords;
+    
+    // Загружаем предстоящие сеансы (они не сохраняются в SharedPreferences)
+    await _loadAppointmentsToCalendar();
     
     // Initialize with today's records
     filterRecordsByDate(DateTime.now());
@@ -115,6 +125,7 @@ class ItemController extends GetxController {
       List<Map<String, dynamic>> appointments = storeAppointmentsStore.appointmentsDataList.cast<Map<String, dynamic>>();
       
       print("DEBUG: Loading ${appointments.length} appointments to calendar for patient");
+      print("DEBUG: Current calendar records before adding appointments: ${_calendarRecords.length}");
       
       for (var appointment in appointments) {
         try {
@@ -122,6 +133,8 @@ class ItemController extends GetxController {
           String dateStr = appointment['date'] ?? '';
           String fromTime = appointment['from_time'] ?? '';
           String fromTimeType = appointment['from_time_type'] ?? '';
+          
+          print("DEBUG: Processing appointment: ${appointment['id']}, date: $dateStr, time: $fromTime $fromTimeType");
           
           if (dateStr.isNotEmpty) {
             DateTime appointmentDate = DateTime.parse(dateStr);
@@ -151,6 +164,14 @@ class ItemController extends GetxController {
           print("DEBUG: Error processing appointment: $e");
         }
       }
+      
+      print("DEBUG: Total calendar records after adding appointments: ${_calendarRecords.length}");
+      
+      // Принудительно обновляем UI
+      _calendarRecords.refresh();
+      
+      // Перефильтровываем записи для текущей даты
+      filterRecordsByDate(DateTime.now());
     } catch (e) {
       print("DEBUG: Error loading appointments to calendar: $e");
     }
