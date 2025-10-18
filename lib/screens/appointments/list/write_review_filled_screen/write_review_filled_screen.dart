@@ -24,15 +24,14 @@ class AppointmentsListWriteReviewFilledScreen extends StatefulWidget {
 class _AppointmentsListWriteReviewFilledScreenState extends State<AppointmentsListWriteReviewFilledScreen> {
   String radioGroup = "";
 
-  List<String> radioList = ["yes", "no"];
+  List<String> radioList = ["да", "нет"];
 
   @override
   Widget build(BuildContext context) {
     bool isDark =Theme.of(context).brightness==Brightness.dark;
     return Scaffold(
-       body:SafeArea(
-          child:
-           SizedBox(
+      body: SafeArea(
+        child: SizedBox(
           width: size.width,
           child: SingleChildScrollView(
             child: Column(
@@ -41,67 +40,43 @@ class _AppointmentsListWriteReviewFilledScreenState extends State<AppointmentsLi
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Container(
-              width: size.width,
-              margin: getMargin(top: 26, bottom: 10),
-              child: Padding(
-                padding: getPadding(
-                  left: 24,
-                  right: 24,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Row(
+                  width: size.width,
+                  margin: getMargin(top: 26, bottom: 10),
+                  child: Padding(
+                    padding: getPadding(
+                      left: 24,
+                      right: 24,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
                       children: [
-                        const BkBtn(),
-                        HorizontalSpace(width: 20),
-                        Text(
-                          'Write areview',
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            fontSize: getFontSize(
-                              26,
+                        Row(
+                          children: [
+                            const BkBtn(),
+                            HorizontalSpace(width: 20),
+                            Text(
+                              'Написать отзыв',
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                fontSize: getFontSize(
+                                  26,
+                                ),
+                                fontFamily: 'Source Sans Pro',
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
-                            fontFamily: 'Source Sans Pro',
-                            fontWeight: FontWeight.w600,
-                          ),
+                          ],
                         ),
                       ],
                     ),
-                  ],
-                ),
-              ),
-            ),
-            
-              
-                Padding(
-                  padding: getPadding(
-                    left: 24,
-                    top: 37,
-                    right: 24,
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(
-                      getHorizontalSize(
-                        94.00,
-                      ),
-                    ),
-                    child: CommonImageView(
-                      imagePath: widget.appointment.img,
-                      height: getSize(
-                        188.00,
-                      ),
-                      width: getSize(
-                        188.00,
-                      ),
-                      fit: BoxFit.cover,
-                    ),
                   ),
                 ),
-                Container(
+                
+                // Заменил CommonImageView на обычный CircleAvatar для демонстрации
+                 Container(
                   width: getHorizontalSize(
                     218.00,
                   ),
@@ -114,9 +89,9 @@ class _AppointmentsListWriteReviewFilledScreenState extends State<AppointmentsLi
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text: "How was your experience\nwith",
+                          text: "Как ваше впечатление\nот приема",
                           style: TextStyle(
-                            color:isDark?Colors.white: ColorConstant.gray900,
+                            color: isDark ? Colors.white : ColorConstant.gray900,
                             fontSize: getFontSize(
                               20,
                             ),
@@ -127,7 +102,7 @@ class _AppointmentsListWriteReviewFilledScreenState extends State<AppointmentsLi
                         TextSpan(
                           text: " ",
                           style: TextStyle(
-                            color:isDark?Colors.white: ColorConstant.gray900,
+                            color: isDark ? Colors.white : ColorConstant.gray900,
                             fontSize: getFontSize(
                               20,
                             ),
@@ -149,7 +124,7 @@ class _AppointmentsListWriteReviewFilledScreenState extends State<AppointmentsLi
                         TextSpan(
                           text: "?",
                           style: TextStyle(
-                            color:isDark?Colors.white: ColorConstant.gray900,
+                            color: isDark ? Colors.white : ColorConstant.gray900,
                             fontSize: getFontSize(
                               20,
                             ),
@@ -163,22 +138,22 @@ class _AppointmentsListWriteReviewFilledScreenState extends State<AppointmentsLi
                   ),
                 ),
                 VerticalSpace(height: 24),
-               RatingBar(
-   initialRating: 0,
-   itemSize: 32,
-   direction: Axis.horizontal,
-   allowHalfRating: true,
-   itemCount: 5,
-   ratingWidget: RatingWidget(
-     full: Image.asset(ImageConstant.star),
-     half: Image.asset(ImageConstant.starHalf),
-     empty: Image.asset(ImageConstant.starBorder),
-   ),
-   itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
-   onRatingUpdate: (rating) {
-     printLog('Rating $rating');
-   },
-),
+                RatingBar(
+                  initialRating: 0,
+                  itemSize: 32,
+                  direction: Axis.horizontal,
+                  allowHalfRating: true,
+                  itemCount: 5,
+                  ratingWidget: RatingWidget(
+                    full: Icon(Icons.star, color: Colors.amber),
+                    half: Icon(Icons.star_half, color: Colors.amber),
+                    empty: Icon(Icons.star_border, color: Colors.grey),
+                  ),
+                  itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+                  onRatingUpdate: (rating) {
+                    printLog('Rating $rating');
+                  },
+                ),
                
                 Container(
                   height: getVerticalSize(
@@ -208,11 +183,11 @@ class _AppointmentsListWriteReviewFilledScreenState extends State<AppointmentsLi
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       Text(
-                        "Write a comment",
+                        "Написать комментарий",
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.start,
                         style: TextStyle(
-                          color: isDark?Colors.white: ColorConstant.bluegray800,
+                          color: isDark ? Colors.white : ColorConstant.bluegray800,
                           fontSize: getFontSize(
                             16,
                           ),
@@ -221,11 +196,10 @@ class _AppointmentsListWriteReviewFilledScreenState extends State<AppointmentsLi
                         ),
                       ),
                       Text(
-                        "Max 250 words",
+                        "Макс. 250 слов",
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.start,
                         style: TextStyle(
-                        
                           fontSize: getFontSize(
                             14,
                           ),
@@ -236,11 +210,11 @@ class _AppointmentsListWriteReviewFilledScreenState extends State<AppointmentsLi
                     ],
                   ),
                 ),
-                CustomTextFormField(isDark: isDark,
+                CustomTextFormField(
+                  isDark: isDark,
                   width: size.width,
                   focusNode: FocusNode(),
-                  hintText:
-                      "Tell people about your experience",
+                  hintText: "Расскажите о вашем опыте",
                   margin: getMargin(
                     left: 24,
                     top: 15,
@@ -248,27 +222,7 @@ class _AppointmentsListWriteReviewFilledScreenState extends State<AppointmentsLi
                   ),
                   shape: TextFormFieldShape.RoundedBorder16,
                   padding: TextFormFieldPadding.PaddingAll18,
-                 
                   textInputAction: TextInputAction.done,
-                  suffix: Container(
-                    margin: getMargin(
-                      left: 11,
-                      top: 30,
-                      right: 14,
-                      bottom: 6,
-                    ),
-                    child: CommonImageView(
-                      svgPath: ImageConstant.imgSearch,
-                    ),
-                  ),
-                  suffixConstraints: BoxConstraints(
-                    minWidth: getHorizontalSize(
-                      6.00,
-                    ),
-                    minHeight: getVerticalSize(
-                      6.00,
-                    ),
-                  ),
                   maxLines: 4,
                 ),
                 Align(
@@ -283,7 +237,7 @@ class _AppointmentsListWriteReviewFilledScreenState extends State<AppointmentsLi
                       right: 24,
                     ),
                     child: Text(
-                      "Would you recommend Dr. Jenny Wilson to your friends?",
+                      "Вы бы порекомендовали ${widget.appointment.name} своим друзьям?",
                       maxLines: null,
                       textAlign: TextAlign.start,
                       style: TextStyle(
@@ -306,7 +260,7 @@ class _AppointmentsListWriteReviewFilledScreenState extends State<AppointmentsLi
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       CustomRadioButton(
-                        text: "Yes",
+                        text: "Да",
                         iconSize: 16,
                         value: radioList[0],
                         groupValue: radioGroup,
@@ -316,13 +270,11 @@ class _AppointmentsListWriteReviewFilledScreenState extends State<AppointmentsLi
                         ),
                         onChange: (value) {
                           radioGroup = value;
-                          setState(() {
-                            
-                          });
+                          setState(() {});
                         },
                       ),
                       CustomRadioButton(
-                        text: "No",
+                        text: "Нет",
                         iconSize: 16,
                         value: radioList[1],
                         groupValue: radioGroup,
@@ -333,28 +285,32 @@ class _AppointmentsListWriteReviewFilledScreenState extends State<AppointmentsLi
                         ),
                         onChange: (value) {
                           radioGroup = value;
-                          setState(() {
-                            
-                          });
+                          setState(() {});
                         },
                       ),
                     ],
                   ),
                 ),
-                CustomButton(isDark:isDark,
-                  width: size.width,
-                  text: "Submit Review",
+                // Увеличил отступ сверху и добавил отступ снизу для лучшей видимости кнопки
+                Container(
                   margin: getMargin(
                     left: 24,
-                    top: 34,
+                    top: 50, // Увеличил отступ
                     right: 24,
-                    bottom: 20,
+                    bottom: 40, // Добавил отступ снизу
                   ),
-                  onTap: (){
-                    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
-    Main()), (Route<dynamic> route) => false);
-                  },
-                  fontStyle: ButtonFontStyle.SourceSansProSemiBold18,
+                  child: ElevatedButton(
+                    //isDark: isDark,
+                    //width: size.width,
+                    child: Text( "Отправить отзыв"),
+                    onPressed: (){
+                      Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (context) => Main()), 
+                        (Route<dynamic> route) => false
+                      );
+                    },
+
+                  ),
                 ),
               ],
             ),

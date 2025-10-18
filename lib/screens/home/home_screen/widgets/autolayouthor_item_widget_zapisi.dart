@@ -30,7 +30,7 @@ class AutolayouthorItemWidgetZapisi extends StatelessWidget {
               : ColorConstant.fromHex("FFFCBB"),
         ),
         child: Column(
-            mainAxisSize: MainAxisSize.min,
+            //mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -95,31 +95,47 @@ class AutolayouthorItemWidgetZapisi extends StatelessWidget {
                       ],
                     ),
                   )),
-              SvgPicture.string(
+                  SvgPicture.string(
                   //     colorFilter:
                   //         ColorFilter.mode(Colors.white, BlendMode.saturation),
                   width: MediaQuery.of(context).size.width,
-                  SvgConstant.star_svg),
-              Row(
-                  children: List.generate(0, (inex) {
-                return Container(
-                  margin: EdgeInsets.all(8.0), // Отступы
-                  padding: EdgeInsets.symmetric(
-                      horizontal: 8.0, vertical: 4.0), // Внутренние отступы
-                  decoration: BoxDecoration(
-                    color: ColorConstant.fromHex("FFFFFF").withAlpha(400),
-                    borderRadius:
-                        BorderRadius.circular(20.0), // Радиус для овала
-                  ),
-                  child: Text(
-                    "20:00",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16.0,
-                    ),
-                  ),
-                );
-              }))
+                  SvgConstant.star_svg),/*
+                  Row(
+  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  children: [
+    _buildIconWithText(Icons.star, '43', 'Users'),
+    _buildIconWithText(Icons.download, '814', 'Downloads'),
+    _buildIconWithText(Icons.star, '125', 'Rating'),
+    _buildIconWithText(Icons.group, '125', 'Team'),
+  ],
+),*/
+              
+              
             ]));
   }
+}
+
+
+Widget _buildIconWithText(IconData icon, String number, String label) {
+  return Column(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Icon(icon, size: 32, color: Colors.blue),
+      const SizedBox(height: 4),
+      Text(
+        number,
+        style: const TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      Text(
+        label,
+        style: const TextStyle(
+          fontSize: 12,
+          color: Colors.grey,
+        ),
+      ),
+    ],
+  );
 }

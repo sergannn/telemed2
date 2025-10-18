@@ -1,7 +1,8 @@
 import 'package:doctorq/extensions.dart';
+import 'package:doctorq/daily/main.dart';
 import 'package:doctorq/screens/articles/articles.dart';
-import 'package:doctorq/screens/online_reception_audio_start.dart';
 import 'package:doctorq/services/api_service.dart';
+import 'package:doctorq/utils/daily_call_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 
@@ -10,6 +11,10 @@ class OnlineReceptionAudio extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new),
+          onPressed: () => Navigator.of(context).maybePop(),
+        ),
         title: const Text('Ближайшие записи'),
       ),
       body: SingleChildScrollView(
@@ -351,11 +356,13 @@ Row(
   children: [
     // Основная кнопка слева
     ElevatedButton(
-      onPressed: () {
-         Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => OnlineReceptionAudioStart()),
-    );
+      onPressed: () async {
+        final navigator = Navigator.of(context);
+        await launchDailyCall(context, DailyCallMode.audio);
+        if (!navigator.mounted) return;
+        if (navigator.canPop()) {
+          navigator.pop();
+        }
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: const Color.fromARGB(255, 96, 159, 222),

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+/* import 'package:flutter/material.dart';
 
 class FigmaToCodeApp extends StatefulWidget {
   @override
@@ -284,3 +284,4 @@ class SectionTitle extends StatelessWidget {
     );
   }
 }
+*/

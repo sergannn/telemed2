@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'proactivity/proactivity_manager.dart';
-import 'package:vibration/vibration.dart';
+//import 'package:vibration/vibration.dart';
 import 'chat_logic.dart';
 import 'chat_message_model.dart';
-import 'services/voice_service.dart';
+
 import 'services/proactivity_service.dart';
 import 'hdt_suggestions.dart';
 
@@ -195,7 +195,7 @@ class _ChatScreenState extends State<ChatScreen> {
     setState(() {
       _isRecording = false;
     });
-    Vibration.vibrate(duration: 50);
+//    Vibration.vibrate(duration: 50);
   }
 
   void _handleSubmitted(String text) async {

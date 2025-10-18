@@ -60,17 +60,22 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
     Map<dynamic, dynamic> userData = storeUserStore.userData;
     print(userData);
     // пример того как грузить много данных
-    List<bool> resultOfRequests = await Future.wait([
-      userData['patient_id'] != null
-          ? getAppointments(patientId: userData['patient_id'])
-          : getAppointmentsD(doctorId: userData['doctor_id'])
-    ]);
+    bool requestResult = false;
+    if (userData['patient_id'] != null) {
+      final String primaryPatientId = userData['patient_id'].toString();
+      requestResult = await getAppointments(patientId: primaryPatientId);
+      if (context.appointmentsData.isEmpty) {
+        requestResult = await getAppointments(patientId: '30');
+      }
+    } else {
+      requestResult = await getAppointmentsD(doctorId: userData['doctor_id']);
+    }
 
     setState(() {
       myAppointments = context.appointmentsData;
     });
 
-    inspect(resultOfRequests);
+    inspect(requestResult);
 
     printLog('Appointments loaded');
 

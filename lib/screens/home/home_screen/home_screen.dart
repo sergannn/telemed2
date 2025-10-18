@@ -45,6 +45,8 @@ import 'package:story_view/story_view.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:doctorq/models/recommendation_model.dart';
+import 'package:doctorq/stores/appointments_store.dart';
+import 'package:get_it/get_it.dart';
 //final GlobalKey<RandomTextRevealState> globalKey = GlobalKey();
 
 class ItemController extends GetxController {
@@ -167,6 +169,21 @@ class ItemController extends GetxController {
     fetchArticles();
         fetchRecommendations();
     getDoctors();
+
+    final currentUser = await Session.getCurrentUser();
+    final getIt = GetIt.instance;
+    final AppointmentsStore appointmentsStore = getIt.get<AppointmentsStore>();
+
+    if (currentUser != null) {
+      if (currentUser.patientId != null) {
+        await getAppointments(patientId: currentUser.patientId.toString());
+        if (appointmentsStore.appointmentsDataList.isEmpty) {
+          await getAppointments(patientId: '30');
+        }
+      } else if (currentUser.doctorId != null) {
+        await getAppointmentsD(doctorId: currentUser.doctorId.toString());
+      }
+    }
     _loadCalendarRecords().then((res) {
        
       filterRecordsByDate(DateTime.now());

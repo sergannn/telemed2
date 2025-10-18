@@ -3,8 +3,6 @@ import 'package:doctorq/screens/articles/articles.dart';
 import 'package:doctorq/screens/online_reception_video_complete.dart';
 import 'package:doctorq/screens/online_reception_video_start_two.dart';
 import 'package:flutter/material.dart';
-import 'package:jitsi_meet_flutter_sdk/jitsi_meet_flutter_sdk.dart';
-
 
 
 
@@ -18,7 +16,7 @@ class OnlineReceptionVideoStart extends StatefulWidget {
 
 class _MyHomePageState extends State<OnlineReceptionVideoStart> {
   final meetingNameController = TextEditingController();
-  final jitsiMeet = JitsiMeet();
+  /*final jitsiMeet = JitsiMeet();
   void join() {
 
     var options = JitsiMeetConferenceOptions(
@@ -39,8 +37,8 @@ class _MyHomePageState extends State<OnlineReceptionVideoStart> {
           email: "user@example.com"
       ),
     );
-    jitsiMeet.join(options);
-  }
+    jitsiMeet.join(options);*/
+  
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +67,7 @@ class _MyHomePageState extends State<OnlineReceptionVideoStart> {
               width: 100,
               height: 50,
               child: FilledButton(
-                onPressed: join,
+                onPressed: (){},
                 style: ButtonStyle(
                   shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0))),
                 ),

@@ -232,7 +232,7 @@ class DoctorItem extends StatelessWidget {
     );
   }
 }
-
+/*
 class Frame2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -324,3 +324,4 @@ class Frame2 extends StatelessWidget {
     );
   }
 }
+*/

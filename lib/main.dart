@@ -16,7 +16,7 @@ import 'package:doctorq/utils/utility.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+//import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:number_pad_keyboard/number_pad_keyboard.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -30,7 +30,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 //  WidgetsFlutterBinding.ensureInitialized();
-
+/*
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
@@ -44,7 +44,7 @@ void main() async {
 
   await flutterLocalNotificationsPlugin.initialize(
     initializationSettings,
-  );
+  ); */
   await EasyLocalization.ensureInitialized();
 
   SystemChrome.setPreferredOrientations([
