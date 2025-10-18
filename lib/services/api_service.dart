@@ -1006,7 +1006,9 @@ Future<bool> updateProfileAvatar(BuildContext context, String imagePath) async {
     final response = await http.Response.fromStream(streamedResponse);
     
     // Закрываем диалог загрузки
-    Navigator.of(context).pop();
+    if (Navigator.of(context).canPop()) {
+      Navigator.of(context).pop();
+    }
     
     if (response.statusCode == 200) {
       final responseData = jsonDecode(response.body);
@@ -1046,9 +1048,6 @@ Future<bool> updateProfileAvatar(BuildContext context, String imagePath) async {
         return false;
       }
     } else {
-      // Закрываем диалог загрузки если он еще открыт
-      Navigator.of(context).pop();
-      
       // Показываем сообщение об ошибке
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -1061,7 +1060,9 @@ Future<bool> updateProfileAvatar(BuildContext context, String imagePath) async {
     }
   } catch (e) {
     // Закрываем диалог загрузки если он еще открыт
-    Navigator.of(context).pop();
+    if (Navigator.of(context).canPop()) {
+      Navigator.of(context).pop();
+    }
     
     // Показываем сообщение об ошибке
     ScaffoldMessenger.of(context).showSnackBar(

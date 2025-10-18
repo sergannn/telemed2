@@ -122,7 +122,7 @@ Color getColor(dynamic record) {
   } else if (record.category == 'Cat3') {
     return ColorConstant.fromHex("FFFCBB");
   } else if (record.category == 'Пусто') {
-    return Color(0xFFFFB800);
+    return ColorConstant.fromHex("FFFCBB");
   } else {
     return Color.fromARGB(255, 138, 234, 205);
   }
