@@ -415,17 +415,23 @@ class _AppointmentsStep3FilledScreenState
                 printLog('time ${userData}');
 print(widget.time);
 context.loaderOverlay.show();
+                // Извлекаем время и определяем AM/PM
+                String fromTime = widget.time.split('-')[0].trim();
+                String toTime = widget.time.split('-')[1].trim();
+                
+                // Определяем AM/PM на основе времени
+                String fromTimeType = _getTimeType(fromTime);
+                String toTimeType = _getTimeType(toTime);
+                
                 bool result = await setAppointment(
                     doctor_id: selectedDoctor['doctor_id'],
                     date: DateFormat('yyyy-MM-dd').format(widget.date),
                     patient_id: userData['patient_id'],
                     status: "1",
-                    from_time: widget.time.split('-')[0].trim().split(' ')[0],
-                    from_time_type:
-                        widget.time.split('-')[0].trim(),//.split(' ')[1],
-                    to_time: widget.time.split('-')[1].trim().split(' ')[0],
-                    to_time_type:
-                        widget.time.split('-')[1].trim(),//split(' ')[1],
+                    from_time: fromTime,
+                    from_time_type: fromTimeType,
+                    to_time: toTime,
+                    to_time_type: toTimeType,
                     description: widget.contactMethod.toString(),
                     service_id: "1",
                     payment_type: "1",
@@ -454,5 +460,24 @@ context.loaderOverlay.show();
         ),
       ),
     );
+  }
+  
+  // Функция для определения AM/PM на основе времени
+  String _getTimeType(String time) {
+    try {
+      // Парсим время (например, "12:00")
+      List<String> timeParts = time.split(':');
+      int hour = int.parse(timeParts[0]);
+      
+      // Определяем AM/PM
+      if (hour >= 12) {
+        return "PM";
+      } else {
+        return "AM";
+      }
+    } catch (e) {
+      // В случае ошибки возвращаем AM по умолчанию
+      return "AM";
+    }
   }
 }
