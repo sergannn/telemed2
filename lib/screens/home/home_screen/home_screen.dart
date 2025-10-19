@@ -45,16 +45,16 @@ class ItemController extends GetxController {
   var users = [].obs; // Reactive list to store fetched items
   var articles = [].obs;
   var recommendations = <RecommendationModel>[].obs; // Reactive list for recommendations
-  var _filteredRecords = <CalendarRecordData>[].obs;
+  var filteredRecords = <CalendarRecordData>[].obs;
 
   void filterRecordsByDate(DateTime date) {
-    _filteredRecords.value = _calendarRecords.where((record) {
+    filteredRecords.value = _calendarRecords.where((record) {
       return record.date.year == date.year &&
           record.date.month == date.month &&
           record.date.day == date.day;
     }).toList();
-    if (_filteredRecords.isEmpty) {
-      _filteredRecords.add(CalendarRecordData(
+    if (filteredRecords.isEmpty) {
+      filteredRecords.add(CalendarRecordData(
           date: date,
           title: "На этот день заметки отсутствуют",
           category: "Приемы"));
