@@ -4,6 +4,8 @@ import 'package:doctorq/app_export.dart';
 import 'package:doctorq/data_files/specialist_list.dart';
 import 'package:doctorq/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
+import 'package:doctorq/screens/appointments/AppointmentsScreen.dart';
+import 'package:doctorq/screens/medcard/create_record_page.dart';
 
 // ignore: must_be_immutable
 class AutolayouthorItemWidgetTasks extends StatelessWidget {
@@ -15,7 +17,36 @@ class AutolayouthorItemWidgetTasks extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return GestureDetector(
+      onTap: () {
+        if (item.category == 'Приемы' && item.description != null && item.description.contains('ID:')) {
+          // Если в блоке отображен предстоящий сеанс - переход к предстоящим сеансам
+          print("DEBUG: Navigating to upcoming appointments (Doctor)");
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AppointmentsScreen(),
+            ),
+          );
+        } else {
+          // Если в блоке НЕ отображен сеанс - переход к экрану "Обновить запись" (как при двойном клике на дату в календаре)
+          print("DEBUG: Navigating to edit record screen (Doctor)");
+          
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CreateRecordPage(
+                event: item, // Передаем существующую запись для редактирования
+                onRecordAdd: (record) {
+                  // Обновляем календарь после редактирования записи
+                  print("DEBUG: Record updated: ${record.title}");
+                },
+              ),
+            ),
+          );
+        }
+      },
+      child: Container(
       width: MediaQuery.of(context).size.width / 3,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(
@@ -92,6 +123,7 @@ class AutolayouthorItemWidgetTasks extends StatelessWidget {
           ),
         ],
       ),
+    ),
     );
   }
 }
