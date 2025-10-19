@@ -29,7 +29,7 @@ class AutolayouthorItemWidgetProfileTasks extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => AppointmentsScreen(mode: 'old'),
+              builder: (context) => AppointmentsScreen(), // Убираем mode: 'old' для предстоящих сеансов
             ),
           );
         } else {
