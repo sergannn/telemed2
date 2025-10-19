@@ -1,3 +1,4 @@
+import 'package:doctorq/extensions.dart';
 import 'package:doctorq/screens/medcard/create_record_page.dart';
 import 'package:doctorq/screens/medcard/create_record_page_lib.dart';
 import 'package:doctorq/utils/utility.dart';

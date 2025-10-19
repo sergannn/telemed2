@@ -1,0 +1,4 @@
+1. Home screen refresh теперь проверяет роль пользователя: доктор вызывает getAppointmentsD, пациент — getAppointments, чтобы заполнить AppointmentsStore.
+2. Appointment cards теперь сразу открывают DailyApp с режимами: чат → DailyCallMode.chat (ChatResolution для прошедших), аудио → DailyCallMode.audio (AudioResolution для прошедших), видео → DailyCallMode.video (VideoResolution для прошедших).
+3. Daily integration uses room_data when available; fallback test room is used if room data is missing or expired to keep entry working.
+4. DailyApp теперь поддерживает режимы (video/audio/chat): камера и отображение видео отключаются для аудио и чата, показываются соответствующие заглушки, сохраняя единую точку входа.

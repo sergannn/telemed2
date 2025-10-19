@@ -20,9 +20,9 @@ class AutolayouthorItemWidgetProfileTasks extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (item.category == 'Приемы' && item.description != null && item.description.contains('ID:')) {
+        if (item.category == 'Приемы' && item.description != null && item.description!.contains('ID:')) {
           // Если это прием, переходим к экрану приема
-          String appointmentId = item.description.replaceAll('ID: ', '');
+          String appointmentId = item.description!.replaceAll('ID: ', '');
           print("DEBUG: Navigating to appointment with ID: $appointmentId");
           
           // Навигация к экрану приема

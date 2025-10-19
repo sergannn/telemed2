@@ -662,13 +662,13 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               scrollDirection: Axis.horizontal,
                               physics: const ClampingScrollPhysics(),
-                              itemCount: itemController._filteredRecords.length,
+                              itemCount: itemController.filteredRecords.length,
                               separatorBuilder: (context, index) {
                                 return HorizontalSpace(width: 16);
                               },
                               itemBuilder: (context, index) {
                                 return AutolayouthorItemWidgetTasks(
-                                  item: itemController._filteredRecords[index].toJson(),
+                                  item: itemController.filteredRecords[index].toJson(),
                                   index: index,
                                 );
                               },
