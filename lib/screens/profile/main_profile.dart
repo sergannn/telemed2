@@ -233,11 +233,8 @@ class MainProfileScreen extends StatelessWidget {
                                 ),
                                 selectedTextColor: Colors.white,
                                 onDateChange: (date) {
-                                  //setState(() {});
-                                  // New date selected
-                                  //setState(() {
-                                  //  selectedDate = date;
-                                  //});
+                                  // Фильтруем записи по выбранной дате
+                                  itemController.filterRecordsByDate(date);
                                 },
                               ))))),
 
@@ -264,12 +261,12 @@ class MainProfileScreen extends StatelessWidget {
                               ),
                               scrollDirection: Axis.horizontal,
                               physics: const BouncingScrollPhysics(),
-                              itemCount: itemController.calendarRecords.length,
+                              itemCount: itemController.filteredRecords.length,
                               separatorBuilder: (context, index) {
                                 return HorizontalSpace(width: 16);
                               },
                               itemBuilder: (context, index) {
-                                var cats = itemController.calendarRecords;
+                                var cats = itemController.filteredRecords;
                                 //return Text("a");
 
                                 return AutolayouthorItemWidgetProfileTasks(
@@ -485,12 +482,12 @@ class MainProfileScreen extends StatelessWidget {
                               ),
                               scrollDirection: Axis.horizontal,
                               physics: const BouncingScrollPhysics(),
-                              itemCount: itemController.calendarRecords.length,
+                              itemCount: itemController.filteredRecords.length,
                               separatorBuilder: (context, index) {
                                 return HorizontalSpace(width: 16);
                               },
                               itemBuilder: (context, index) {
-                                var cats = itemController.calendarRecords;
+                                var cats = itemController.filteredRecords;
                                 //return Text("a");
                                 return GestureDetector(
                                     onTap: () async {
