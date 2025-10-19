@@ -133,26 +133,55 @@ class _CalendarScreenState extends State<CalendarScreen> {
     final alignment = Alignment.center;
     const duration = Duration(milliseconds: 250);
 
-    Color? backgroundColor;
-    final record = _calendarRecords.firstWhere(
+    // Находим все записи для этой даты
+    final recordsForDay = _calendarRecords.where(
       (record) => record.date.compareWithoutTime(day),
-      orElse: () => CalendarRecordData(title: '', date: day, category: null),
-    );
+    ).toList();
 
-    if (record.category == 'Cat1') {
-      backgroundColor = Color(0xFFC8E0FF);
-    } else if (record.category == 'Cat2') {
-      backgroundColor = const Color.fromARGB(255, 255, 245, 155);
-    } else if (record.category == 'Cat3') {
-      backgroundColor = Color.fromARGB(255, 255, 218, 245);
+    // Определяем основной цвет фона (первая категория)
+    Color? backgroundColor;
+    if (recordsForDay.isNotEmpty) {
+      final firstCategory = recordsForDay.first.category;
+      if (firstCategory == 'Cat1') {
+        backgroundColor = Color(0xFFC8E0FF);
+      } else if (firstCategory == 'Cat2') {
+        backgroundColor = const Color.fromARGB(255, 255, 245, 155);
+      } else if (firstCategory == 'Cat3') {
+        backgroundColor = Color.fromARGB(255, 255, 218, 245);
+      } else {
+        backgroundColor = Color.fromARGB(255, 255, 255, 255);
+      }
     } else {
       backgroundColor = Color.fromARGB(255, 255, 255, 255);
     }
 
+    // Определяем цвета контуров для дополнительных категорий
+    List<Color> borderColors = [];
+    if (recordsForDay.length >= 2) {
+      final secondCategory = recordsForDay[1].category;
+      if (secondCategory == 'Cat1') {
+        borderColors.add(Color(0xFFC8E0FF));
+      } else if (secondCategory == 'Cat2') {
+        borderColors.add(const Color.fromARGB(255, 255, 245, 155));
+      } else if (secondCategory == 'Cat3') {
+        borderColors.add(Color.fromARGB(255, 255, 218, 245));
+      }
+    }
+    if (recordsForDay.length >= 3) {
+      final thirdCategory = recordsForDay[2].category;
+      if (thirdCategory == 'Cat1') {
+        borderColors.add(Color(0xFFC8E0FF));
+      } else if (thirdCategory == 'Cat2') {
+        borderColors.add(const Color.fromARGB(255, 255, 245, 155));
+      } else if (thirdCategory == 'Cat3') {
+        borderColors.add(Color.fromARGB(255, 255, 218, 245));
+      }
+    }
+
     return GestureDetector(
       onDoubleTap: () {
-        if (record.title.isNotEmpty) {
-          _editRecord(context, record);
+        if (recordsForDay.isNotEmpty) {
+          _editRecord(context, recordsForDay.first);
         }
       },
       child: AnimatedContainer(
@@ -162,9 +191,44 @@ class _CalendarScreenState extends State<CalendarScreen> {
         decoration: BoxDecoration(
           color: backgroundColor,
           shape: BoxShape.circle,
+          border: borderColors.isNotEmpty 
+            ? Border.all(
+                color: borderColors.first, 
+                width: 2.0,
+              )
+            : null,
         ),
         alignment: alignment,
-        child: Text('${day.day}', style: selectedTextStyle),
+        child: Stack(
+          children: [
+            Text('${day.day}', style: selectedTextStyle),
+            // Дополнительные контуры
+            if (borderColors.length >= 2)
+              Positioned.fill(
+                child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: borderColors[1],
+                      width: 1.5,
+                    ),
+                  ),
+                ),
+              ),
+            if (borderColors.length >= 3)
+              Positioned.fill(
+                child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: borderColors[2],
+                      width: 1.0,
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
