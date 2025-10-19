@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 // ignore: must_be_immutable
 class AutolayouthorItemWidgetProfileTasks extends StatelessWidget {
   int index;
-  Map<String, dynamic> item;
+  CalendarRecordData item;
   AutolayouthorItemWidgetProfileTasks(
       {Key? key, required this.index, required this.item})
       : super(key: key);
@@ -19,29 +19,22 @@ class AutolayouthorItemWidgetProfileTasks extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (item['category'] == 'Приемы' && item['description'] != null && item['description'].contains('ID:')) {
+        if (item.category == 'Приемы' && item.description != null && item.description.contains('ID:')) {
           // Если это прием, переходим к экрану приема
-          String appointmentId = item['description'].replaceAll('ID: ', '');
+          String appointmentId = item.description.replaceAll('ID: ', '');
           print("DEBUG: Navigating to appointment with ID: $appointmentId");
           
           // Навигация к экрану приема
           Navigator.pushNamed(context, '/appointments');
         } else {
           // Если в блоке НЕ отображен сеанс - переход к экрану "Обновить запись" (как при двойном клике на дату в дневнике)
-          // Создаем CalendarRecordData из item для редактирования
           print("DEBUG: Navigating to edit record screen");
-          CalendarRecordData recordToEdit = CalendarRecordData(
-            title: item['title'] ?? '',
-            date: item['date'] ?? DateTime.now(),
-            category: item['category'] ?? 'Cat1',
-            description: item['description'] ?? '',
-          );
           
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => CreateRecordPage(
-                event: recordToEdit, // Передаем существующую запись для редактирования
+                event: item, // Передаем существующую запись для редактирования
                 onRecordAdd: (record) {
                   // Обновляем календарь после редактирования записи
                   print("DEBUG: Record updated: ${record.title}");
@@ -82,9 +75,8 @@ class AutolayouthorItemWidgetProfileTasks extends StatelessWidget {
           Container(
               padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 0.5),
               child: RichText(
-                text: const TextSpan(
-                  //item['name'] +
-                  text: "Записи" + '\n',
+                text: TextSpan(
+                  text: item.title.isNotEmpty ? item.title : "Записи" + '\n',
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.black,
@@ -93,7 +85,7 @@ class AutolayouthorItemWidgetProfileTasks extends StatelessWidget {
                   ),
                   children: <TextSpan>[
                     TextSpan(
-                      text: '2 записи',
+                      text: item.category ?? '2 записи',
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.black,
