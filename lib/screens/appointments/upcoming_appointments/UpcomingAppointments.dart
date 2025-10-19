@@ -27,16 +27,17 @@ class UpcomingAppointments extends StatelessWidget {
 
     List<Map<dynamic, dynamic>> appointmentsList = context.appointmentsData;
     print("DEBUG: Total appointments from store: ${appointmentsList.length}");
+
+    if (appointmentsList.isEmpty) {
+      return _buildEmptyState(isDark, title: 'Сеансы не найдены');
+    }
     
     // Группировка по дате
     Map<String, List<Map<dynamic, dynamic>>> groupedAppointments = {};
     final formatter = DateFormat('EEEE', 'ru_RU');
     for (var appointment in appointmentsList) {
-        print("DEBUG: Processing appointment: ${appointment['id']}, status: ${appointment['status']}, date: ${appointment['date']}");
-        if(appointment['status']=='0') { 
-          print("DEBUG: Skipping appointment ${appointment['id']} - status is 0");
-          continue;
-        }
+      print(
+          "DEBUG: Processing appointment: ${appointment['id']}, status: ${appointment['status']}, date: ${appointment['date']}");
       String ad = appointment['date'];
       String at = appointment['from_time'];
       DateTime appDateTime =
@@ -62,38 +63,7 @@ class UpcomingAppointments extends StatelessWidget {
     
     // Если нет предстоящих сеансов, показываем сообщение
     if (groupedAppointments.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.event_available,
-              size: 64,
-              color: isDark ? Colors.white70 : ColorConstant.bluegray400,
-            ),
-            SizedBox(height: 16),
-            Text(
-              'Нет предстоящих сеансов',
-              style: TextStyle(
-                fontSize: getFontSize(18),
-                fontFamily: 'Source Sans Pro',
-                fontWeight: FontWeight.w600,
-                color: isDark ? Colors.white : ColorConstant.bluegray800,
-              ),
-            ),
-            SizedBox(height: 8),
-            Text(
-              'Ваши предстоящие записи появятся здесь',
-              style: TextStyle(
-                fontSize: getFontSize(14),
-                fontFamily: 'Source Sans Pro',
-                fontWeight: FontWeight.w400,
-                color: isDark ? Colors.white70 : ColorConstant.bluegray400,
-              ),
-            ),
-          ],
-        ),
-      );
+      return _buildEmptyState(isDark, title: 'Нет предстоящих сеансов');
     }
     
     return SingleChildScrollView(
@@ -177,6 +147,36 @@ class UpcomingAppointments extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget _buildEmptyState(bool isDark, {required String title}) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+    child: SizedBox(
+      width: double.infinity,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.event_available,
+            size: 64,
+            color: isDark ? Colors.white70 : ColorConstant.bluegray400,
+          ),
+          SizedBox(height: 16),
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: getFontSize(18),
+              fontFamily: 'Source Sans Pro',
+              fontWeight: FontWeight.w600,
+              color: isDark ? Colors.white : ColorConstant.bluegray800,
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 }
 
 class InfoBar extends StatelessWidget {

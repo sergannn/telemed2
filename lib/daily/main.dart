@@ -25,6 +25,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:wakelock/wakelock.dart';
 
 import 'package:doctorq/screens/main_screen.dart';
+
+enum DailyCallMode {
+  video,
+  audio,
+  chat,
+}
 /*Future<void> main() async {
   print("main");
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,12 +48,14 @@ class DailyApp extends StatefulWidget {
       required this.prefs,
       required this.callClient,
       required this.room,
-      required this.appointment_unique_id});
+      required this.appointment_unique_id,
+      this.mode = DailyCallMode.video});
 
   final SharedPreferences prefs;
   final CallClient callClient;
   final String room;
   final String appointment_unique_id;
+  final DailyCallMode mode;
   @override
   State<DailyApp> createState() => _MyAppState();
 }
@@ -96,7 +104,10 @@ class _MyAppState extends State<DailyApp> {
           ),
         },
       )
-      ..setInputsEnabled(camera: true, microphone: true); // Включаем камеру для предварительного просмотра
+      ..setInputsEnabled(
+        camera: widget.mode == DailyCallMode.video,
+        microphone: widget.mode != DailyCallMode.chat,
+      );
     _eventSubscription = widget.callClient.events.listen(_handleEvent);
     
     // НЕ подключаемся автоматически - только по требованию пользователя
@@ -514,6 +525,7 @@ class _MyAppState extends State<DailyApp> {
             room: testRoomUrl,
             prefs: widget.prefs,
             callClient: newCallClient,
+            mode: widget.mode,
           ),
         ),
       );
@@ -532,6 +544,44 @@ class _MyAppState extends State<DailyApp> {
           backgroundColor: Colors.red,
         ),
       );
+    }
+  }
+
+  Widget _buildModePlaceholder() {
+    switch (widget.mode) {
+      case DailyCallMode.audio:
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 20),
+          child: Column(
+            children: const [
+              Icon(Icons.headset_mic, size: 96, color: Colors.blueAccent),
+              SizedBox(height: 16),
+              Text(
+                'Аудио приём. Камера отключена, ожидайте подключения собеседника.',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 14),
+              ),
+            ],
+          ),
+        );
+      case DailyCallMode.chat:
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 20),
+          child: Column(
+            children: const [
+              Icon(Icons.chat_bubble_outline,
+                  size: 96, color: Colors.deepPurple),
+              SizedBox(height: 16),
+              Text(
+                'Чат приём. Общение доступно через окно чата ниже.',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 14),
+              ),
+            ],
+          ),
+        );
+      case DailyCallMode.video:
+        return const SizedBox.shrink();
     }
   }
 
@@ -632,86 +682,69 @@ class _MyAppState extends State<DailyApp> {
                       // Информация о комнате
                       _buildRoomInfoPanel(),
                       bottomDailyNavBar(),
-                      // Text('aaaa'),
-                      Row(children: [
-                        Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8),
-                            child: LocalParticipantView(
-                                client: widget.callClient,
-                                prefs: widget.prefs)),
-                      ]),
-                      focusedParticipantId != null
-                          ? RemoteParticipantView(
-                              client: widget.callClient,
-                              participantId: focusedParticipantId,
-                              size: const Size.fromHeight(256),
-                            )
-                          : Text("waiting"),
-                      if (widget.callClient.callState == CallState.joined &&
-                          focusedParticipantId == null) ...[
-                        const SizedBox(height: 80),
-                        const Center(
-                            child: CircularProgressIndicator(strokeWidth: 2)),
-                        Text("Ожидаем подключения пользователя...")
-                      ],
-                      /*   if (focusedParticipantId != null)
-                            Padding(
+                      if (widget.mode == DailyCallMode.video) ...[
+                        Row(children: [
+                          Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 8),
-                              child: RemoteParticipantView(
-                                client: widget.callClient,
-                                participantId: focusedParticipantId,
-                                size: const Size.fromHeight(256),
-                              ),
-                            ),*/
-                      if (_participantFocusPriority.length > 1)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              /*  if (nextParticipant1 != null)
-                                    RemoteParticipantView(
-                                      client: widget.callClient,
-                                      participantId: nextParticipant1,
-                                      size: const Size.square(128),
-                                    ),*/
-                              /*     if (nextParticipant2 != null)
-                                    RemoteParticipantView(
-                                      client: widget.callClient,
-                                      participantId: nextParticipant2,
-                                      size: const Size.square(128),
-                                    ),*/
-                              if (_participantListUpdatedNotifier
-                                  .value.isNotEmpty)
-                                Builder(
-                                  builder: (context) {
-                                    return InkWell(
-                                      onTap: () {
-                                        showParticipantListBottomSheet(
-                                          context,
-                                          widget.callClient,
-                                          _participantListUpdatedNotifier,
-                                        );
-                                      },
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Icon(Icons.group),
-                                          const SizedBox(width: 2),
-                                          Text(
-                                            '+${_participantListUpdatedNotifier.value.length}',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                )
-                            ],
+                              child: LocalParticipantView(
+                                  client: widget.callClient,
+                                  prefs: widget.prefs)),
+                        ]),
+                        if (focusedParticipantId != null)
+                          RemoteParticipantView(
+                            client: widget.callClient,
+                            participantId: focusedParticipantId,
+                            size: const Size.fromHeight(256),
+                          )
+                        else
+                          const Text("waiting"),
+                        if (widget.callClient.callState == CallState.joined &&
+                            focusedParticipantId == null) ...[
+                          const SizedBox(height: 80),
+                          const Center(
+                              child:
+                                  CircularProgressIndicator(strokeWidth: 2)),
+                          const Text("Ожидаем подключения пользователя...")
+                        ],
+                        if (_participantFocusPriority.length > 1)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                if (_participantListUpdatedNotifier
+                                    .value.isNotEmpty)
+                                  Builder(
+                                    builder: (context) {
+                                      return InkWell(
+                                        onTap: () {
+                                          showParticipantListBottomSheet(
+                                            context,
+                                            widget.callClient,
+                                            _participantListUpdatedNotifier,
+                                          );
+                                        },
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            const Icon(Icons.group),
+                                            const SizedBox(width: 2),
+                                            Text(
+                                              '+${_participantListUpdatedNotifier.value.length}',
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  )
+                              ],
+                            ),
                           ),
-                        ),
+                      ] else
+                        _buildModePlaceholder(),
                     ],
                   ),
                 ),

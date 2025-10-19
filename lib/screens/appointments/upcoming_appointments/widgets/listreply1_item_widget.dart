@@ -13,9 +13,6 @@ import 'package:doctorq/screens/appointments/list/voice_call_ringing_screen/voic
 import 'package:doctorq/screens/appointments/list/voice_call_screen/voice_call_screen.dart';
 import 'package:doctorq/screens/audio_resolution.dart';
 import 'package:doctorq/screens/chat_resolution.dart';
-import 'package:doctorq/screens/online_reception_audio.dart';
-import 'package:doctorq/screens/online_reception_chat.dart';
-import 'package:doctorq/screens/online_reception_video.dart';
 import 'package:doctorq/screens/ser_view.dart';
 import 'package:doctorq/screens/video_resolution.dart';
 import 'package:doctorq/widgets/custom_icon_button.dart';
@@ -78,7 +75,8 @@ class AppointmentListItem extends StatelessWidget {
         await Permission.microphone.isGranted;
   }
 
-  navigateToScreen(BuildContext context) async {
+  Future<void> navigateToScreen(
+      BuildContext context, DailyCallMode mode) async {
     print('заходим в комнату');
     print(item);
     print(item['room_data']);
@@ -89,7 +87,7 @@ class AppointmentListItem extends StatelessWidget {
       // СНАЧАЛА проверяем истечение комнаты
       if (_isRoomExpired(roomData)) {
         print('DEBUG: Room has expired, using test room instead');
-        _navigateToTestRoom(context);
+        _navigateToTestRoom(context, mode);
         return;
       }
       
@@ -109,6 +107,7 @@ class AppointmentListItem extends StatelessWidget {
               room: roomUrl,
               prefs: prefs,
               callClient: client,
+              mode: mode,
             ),
           ),
         );
@@ -116,15 +115,15 @@ class AppointmentListItem extends StatelessWidget {
       } catch (e) {
         print("Error parsing room_data: $e");
         // Fallback to test room if parsing fails
-        _navigateToTestRoom(context);
+        _navigateToTestRoom(context, mode);
       }
     } else {
       print("No room_data available, using test room");
-      _navigateToTestRoom(context);
+      _navigateToTestRoom(context, mode);
     }
   }
 
-  void _navigateToTestRoom(BuildContext context) async {
+  void _navigateToTestRoom(BuildContext context, DailyCallMode mode) async {
     var prefs = await SharedPreferences.getInstance();
     final client = await CallClient.create();
 
@@ -136,6 +135,7 @@ class AppointmentListItem extends StatelessWidget {
           room: 'https://telemed2.daily.co/lFxg9A2Hi3PLrMdYKF81',
           prefs: prefs,
           callClient: client,
+          mode: mode,
         ),
       ),
     );
@@ -160,27 +160,26 @@ class AppointmentListItem extends StatelessWidget {
       switch (description) {
         case "ContactMethods.message": 
           print("message");
-          isPast==false ?
-          
-          Navigator.push(
-             // context, MaterialPageRoute(builder: (context) => ChatScreen()));
-             context, MaterialPageRoute(builder: (context) => OnlineReceptionChat()))
-      
-      :
-          Navigator.push(
-             // context, MaterialPageRoute(builder: (context) => ChatScreen()));
-             context, MaterialPageRoute(builder: (context) => ChatResolution()));
+          if (!isPast) {
+            await navigateToScreen(context, DailyCallMode.chat);
+          } else {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ChatResolution()));
+          }
       
       
           break;
         case "ContactMethods.voiceCall":
-           isPast==false ?
-              Navigator.push(
-             // context, MaterialPageRoute(builder: (context) => ChatScreen()));
-             context, MaterialPageRoute(builder: (context) => OnlineReceptionAudio()))
-            :    Navigator.push(
-             // context, MaterialPageRoute(builder: (context) => ChatScreen()));
-             context, MaterialPageRoute(builder: (context) => AudioResolution()));
+          if (!isPast) {
+            await navigateToScreen(context, DailyCallMode.audio);
+          } else {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => AudioResolution()));
+          }
       
 
           /*
@@ -199,13 +198,14 @@ class AppointmentListItem extends StatelessWidget {
                       )));*/
           break;
         case "ContactMethods.videoCall":
-          // Переход к экрану с информацией о записи
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => OnlineReceptionVideo(),
-            ),
-          );
+          if (!isPast) {
+            await navigateToScreen(context, DailyCallMode.video);
+          } else {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => VideoResolution()));
+          }
           break;
         default:
           print('Unknown navigation option: $description');
@@ -358,41 +358,7 @@ class AppointmentListItem extends StatelessWidget {
 
   ser(context, isPast) async {
     navigateToScreenWithTypes(context, isPast);
-//    navigateToScreen(context);
     return;
-    await requestPermissions();
-    Map<Permission, PermissionStatus> statuses = await [
-      Permission.camera,
-      Permission.microphone,
-    ].request();
-
-    print("Permission statuses:");
-    for (var entry in statuses.entries) {
-      print("${entry.key}: ${entry.value}");
-    }
-
-    bool hasCameraPermission = await Permission.camera.isGranted;
-    bool hasMicrophonePermission = await Permission.microphone.isGranted;
-
-    print("Has Camera Permission: $hasCameraPermission");
-    print("Has Microphone Permission: $hasMicrophonePermission");
-
-    print(hasCameraPermission && hasMicrophonePermission
-        ? "Both permissions granted"
-        : "One or both permissions denied");
-
-    bool hasPermission = await checkPermissions();
-    print(hasPermission ? "Permissions granted" : "Permissions denied");
-
-    if (hasPermission) {
-      print("navigating");
-      if (!isPast) {
-        navigateToScreen(context);
-      }
-    } else {
-      print("not okey");
-      // Request permissions
-    }
   }
 
   getContactMethod(Map item) {

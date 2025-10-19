@@ -47,6 +47,7 @@ class _AddOrEditRecordFormState extends State<AddOrEditRecordForm> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          SizedBox(height: 15),
           TextFormField(
             controller: _titleController,
             decoration: AppConstants.inputDecoration.copyWith(
@@ -144,7 +145,7 @@ class _AddOrEditRecordFormState extends State<AddOrEditRecordForm> {
                 },
               ),
               Text(
-                'Cat1',
+                getCategoryName('Cat1'),
                 style: TextStyle(
                   color: AppColors.black,
                   fontSize: 17,
@@ -162,7 +163,7 @@ class _AddOrEditRecordFormState extends State<AddOrEditRecordForm> {
                 },
               ),
               Text(
-                'Cat2',
+                getCategoryName('Cat2'),
                 style: TextStyle(
                   color: AppColors.black,
                   fontSize: 17,
@@ -180,7 +181,7 @@ class _AddOrEditRecordFormState extends State<AddOrEditRecordForm> {
                 },
               ),
               Text(
-                'Cat3',
+                getCategoryName('Cat3'),
                 style: TextStyle(
                   color: AppColors.black,
                   fontSize: 17,
@@ -188,10 +189,24 @@ class _AddOrEditRecordFormState extends State<AddOrEditRecordForm> {
               ),
             ],
           ),
-          SizedBox(height: 15),
-          CustomButton(
-            onTap: _createEvent,
-            title: widget.event == null ? "Добавить запись" : "Обновить запись",
+          SizedBox(height: 30),
+          ElevatedButton(
+            onPressed: widget.event == null ? _createEvent : null,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color.fromARGB(255, 96, 159, 222),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(32),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+              minimumSize: const Size(260, 56),
+            ),
+            child: Text(
+              widget.event == null ? "Добавить запись" : "Обновить запись",
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 14,
+              ),
+            ),
           ),
         ],
       ),
@@ -370,41 +385,15 @@ class _DateTimeSelectorFormFieldState extends State<DateTimeSelectorFormField> {
   }
 }
 
-class CustomButton extends StatelessWidget {
-  final String title;
-  final VoidCallback? onTap;
-
-  const CustomButton({super.key, required this.title, this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.symmetric(
-          vertical: 10,
-          horizontal: 40,
-        ),
-        decoration: BoxDecoration(
-          color: AppColors.navyBlue,
-          borderRadius: BorderRadius.circular(7.0),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.black,
-              offset: Offset(0, 4),
-              blurRadius: 10,
-              spreadRadius: -3,
-            )
-          ],
-        ),
-        child: Text(
-          title,
-          style: TextStyle(
-            color: AppColors.white,
-            fontSize: 20,
-          ),
-        ),
-      ),
-    );
+String getCategoryName(String category) {
+  switch (category) {
+    case 'Cat1':
+      return 'Приемы';
+    case 'Cat2':
+      return 'Лекарства';
+    case 'Cat3':
+      return 'Упражнения';
+    default:
+      return 'Попробуйте воспользоваться дневником';
   }
 }

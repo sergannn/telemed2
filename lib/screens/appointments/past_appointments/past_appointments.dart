@@ -30,6 +30,10 @@ class PastAppointments extends StatelessWidget {
 
     List<Map<dynamic, dynamic>> appointmentsList = context.appointmentsData;
 
+    if (appointmentsList.isEmpty) {
+      return _buildEmptyState(isDark, title: 'Сеансы не найдены');
+    }
+
     Map<String, List<Map<dynamic, dynamic>>> groupedAppointments = {};
     final formatter = DateFormat('EEEE', 'ru_RU');
     for (var appointment in appointmentsList) {
@@ -53,38 +57,7 @@ class PastAppointments extends StatelessWidget {
 
     // Если нет прошедших сеансов, показываем сообщение
     if (groupedAppointments.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.history,
-              size: 64,
-              color: isDark ? Colors.white70 : ColorConstant.bluegray400,
-            ),
-            SizedBox(height: 16),
-            Text(
-              'Нет прошедших сеансов',
-              style: TextStyle(
-                fontSize: getFontSize(18),
-                fontFamily: 'Source Sans Pro',
-                fontWeight: FontWeight.w600,
-                color: isDark ? Colors.white : ColorConstant.bluegray800,
-              ),
-            ),
-            SizedBox(height: 8),
-            Text(
-              'Ваши завершенные записи появятся здесь',
-              style: TextStyle(
-                fontSize: getFontSize(14),
-                fontFamily: 'Source Sans Pro',
-                fontWeight: FontWeight.w400,
-                color: isDark ? Colors.white70 : ColorConstant.blueA400Cc,
-              ),
-            ),
-          ],
-        ),
-      );
+      return _buildEmptyState(isDark, title: 'Нет прошедших сеансов');
     }
 
     return SingleChildScrollView(
@@ -169,6 +142,36 @@ class PastAppointments extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget _buildEmptyState(bool isDark, {required String title}) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+    child: SizedBox(
+      width: double.infinity,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.history,
+            size: 64,
+            color: isDark ? Colors.white70 : ColorConstant.bluegray400,
+          ),
+          SizedBox(height: 16),
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: getFontSize(18),
+              fontFamily: 'Source Sans Pro',
+              fontWeight: FontWeight.w600,
+              color: isDark ? Colors.white : ColorConstant.bluegray800,
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 }
 
 class InfoBar extends StatelessWidget {

@@ -88,22 +88,29 @@ class ItemController extends GetxController {
     }
     
     // Загружаем предстоящие сеансы
-    await _loadAppointmentsToCalendar();
+    final appointmentRecords = await _loadAppointmentsToCalendar();
     
-    // Объединяем записи
-    _calendarRecords.value = diaryRecords;
+    // Объединяем записи дневника и предстоящих сеансов
+    _calendarRecords.assignAll([
+      ...diaryRecords,
+      ...appointmentRecords,
+    ]);
     
     // Initialize with today's records
     filterRecordsByDate(DateTime.now());
   }
 
-  Future<void> _loadAppointmentsToCalendar() async {
+  Future<List<CalendarRecordData>> _loadAppointmentsToCalendar() async {
+    final appointmentRecords = <CalendarRecordData>[];
     try {
       // Получаем предстоящие сеансы из store
       AppointmentsStore storeAppointmentsStore = getIt.get<AppointmentsStore>();
       List<Map<String, dynamic>> appointments = storeAppointmentsStore.appointmentsDataList.cast<Map<String, dynamic>>();
       
       print("DEBUG: Loading ${appointments.length} appointments to calendar");
+
+      final currentUser = await Session.getCurrentUser();
+      final bool isDoctor = currentUser?.doctorId != null;
       
       for (var appointment in appointments) {
         try {
@@ -124,16 +131,19 @@ class ItemController extends GetxController {
               if (hour != 12) hour += 12;
               timeStr = '${hour.toString().padLeft(2, '0')}:${timeParts[1]}';
             }
+
+            final counterpartName = _extractCounterpartName(appointment, isDoctor);
+            final contactLabel = _mapContactMethodToLabel(appointment['description']);
             
             // Создаем запись для календаря
             CalendarRecordData appointmentRecord = CalendarRecordData(
               date: appointmentDate,
-              title: '${timeStr} - ${appointment['patient']['first_name'] ?? 'Пациент'} - ${appointment['description'] ?? 'Прием'}',
+              title: '${timeStr} - $counterpartName - $contactLabel',
               category: 'Приемы',
               description: 'ID: ${appointment['id']?.toString() ?? 'N/A'}',
             );
             
-            _calendarRecords.add(appointmentRecord);
+            appointmentRecords.add(appointmentRecord);
             print("DEBUG: Added appointment to calendar: ${appointmentRecord.title} on ${appointmentDate.toString()}");
           }
         } catch (e) {
@@ -142,6 +152,42 @@ class ItemController extends GetxController {
       }
     } catch (e) {
       print("DEBUG: Error loading appointments to calendar: $e");
+    }
+    return appointmentRecords;
+  }
+
+  String _extractCounterpartName(Map<String, dynamic> appointment, bool isDoctor) {
+    if (isDoctor) {
+      final patient = appointment['patient'];
+      if (patient is Map) {
+        return patient['first_name'] ?? patient['username'] ?? patient['last_name'] ?? 'Пациент';
+      }
+      return 'Пациент';
+    } else {
+      final doctor = appointment['doctor'];
+      if (doctor is Map) {
+        return doctor['first_name'] ??
+            doctor['username'] ??
+            doctor['last_name'] ??
+            (doctor['doctorUser'] is Map
+                ? doctor['doctorUser']['first_name'] ?? doctor['doctorUser']['username']
+                : null) ??
+            'Врач';
+      }
+      return 'Врач';
+    }
+  }
+
+  String _mapContactMethodToLabel(dynamic description) {
+    switch (description) {
+      case 'ContactMethods.voiceCall':
+        return 'Аудио прием';
+      case 'ContactMethods.videoCall':
+        return 'Видео прием';
+      case 'ContactMethods.message':
+        return 'Чат прием';
+      default:
+        return 'Прием';
     }
   }
 
@@ -214,12 +260,15 @@ class ItemController extends GetxController {
     fetchRecommendations();
     getDoctors();
     
-    // Загружаем предстоящие сеансы
     final currentUser = await Session.getCurrentUser();
-    if (currentUser != null && currentUser.doctorId != null) {
-      await getAppointmentsD(doctorId: currentUser.doctorId.toString());
+    if (currentUser != null) {
+      if (currentUser.doctorId != null) {
+        await getAppointmentsD(doctorId: currentUser.doctorId.toString());
+      } else if (currentUser.patientId != null) {
+        await getAppointments(patientId: currentUser.patientId.toString());
+      }
     }
-    
+
     _loadCalendarRecords().then((res) {
       filterRecordsByDate(DateTime.now());
     });
@@ -589,7 +638,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               ))))),
 
                       Obx(() {
-                        //print(itemController.storyItems.length);
                         return FadeInUp(
                           delay: const Duration(milliseconds: 300),
                           onFinish: (direction) =>
@@ -706,7 +754,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               printLog('Direction $direction'),
                           child: SizedBox(
                             height: getVerticalSize(
-                              190.00,
+                              240.00,
                             ),
                             width: getHorizontalSize(
                               528.00,
@@ -778,6 +826,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         );
                       }),
+                    //  Text('123'),
                       //SingleChildScrollView(child: NewsSlider()),
 
                       Align(

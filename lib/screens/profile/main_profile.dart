@@ -461,7 +461,7 @@ class MainProfileScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-
+/*
                       Obx(() {
                         //print(itemController.storyItems.length);
                         return FadeInUp(
@@ -539,7 +539,7 @@ class MainProfileScreen extends StatelessWidget {
                         );
                       }),
                       //SingleChildScrollView(child: NewsSlider()),
-
+*/
                       // Раздел "Рекомендуем вам"
                       Align(
                         alignment: Alignment.center,

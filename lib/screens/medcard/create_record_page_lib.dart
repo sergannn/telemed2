@@ -303,10 +303,10 @@ class AppConstants {
   AppConstants._();
 
   static OutlineInputBorder inputBorder = OutlineInputBorder(
-    borderRadius: BorderRadius.circular(7),
+    borderRadius: BorderRadius.circular(32),
     borderSide: BorderSide(
-      width: 2,
-      color: AppColors.lightNavyBlue,
+      width: 1,
+      color: const Color.fromARGB(255, 96, 159, 222),
     ),
   );
 
