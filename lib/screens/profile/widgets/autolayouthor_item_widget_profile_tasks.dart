@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:doctorq/app_export.dart';
 import 'package:doctorq/data_files/specialist_list.dart';
 import 'package:doctorq/widgets/custom_button.dart';
+import 'package:doctorq/screens/medcard/create_record_page.dart';
+import 'package:doctorq/screens/medcard/create_record_page_lib.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
@@ -15,7 +17,41 @@ class AutolayouthorItemWidgetProfileTasks extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return GestureDetector(
+      onTap: () {
+        if (item.category == 'Приемы' && item.description != null && item.description.contains('ID:')) {
+          // Если это прием, переходим к экрану приема
+          String appointmentId = item.description.replaceAll('ID: ', '');
+          print("DEBUG: Navigating to appointment with ID: $appointmentId");
+          
+          // Навигация к экрану приема
+          Navigator.pushNamed(context, '/appointments');
+        } else {
+          // Если в блоке НЕ отображен сеанс - переход к экрану "Обновить запись" (как при двойном клике на дату в дневнике)
+          // Создаем CalendarRecordData из item для редактирования
+          print("DEBUG: Navigating to edit record screen");
+          CalendarRecordData recordToEdit = CalendarRecordData(
+            title: item['title'] ?? '',
+            date: item['date'] ?? DateTime.now(),
+            category: item['category'] ?? 'Cat1',
+            description: item['description'] ?? '',
+          );
+          
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CreateRecordPage(
+                event: recordToEdit, // Передаем существующую запись для редактирования
+                onRecordAdd: (record) {
+                  // Обновляем календарь после редактирования записи
+                  print("DEBUG: Record updated: ${record.title}");
+                },
+              ),
+            ),
+          );
+        }
+      },
+      child: Container(
       width: MediaQuery.of(context).size.width / 3,
       //height: getVerticalSize(10.0), // Установили фиксированную высоту
       
@@ -76,6 +112,7 @@ class AutolayouthorItemWidgetProfileTasks extends StatelessWidget {
           ),
         ],
       ),
+    ),
     );
   }
 }
