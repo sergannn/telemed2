@@ -290,12 +290,12 @@ class _MainProfileScreenState extends State<MainProfileScreen> {
                               ),
                               scrollDirection: Axis.horizontal,
                               physics: const BouncingScrollPhysics(),
-                              itemCount: itemController._filteredRecords.length,
+                              itemCount: itemController.filteredRecords.length,
                               separatorBuilder: (context, index) {
                                 return HorizontalSpace(width: 16);
                               },
                               itemBuilder: (context, index) {
-                                var cats = itemController._filteredRecords;
+                                var cats = itemController.filteredRecords;
                                 //return Text("a");
 
                                 return AutolayouthorItemWidgetProfileTasks(
@@ -483,12 +483,12 @@ class _MainProfileScreenState extends State<MainProfileScreen> {
                               ),
                               scrollDirection: Axis.horizontal,
                               physics: const BouncingScrollPhysics(),
-                              itemCount: itemController._filteredRecords.length,
+                              itemCount: itemController.filteredRecords.length,
                               separatorBuilder: (context, index) {
                                 return HorizontalSpace(width: 16);
                               },
                               itemBuilder: (context, index) {
-                                var cats = itemController._filteredRecords;
+                                var cats = itemController.filteredRecords;
                                 //return Text("a");
                                 return GestureDetector(
                                     onTap: () async {

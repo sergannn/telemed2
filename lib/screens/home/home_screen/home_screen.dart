@@ -54,13 +54,13 @@ class ItemController extends GetxController {
   var users = [].obs; // Reactive list to store fetched items
   var articles = [].obs;
   var recommendations = <RecommendationModel>[].obs; // Reactive list for recommendations
-  var _filteredRecords = <CalendarRecordData>[].obs;
+  var filteredRecords = <CalendarRecordData>[].obs;
 
   void filterRecordsByDate(DateTime date) {
     print("DEBUG: Filtering records for date: ${date.toString()}");
     print("DEBUG: Total calendar records: ${_calendarRecords.length}");
     
-    _filteredRecords.value = _calendarRecords.where((record) {
+    filteredRecords.value = _calendarRecords.where((record) {
       bool matches = record.date.year == date.year &&
           record.date.month == date.month &&
           record.date.day == date.day;
@@ -70,11 +70,11 @@ class ItemController extends GetxController {
       return matches;
     }).toList();
     
-    print("DEBUG: Filtered records count: ${_filteredRecords.length}");
+    print("DEBUG: Filtered records count: ${filteredRecords.length}");
     
     // Показываем сообщение только если нет никаких записей
-    if (_filteredRecords.isEmpty) {
-      _filteredRecords.add(CalendarRecordData(
+    if (filteredRecords.isEmpty) {
+      filteredRecords.add(CalendarRecordData(
           date: date,
           title: "Попробуйте воспользоваться дневником",
           category: "Пусто"));
