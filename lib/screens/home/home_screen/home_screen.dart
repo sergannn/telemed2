@@ -62,6 +62,9 @@ class ItemController extends GetxController {
   }
 
   var _calendarRecords = <CalendarRecordData>[].obs;
+  
+  // Геттер для доступа к записям календаря
+  List<CalendarRecordData> get calendarRecords => _calendarRecords;
   final storyItems = <StoryItem>[].obs;
   @override
   void onInit() {

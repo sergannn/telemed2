@@ -5,6 +5,7 @@ import 'package:doctorq/data_files/specialist_list.dart';
 import 'package:doctorq/widgets/custom_button.dart';
 import 'package:doctorq/screens/medcard/create_record_page.dart';
 import 'package:doctorq/screens/medcard/create_record_page_lib.dart';
+import 'package:doctorq/screens/appointments/AppointmentsScreen.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
@@ -25,7 +26,12 @@ class AutolayouthorItemWidgetProfileTasks extends StatelessWidget {
           print("DEBUG: Navigating to appointment with ID: $appointmentId");
           
           // Навигация к экрану приема
-          Navigator.pushNamed(context, '/appointments');
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AppointmentsScreen(),
+            ),
+          );
         } else {
           // Если в блоке НЕ отображен сеанс - переход к экрану "Обновить запись" (как при двойном клике на дату в дневнике)
           print("DEBUG: Navigating to edit record screen");
