@@ -264,12 +264,12 @@ class MainProfileScreen extends StatelessWidget {
                               ),
                               scrollDirection: Axis.horizontal,
                               physics: const BouncingScrollPhysics(),
-                              itemCount: itemController._calendarRecords.length,
+                              itemCount: itemController._filteredRecords.length,
                               separatorBuilder: (context, index) {
                                 return HorizontalSpace(width: 16);
                               },
                               itemBuilder: (context, index) {
-                                var cats = itemController._calendarRecords;
+                                var cats = itemController._filteredRecords;
                                 //return Text("a");
 
                                 return AutolayouthorItemWidgetProfileTasks(
@@ -485,12 +485,12 @@ class MainProfileScreen extends StatelessWidget {
                               ),
                               scrollDirection: Axis.horizontal,
                               physics: const BouncingScrollPhysics(),
-                              itemCount: itemController._calendarRecords.length,
+                              itemCount: itemController._filteredRecords.length,
                               separatorBuilder: (context, index) {
                                 return HorizontalSpace(width: 16);
                               },
                               itemBuilder: (context, index) {
-                                var cats = itemController._calendarRecords;
+                                var cats = itemController._filteredRecords;
                                 //return Text("a");
                                 return GestureDetector(
                                     onTap: () async {
