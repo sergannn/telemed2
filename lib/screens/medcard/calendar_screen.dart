@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:doctorq/stores/appointments_store.dart';
+import 'package:get_it/get_it.dart';
 
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({super.key});
@@ -27,20 +29,93 @@ class _CalendarScreenState extends State<CalendarScreen> {
   Future<void> _loadCalendarRecords() async {
     final prefs = await SharedPreferences.getInstance();
     final recordsString = prefs.getString('calendar_records');
+    
+    // Загружаем записи из дневника
+    List<CalendarRecordData> diaryRecords = [];
     if (recordsString != null) {
       try {
         final List<dynamic> jsonList = jsonDecode(recordsString);
-        _calendarRecords =
-            jsonList.map((item) => CalendarRecordData.fromJson(item)).toList();
+        diaryRecords = jsonList.map((item) => CalendarRecordData.fromJson(item)).toList();
       } catch (e) {
         print('Error decoding calendar records: $e');
-        _calendarRecords = [];
       }
     }
+    
+    // Инициализируем записи дневника
+    _calendarRecords = diaryRecords;
+    
+    // Загружаем предстоящие сеансы
+    await _loadAppointmentsToCalendar();
+    
     setState(() {
       printLog(
           '_calendarRecords after load: ${_calendarRecords.map((e) => e.toJson()).toList()}');
     });
+  }
+  
+  Future<void> _loadAppointmentsToCalendar() async {
+    try {
+      // Получаем предстоящие сеансы из store
+      AppointmentsStore storeAppointmentsStore = getIt.get<AppointmentsStore>();
+      List<Map<String, dynamic>> appointments = storeAppointmentsStore.appointmentsDataList.cast<Map<String, dynamic>>();
+      
+      print("DEBUG: Loading ${appointments.length} appointments to calendar in MedCard");
+      
+      for (var appointment in appointments) {
+        try {
+          // Парсим дату сеанса
+          String dateStr = appointment['date'] ?? '';
+          String fromTime = appointment['from_time'] ?? '';
+          String fromTimeType = appointment['from_time_type'] ?? '';
+          
+          if (dateStr.isNotEmpty) {
+            DateTime appointmentDate = DateTime.parse(dateStr);
+            
+            // Создаем время
+            String timeStr = fromTime;
+            if (fromTimeType == 'PM' && fromTime != '12:00') {
+              // Конвертируем PM время
+              List<String> timeParts = fromTime.split(':');
+              int hour = int.parse(timeParts[0]);
+              if (hour != 12) hour += 12;
+              timeStr = '${hour.toString().padLeft(2, '0')}:${timeParts[1]}';
+            }
+            
+            // Улучшаем отображение типа приема
+            String appointmentType = _getAppointmentTypeDisplay(appointment['description']);
+            
+            // Создаем запись для календаря
+            CalendarRecordData appointmentRecord = CalendarRecordData(
+              date: appointmentDate,
+              title: '${timeStr} - ${appointment['doctor']['first_name'] ?? 'Врач'} - $appointmentType',
+              category: 'Приемы',
+              description: 'ID: ${appointment['id']?.toString() ?? 'N/A'}',
+            );
+            
+            _calendarRecords.add(appointmentRecord);
+            print("DEBUG: Added appointment to MedCard calendar: ${appointmentRecord.title} on ${appointmentDate.toString()}");
+          }
+        } catch (e) {
+          print("DEBUG: Error processing appointment in MedCard: $e");
+        }
+      }
+    } catch (e) {
+      print("DEBUG: Error loading appointments to MedCard calendar: $e");
+    }
+  }
+  
+  String _getAppointmentTypeDisplay(String? description) {
+    if (description == null) return 'Прием';
+    
+    if (description.contains('ContactMethods.voiceCall')) {
+      return 'Голосовой звонок';
+    } else if (description.contains('ContactMethods.videoCall')) {
+      return 'Видеозвонок';
+    } else if (description.contains('ContactMethods.chat')) {
+      return 'Чат';
+    } else {
+      return 'Прием';
+    }
   }
 
   Future<void> _saveCalendarRecords() async {

@@ -295,7 +295,7 @@ class _MainProfileScreenState extends State<MainProfileScreen> {
                                 return HorizontalSpace(width: 16);
                               },
                               itemBuilder: (context, index) {
-                                var cats = itemController.filteredRecords;
+                                var cats = itemController.calendarRecords;
                                 //return Text("a");
 
                                 return AutolayouthorItemWidgetProfileTasks(
@@ -488,7 +488,7 @@ class _MainProfileScreenState extends State<MainProfileScreen> {
                                 return HorizontalSpace(width: 16);
                               },
                               itemBuilder: (context, index) {
-                                var cats = itemController.filteredRecords;
+                                var cats = itemController.calendarRecords;
                                 //return Text("a");
                                 return GestureDetector(
                                     onTap: () async {

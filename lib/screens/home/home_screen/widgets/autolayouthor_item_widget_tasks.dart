@@ -3,6 +3,9 @@ import 'dart:math';
 import 'package:doctorq/app_export.dart';
 import 'package:doctorq/data_files/specialist_list.dart';
 import 'package:doctorq/widgets/custom_button.dart';
+import 'package:doctorq/screens/appointments/AppointmentsScreen.dart';
+import 'package:doctorq/screens/medcard/create_record_page.dart';
+import 'package:doctorq/screens/medcard/create_record_page_lib.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
@@ -24,8 +27,27 @@ class AutolayouthorItemWidgetTasks extends StatelessWidget {
           String appointmentId = item.description.replaceAll('ID: ', '');
           print("DEBUG: Navigating to appointment with ID: $appointmentId");
           
-          // Здесь можно добавить навигацию к экрану приема
-          // Navigator.push(context, MaterialPageRoute(builder: (context) => AppointmentDetailScreen(appointmentId: appointmentId)));
+          // Навигация к экрану приемов
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AppointmentsScreen(), // Убираем mode: 'old' для предстоящих сеансов
+            ),
+          );
+        } else {
+          // Если это запись дневника, переходим к редактированию
+          print("DEBUG: Navigating to edit record screen");
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CreateRecordPage(
+                event: item,
+                onRecordAdd: (record) {
+                  print("DEBUG: Record updated: ${record.title}");
+                },
+              ),
+            ),
+          );
         }
       },
       child: Container(

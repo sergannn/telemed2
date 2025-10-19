@@ -82,6 +82,9 @@ class ItemController extends GetxController {
   }
 
   var _calendarRecords = <CalendarRecordData>[].obs;
+  
+  // Геттер для доступа к записям календаря
+  List<CalendarRecordData> get calendarRecords => _calendarRecords;
   final storyItems = <StoryItem>[].obs;
   @override
   void onInit() {
@@ -89,9 +92,9 @@ class ItemController extends GetxController {
     refreshData();
     //fetchStories();
     //fetchArticles();
-    //_loadCalendarRecords().then((_) {
-    //  update(); // Ensure UI updates after loading records
-    //});
+    _loadCalendarRecords().then((_) {
+      update(); // Ensure UI updates after loading records
+    });
   }
 
   Future<void> _loadCalendarRecords() async {
