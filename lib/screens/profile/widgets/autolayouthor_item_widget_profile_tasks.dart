@@ -88,7 +88,7 @@ class AutolayouthorItemWidgetProfileTasks extends StatelessWidget {
                   ),
                   children: <TextSpan>[
                     TextSpan(
-                      text: item.category ?? '2 записи',
+                      text: '',//item.category ?? '2 записи',
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.black,
