@@ -456,7 +456,7 @@ class _MainProfileScreenState extends State<MainProfileScreen> {
                           ),
                         ),
                       ),
-
+/*
                       Obx(() {
                         //print(itemController.storyItems.length);
                         return FadeInUp(
@@ -533,7 +533,7 @@ class _MainProfileScreenState extends State<MainProfileScreen> {
                             ),
                           ),
                         );
-                      }),
+                      }),*/
                       //SingleChildScrollView(child: NewsSlider()),
 
                       // Раздел "Рекомендуем вам"
