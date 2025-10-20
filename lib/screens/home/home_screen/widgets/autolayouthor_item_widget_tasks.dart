@@ -22,7 +22,7 @@ class AutolayouthorItemWidgetTasks extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         // Если это прием, переходим к экрану приема
-        if (item.category == 'Приемы' && item.description != null && item.description.contains('ID:')) {
+        if ((item.category == 'Приемы' || item.category == 'Предстоящие сеансы') && item.description != null && item.description.contains('ID:')) {
           // Извлекаем ID приема из description
           String appointmentId = item.description.replaceAll('ID: ', '');
           print("DEBUG: Navigating to appointment with ID: $appointmentId");
