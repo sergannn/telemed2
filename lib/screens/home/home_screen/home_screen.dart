@@ -684,13 +684,21 @@ class _HomeScreenState extends State<HomeScreen> {
                         focusNode: FocusNode(),
                         readOnly: true,
                         onTap: () {
+                             Navigator.of(context,
+                                                rootNavigator: true)
+                                            .push(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  PopularPatientsScreen()),
+//                                  TopDoctorScreen()),
+                                        ); /*
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
                                       //  const HomeSearchDoctorScreen()
                                       //    HistoryVideoCallPage()
-                                      SearchPatientScreen()));
+                                      SearchPatientScreen()));*/
                         },
                         controller: autoLayoutVerController,
                         hintText: "Найти пациента",
@@ -757,7 +765,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               printLog('Direction $direction'),
                           child: SizedBox(
                             height: getVerticalSize(
-                              240.00,
+                              200.00,
                             ),
                             width: getHorizontalSize(
                               528.00,
@@ -831,7 +839,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       }),
                     //  Text('123'),
                       //SingleChildScrollView(child: NewsSlider()),
-
+/*
                       Align(
                         alignment: Alignment.center,
                         child: Padding(
@@ -984,7 +992,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   )))),
                                       Text("Статьи")
                                     ]),
-                                  ]))),
+                                  ]))),*/
                       // Раздел "Рекомендуем вам"
                       Align(
                         alignment: Alignment.center,

@@ -42,33 +42,19 @@ class _MedCardScreenState extends State<MedCardScreen> with SingleTickerProvider
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Медкарта",
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-            fontFamily: 'Source Sans Pro',
-          ),
-        ),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.favorite, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(60),
-          child: Container(
-            width: double.infinity,
-            margin: EdgeInsets.symmetric(horizontal: 16),
-            child: SpecsTabBar(['Документы', 'Анкета', 'Дневник'], tabController),
-          ),
-        ),
-      ),
-      body: MedCardList(tabController, MediaQuery.of(context).size.height - 200),
-    );
+      
+      body: //SafeArea(child:
+      Column(children:[
+         ...topBack(
+                text: "Статьи",
+                context: context,
+                back: false,
+                icon: Icon(Icons.favorite)),
+               SpecsTabBar(['Документы', 'Анкета', 'Дневник'], tabController),
+     
+      
+      MedCardList(tabController, MediaQuery.of(context).size.height - 200),
+    ]));
   }
 
   Widget MedCardList(tabController, height) {
