@@ -259,11 +259,8 @@ class _MainProfileScreenState extends State<MainProfileScreen> {
                                 ),
                                 selectedTextColor: Colors.white,
                                 onDateChange: (date) {
-                                  //setState(() {});
-                                  // New date selected
-                                  //setState(() {
-                                  //  selectedDate = date;
-                                  //});
+                                  // Фильтруем записи по выбранной дате
+                                  itemController.filterRecordsByDate(date);
                                 },
                               ))))),
 
@@ -295,7 +292,7 @@ class _MainProfileScreenState extends State<MainProfileScreen> {
                                 return HorizontalSpace(width: 16);
                               },
                               itemBuilder: (context, index) {
-                                var cats = itemController.calendarRecords;
+                                var cats = itemController.filteredRecords;
                                 //return Text("a");
 
                                 return AutolayouthorItemWidgetProfileTasks(
@@ -488,7 +485,7 @@ class _MainProfileScreenState extends State<MainProfileScreen> {
                                 return HorizontalSpace(width: 16);
                               },
                               itemBuilder: (context, index) {
-                                var cats = itemController.calendarRecords;
+                                var cats = itemController.filteredRecords;
                                 //return Text("a");
                                 return GestureDetector(
                                     onTap: () async {
