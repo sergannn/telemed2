@@ -87,7 +87,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
             CalendarRecordData appointmentRecord = CalendarRecordData(
               date: appointmentDate,
               title: '${timeStr} - ${appointment['patient']['first_name'] ?? 'Пациент'} - $appointmentType',
-              category: 'Приемы',
+              category: 'Предстоящие сеансы',
               description: 'ID: ${appointment['id']?.toString() ?? 'N/A'}',
             );
             
@@ -218,6 +218,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
         backgroundColor = Colors.yellow;
       } else if (firstCategory == 'Cat3') {
         backgroundColor = Colors.green;
+      } else if (firstCategory == 'Приемы') {
+        backgroundColor = Color(0xFF90EE90); // Зеленый цвет для ручных записей приемов
+      } else if (firstCategory == 'Предстоящие сеансы') {
+        backgroundColor = Color(0xFF4CAF50); // Темно-зеленый цвет для предстоящих сеансов
       } else {
         backgroundColor = Color.fromARGB(255, 255, 255, 255);
       }
@@ -235,6 +239,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
         borderColors.add(Colors.yellow);
       } else if (secondCategory == 'Cat3') {
         borderColors.add(Colors.green);
+      } else if (secondCategory == 'Приемы') {
+        borderColors.add(Color(0xFF90EE90)); // Зеленый цвет для ручных записей приемов
+      } else if (secondCategory == 'Предстоящие сеансы') {
+        borderColors.add(Color(0xFF4CAF50)); // Темно-зеленый цвет для предстоящих сеансов
       }
     }
     if (recordsForDay.length >= 3) {
@@ -245,6 +253,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
         borderColors.add(Colors.yellow);
       } else if (thirdCategory == 'Cat3') {
         borderColors.add(Colors.green);
+      } else if (thirdCategory == 'Приемы') {
+        borderColors.add(Color(0xFF90EE90)); // Зеленый цвет для ручных записей приемов
+      } else if (thirdCategory == 'Предстоящие сеансы') {
+        borderColors.add(Color(0xFF4CAF50)); // Темно-зеленый цвет для предстоящих сеансов
       }
     }
 

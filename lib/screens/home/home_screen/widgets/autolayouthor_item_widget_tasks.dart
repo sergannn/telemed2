@@ -19,7 +19,7 @@ class AutolayouthorItemWidgetTasks extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (item['category'] == 'Приемы' && item['description'] != null && item['description'].toString().contains('ID:')) {
+        if ((item['category'] == 'Приемы' || item['category'] == 'Предстоящие сеансы') && item['description'] != null && item['description'].toString().contains('ID:')) {
           // Если в блоке отображен предстоящий сеанс - переход к предстоящим сеансам
           print("DEBUG: Navigating to upcoming appointments (Doctor)");
           Navigator.push(
