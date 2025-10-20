@@ -597,12 +597,12 @@ class _HomeScreenState extends State<HomeScreen> {
                               padding: getPadding(left: 20, right: 20, top: 10),
                               scrollDirection: Axis.horizontal,
                               physics: const BouncingScrollPhysics(),
-                              itemCount: itemController._filteredRecords.length,
+                              itemCount: itemController.filteredRecords.length,
                               separatorBuilder: (context, index) =>
                                   HorizontalSpace(width: 16),
                               itemBuilder: (context, index) {
                                 return AutolayouthorItemWidgetTasks(
-                                  item: itemController._filteredRecords[index],
+                                  item: itemController.filteredRecords[index],
                                   index: index,
                                 );
                               },
