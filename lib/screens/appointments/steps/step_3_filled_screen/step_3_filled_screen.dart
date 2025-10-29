@@ -2,6 +2,7 @@ import 'package:doctorq/extensions.dart';
 import 'package:doctorq/screens/appointments/steps/step_2_filled_screen/step_2_filled_screen.dart';
 import 'package:doctorq/screens/appointments/steps/step_3_filled_screen/proffit.dart';
 import 'package:doctorq/screens/appointments/upcoming_appointments/UpcomingAppointments.dart';
+import 'package:doctorq/screens/appointments/AppointmentsScreen.dart';
 import 'package:doctorq/screens/medcard/create_record_page_lib.dart';
 import 'package:doctorq/services/api_service.dart';
 import 'package:doctorq/services/session.dart';
@@ -448,19 +449,19 @@ context.loaderOverlay.show();
                   //добавили комнату
                   //endpoint в graph ---
                   snackBar(context, message: 'Вы успешно записались на прием');
+                  
+                  // Обновляем данные записей
+                  await getAppointments(patientId: patientId);
                 } else {
                   print(result);
                   snackBar(context, message: 'Ошибка');
                 }
-                Future.delayed(Duration(seconds: 3), () {
+                Future.delayed(Duration(seconds: 2), () {
                   Navigator.pop(context);
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ProffitScreen(
-                              contactMethod: widget.contactMethod,
-                              date: widget.date,
-                              time: widget.time)));
+                          builder: (context) => AppointmentsScreen()));
                 });
               },
             ),

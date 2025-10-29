@@ -286,7 +286,7 @@ class _AppointmentsStep3FilledScreenState extends State<ProffitScreen> {
                                               flex: 3,
                                               child: Container(
                                               child: Text(
-                                                _formatDate(context.selectedAppointment['date']),
+                                                _formatDate(widget.date.toString()),
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Color.fromARGB(

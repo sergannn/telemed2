@@ -206,3 +206,5 @@ class PatientAvatarWidget extends StatelessWidget {
     );
   }
 }
+
+
