@@ -101,13 +101,42 @@ fontSize: 12,
 color: Color.fromARGB(255, 91, 91, 91),
 ),
 ),
-
-
                       ],
                     ),
                   ),
                 ],
               ),
+              const SizedBox(height: 24),
+              // Кнопка "Завершить" доступна только для врачей
+              if (context.userData['doctor_id'] != null && 
+                  (context.userData['doctor_id'] != '0' && 
+                   context.userData['doctor_id'] != ''))
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              const OnlineReceptionChatComplete()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        const Color.fromARGB(255, 96, 159, 222),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18),
+                    ),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: 12, vertical: 8),
+                  ),
+                  child: Text(
+                    'Завершить',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
               ]
             ),
           ),

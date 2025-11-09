@@ -10,6 +10,7 @@ class UserModel {
     this.lastName,
     this.photo,
     this.authToken,
+    this.gender,
   });
 
   UserModel.fromJson(Map json) {
@@ -20,6 +21,7 @@ class UserModel {
     userName = json['user']['username'];
     firstName = json['user']['first_name'];
     email = json['user']['email'];
+    gender = json['user']['gender']?.toString();
 
     lastName = json['user']['last_name'];
     photo = json['user']['photo'];
@@ -42,6 +44,7 @@ class UserModel {
   String? lastName;
   String? photo;
   String? authToken;
+  String? gender; // 1 = MALE, 2 = FEMALE
 
   // List<String>? role;
 
@@ -62,6 +65,7 @@ class UserModel {
       'email': email,
       'last_name': lastName,
       'photo': photo,
+      'gender': gender,
     };
   }
 }

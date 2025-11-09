@@ -1037,6 +1037,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: SingleChildScrollView(child: DoctorsSilder()),
                           visible: false),
                       //  NewsHeader(isDark: isDark),
+                      // Добавляем отступ внизу для возможности прокрутки
+                      SizedBox(height: 100),
                     ],
                   ),
                 ),

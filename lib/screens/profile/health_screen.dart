@@ -26,7 +26,7 @@ class _HealthScreenState extends State<HealthScreen>
   @override
   void initState() {
     super.initState();
-    tabController = TabController(length: 2, vsync: this);
+    tabController = TabController(length: 1, vsync: this); // Убрали трекер, оставили только статьи
     _fetchArticles();
   }
 
@@ -89,7 +89,6 @@ class _HealthScreenState extends State<HealthScreen>
                     onRefresh: _fetchArticles,
                     child: ArticlesSection(),
                   ),
-                  Container(), // Пустой трекер
                 ],
               ),
             )
@@ -108,12 +107,6 @@ class _HealthScreenState extends State<HealthScreen>
         color: ColorConstant.fromHex("E4F0FF"),
       ),
       child: TabBar(
-        onTap: (int index) {
-          if (index == 1) {
-            // Трекер пока пустой
-            return;
-          }
-        },
         controller: controller,
         isScrollable: true,
         padding: getPadding(top: 10, bottom: 10),
@@ -142,15 +135,6 @@ class _HealthScreenState extends State<HealthScreen>
                 borderRadius: BorderRadius.circular(120),
               ),
               child: Text('Статьи'),
-            ),
-          ),
-          Tab(
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(120),
-              ),
-              child: Text('Трекер'),
             ),
           ),
         ],
@@ -187,7 +171,7 @@ class _HealthScreenState extends State<HealthScreen>
 
     return ListView(
       shrinkWrap: true,
-      padding: EdgeInsets.all(16),
+      padding: EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 100),
       children: articlesByCategory.entries.map((entry) {
         final categoryName = entry.key;
         final categoryArticles = entry.value;

@@ -25,6 +25,7 @@ class Session {
     String? lastName = data.getString("last_name");
     String? photo = data.getString("photo");
     String? authToken = data.getString("authToken");
+    String? gender = data.getString("gender");
 
     // Create and return UserModel if all data is available
     if (userId != null &&
@@ -44,6 +45,7 @@ class Session {
         lastName: lastName,
         photo: photo,
         authToken: authToken,
+        gender: gender,
       );
     }
 
@@ -82,6 +84,9 @@ class Session {
       case 'auth_token':
         user.authToken = newValue.toString();
         break;
+      case 'gender':
+        user.gender = newValue.toString();
+        break;
       default:
         throw Exception('Invalid field name');
     }
@@ -115,6 +120,7 @@ class Session {
     data.setString("last_name", user.lastName!);
     data.setString("photo", user.photo ?? '');
     data.setString("authToken", user.authToken!);
+    data.setString("gender", user.gender ?? '');
     print(data);
     print(user.photo);
     return true;
@@ -132,6 +138,7 @@ class Session {
     data.remove("authToken");
     data.remove("doctor_id");
     data.remove('patient_id');
+    data.remove('gender');
     print("user saved");
   }
 
