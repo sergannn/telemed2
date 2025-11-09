@@ -137,6 +137,8 @@ class PastAppointments extends StatelessWidget {
                           })))),
 
           VerticalSpace(height: 40),
+          // Добавляем дополнительный отступ внизу для возможности прокрутки
+          SizedBox(height: 100),
         ],
       ),
     );

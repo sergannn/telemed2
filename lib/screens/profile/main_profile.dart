@@ -628,7 +628,9 @@ class _MainProfileScreenState extends State<MainProfileScreen> {
                                     ),
                                   ],
                                 ),
-                              )))
+                              )),
+                      // Добавляем отступ внизу для возможности прокрутки
+                      SizedBox(height: 100),
                     ],
                   ),
                 ),

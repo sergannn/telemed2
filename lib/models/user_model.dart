@@ -13,6 +13,7 @@ class UserModel {
     this.snils,
     this.phone,
     this.birthDate,
+    this.gender,
   });
 
   UserModel.fromJson(Map json) {
@@ -26,6 +27,7 @@ class UserModel {
     snils = json['user']['snils'];
     phone = json['user']['phone'];
     birthDate = json['user']['birth_date'];
+    gender = json['user']['gender']?.toString();
 
     lastName = json['user']['last_name'];
     photo = json['user']['photo'];
@@ -51,6 +53,7 @@ class UserModel {
   String? snils;
   String? phone;
   String? birthDate;
+  String? gender; // 1 = MALE, 2 = FEMALE
 
   // List<String>? role;
 
@@ -74,6 +77,7 @@ class UserModel {
       'snils': snils,
       'phone': phone,
       'birth_date': birthDate,
+      'gender': gender,
     };
   }
 }

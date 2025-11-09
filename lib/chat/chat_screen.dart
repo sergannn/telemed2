@@ -580,10 +580,7 @@ class _ChatScreenState extends State<ChatScreen> {
         appBar: my_AppBar(),
         body: DecoratedBox(
             decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage(_backgroundImages[_selectedBackgroundIndex]),
-                fit: BoxFit.cover,
-              ),
+              color: Colors.white, // Белый фон вместо изображения
             ),
             child: Container(
               height: MediaQuery.of(context).size.height * 0.85,

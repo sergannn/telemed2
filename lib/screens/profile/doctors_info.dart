@@ -464,28 +464,6 @@ class DoctorInfoScreen extends StatelessWidget {
                             ],
                           ),
                         ),
-                        SizedBox(height: 32),
-                        ElevatedButton(
-                          onPressed: () {
-                            // Здесь будет код для перехода к препаратам
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                const Color.fromARGB(255, 96, 159, 222),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18),
-                            ),
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 8),
-                          ),
-                          child: Text(
-                            'Перейти к трекеру тестов',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                            ),
-                          ),
-                        ),
                       ],
                     ),
                   ),

@@ -9,6 +9,7 @@ import 'package:doctorq/widgets/top_back.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:doctorq/services/session.dart';
 
 // Классы для хранения состояний
 class BloodTypeSelection {
@@ -77,6 +78,7 @@ class SurveyScreen extends StatefulWidget {
 
 class SurveyState extends State<SurveyScreen> {
   List<bool> _expansionStates = List<bool>.filled(8, false);
+  String? _userGender; // Пол пользователя: '1' = MALE, '2' = FEMALE
 
   // Расширенные состояния для каждого типа данных
   Map<int, BloodTypeSelection> bloodTypes = {};
@@ -89,6 +91,7 @@ class SurveyState extends State<SurveyScreen> {
   @override
   void initState() {
     super.initState();
+    _loadUserGender();
     _loadSavedValues().then((_) {
       setState(() {}); // Дополнительное обновление UI
     });
@@ -103,6 +106,19 @@ class SurveyState extends State<SurveyScreen> {
           MedicalHistorySelection(); // Добавляем для всех индексов
     }
   }
+
+  // Загружаем пол пользователя
+  Future<void> _loadUserGender() async {
+    final user = await Session.getCurrentUser();
+    if (user != null && user.gender != null) {
+      setState(() {
+        _userGender = user.gender;
+      });
+    }
+  }
+
+  // Проверяем, является ли пользователь женщиной
+  bool get _isFemale => _userGender == '2' || _userGender == 2;
 
   // Метод для загрузки сохраненных значений
   Future<void> _loadSavedValues() async {
@@ -1408,11 +1424,13 @@ ListView(
                     index: 5,
                   ),
          
-                  _buildExpansionTile(
-                    title: 'Менструальный цикл',
-                    content: '',
-                    index: 6,
-                  ),
+                  // Показываем менструальный цикл только для женщин
+                  if (_isFemale)
+                    _buildExpansionTile(
+                      title: 'Менструальный цикл',
+                      content: '',
+                      index: 6,
+                    ),
           
                   _buildExpansionTile(
                     title: 'Беременность и контрацепция',

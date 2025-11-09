@@ -28,6 +28,7 @@ class Session {
     String? snils = data.getString("snils");
     String? phone = data.getString("phone");
     String? birthDate = data.getString("birth_date");
+    String? gender = data.getString("gender");
 
     // Create and return UserModel if all data is available
     if (userId != null &&
@@ -50,6 +51,7 @@ class Session {
         snils: snils,
         phone: phone,
         birthDate: birthDate,
+        gender: gender,
       );
     }
 
@@ -97,6 +99,9 @@ class Session {
       case 'birth_date':
         user.birthDate = newValue.toString();
         break;
+      case 'gender':
+        user.gender = newValue.toString();
+        break;
       default:
         throw Exception('Invalid field name');
     }
@@ -136,6 +141,7 @@ class Session {
     data.setString("snils", user.snils ?? '');
     data.setString("phone", user.phone ?? '');
     data.setString("birth_date", user.birthDate ?? '');
+    data.setString("gender", user.gender ?? '');
     print(data);
     print(user.photo);
     return true;
@@ -156,6 +162,7 @@ class Session {
     data.remove('snils');
     data.remove('phone');
     data.remove('birth_date');
+    data.remove('gender');
     print("user saved");
   }
 
