@@ -2,10 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:collection/collection.dart';
-import 'package:daily_flutter/daily_flutter.dart';
+import 'package:daily_flutter/daily_flutter.dart' if (dart.library.html) 'package:doctorq/daily/daily_flutter_stub.dart';
 import 'package:doctorq/daily/logging.dart';
 import 'package:doctorq/daily/room_parameters_bottom_sheet.dart';
-import 'package:doctorq/daily/main.dart';
+import 'package:doctorq/daily/daily_app.dart';
 import 'package:doctorq/extensions.dart';
 import 'package:doctorq/models/appointment_model.dart';
 import 'package:doctorq/models/appointments_model.dart';

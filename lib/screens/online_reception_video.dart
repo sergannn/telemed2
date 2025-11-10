@@ -2,9 +2,9 @@ import 'package:doctorq/screens/articles/articles.dart';
 import 'package:doctorq/screens/online_reception_video_start.dart';
 import 'package:doctorq/extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:doctorq/daily/main.dart';
+import 'package:doctorq/daily/daily_app.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:daily_flutter/daily_flutter.dart';
+import 'package:daily_flutter/daily_flutter.dart' if (dart.library.html) 'package:doctorq/daily/daily_flutter_stub.dart';
 import 'dart:convert';
 import 'package:doctorq/config/daily_config.dart';
 

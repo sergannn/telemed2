@@ -97,7 +97,7 @@ PODS:
   - webview_flutter_wkwebview (0.0.1):
     - Flutter
     - FlutterMacOS
-  - workmanager_apple (0.0.1):
+  - workmanager (0.0.1):
     - Flutter
 
 DEPENDENCIES:
@@ -125,7 +125,7 @@ DEPENDENCIES:
   - vibration (from `.symlinks/plugins/vibration/ios`)
   - video_player_avfoundation (from `.symlinks/plugins/video_player_avfoundation/darwin`)
   - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/darwin`)
-  - workmanager_apple (from `.symlinks/plugins/workmanager_apple/ios`)
+  - workmanager (from `.symlinks/plugins/workmanager/ios`)
 
 SPEC REPOS:
   trunk:
@@ -186,8 +186,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/video_player_avfoundation/darwin"
   webview_flutter_wkwebview:
     :path: ".symlinks/plugins/webview_flutter_wkwebview/darwin"
-  workmanager_apple:
-    :path: ".symlinks/plugins/workmanager_apple/ios"
+  workmanager:
+    :path: ".symlinks/plugins/workmanager/ios"
 
 SPEC CHECKSUMS:
   app_links: 585674be3c6661708e6cd794ab4f39fb9d8356f9
@@ -221,7 +221,7 @@ SPEC CHECKSUMS:
   vibration: 3797858f8cbf53d841e189ef8bd533d96e4ca93c
   video_player_avfoundation: 7c6c11d8470e1675df7397027218274b6d2360b3
   webview_flutter_wkwebview: a4af96a051138e28e29f60101d094683b9f82188
-  workmanager_apple: 7bac258335c310689a641e2d66e88d4845d372e9
+  workmanager: 05afacf221f5086e18450250dce57f59bb23e6b0
 
 PODFILE CHECKSUM: 3ae57ab09ec1ad921c3add6c9a7dac1b7293f307
 

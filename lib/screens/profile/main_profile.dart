@@ -628,7 +628,7 @@ class MainProfileScreen extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                              )))
+                              ))),
                       // Добавляем отступ внизу для возможности прокрутки
                       SizedBox(height: 100),
                     ],

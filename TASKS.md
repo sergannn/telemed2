@@ -181,17 +181,27 @@
 
 ### Созданные тесты:
 
-**FLUTTER_PATIENT:**
+**Основные тесты функционала:**
 - ✅ `test/date_picker_month_test.dart` - Тесты для отображения месяца в календаре (8 тестов)
 - ✅ `test/user_gender_test.dart` - Тесты для работы с полом пользователя (7 тестов)
 - ✅ `test/menstrual_cycle_visibility_test.dart` - Тесты для видимости менструального цикла (8 тестов)
 - ✅ `test/home_screen_month_test.dart` - Базовые тесты для главной страницы
 - ✅ `test/profile_survey_menstrual_test.dart` - Базовые тесты для профиля
+- ✅ `test/registration_test.dart` - Тесты для регистрации пользователей
+- ✅ `test/profile_update_test.dart` - Тесты для обновления профиля
+- ✅ `test/avatar_update_test.dart` - Тесты для обновления аватара
+- ✅ `test/unit_test.dart` - Тесты для главного экрана (main_screen)
 
-**FLUTTER_DOCTOR!:**
-- ✅ `test/date_picker_month_test.dart` - Тесты для отображения месяца в календаре (8 тестов)
-- ✅ `test/user_gender_test.dart` - Тесты для работы с полом пользователя (7 тестов)
-- ✅ `test/menstrual_cycle_visibility_test.dart` - Тесты для видимости менструального цикла (8 тестов)
-- ✅ `test/home_screen_month_test.dart` - Базовые тесты для главной страницы
-- ✅ `test/profile_survey_menstrual_test.dart` - Базовые тесты для профиля
+**Новые тесты основного функционала:**
+- ✅ `test/auth_test.dart` - Комплексные тесты для авторизации и работы с сессией (10 тестов)
+- ✅ `test/user_model_test.dart` - Тесты для модели пользователя (5 тестов)
+- ✅ `test/home_screen_test.dart` - Тесты для главного экрана HomeScreen
+- ✅ `test/appointments_screen_test.dart` - Тесты для экрана записей на прием
+- ✅ `test/main_screen_test.dart` - Тесты для главного экрана приложения
+- ✅ `test/appointment_completion_test.dart` - Тесты для завершения приема (задача 7) - проверка, что только врач может завершить прием
+- ✅ `test/medcard_test.dart` - Тесты для медицинской карты
+- ✅ `test/profile_screen_test.dart` - Тесты для экрана профиля
+- ✅ `test/scrollable_screens_test.dart` - Тесты для прокручиваемых экранов (задача 11) - проверка padding внизу для прокрутки
+- ✅ `test/tracker_removal_test.dart` - Тесты для удаления трекера (задача 4) - проверка, что трекер убран из HealthScreen
+- ✅ `test/assistant_background_test.dart` - Тесты для белого фона помощника (задача 15) - проверка, что фон изменен на белый
 

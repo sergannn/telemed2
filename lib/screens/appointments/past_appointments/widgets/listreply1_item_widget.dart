@@ -14,11 +14,11 @@ import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 import 'package:doctorq/data_files/appointments_lists.dart';
-import 'package:doctorq/daily/main.dart';
+import 'package:doctorq/daily/daily_app.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:daily_flutter/daily_flutter.dart';
+import 'package:daily_flutter/daily_flutter.dart' if (dart.library.html) 'package:doctorq/daily/daily_flutter_stub.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:date_count_down/date_count_down.dart';
 
