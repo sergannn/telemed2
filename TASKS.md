@@ -195,3 +195,4 @@
 - ✅ `test/home_screen_month_test.dart` - Базовые тесты для главной страницы
 - ✅ `test/profile_survey_menstrual_test.dart` - Базовые тесты для профиля
 
+

@@ -99,6 +99,8 @@
   dev_dependencies:
     flutter_test:
       sdk: flutter
+    integration_test:
+      sdk: flutter
     mobx_codegen: ^2.6.2
     build_runner: ^2.3.3
 
