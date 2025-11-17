@@ -331,13 +331,9 @@ class AppointmentListItem extends StatelessWidget {
                             longDateName: false,
                             style: TextStyle(color: Colors.blue),
                           ),*/
-                        ],
-                      ),
-                    ),
-                    //      Text(item['date']),
-                    Container(
-                        child: Text(
-                      getAppointmentTime(item),
+                            Container(
+                        child: Text(  getAppointmentTime(item),
+//                    
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.start,
                       style: TextStyle(
@@ -346,6 +342,11 @@ class AppointmentListItem extends StatelessWidget {
                         fontWeight: FontWeight.w400,
                       ),
                     )),
+                        ],
+                      ),
+                    ),
+                    //      Text(item['date']),
+                  
                   ],
                 ),
               ),

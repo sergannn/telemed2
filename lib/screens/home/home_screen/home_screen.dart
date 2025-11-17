@@ -57,7 +57,7 @@ class ItemController extends GetxController {
       filteredRecords.add(CalendarRecordData(
           date: date,
           title: "На этот день заметки отсутствуют",
-          category: "Приемы"));
+          category: ""));
     }
   }
 
@@ -616,7 +616,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                                 initialSelectedDate: DateTime.now(),
                                 selectionColor: ColorConstant.fromHex("81AEEA"),
-                                height: 56,
+                                height: 66,
                                 dateTextStyle: TextStyle(
                                     fontFamily: 'Source Sans Pro',
                                     color: ColorConstant.blueA400,

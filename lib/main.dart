@@ -21,8 +21,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'theme/theme_constants.dart';
 import 'theme/theme_manager.dart';
 import 'package:doctorq/screens/main_screen.dart';
-import 'package:another_flutter_splash_screen/another_flutter_splash_screen.dart';
 import 'package:loader_overlay/loader_overlay.dart';
+import 'package:another_flutter_splash_screen/another_flutter_splash_screen.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -200,9 +200,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           locale: context.locale,
           home: Builder(
             builder: (context) => FlutterSplashScreen.gif(
-              gifHeight: MediaQuery.of(context).size.height,
-              gifWidth: MediaQuery.of(context).size.width,
-              gifPath: "./assets/images/a_logo.jpg",
+              gifHeight: 250,
+              gifWidth: 250,
+              gifPath: "./assets/images/Logo.png",
               useImmersiveMode: true,
               backgroundColor: Colors.white,
               onInit: () => debugPrint("On Init"),

@@ -89,7 +89,7 @@ class DatePicker extends StatefulWidget {
     this.inactiveDates,
     this.daysCount = 500,
     this.onDateChange,
-    this.locale = "en_US",
+    this.locale = "ru",
     this.calendarType = CalendarType.gregorianDate,
     this.directionality,
   }) : assert(
