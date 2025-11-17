@@ -23,7 +23,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'theme/theme_constants.dart';
 import 'theme/theme_manager.dart';
 import 'package:doctorq/screens/main_screen.dart';
-import 'package:another_flutter_splash_screen/another_flutter_splash_screen.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -180,26 +179,15 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           localizationsDelegates: context.localizationDelegates,
           supportedLocales: context.supportedLocales,
           locale: context.locale,
-          home: Builder(
-            builder: (context) => FlutterSplashScreen.gif(
-              gifHeight: MediaQuery.of(context).size.height,
-              gifWidth: MediaQuery.of(context).size.width,
-              gifPath: "./assets/images/a_logo.jpg",
-              useImmersiveMode: true,
-              backgroundColor: Colors.white,
-              onInit: () => debugPrint("On Init"),
-              onEnd: () => debugPrint("On End"),
-              nextScreen: FutureBuilder(
-                future: getStartupData(),
-                builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done &&
-                      snapshot.data == true) {
-                    return Main();
-                  }
-                  return firstScreen();
-                },
-              ),
-            ),
+          home: FutureBuilder(
+            future: getStartupData(),
+            builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+              if (snapshot.connectionState == ConnectionState.done &&
+                  snapshot.data == true) {
+                return Main();
+              }
+              return firstScreen();
+            },
           ),
         ));
       },

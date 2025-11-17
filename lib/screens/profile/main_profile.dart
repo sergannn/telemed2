@@ -240,7 +240,7 @@ class _MainProfileScreenState extends State<MainProfileScreen> {
 
                                 initialSelectedDate: DateTime.now(),
                                 selectionColor: ColorConstant.fromHex("81AEEA"),
-                                height: 56,
+                                height: 70,
                                 dateTextStyle: TextStyle(
                                     fontFamily: 'Source Sans Pro',
                                     color: ColorConstant.blueA400,

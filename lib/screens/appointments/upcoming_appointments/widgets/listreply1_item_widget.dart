@@ -311,11 +311,7 @@ print(context.selectedAppointment);
                             longDateName: false,
                             style: TextStyle(color: Colors.blue),
                           ),*/
-                        ],
-                      ),
-                    ),
-                    //      Text(item['date']),
-                    Container(
+                             Container(
                         child: Text(
                       getAppointmentTime(item),
                       overflow: TextOverflow.ellipsis,
@@ -326,6 +322,11 @@ print(context.selectedAppointment);
                         fontWeight: FontWeight.w400,
                       ),
                     )),
+                        ],
+                      ),
+                    ),
+                    //      Text(item['date']),
+                 
                   ],
                 ),
               ),
