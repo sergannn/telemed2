@@ -64,22 +64,24 @@ class GregorianDateWidget extends StatelessWidget {
           color: selectionColor,
         ),
         child: Padding(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Text(
                 date.day.toString(),
                 textAlign: TextAlign.center,
                 style: dateTextStyle,
               ),
+              SizedBox(height: 2),
               // Добавляем месяц под числом мелким серым шрифтом
               Text(
                 monthName,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 10,
+                  fontSize: 9,
                   color: Colors.grey[600],
                   fontWeight: FontWeight.w400,
                 ),
