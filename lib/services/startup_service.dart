@@ -4,10 +4,12 @@ import 'package:doctorq/constant/constants.dart';
 import 'package:doctorq/models/doctor_model.dart';
 import 'package:doctorq/services/api_service.dart';
 import 'package:doctorq/services/notification_service.dart';
+import 'package:doctorq/controllers/appointment_notification_controller.dart';
 import 'package:doctorq/stores/doctors_store.dart';
 import 'package:doctorq/stores/user_store.dart';
 import 'package:doctorq/utils/utility.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:graphql/client.dart';
 
@@ -35,7 +37,10 @@ Future<void> _initializeNotificationService() async {
     final userStore = GetIt.instance.get<UserStore>();
     if (userStore.userData != null && userStore.userData!['role'] == 'doctor') {
       final doctorId = userStore.userData!['user_id'].toString();
-      await notificationService.startCheckingForNewAppointments(doctorId);
+      
+      // Запустить RxController для периодической проверки
+      final appointmentController = Get.put(AppointmentNotificationController());
+      await appointmentController.startChecking(doctorId);
       printLog('Started appointment checking for doctor: $doctorId');
     }
     else {print("no..");}

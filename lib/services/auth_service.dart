@@ -3,10 +3,12 @@ import 'dart:math';
 
 import 'package:doctorq/models/user_model.dart';
 import 'package:doctorq/services/notification_service.dart';
+import 'package:doctorq/controllers/appointment_notification_controller.dart';
 import 'package:doctorq/services/session.dart';
 import 'package:doctorq/stores/user_store.dart';
 import 'package:doctorq/utils/utility.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import 'package:get_it/get_it.dart';
 import 'package:graphql/client.dart';
@@ -256,10 +258,14 @@ Future<bool> authUser(
   // Start checking for new appointments if user is a doctor
   if (user.doctorId != null) {
     print("not null");
+    // Инициализировать NotificationService для показа уведомлений
     final notificationService = getIt<NotificationService>();
     print("initing");
     await notificationService.initialize();
-    await notificationService.startCheckingForNewAppointments(user.doctorId!);
+    
+    // Запустить RxController для периодической проверки
+    final appointmentController = Get.put(AppointmentNotificationController());
+    await appointmentController.startChecking(user.doctorId!);
     print('Started appointment checking for doctor: ${user.doctorId}');
   }
 
@@ -319,6 +325,14 @@ Future<Map<String, dynamic>?> sendSMS(tel, code) async {
 }
 
 Future<String?> logOut() async {
+  // Остановить проверку новых записей
+  if (Get.isRegistered<AppointmentNotificationController>()) {
+    final appointmentController = Get.find<AppointmentNotificationController>();
+    appointmentController.stopChecking();
+    Get.delete<AppointmentNotificationController>();
+    printLog('Appointment notification controller stopped');
+  }
+  
   Session().removeUser();
   printLog('Logging out');
   return 'logged out';
