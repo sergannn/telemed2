@@ -231,7 +231,7 @@ class _SignInBlankScreenState extends State<SignInBlankScreen> {
                   child: Container(
                     width: MediaQuery.of(context).size.width / 3,
                     child: Image.asset(
-                      ImageConstant.appLogoAnn,
+                      ImageConstant.appLogo,
                       fit: BoxFit.contain,
                     ),
                   ),
