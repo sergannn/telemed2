@@ -72,31 +72,22 @@ class _HighPressureScreenState extends State<HighPressureScreen> with SingleTick
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            ...topBack(
-              text: widget.articleTitle ?? article?['title'] ?? "Статья",
-              context: context,
-              back: true,
-              icon: Icon(Icons.favorite),
-            ),
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 16),
-                  Container(child: _buildTabBar()),
-                  _buildTabContent(_tabController, MediaQuery.of(context).size.height),
-                ],
-              ),
-            ),
-          ],
-        ),
+      body: Column(
+        children: [
+          ...topBack(
+            text: widget.articleTitle ?? article?['title'] ?? "Статья",
+            context: context,
+            back: true,
+            icon: Icon(Icons.favorite),
+          ),
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            child: _buildTabBar(),
+          ),
+          Expanded(
+            child: _buildTabContent(_tabController, MediaQuery.of(context).size.height),
+          ),
+        ],
       ),
     );
   }
@@ -166,16 +157,13 @@ class _HighPressureScreenState extends State<HighPressureScreen> with SingleTick
   }
 
   Widget _buildTabContent(TabController _tabController, double height) {
-    return SizedBox(
-      height: height,
-      child: TabBarView(
-        controller: _tabController,
-        children: [
-          _buildArticleContent(),
-          _buildVideoContent(),
-          FakeChatScreen()
-        ],
-      ),
+    return TabBarView(
+      controller: _tabController,
+      children: [
+        _buildArticleContent(),
+        _buildVideoContent(),
+        FakeChatScreen()
+      ],
     );
   }
 
@@ -192,11 +180,10 @@ class _HighPressureScreenState extends State<HighPressureScreen> with SingleTick
       return Center(child: Text('Статья не найдена'));
     }
 
-    return ListView(
+    return SingleChildScrollView(
+      physics: AlwaysScrollableScrollPhysics(),
       padding: EdgeInsets.all(16),
-      children: [
-        _buildArticleDetail(article!),
-      ],
+      child: _buildArticleDetail(article!),
     );
   }
 /*
@@ -291,11 +278,10 @@ class _HighPressureScreenState extends State<HighPressureScreen> with SingleTick
       return Center(child: Text('Нет видео для этой статьи'));//+article.toString()));
     }
 
-    return ListView(
+    return SingleChildScrollView(
+      physics: AlwaysScrollableScrollPhysics(),
       padding: EdgeInsets.all(16),
-      children: [
-        _buildVideoItem(article!),
-      ],
+      child: _buildVideoItem(article!),
     );
   }
 
@@ -384,8 +370,11 @@ class _HighPressureScreenState extends State<HighPressureScreen> with SingleTick
                       color: Colors.grey[50],
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: SizedBox(
-                      height: 300, // Set a fixed height for the WebView
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: 300,
+                        maxHeight: MediaQuery.of(context).size.height * 0.6,
+                      ),
                       child: WebViewWidget(
                         controller: WebViewController()
                           ..setJavaScriptMode(JavaScriptMode.unrestricted)
@@ -594,22 +583,21 @@ class _FakeChatScreenState extends State<FakeChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              reverse: false,
-              padding: EdgeInsets.symmetric(horizontal: 8.0),
-              itemCount: _messages.length,
-              itemBuilder: (context, index) {
-                return _buildMessage(_messages[index]);
-              },
-            ),
+    return Column(
+      children: [
+        Expanded(
+          child: ListView.builder(
+            physics: AlwaysScrollableScrollPhysics(),
+            reverse: false,
+            padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+            itemCount: _messages.length,
+            itemBuilder: (context, index) {
+              return _buildMessage(_messages[index]);
+            },
           ),
-          _buildMessageComposer(),
-        ],
-      ),
+        ),
+        _buildMessageComposer(),
+      ],
     );
   }
 

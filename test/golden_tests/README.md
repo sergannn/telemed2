@@ -39,3 +39,5 @@ flutter test test/golden_tests/health_screen_golden_test.dart
 - Размер экрана: 390x844 (iPhone 12 Pro)
 - Pixel ratio: 3.0
 
+
+
