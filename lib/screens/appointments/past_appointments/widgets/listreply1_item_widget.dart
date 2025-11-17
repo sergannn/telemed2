@@ -261,15 +261,29 @@ class AppointmentListItem extends StatelessWidget {
                       ),
                     ),
                     Container(
-                        child: Text(
-                      getAppointmentTime(item),
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                        fontSize: getFontSize(14),
-                        fontFamily: 'Source Sans Pro',
-                        fontWeight: FontWeight.w400,
-                      ),
+                        child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          getAppointmentTimeFrom(item),
+                          textAlign: TextAlign.end,
+                          style: TextStyle(
+                            fontSize: getFontSize(14),
+                            fontFamily: 'Source Sans Pro',
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                        Text(
+                          getAppointmentTimeTo(item),
+                          textAlign: TextAlign.end,
+                          style: TextStyle(
+                            fontSize: getFontSize(14),
+                            fontFamily: 'Source Sans Pro',
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ],
                     )),
                   ],
                 ),
@@ -341,6 +355,18 @@ class AppointmentListItem extends StatelessWidget {
         item['to_time'] +
         ' ' +
         item['to_time_type'];
+  }
+
+  getAppointmentTimeFrom(item) {
+    String fromTime = item['from_time'];
+    String from24Hour = convertTo24Hour(fromTime, item['from_time_type']);
+    return from24Hour;
+  }
+
+  getAppointmentTimeTo(item) {
+    String toTime = item['to_time'];
+    String to24Hour = convertTo24Hour(toTime, item['to_time_type']);
+    return to24Hour;
   }
 }
 
