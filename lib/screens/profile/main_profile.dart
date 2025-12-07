@@ -7,6 +7,7 @@ import 'package:doctorq/screens/appointments/AppointmentsScreenDoctor.dart';
 import 'package:doctorq/screens/home/home_screen/home_screen.dart';
 import 'package:doctorq/screens/home/home_screen/widgets/autolayouthor_item_widget_tasks.dart';
 import 'package:doctorq/screens/home/home_screen/widgets/autolayouthor_item_widget_zapisi.dart';
+import 'package:doctorq/screens/home/home_screen/widgets/recommendation_item_widget.dart';
 import 'package:doctorq/screens/home/home_screen/widgets/story_item_widget.dart';
 import 'package:doctorq/screens/profile/edit_profile_information.dart';
 import 'package:doctorq/screens/profile/exit_sure.dart';
@@ -17,6 +18,8 @@ import 'package:doctorq/screens/profile/questions_screen.dart';
 import 'package:doctorq/screens/profile/questions_screen.dart';
 import 'package:doctorq/screens/profile/settings/appearance_screen/appearance_screen.dart';
 import 'package:doctorq/screens/profile/settings/logout_modal_bottomsheet/logout_modal_bottomsheet.dart';
+import 'package:doctorq/screens/profile/high_pressure.dart';
+import 'package:doctorq/models/recommendation_model.dart';
 import 'package:doctorq/screens/profile/settings/settings_all.dart';
 import 'package:doctorq/screens/profile/settings/settings_screen.dart';
 import 'package:doctorq/screens/profile/widgets/autolayouthor_item_widget_profile_tasks.dart';
@@ -63,19 +66,6 @@ class _MainProfileScreenState extends State<MainProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var titles = [
-      "Путеводитель",
-      "Ваши симптомы",
-      "Синдром-чокер",
-      "Статус здоровья"
-    ];
-    var images = [
-      'assets/images/11.png', // Путеводитель
-      'assets/images/12.png', // Симптомы здоровья
-      'assets/images/13.png', // Синдром-чокер
-      'assets/images/11.png', // Статус здоровья
-    ];
-
     bool isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       extendBody: true,
@@ -562,7 +552,21 @@ class _MainProfileScreenState extends State<MainProfileScreen> {
                                 ),
                               ),
                               SizedBox(height: 16),
-                              fourThings(titles, images)
+                              Obx(() {
+                                return itemController.recommendations.isEmpty
+                                    ? Container(
+                                        height: getVerticalSize(120.00),
+                                        child: Center(
+                                          child: CircularProgressIndicator(),
+                                        ),
+                                      )
+                                    : recommendationsList(itemController.recommendations.toList());
+                              }),
+                              Obx(() {
+                                return itemController.articles.isEmpty
+                                    ? SizedBox(height: getVerticalSize(120.00))
+                                    : fourThingsArticles(context, itemController.articles.toList());
+                              })
                             ],
                           ),
                         ),
@@ -717,7 +721,7 @@ class NewsHeader extends StatelessWidget {
   }
 }
 
-Widget fourThings(titles, images) {
+Widget recommendationsList(List<RecommendationModel> recommendations) {
   return SizedBox(
     height: getVerticalSize(120.00),
     width: getHorizontalSize(528.00),
@@ -725,20 +729,62 @@ Widget fourThings(titles, images) {
       padding: getPadding(
         left: 20,
         right: 20,
-        top: 6,
+        top: 17,
       ),
       scrollDirection: Axis.horizontal,
       physics: const BouncingScrollPhysics(),
-      itemCount: 4,
+      itemCount: recommendations.length,
       separatorBuilder: (context, index) {
         return HorizontalSpace(width: 16);
       },
       itemBuilder: (context, index) {
+        return RecommendationItemWidget(
+          recommendation: recommendations[index],
+          index: index,
+        );
+      },
+    ),
+  );
+}
+
+Widget fourThingsArticles(BuildContext context, List<dynamic> articles) {
+  // Берем первые 4 статьи (или меньше, если статей меньше)
+  final displayArticles = articles.take(4).toList();
+  
+  return SizedBox(
+    height: getVerticalSize(120.00),
+    width: getHorizontalSize(528.00),
+    child: ListView.separated(
+      padding: getPadding(
+        left: 20,
+        right: 20,
+        top: 17,
+      ),
+      scrollDirection: Axis.horizontal,
+      physics: const BouncingScrollPhysics(),
+      itemCount: displayArticles.length,
+      separatorBuilder: (context, index) {
+        return HorizontalSpace(width: 16);
+      },
+      itemBuilder: (context, index) {
+        final article = displayArticles[index];
+        final imageUrl = article['image'] != null
+            ? 'https://admin.onlinedoctor.su/storage/' + article['image']
+            : null;
+        final title = article['title'] as String? ?? '';
+        final articleId = article['id'] as int? ?? 0;
+        
         return GestureDetector(
             onTap: () {
-              Navigator.pushNamed(context, '',
-                  arguments:
-                      '');
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => HighPressureScreen(
+                    articleId: articleId,
+                    articleTitle: title,
+                  ),
+                ),
+              );
             },
             child: Container(
               decoration: BoxDecoration(
@@ -757,14 +803,23 @@ Widget fourThings(titles, images) {
                 children: [
                   Expanded(
                     child: Container(
-                      width: getHorizontalSize(140),
+                      width: getHorizontalSize(160),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(16),
-                        image: DecorationImage(
-                          image: AssetImage(images[index]),
-                          fit: BoxFit.cover,
-                        ),
+                        image: imageUrl != null
+                            ? DecorationImage(
+                                image: NetworkImage(imageUrl),
+                                fit: BoxFit.cover,
+                                onError: (exception, stackTrace) {
+                                  // Fallback если изображение не загрузилось
+                                },
+                              )
+                            : null,
+                        color: imageUrl == null ? Colors.grey[300] : null,
                       ),
+                      child: imageUrl == null
+                          ? Center(child: Icon(Icons.article, color: Colors.grey[600]))
+                          : null,
                     ),
                   ),
                   Padding(
@@ -775,7 +830,9 @@ Widget fourThings(titles, images) {
                       right: 16,
                     ),
                     child: Text(
-                      titles[index],
+                      title,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontSize: getFontSize(14),
                         fontFamily: 'Source Sans Pro',

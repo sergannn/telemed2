@@ -17,6 +17,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:doctorq/screens/profile/popular_doctors.dart';
 import 'package:doctorq/screens/profile/search_doctors.dart';
 import 'package:doctorq/screens/profile/settings/appearance_screen/appearance_screen.dart';
+import 'package:doctorq/screens/profile/high_pressure.dart';
 import 'package:doctorq/screens/stories/story_scren.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import "package:story_view/story_view.dart";
@@ -189,13 +190,14 @@ class ItemController extends GetxController {
     
     switch (description) {
       case 'ContactMethods.voiceCall':
-        return 'Голосовой звонок';
+        return 'Аудио';
       case 'ContactMethods.videoCall':
-        return 'Видеозвонок';
+        return 'Видео';
       case 'ContactMethods.audioCall':
-        return 'Аудиозвонок';
+        return 'Аудио';
       case 'ContactMethods.textChat':
-        return 'Текстовый чат';
+      case 'ContactMethods.message':
+        return 'Чат';
       default:
         return description;
     }
@@ -250,16 +252,31 @@ class ItemController extends GetxController {
 
 
   Future<void> fetchRecommendations() async {
-    final response = await http.get(Uri.parse('https://admin.onlinedoctor.su/api/recommendations'));
+    // Загружаем статьи вместо рекомендаций
+    final response = await http.get(Uri.parse('https://admin.onlinedoctor.su/api/articles'));
 
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body);
-      final List<dynamic> data = jsonData['data'];
-      recommendations.value = data.map((item) => RecommendationModel.fromJson(item) as RecommendationModel).toList();
-      print('Loaded ${recommendations.length} recommendations');
+      final List<dynamic> data = jsonData['data'] ?? [];
+      
+      // Перемешиваем статьи случайным образом
+      data.shuffle();
+      
+      // Преобразуем статьи в RecommendationModel для совместимости
+      recommendations.value = data.take(10).map((item) {
+        return RecommendationModel(
+          id: item['id'] as int? ?? 0,
+          title: item['title'] as String? ?? '',
+          description: item['description'] as String?,
+          image: item['image'] as String? ?? '',
+          html: item['html'] as String?,
+          category_id: item['category_id'] as int?,
+        );
+      }).toList();
+      print('Loaded ${recommendations.length} random articles');
     } else {
       // Handle error
-      print('Failed to load recommendations: ${response.statusCode}');
+      print('Failed to load articles: ${response.statusCode}');
     }
   }
 
@@ -357,18 +374,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var titles = [
-      "Путеводитель",
-      "Ваши симптомы",
-      "Синдром-чокер",
-      "Статус здоровья"
-    ];
-    var images = [
-      'assets/images/11.png', // Путеводитель
-      'assets/images/12.png', // Симптомы здоровья
-      'assets/images/13.png', // Синдром-чокер
-      'assets/images/11.png', // Статус здоровья
-    ];
+    // Убрали "Путеводитель" и "Ваши симптомы" - теперь будут статьи
 
     bool isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
@@ -1000,7 +1006,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                       )
                                     : recommendationsList(itemController.recommendations.toList());
                               }),
-                              fourThings(titles, images)
+                              Obx(() {
+                                return itemController.articles.isEmpty
+                                    ? SizedBox(height: getVerticalSize(120.00))
+                                    : fourThingsArticles(itemController.articles.toList());
+                              })
                             ],
                           ),
                         ),
@@ -1208,7 +1218,10 @@ Widget recommendationsList(List<RecommendationModel> recommendations) {
   );
 }
 
-Widget fourThings(titles, images) {
+Widget fourThingsArticles(List<dynamic> articles) {
+  // Берем первые 4 статьи (или меньше, если статей меньше)
+  final displayArticles = articles.take(4).toList();
+  
   return SizedBox(
     height: getVerticalSize(120.00),
     width: getHorizontalSize(528.00),
@@ -1220,19 +1233,29 @@ Widget fourThings(titles, images) {
       ),
       scrollDirection: Axis.horizontal,
       physics: const BouncingScrollPhysics(),
-      itemCount: 4,
+      itemCount: displayArticles.length,
       separatorBuilder: (context, index) {
         return HorizontalSpace(width: 16);
       },
       itemBuilder: (context, index) {
+        final article = displayArticles[index];
+        final imageUrl = article['image'] != null
+            ? 'https://admin.onlinedoctor.su/storage/' + article['image']
+            : null;
+        final title = article['title'] as String? ?? '';
+        final articleId = article['id'] as int? ?? 0;
+        
         return GestureDetector(
             onTap: () {
-              print("one of thing");
-              //  if (index == 0) {
-              Navigator.pushNamed(context, '',
-                  arguments:
-                      '');
-              // }
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => HighPressureScreen(
+                    articleId: articleId,
+                    articleTitle: title,
+                  ),
+                ),
+              );
             },
             child: Container(
               decoration: BoxDecoration(
@@ -1254,11 +1277,20 @@ Widget fourThings(titles, images) {
                       width: getHorizontalSize(160),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(16),
-                        image: DecorationImage(
-                          image: AssetImage(images[index]),
-                          fit: BoxFit.cover,
-                        ),
+                        image: imageUrl != null
+                            ? DecorationImage(
+                                image: NetworkImage(imageUrl),
+                                fit: BoxFit.cover,
+                                onError: (exception, stackTrace) {
+                                  // Fallback если изображение не загрузилось
+                                },
+                              )
+                            : null,
+                        color: imageUrl == null ? Colors.grey[300] : null,
                       ),
+                      child: imageUrl == null
+                          ? Center(child: Icon(Icons.article, color: Colors.grey[600]))
+                          : null,
                     ),
                   ),
                   Padding(
@@ -1269,7 +1301,9 @@ Widget fourThings(titles, images) {
                       right: 16,
                     ),
                     child: Text(
-                      titles[index],
+                      title,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontSize: getFontSize(14),
                         fontFamily: 'Source Sans Pro',

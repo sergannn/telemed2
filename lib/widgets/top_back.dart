@@ -30,11 +30,14 @@ List<Widget> topBack(
                   color: back ? Colors.black : Colors.transparent),
               onPressed: () { if(back) {Navigator.pop(context);}},
             ),
-            Text(
-              text,
-              style: TextStyle(fontSize: 16),
+            Expanded(
+              child: Text(
+                text,
+                style: TextStyle(fontSize: 16),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
-            const Spacer(), // раздвигает элементы
             IconButton(
               icon:
                   icon, //const Icon(Icons.settings_input_component, size: 20),

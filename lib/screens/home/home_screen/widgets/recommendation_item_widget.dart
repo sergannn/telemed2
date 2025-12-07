@@ -1,5 +1,6 @@
 import 'package:doctorq/app_export.dart';
 import 'package:doctorq/models/recommendation_model.dart';
+import 'package:doctorq/screens/profile/high_pressure.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
@@ -14,8 +15,15 @@ class RecommendationItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Navigate to recommendation detail screen
-        // Navigator.push(context, MaterialPageRoute(builder: (context) => RecommendationDetailScreen(recommendation: recommendation)));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HighPressureScreen(
+              articleId: recommendation.id,
+              articleTitle: recommendation.title,
+            ),
+          ),
+        );
       },
       child: Container(
         width: getHorizontalSize(280),

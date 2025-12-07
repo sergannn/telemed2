@@ -109,10 +109,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
     if (description == null) return 'Прием';
     
     if (description.contains('ContactMethods.voiceCall')) {
-      return 'Голосовой звонок';
+      return 'Аудио';
     } else if (description.contains('ContactMethods.videoCall')) {
-      return 'Видеозвонок';
-    } else if (description.contains('ContactMethods.chat')) {
+      return 'Видео';
+    } else if (description.contains('ContactMethods.chat') || description.contains('ContactMethods.message')) {
       return 'Чат';
     } else {
       return 'Прием';
@@ -163,6 +163,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     return Scaffold(
       body: Column(children: [
         TableCalendar(
+          
           onCalendarCreated: (pageController) {},
           calendarBuilders: CalendarBuilders(
             defaultBuilder: dayBuilder,

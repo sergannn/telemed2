@@ -302,7 +302,14 @@ print(context.selectedAppointment);
                             ),
                           ),
                         if (item['doctor']['specializations'].isNotEmpty) Text(item['doctor']['specializations'][0]['name']),
-                          Text(getContactMethod(item)),
+                          Row(
+                            children: [
+                              Text(getContactMethod(item)),
+                              SizedBox(width: 8),
+                              // Индикация статуса записи и комнаты
+                              _buildAppointmentStatusIndicator(item),
+                            ],
+                          ),
                           /*  CountDownText(
                             due: DateTime.parse(item["date"]),
                             finishedText: ' Done',
@@ -436,6 +443,90 @@ print(context.selectedAppointment);
         item['to_time'] +
         ' ' +
         item['to_time_type'];
+  }
+
+  // Метод для создания индикатора статуса записи
+  Widget _buildAppointmentStatusIndicator(Map<dynamic, dynamic> item) {
+    // Проверяем статус записи
+    bool isAppointmentValid = item['status'] != null && item['status'].toString() == '1';
+    bool hasRoomData = item['room_data'] != null && item['room_data'].toString().isNotEmpty && item['room_data'].toString() != 'null';
+    
+    if (isAppointmentValid && hasRoomData) {
+      // Запись валидна и комната создана
+      return Container(
+        padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+        decoration: BoxDecoration(
+          color: Colors.green[100],
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.green[300]!, width: 1),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.check_circle, size: 12, color: Colors.green[700]),
+            SizedBox(width: 4),
+            Text(
+              'Готово',
+              style: TextStyle(
+                fontSize: 10,
+                color: Colors.green[700],
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+      );
+    } else if (isAppointmentValid && !hasRoomData) {
+      // Запись валидна, но комната не создана
+      return Container(
+        padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+        decoration: BoxDecoration(
+          color: Colors.orange[100],
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.orange[300]!, width: 1),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.warning, size: 12, color: Colors.orange[700]),
+            SizedBox(width: 4),
+            Text(
+              'Без комнаты',
+              style: TextStyle(
+                fontSize: 10,
+                color: Colors.orange[700],
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+      );
+    } else {
+      // Запись невалидна
+      return Container(
+        padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+        decoration: BoxDecoration(
+          color: Colors.grey[100],
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.grey[300]!, width: 1),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.cancel, size: 12, color: Colors.grey[700]),
+            SizedBox(width: 4),
+            Text(
+              'Неактивна',
+              style: TextStyle(
+                fontSize: 10,
+                color: Colors.grey[700],
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
   }
 }
 
