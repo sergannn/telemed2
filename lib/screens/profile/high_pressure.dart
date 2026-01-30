@@ -12,6 +12,7 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HighPressureScreen extends StatefulWidget {
   final int articleId;
@@ -162,7 +163,7 @@ class _HighPressureScreenState extends State<HighPressureScreen> with SingleTick
       children: [
         _buildArticleContent(),
         _buildVideoContent(),
-        FakeChatScreen()
+        ArticleCommentsScreen(articleId: widget.articleId)
       ],
     );
   }
@@ -553,98 +554,281 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
   }
 }
 
-// Keep the existing FakeChatScreen class as it was
-class FakeChatScreen extends StatefulWidget {
+// Реальный экран комментариев к статье
+class ArticleCommentsScreen extends StatefulWidget {
+  final int articleId;
+  
+  const ArticleCommentsScreen({Key? key, required this.articleId}) : super(key: key);
+  
   @override
-  _FakeChatScreenState createState() => _FakeChatScreenState();
+  _ArticleCommentsScreenState createState() => _ArticleCommentsScreenState();
 }
 
-class _FakeChatScreenState extends State<FakeChatScreen> {
-  final List<ChatMessage> _messages = [
-    ChatMessage(
-      text: "Здравствуйте! У меня вопрос по поводу давления.",
-      isMe: false,
-      time: DateTime.now().subtract(Duration(minutes: 5))),
-    ChatMessage(
-      text: "Добрый день! Чем могу помочь?",
-      isMe: true,
-      time: DateTime.now().subtract(Duration(minutes: 4))),
-    ChatMessage(
-      text: "Какое давление считается нормальным для человека 45 лет?",
-      isMe: false,
-      time: DateTime.now().subtract(Duration(minutes: 3))),
-    ChatMessage(
-      text: "Нормальное давление для взрослого человека - 120/80 мм рт.ст. Но небольшие отклонения в пределах 110-139/70-89 тоже могут быть нормальными.",
-      isMe: true,
-      time: DateTime.now().subtract(Duration(minutes: 2))),
-  ];
-
+class _ArticleCommentsScreenState extends State<ArticleCommentsScreen> {
+  final List<ArticleComment> _comments = [];
   final TextEditingController _textController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
+  bool _isLoading = true;
+  bool _isSending = false;
+  String? _errorMessage;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadComments();
+  }
+
+  Future<void> _loadComments() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      final response = await http.get(
+        Uri.parse('https://admin.onlinedoctor.su/api/articles/${widget.articleId}/comments'),
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['success'] == true && data['data'] != null) {
+          setState(() {
+            _comments.clear();
+            for (var commentData in data['data']) {
+              _comments.add(ArticleComment.fromJson(commentData));
+            }
+            _isLoading = false;
+          });
+          _scrollToBottom();
+        }
+      } else {
+        setState(() {
+          _errorMessage = 'Не удалось загрузить комментарии';
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'Ошибка загрузки: $e';
+        _isLoading = false;
+      });
+    }
+  }
+
+  void _scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+  }
+
+  Future<void> _sendComment(String text) async {
+    if (text.trim().isEmpty) return;
+
+    setState(() {
+      _isSending = true;
+    });
+
+    try {
+      // Получаем токен авторизации
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('authToken');
+
+      if (token == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Необходимо войти в систему')),
+        );
+        setState(() {
+          _isSending = false;
+        });
+        return;
+      }
+
+      final response = await http.post(
+        Uri.parse('https://admin.onlinedoctor.su/api/articles/${widget.articleId}/comments'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+        },
+        body: json.encode({'text': text}),
+      );
+
+      final data = json.decode(response.body);
+
+      if (response.statusCode == 201 && data['success'] == true) {
+        _textController.clear();
+        setState(() {
+          _comments.add(ArticleComment.fromJson(data['data']));
+          _isSending = false;
+        });
+        _scrollToBottom();
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(data['message'] ?? 'Ошибка отправки')),
+        );
+        setState(() {
+          _isSending = false;
+        });
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Ошибка: $e')),
+      );
+      setState(() {
+        _isSending = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return Center(child: CircularProgressIndicator());
+    }
+
+    if (_errorMessage != null) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(_errorMessage!, style: TextStyle(color: Colors.red)),
+            SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: _loadComments,
+              child: Text('Повторить'),
+            ),
+          ],
+        ),
+      );
+    }
+
     return Column(
       children: [
         Expanded(
-          child: ListView.builder(
-            physics: AlwaysScrollableScrollPhysics(),
-            reverse: false,
-            padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
-            itemCount: _messages.length,
-            itemBuilder: (context, index) {
-              return _buildMessage(_messages[index]);
-            },
-          ),
+          child: _comments.isEmpty
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.chat_bubble_outline, size: 64, color: Colors.grey[400]),
+                      SizedBox(height: 16),
+                      Text(
+                        'Пока нет комментариев',
+                        style: TextStyle(color: Colors.grey[600], fontSize: 16),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        'Будьте первым, кто оставит комментарий!',
+                        style: TextStyle(color: Colors.grey[400], fontSize: 14),
+                      ),
+                    ],
+                  ),
+                )
+              : ListView.builder(
+                  controller: _scrollController,
+                  physics: AlwaysScrollableScrollPhysics(),
+                  padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+                  itemCount: _comments.length,
+                  itemBuilder: (context, index) {
+                    return _buildCommentWidget(_comments[index]);
+                  },
+                ),
         ),
         _buildMessageComposer(),
       ],
     );
   }
 
-  Widget _buildMessage(ChatMessage message) {
+  Widget _buildCommentWidget(ArticleComment comment) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 8.0),
-      alignment: message.isMe ? Alignment.centerRight : Alignment.centerLeft,
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width * 0.75,
-        ),
-        child: Container(
-          padding: EdgeInsets.all(12.0),
-          decoration: BoxDecoration(
-            color: message.isMe 
-                ? Color(0xFFE3F2FD) 
-                : Color(0xFFF5F5F5),
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(12),
-              topRight: Radius.circular(12),
-              bottomLeft: message.isMe ? Radius.circular(12) : Radius.circular(0),
-              bottomRight: message.isMe ? Radius.circular(0) : Radius.circular(12),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CircleAvatar(
+            radius: 20,
+            backgroundImage: comment.doctorProfileImage != null
+                ? NetworkImage(comment.doctorProfileImage!)
+                : AssetImage('assets/images/11.png') as ImageProvider,
+          ),
+          SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        comment.doctorName,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      _formatTime(comment.createdAt),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
+                ),
+                if (comment.specializations.isNotEmpty)
+                  Padding(
+                    padding: EdgeInsets.only(top: 2),
+                    child: Text(
+                      comment.specializations.join(', '),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.blue[700],
+                      ),
+                    ),
+                  ),
+                SizedBox(height: 8),
+                Container(
+                  padding: EdgeInsets.all(12.0),
+                  decoration: BoxDecoration(
+                    color: Color(0xFFF5F5F5),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    comment.text,
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.black87,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                message.text,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.black87,
-                ),
-              ),
-              SizedBox(height: 4),
-              Text(
-                DateFormat('HH:mm').format(message.time),
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey,
-                ),
-              ),
-            ],
-          ),
-        ),
+        ],
       ),
     );
+  }
+
+  String _formatTime(DateTime time) {
+    final now = DateTime.now();
+    final diff = now.difference(time);
+
+    if (diff.inDays > 0) {
+      return DateFormat('dd.MM.yy HH:mm').format(time);
+    } else if (diff.inHours > 0) {
+      return '${diff.inHours} ч. назад';
+    } else if (diff.inMinutes > 0) {
+      return '${diff.inMinutes} мин. назад';
+    } else {
+      return 'только что';
+    }
   }
 
   Widget _buildMessageComposer() {
@@ -660,81 +844,90 @@ class _FakeChatScreenState extends State<FakeChatScreen> {
           ),
         ],
       ),
-      child: Row(
-        children: [
-          IconButton(
-            icon: Icon(Icons.attach_file),
-            onPressed: () {},
-          ),
-          Expanded(
-            child: TextField(
-              controller: _textController,
-              decoration: InputDecoration.collapsed(
-                hintText: "Напишите сообщение...",
-                hintStyle: TextStyle(color: Colors.grey),
+      child: SafeArea(
+        child: Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: _textController,
+                maxLines: null,
+                decoration: InputDecoration(
+                  hintText: "Напишите комментарий...",
+                  hintStyle: TextStyle(color: Colors.grey),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    borderSide: BorderSide.none,
+                  ),
+                  filled: true,
+                  fillColor: Colors.grey[100],
+                  contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                ),
               ),
             ),
-          ),
-          IconButton(
-            icon: Icon(Icons.send, color: Colors.blue),
-            onPressed: () {
-              if (_textController.text.trim().isNotEmpty) {
-                _sendMessage(_textController.text);
-                _textController.clear();
-              }
-            },
-          ),
-        ],
+            SizedBox(width: 8),
+            _isSending
+                ? SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : IconButton(
+                    icon: Icon(Icons.send, color: Colors.blue),
+                    onPressed: () {
+                      if (_textController.text.trim().isNotEmpty) {
+                        _sendComment(_textController.text);
+                      }
+                    },
+                  ),
+          ],
+        ),
       ),
     );
-  }
-
-  void _sendMessage(String text) {
-    setState(() {
-      _messages.add(ChatMessage(
-        text: text,
-        isMe: true,
-        time: DateTime.now(),
-      ));
-      
-      Future.delayed(Duration(seconds: 1), () {
-        setState(() {
-          _messages.add(ChatMessage(
-            text: _getRandomDoctorReply(),
-            isMe: false,
-            time: DateTime.now(),
-          ));
-        });
-      });
-    });
-  }
-
-  String _getRandomDoctorReply() {
-    final replies = [
-      "Похоже на классические симптомы гипертонии.",
-      "Рекомендую измерить давление утром и вечером в течение недели.",
-      "Вам следует обратиться к кардиологу для дополнительного обследования.",
-      "Попробуйте уменьшить потребление соли и больше отдыхать.",
-      "При таком давлении лучше вызвать скорую помощь.",
-    ];
-    return replies[DateTime.now().millisecond % replies.length];
   }
 
   @override
   void dispose() {
     _textController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 }
 
-class ChatMessage {
+// Модель комментария к статье
+class ArticleComment {
+  final int id;
   final String text;
-  final bool isMe;
-  final DateTime time;
+  final DateTime createdAt;
+  final int? doctorId;
+  final String doctorName;
+  final String? doctorProfileImage;
+  final List<String> specializations;
+  final List<ArticleComment> replies;
 
-  ChatMessage({
+  ArticleComment({
+    required this.id,
     required this.text,
-    required this.isMe,
-    required this.time,
+    required this.createdAt,
+    this.doctorId,
+    required this.doctorName,
+    this.doctorProfileImage,
+    required this.specializations,
+    required this.replies,
   });
+
+  factory ArticleComment.fromJson(Map<String, dynamic> json) {
+    return ArticleComment(
+      id: json['id'] ?? 0,
+      text: json['text'] ?? '',
+      createdAt: DateTime.tryParse(json['created_at'] ?? '') ?? DateTime.now(),
+      doctorId: json['doctor']?['id'],
+      doctorName: json['doctor']?['full_name'] ?? 'Врач',
+      doctorProfileImage: json['doctor']?['profile_image'],
+      specializations: List<String>.from(json['doctor']?['specializations'] ?? []),
+      replies: (json['replies'] as List<dynamic>?)
+              ?.map((r) => ArticleComment.fromJson(r))
+              .toList() ??
+          [],
+    );
+  }
 }
