@@ -53,3 +53,4 @@ app.*.map.json
 sentry.properties
 
 sentry.properties
+sentry-wizard
