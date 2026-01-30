@@ -1432,11 +1432,13 @@ ListView(
                       index: 6,
                     ),
           
-                  _buildExpansionTile(
-                    title: 'Беременность и контрацепция',
-                    content: '',
-                    index: 7,
-                  ),
+                  // Показываем беременность и контрацепцию только для женщин
+                  if (_isFemale)
+                    _buildExpansionTile(
+                      title: 'Беременность и контрацепция',
+                      content: '',
+                      index: 7,
+                    ),
                //   SizedBox(height: 20),
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.35,

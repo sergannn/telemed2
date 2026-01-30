@@ -8,9 +8,59 @@ import 'package:doctorq/screens/medcard/card_gallery.dart';
 import 'package:doctorq/screens/profile/health_screen.dart';
 import 'package:doctorq/screens/profile/main_profile.dart';
 import 'package:doctorq/stores/user_store.dart';
-import 'package:doctorq/theme/svg_constant.dart';
+import 'package:doctorq/theme/image_constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
+// Виджет для отображения иконок из Figma с поддержкой активного/неактивного состояния
+class FigmaIcon extends StatelessWidget {
+  final String imagePath;
+  final bool isActive;
+  final double? size;
+  final Color? activeColor;
+  final Color? inactiveColor;
+
+  const FigmaIcon({
+    Key? key,
+    required this.imagePath,
+    this.isActive = false,
+    this.size,
+    this.activeColor,
+    this.inactiveColor,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final double iconSize = size ?? 24.0;
+    final Color color = isActive 
+        ? (activeColor ?? const Color.fromARGB(255, 36, 36, 36))
+        : (inactiveColor ?? const Color.fromARGB(255, 92, 92, 92));
+
+    return SvgPicture.asset(
+      imagePath,
+      width: iconSize,
+      height: iconSize,
+      colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+      allowDrawingOutsideViewBox: true,
+      fit: BoxFit.contain,
+      placeholderBuilder: (context) => SizedBox(
+        width: iconSize,
+        height: iconSize,
+      ),
+      errorBuilder: (context, error, stackTrace) {
+        print('Ошибка загрузки SVG: $imagePath');
+        print('Ошибка: $error');
+        print('Stack trace: $stackTrace');
+        // Fallback на стандартную иконку при ошибке
+        return Icon(
+          Icons.circle,
+          size: iconSize,
+          color: color,
+        );
+      },
+    );
+  }
+}
 
 // ignore: must_be_immutable
 class Main extends StatelessWidget {
@@ -35,72 +85,91 @@ class Main extends StatelessWidget {
       PersistentTabConfig(
           screen: _buildScreens()[2],
           item: ItemConfig(
-       //подумать     textStyle: TextStyle(color:Colors.black),
-            icon: Icon(Icons.border_color,
-                color: const Color.fromARGB(255, 92, 92, 92)),
-            inactiveIcon: Icon(
-              Icons.border_color,
+            icon: FigmaIcon(
+              imagePath: ImageConstant.iconAppointments,
+              isActive: true,
               size: 28,
-              color: const Color.fromARGB(255, 36, 36, 36),
+              activeColor: const Color.fromARGB(255, 36, 36, 36),
+            ),
+            inactiveIcon: FigmaIcon(
+              imagePath: ImageConstant.iconAppointments,
+              isActive: false,
+              size: 28,
+              inactiveColor: const Color.fromARGB(255, 92, 92, 92),
             ),
             title: ("Записи"),
             activeColorSecondary: ColorConstant.blueA400,
-            //activeColorPrimary: ColorConstant.blueA400.withOpacity(0.1),
-            //inactiveColorPrimary: ColorConstant.blueA400,
           )),
       PersistentTabConfig(
           screen: _buildScreens()[1],
           item: ItemConfig(
-            icon: Icon(Icons.chrome_reader_mode,
-                color: const Color.fromARGB(255, 92, 92, 92)),
-            inactiveIcon: Icon(
-              Icons.chrome_reader_mode,
+            icon: FigmaIcon(
+              imagePath: ImageConstant.iconMyArticles,
+              isActive: true,
               size: 28,
-              color: const Color.fromARGB(255, 36, 36, 36),
+              activeColor: const Color.fromARGB(255, 36, 36, 36),
+            ),
+            inactiveIcon: FigmaIcon(
+              imagePath: ImageConstant.iconMyArticles,
+              isActive: false,
+              size: 28,
+              inactiveColor: const Color.fromARGB(255, 92, 92, 92),
             ),
             title: ("Мои статьи"),
             activeColorSecondary: ColorConstant.blueA400,
-            //activeColorPrimary: ColorConstant.blueA400.withOpacity(0.1),
-            //inactiveColorPrimary: ColorConstant.blueA400,
           )),
       PersistentTabConfig(
           screen: _buildScreens()[0],
           item: ItemConfig(
-            icon: Icon(
-              Icons.house_siding_outlined,
-              color: const Color.fromARGB(255, 37, 37, 37),
+            icon: FigmaIcon(
+              imagePath: ImageConstant.iconAdd,
+              isActive: true,
+              size: 28,
+              activeColor: const Color.fromARGB(255, 36, 36, 36),
             ),
             title: ("Главная"),
             activeColorSecondary: ColorConstant.blueA400,
-            inactiveIcon: Icon(
-              Icons.house_siding_outlined,
+            inactiveIcon: FigmaIcon(
+              imagePath: ImageConstant.iconAdd,
+              isActive: false,
               size: 28,
-              color: const Color.fromARGB(255, 36, 36, 36),
+              inactiveColor: const Color.fromARGB(255, 92, 92, 92),
             ),
           )),
       PersistentTabConfig(
           screen: _buildScreens()[4],
           item: ItemConfig(
-            icon: Icon(Icons.favorite,
-                color: const Color.fromARGB(255, 92, 92, 92)),
-            inactiveIcon: Icon(
-              Icons.favorite,
+            icon: FigmaIcon(
+              imagePath: ImageConstant.iconHealth,
+              isActive: true,
               size: 28,
-              color: const Color.fromARGB(255, 36, 36, 36),
+              activeColor: const Color.fromARGB(255, 36, 36, 36),
+            ),
+            inactiveIcon: FigmaIcon(
+              imagePath: ImageConstant.iconHealth,
+              isActive: false,
+              size: 28,
+              inactiveColor: const Color.fromARGB(255, 92, 92, 92),
             ),
             title: ("Здоровье"),
             activeColorSecondary: ColorConstant.blueA400,
-           // activeColorPrimary: ColorConstant.blueA400.withOpacity(0.1),
-            //inactiveColorPrimary: ColorConstant.blueA400,
           )),
       PersistentTabConfig(
           screen: MainProfileScreen(),
           item: ItemConfig(
             title: "Профиль",
-            icon: Icon(Icons.account_box,
-                color: const Color.fromARGB(255, 92, 92, 92)), // Image.asset(
-            inactiveIcon: Icon(Icons.account_box,
-                size: 28, color: const Color.fromARGB(255, 36, 36, 36)),
+            icon: FigmaIcon(
+              imagePath: ImageConstant.iconChats,
+              isActive: true,
+              size: 28,
+              activeColor: const Color.fromARGB(255, 36, 36, 36),
+            ),
+            inactiveIcon: FigmaIcon(
+              imagePath: ImageConstant.iconChats,
+              isActive: false,
+              size: 28,
+              inactiveColor: const Color.fromARGB(255, 92, 92, 92),
+            ),
             activeColorSecondary: ColorConstant.blueA400,
           ))
     ];
@@ -190,6 +259,7 @@ class CustomBottomNavBar extends StatelessWidget {
   final PersistentTabController controller;
 
   final NavBarDecoration navBarDecoration;
+  
   Widget buildMiddleItemForTest(ItemConfig item, bool isSelected) {
     return _buildMiddleItem(item, isSelected);
   }
@@ -202,15 +272,7 @@ class CustomBottomNavBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Expanded(
-            child: IconTheme(
-              data: IconThemeData(
-                size: item.iconSize,
-                color: isSelected
-                    ? item.activeForegroundColor
-                    : item.inactiveForegroundColor,
-              ),
-              child: isSelected ? item.icon : item.inactiveIcon,
-            ),
+            child: isSelected ? item.icon : item.inactiveIcon,
           ),
           if (item.title != null)
             FittedBox(
@@ -236,15 +298,7 @@ class CustomBottomNavBar extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Expanded(
-              child: IconTheme(
-                data: IconThemeData(
-                  size: item.iconSize,
-                  color: isSelected
-                      ? item.activeForegroundColor
-                      : item.inactiveForegroundColor,
-                ),
-                child: isSelected ? item.icon : item.inactiveIcon,
-              ),
+              child: isSelected ? item.icon : item.inactiveIcon,
             ),
           ],
         ),
@@ -255,7 +309,17 @@ class CustomBottomNavBar extends StatelessWidget {
     final midIndex = (navBarConfig.items.length / 2).floor();
 
     return DecoratedNavBar(
-      decoration: navBarDecoration,
+      decoration: NavBarDecoration(
+        color: Colors.white, // Явно указываем белый фон
+        padding: navBarDecoration.padding,
+        filter: navBarDecoration.filter,
+        border: navBarDecoration.border,
+        borderRadius: navBarDecoration.borderRadius,
+        boxShadow: navBarDecoration.boxShadow,
+        gradient: navBarDecoration.gradient,
+        backgroundBlendMode: navBarDecoration.backgroundBlendMode,
+        shape: navBarDecoration.shape,
+      ),
       filter: navBarConfig.selectedItem.filter,
       opacity: navBarConfig.selectedItem.opacity,
       height: navBarConfig.navBarHeight,

@@ -117,6 +117,7 @@
     # package. See that file for information about deactivating specific lint
     # rules and activating additional ones.
     flutter_lints: ^4.0.0
+    flutter_native_splash: ^2.4.1
 
 
 
@@ -132,6 +133,7 @@
     assets:
       - assets/
       - assets/images/
+      - assets/images/icons/
       - assets/translations/
     
 
@@ -146,3 +148,9 @@
     android: "launcher_icon"
     ios: true
     image_path: "assets/images/Logo.png"
+
+  flutter_native_splash:
+    color: "#FFFFFF"
+    android: false
+    ios: false
+    web: false

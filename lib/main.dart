@@ -11,7 +11,7 @@ import 'package:doctorq/services/notification_manager.dart';
 import 'package:doctorq/stores/init_stores.dart';
 import 'package:doctorq/stores/user_store.dart';
 import 'package:doctorq/translations/codegen_loader.g.dart';
-import 'package:doctorq/utils/utility.dart';
+import 'package:doctorq/utils/utility.dart' show navigatorKey;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -58,6 +58,7 @@ void main() async {
   initStores();
   await Future.delayed(Duration(milliseconds: 1000));
   runApp(MaterialApp(
+      navigatorKey: navigatorKey,
       routes: {
         // When navigating to the "/" route, build the FirstScreen widget.
         //'/': (context) => const FirstScreen(),

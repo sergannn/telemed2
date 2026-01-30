@@ -226,12 +226,13 @@ class _AkkInfoScreenState extends State<AkkEditScreen> {
                     keyboardType: TextInputType.datetime,
                   ),
 
-                  // Email Field
+                  // Email Field (readonly)
                   _buildEditableField(
                     label: 'Почта',
                     controller: _emailController,
                     hintText: 'Введите email',
                     keyboardType: TextInputType.emailAddress,
+                    readOnly: true,
                   ),
 
                   // SNILS Field
@@ -354,6 +355,7 @@ class _AkkInfoScreenState extends State<AkkEditScreen> {
     required TextEditingController controller,
     required String hintText,
     TextInputType keyboardType = TextInputType.text,
+    bool readOnly = false,
   }) {
     return Container(
       width: double.infinity,
@@ -389,6 +391,8 @@ class _AkkInfoScreenState extends State<AkkEditScreen> {
             child: TextField(
               controller: controller,
               keyboardType: keyboardType,
+              readOnly: readOnly,
+              enabled: !readOnly,
               decoration: InputDecoration(
                 border: InputBorder.none,
                 hintText: hintText,
@@ -400,7 +404,7 @@ class _AkkInfoScreenState extends State<AkkEditScreen> {
               ),
               style: TextStyle(
                 fontSize: 14,
-                color: Colors.black,
+                color: readOnly ? Colors.grey : Colors.black,
               ),
             ),
           ),

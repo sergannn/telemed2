@@ -312,4 +312,11 @@ class ImageConstant {
   static String imgImage15 = 'assets/images/img_image_15.png';
 
   static String imageNotFound = 'assets/images/image_not_found.png';
+
+  // Иконки нижнего меню из Figma
+  static String iconAppointments = 'assets/images/icons/appointments.svg';
+  static String iconMyArticles = 'assets/images/icons/my_articles.svg';
+  static String iconAdd = 'assets/images/icons/add.svg';
+  static String iconHealth = 'assets/images/icons/health.svg';
+  static String iconChats = 'assets/images/icons/chats.svg';
 }

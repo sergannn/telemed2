@@ -5,10 +5,17 @@ import 'package:html_unescape/html_unescape.dart';
 
 import 'package:flutter/material.dart' hide ModalBottomSheetRoute;
 
-
 import 'dart:developer';
+import 'dart:io';
+
+import 'package:http/http.dart' as http;
 
 import '../constant/constants.dart';
+import '../widgets/loading_overlay.dart';
+import 'package:loader_overlay/loader_overlay.dart';
+
+// Глобальный ключ для навигатора (для показа snackbar без context)
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 
 
@@ -87,6 +94,80 @@ snackBar(context, {required String message, Color? color, int duration = 5}) {
     duration: Duration(seconds: duration),
   );
   return ScaffoldMessenger.of(context).showSnackBar(snackBar);
+}
+
+/// Проверяет, является ли ошибка ошибкой сети (отсутствие интернета)
+bool isNetworkError(dynamic error) {
+  if (error is SocketException) {
+    return true;
+  }
+  if (error is HttpException) {
+    return true;
+  }
+  if (error is http.ClientException) {
+    return true;
+  }
+  // Проверяем строковое представление ошибки
+  final errorString = error.toString().toLowerCase();
+  return errorString.contains('socketexception') ||
+      errorString.contains('failed host lookup') ||
+      errorString.contains('network is unreachable') ||
+      errorString.contains('connection refused') ||
+      errorString.contains('connection timed out') ||
+      errorString.contains('no internet') ||
+      errorString.contains('internet connection');
+}
+
+/// Безопасное выполнение HTTP запроса с обработкой ошибок сети
+/// Показывает snackbar при отсутствии интернета и закрывает loader
+Future<http.Response?> safeHttpRequest(
+  BuildContext? context,
+  Future<http.Response> Function() request, {
+  String? errorMessage,
+  bool showError = true,
+}) async {
+  try {
+    return await request();
+  } catch (e) {
+    if (isNetworkError(e)) {
+      // Закрываем loader если он открыт
+      final ctx = context ?? navigatorKey.currentContext;
+      if (ctx != null) {
+        try {
+          // Пробуем закрыть loader_overlay
+          if (ctx.mounted) {
+            try {
+              ctx.loaderOverlay.hide();
+            } catch (_) {
+              // Игнорируем ошибку, если loader_overlay не используется
+            }
+          }
+        } catch (_) {
+          // Игнорируем ошибку
+        }
+        
+        // Пробуем закрыть MyOverlay
+        try {
+          MyOverlay.hide();
+        } catch (_) {
+          // Игнорируем ошибку, если MyOverlay не используется
+        }
+        
+        if (showError) {
+          snackBar(
+            ctx,
+            message: errorMessage ?? 'Нет подключения к интернету. Проверьте соединение.',
+            color: Colors.red,
+            duration: 4,
+          );
+        }
+      }
+      return null;
+    } else {
+      // Другие ошибки пробрасываем дальше
+      rethrow;
+    }
+  }
 }
 
 
