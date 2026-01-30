@@ -197,7 +197,8 @@ class _AppointmentsStep2FilledScreenState
                         // Описание
                         Padding(
                           padding: EdgeInsets.only(top: 12),
-                          child: Text(context.selectedDoctor['description']==null ? 'Описание отсутствует' : context.selectedDoctor['description'],
+                          child: Text( (context.selectedDoctor['description']==null || context.selectedDoctor['description']==''
+                                        ) ? 'Описание отсутствует' : context.selectedDoctor['description'],
 //                            'Наш тест на важные показатели здоровья покажет вам , на что обратить свое внимание и носит рекомендательный характер. Пройдите по ссылке, чтобы ознакомиться и уже сейчас сделать свой организм выносливее и крепче',
                             style: TextStyle(
                               color: const Color.fromARGB(255, 17, 17, 17),

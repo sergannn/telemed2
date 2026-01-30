@@ -5,6 +5,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'websocket_server.dart';
 import 'proactivity/notification_trigger.dart';
 import 'web_server.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 const bool enableNotificationTrigger = false;
 

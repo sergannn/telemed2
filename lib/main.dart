@@ -12,7 +12,8 @@ import 'package:doctorq/services/startup_service.dart';
 import 'package:doctorq/stores/init_stores.dart';
 import 'package:doctorq/stores/user_store.dart';
 import 'package:doctorq/translations/codegen_loader.g.dart';
-import 'package:doctorq/utils/utility.dart';
+import 'package:doctorq/utils/utility.dart' show navigatorKey;
+import 'package:doctorq/constant/constants.dart' show withSentry, forceSentry;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -20,6 +21,7 @@ import 'package:flutter/services.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:number_pad_keyboard/number_pad_keyboard.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'theme/theme_constants.dart';
 import 'theme/theme_manager.dart';
 import 'package:doctorq/screens/main_screen.dart';
@@ -27,6 +29,28 @@ import 'package:doctorq/screens/main_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() async {
+  // Проверяем, нужно ли включать Sentry
+  final bool shouldUseSentry = forceSentry || withSentry;
+
+  if (shouldUseSentry) {
+    // Инициализируем приложение с Sentry
+    await SentryFlutter.init(
+      (options) {
+        options.dsn = 'https://bzpz5xodp1zvlkllus7rf1toh8@o4506802011537408.ingest.de.sentry.io/4506802011537408';
+        options.tracesSampleRate = 1.0;
+        options.environment = 'production';
+        // Дополнительные настройки можно добавить здесь
+      },
+      appRunner: () => _runApp(),
+    );
+  } else {
+    // Запускаем приложение без Sentry
+    WidgetsFlutterBinding.ensureInitialized();
+    await _runApp();
+  }
+}
+
+Future<void> _runApp() async {
   WidgetsFlutterBinding.ensureInitialized();
 //  WidgetsFlutterBinding.ensureInitialized();
 /*
@@ -54,6 +78,7 @@ void main() async {
   initStores();
   await Future.delayed(Duration(milliseconds: 1000));
   runApp(MaterialApp(
+      navigatorKey: navigatorKey,
       routes: {
         // When navigating to the "/" route, build the FirstScreen widget.
         //'/': (context) => const FirstScreen(),

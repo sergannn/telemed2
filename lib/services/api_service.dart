@@ -19,7 +19,7 @@ import 'package:doctorq/stores/doctors_store.dart';
 import 'package:doctorq/stores/specs_store.dart';
 import 'package:doctorq/stores/user_store.dart';
 import 'package:doctorq/utils/pub.dart';
-import 'package:doctorq/utils/utility.dart';
+import 'package:doctorq/utils/utility.dart' show safeHttpRequest, isNetworkError, printLog, debugPrintTransactionStart, debugPrintTransactionEnd;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:get_it/get_it.dart';
@@ -32,8 +32,15 @@ Future<bool> getSpecs() async {
   printLog('Getting doctors');
   print("get specs");
 
-  final response =
-      await http.get(Uri.parse('https://admin.onlinedoctor.su/api/specializations'));
+  final response = await safeHttpRequest(
+    null,
+    () => http.get(Uri.parse('https://admin.onlinedoctor.su/api/specializations')),
+    errorMessage: 'Нет подключения к интернету. Не удалось загрузить специализации.',
+  );
+
+  if (response == null) {
+    return false; // Ошибка сети уже обработана в safeHttpRequest
+  }
 
   if (response.statusCode == 200) {
     List jsonResponse = json.decode(response.body)['data'];
@@ -832,7 +839,15 @@ Future<bool> updateProfileWithDocument(BuildContext context, String imagePath,
 Future<List<RecommendationModel>> fetchRecommendations() async {
   printLog('Fetching recommendations');
   
-  final response = await http.get(Uri.parse('https://admin.onlinedoctor.su/api/recommendations'));
+  final response = await safeHttpRequest(
+    null,
+    () => http.get(Uri.parse('https://admin.onlinedoctor.su/api/recommendations')),
+    errorMessage: 'Нет подключения к интернету. Не удалось загрузить рекомендации.',
+  );
+
+  if (response == null) {
+    return []; // Возвращаем пустой список при ошибке сети
+  }
 
   if (response.statusCode == 200) {
     final jsonData = json.decode(response.body);
@@ -899,7 +914,15 @@ Future<List<Map<String, dynamic>>> fetchFAQs({String? category}) async {
     url += '?category=$category';
   }
 
-  final response = await http.get(Uri.parse(url));
+  final response = await safeHttpRequest(
+    null,
+    () => http.get(Uri.parse(url)),
+    errorMessage: 'Нет подключения к интернету. Не удалось загрузить FAQ.',
+  );
+
+  if (response == null) {
+    return []; // Возвращаем пустой список при ошибке сети
+  }
 
   if (response.statusCode == 200) {
     final jsonData = json.decode(response.body);
@@ -924,7 +947,15 @@ Future<List<Map<String, dynamic>>> fetchLegalInfos({String? type}) async {
     url += '?type=$type';
   }
 
-  final response = await http.get(Uri.parse(url));
+  final response = await safeHttpRequest(
+    null,
+    () => http.get(Uri.parse(url)),
+    errorMessage: 'Нет подключения к интернету. Не удалось загрузить юридическую информацию.',
+  );
+
+  if (response == null) {
+    return []; // Возвращаем пустой список при ошибке сети
+  }
 
   if (response.statusCode == 200) {
     final jsonData = json.decode(response.body);

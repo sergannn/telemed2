@@ -30,7 +30,7 @@ import 'package:doctorq/screens/home/specialist_doctor_screen/specialist_doctor_
 import 'package:doctorq/screens/home/top_doctor_screen/choose_specs_screen_step_1.dart';
 import 'package:doctorq/services/api_service.dart' hide getIt;
 import 'package:doctorq/services/session.dart';
-import 'package:doctorq/utils/utility.dart';
+import 'package:doctorq/utils/utility.dart' show safeHttpRequest, printLog;
 import 'package:doctorq/widgets/spacing.dart';
 import 'widgets/autolayouthor1_item_widget.dart';
 import 'widgets/autolayouthor_item_widget.dart';
@@ -205,11 +205,13 @@ class ItemController extends GetxController {
 
   Future<void> fetchArticles() async {
     print('fetching articles');
-    var response = await http.get(Uri.parse(
-      'https://admin.onlinedoctor.su/api/articles',
-    ));
+    var response = await safeHttpRequest(
+      null,
+      () => http.get(Uri.parse('https://admin.onlinedoctor.su/api/articles')),
+      errorMessage: 'Нет подключения к интернету. Не удалось загрузить статьи.',
+    );
 
-    if (response.statusCode == 200) {
+    if (response != null && response.statusCode == 200) {
       List jsonResponse = json.decode(response.body)['data'];
       // items = jsonResponse;
       articles.value = jsonResponse;
@@ -218,32 +220,37 @@ class ItemController extends GetxController {
   }
 
   Future<void> fetchStories() async {
-    final response =
-        await http.get(Uri.parse('https://admin.onlinedoctor.su/api/stories'));
+    final response = await safeHttpRequest(
+      null,
+      () => http.get(Uri.parse('https://admin.onlinedoctor.su/api/stories')),
+      errorMessage: 'Нет подключения к интернету. Не удалось загрузить истории.',
+    );
 
-    if (response.statusCode == 200) {
+    if (response != null && response.statusCode == 200) {
       final jsonData = json.decode(response.body);
-      print('https://admin.onlinedoctor.su/storage/' +
-          jsonData['data'][0]['image']);
-      // Extract data from JSON
-      final data = (jsonData['data'] as List<dynamic>)
-          .map((e) => StoryItem.inlineImage(
-                imageFit: BoxFit.cover,
-                url: 'https://admin.onlinedoctor.su/storage/' + e['image'],
-                controller: StoryController(),
-                caption: Text(
-                  e['title'],
-                  style: const TextStyle(
-                    color: Colors.white,
-                    backgroundColor: Colors.black,
-                    fontSize: 17,
+      if (jsonData['data'] != null && jsonData['data'].isNotEmpty) {
+        print('https://admin.onlinedoctor.su/storage/' +
+            jsonData['data'][0]['image']);
+        // Extract data from JSON
+        final data = (jsonData['data'] as List<dynamic>)
+            .map((e) => StoryItem.inlineImage(
+                  imageFit: BoxFit.cover,
+                  url: 'https://admin.onlinedoctor.su/storage/' + e['image'],
+                  controller: StoryController(),
+                  caption: Text(
+                    e['title'],
+                    style: const TextStyle(
+                      color: Colors.white,
+                      backgroundColor: Colors.black,
+                      fontSize: 17,
+                    ),
                   ),
-                ),
-              ))
-          .toList();
-      //print(data);
-      //storyItems.value = data;
-      storyItems.value = data;
+                ))
+            .toList();
+        //print(data);
+        //storyItems.value = data;
+        storyItems.value = data;
+      }
     } else {
       // Handle error
       print('Failed to load stories');
@@ -253,9 +260,13 @@ class ItemController extends GetxController {
 
   Future<void> fetchRecommendations() async {
     // Загружаем статьи вместо рекомендаций
-    final response = await http.get(Uri.parse('https://admin.onlinedoctor.su/api/articles'));
+    final response = await safeHttpRequest(
+      null,
+      () => http.get(Uri.parse('https://admin.onlinedoctor.su/api/articles')),
+      errorMessage: 'Нет подключения к интернету. Не удалось загрузить рекомендации.',
+    );
 
-    if (response.statusCode == 200) {
+    if (response != null && response.statusCode == 200) {
       final jsonData = json.decode(response.body);
       final List<dynamic> data = jsonData['data'] ?? [];
       
@@ -274,7 +285,7 @@ class ItemController extends GetxController {
         );
       }).toList();
       print('Loaded ${recommendations.length} random articles');
-    } else {
+    } else if (response != null) {
       // Handle error
       print('Failed to load articles: ${response.statusCode}');
     }
@@ -307,11 +318,13 @@ class ItemController extends GetxController {
        }
        );
     // Simulating fetching data from an API
-    var response = await http.get(Uri.parse(
-      'https://www.admin.onlinedoctor.su/api/specializations',
-    ));
+    var response = await safeHttpRequest(
+      null,
+      () => http.get(Uri.parse('https://www.admin.onlinedoctor.su/api/specializations')),
+      errorMessage: 'Нет подключения к интернету. Не удалось загрузить специализации.',
+    );
 
-    if (response.statusCode == 200) {
+    if (response != null && response.statusCode == 200) {
       List jsonResponse = json.decode(response.body)['data'];
       // items = jsonResponse;
       cats.value = jsonResponse;

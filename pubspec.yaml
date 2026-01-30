@@ -1,17 +1,17 @@
-  name: doctorq
-  description: "A new Flutter project."
-  # The following line prevents the package from being accidentally published to
-  # pub.dev using `flutter pub publish`. This is preferred for private packages.
-  publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+name: doctorq
+description: "A new Flutter project."
+# The following line prevents the package from being accidentally published to
+# pub.dev using `flutter pub publish`. This is preferred for private packages.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-  version: 1.0.0+2
+version: 1.0.0+2
 
-  environment:
-    sdk: ^3.4.3
+environment:
+  sdk: ^3.4.3
 
-  executables: 
-    code_uml:
-  dependencies:
+executables: 
+  code_uml:
+dependencies:
     flutter:
       sdk: flutter
     file_picker: ^9.2.0
@@ -88,15 +88,16 @@
 #    intl: ^0.19.0
     loader_overlay: ^5.0.0
     supabase_flutter: ^2.5.6
+    sentry_flutter: ^9.9.1
 #    jitsi_meet_flutter_sdk: ^11.2.0
     
   #  analyzer: ^6.11.0
   #  dartdoc: ^8.3.2
   #  flutter_dtmf: ^2.0.2
   #  flutter_dialpad: ^1.0.5
-  dependency_overrides:
-    #video_player_android: ^2.7.16
-  dev_dependencies:
+dependency_overrides:
+  #video_player_android: ^2.7.16
+dev_dependencies:
     flutter_test:
       sdk: flutter
     integration_test:
@@ -112,11 +113,11 @@
     # package. See that file for information about deactivating specific lint
     # rules and activating additional ones.
     flutter_lints: ^4.0.0
+    flutter_native_splash: ^2.4.1
+    sentry_dart_plugin: ^3.2.0
 
-
-
-  # The following section is specific to Flutter packages.
-  flutter:
+# The following section is specific to Flutter packages.
+flutter:
 
     # The following line ensures that the Material Icons font is
     # included with your application, so that you can use the icons in
@@ -127,17 +128,31 @@
     assets:
       - assets/
       - assets/images/
+      - assets/images/icons/
       - assets/translations/
     
 
-  fonts:
-    - family: SourceSansPro
-      fonts:
-        - asset: assets/fonts/SourceSansProRegular.ttf
-        - asset: assets/fonts/SourceSansProSemiBold.ttf
-          weight: 600
+fonts:
+  - family: SourceSansPro
+    fonts:
+      - asset: assets/fonts/SourceSansProRegular.ttf
+      - asset: assets/fonts/SourceSansProSemiBold.ttf
+        weight: 600
 
-  flutter_launcher_icons:
-    android: "launcher_icon"
-    ios: true
-    image_path: "assets/images/Logo.png"
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/Logo.png"
+
+flutter_native_splash:
+  color: "#FFFFFF"
+  image: "assets/images/Logo.png"
+  android: true
+  android_gravity: center
+  fullscreen: true
+
+sentry:
+  upload_debug_symbols: true
+  upload_source_maps: true
+  project: flutter_telemed
+  org: spbstu-49
