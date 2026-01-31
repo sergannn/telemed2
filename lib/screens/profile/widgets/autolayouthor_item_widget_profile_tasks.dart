@@ -57,9 +57,7 @@ class AutolayouthorItemWidgetProfileTasks extends StatelessWidget {
             16.00,
           ),
         ),
-        color: index % 2 == 0
-            ? ColorConstant.fromHex("C8E0FF")
-            : ColorConstant.fromHex("FFFCBB"),
+        color: getCategoryColorLib(item.category),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -88,7 +86,7 @@ class AutolayouthorItemWidgetProfileTasks extends StatelessWidget {
                   ),
                   children: <TextSpan>[
                     TextSpan(
-                      text: '',//item.category ?? '2 записи',
+                      text: '\n'+_getCategoryName(item.category),
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.black,
@@ -109,5 +107,23 @@ class AutolayouthorItemWidgetProfileTasks extends StatelessWidget {
       ),
     ),
     );
+  }
+}
+
+String _getCategoryName(String? category) {
+  switch (category) {
+    case 'Cat1':
+    case 'Приемы':
+      return 'Приемы';
+    case 'Cat2':
+    case 'Лекарства':
+      return 'Лекарства';
+    case 'Cat3':
+    case 'Упражнения':
+      return 'Упражнения';
+    case 'Пусто':
+      return 'Дневник';
+    default:
+      return category ?? 'Запись';
   }
 }

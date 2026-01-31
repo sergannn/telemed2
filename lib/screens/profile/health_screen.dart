@@ -78,7 +78,7 @@ class _HealthScreenState extends State<HealthScreen>
                 icon: Icon(Icons.favorite)),
             Container(
               width: double.infinity,
-              margin: EdgeInsets.symmetric(horizontal: 16),
+             // margin: EdgeInsets.symmetric(horizontal: 16),
               child: _buildTabBar(tabController),
             ),
             Expanded(

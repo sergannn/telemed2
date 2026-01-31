@@ -81,7 +81,7 @@ class _HighPressureScreenState extends State<HighPressureScreen> with SingleTick
             icon: Icon(Icons.favorite),
           ),
           Container(
-            margin: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          //  margin: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             child: _buildTabBar(),
           ),
           Expanded(
@@ -142,7 +142,7 @@ class _HighPressureScreenState extends State<HighPressureScreen> with SingleTick
               child: Text('Видео'),
             ),
           ),
-          Tab(
+      /*    Tab(
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
@@ -150,7 +150,7 @@ class _HighPressureScreenState extends State<HighPressureScreen> with SingleTick
               ),
               child: Text('Обсуждение с врачами'),
             ),
-          ),
+          ),*/
         ],
       ),
     );

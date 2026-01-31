@@ -163,7 +163,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     return Scaffold(
       body: Column(children: [
         TableCalendar(
-          
+          availableCalendarFormats: const { CalendarFormat.month: 'Month',},
           onCalendarCreated: (pageController) {},
           calendarBuilders: CalendarBuilders(
             defaultBuilder: dayBuilder,
@@ -216,22 +216,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
     ).toList();
 
     // Определяем основной цвет фона (первая категория)
+    // Цвета: голубоватый (Приемы), желтоватый (Лекарства), нежно-розовый (Упражнения)
     Color? backgroundColor;
     if (recordsForDay.isNotEmpty) {
-      final firstCategory = recordsForDay.first.category;
-      if (firstCategory == 'Cat1') {
-        backgroundColor = Color(0xFFC8E0FF);
-      } else if (firstCategory == 'Cat2') {
-        backgroundColor = const Color.fromARGB(255, 255, 245, 155);
-      } else if (firstCategory == 'Cat3') {
-        backgroundColor = Color.fromARGB(255, 255, 218, 245);
-      } else if (firstCategory == 'Приемы') {
-        backgroundColor = Color(0xFF90EE90); // Зеленый цвет для ручных записей приемов
-      } else if (firstCategory == 'Предстоящие сеансы') {
-        backgroundColor = Color(0xFF4CAF50); // Темно-зеленый цвет для предстоящих сеансов
-      } else {
-        backgroundColor = Color.fromARGB(255, 255, 255, 255);
-      }
+      backgroundColor = getCategoryColorLib(recordsForDay.first.category);
     } else {
       backgroundColor = Color.fromARGB(255, 255, 255, 255);
     }
@@ -239,32 +227,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
     // Определяем цвета контуров для дополнительных категорий
     List<Color> borderColors = [];
     if (recordsForDay.length >= 2) {
-      final secondCategory = recordsForDay[1].category;
-      if (secondCategory == 'Cat1') {
-        borderColors.add(Color(0xFFC8E0FF));
-      } else if (secondCategory == 'Cat2') {
-        borderColors.add(const Color.fromARGB(255, 255, 245, 155));
-      } else if (secondCategory == 'Cat3') {
-        borderColors.add(Color.fromARGB(255, 255, 218, 245));
-      } else if (secondCategory == 'Приемы') {
-        borderColors.add(Color(0xFF90EE90)); // Зеленый цвет для ручных записей приемов
-      } else if (secondCategory == 'Предстоящие сеансы') {
-        borderColors.add(Color(0xFF4CAF50)); // Темно-зеленый цвет для предстоящих сеансов
-      }
+      borderColors.add(getCategoryColorLib(recordsForDay[1].category));
     }
     if (recordsForDay.length >= 3) {
-      final thirdCategory = recordsForDay[2].category;
-      if (thirdCategory == 'Cat1') {
-        borderColors.add(Color(0xFFC8E0FF));
-      } else if (thirdCategory == 'Cat2') {
-        borderColors.add(const Color.fromARGB(255, 255, 245, 155));
-      } else if (thirdCategory == 'Cat3') {
-        borderColors.add(Color.fromARGB(255, 255, 218, 245));
-      } else if (thirdCategory == 'Приемы') {
-        borderColors.add(Color(0xFF90EE90)); // Зеленый цвет для ручных записей приемов
-      } else if (thirdCategory == 'Предстоящие сеансы') {
-        borderColors.add(Color(0xFF4CAF50)); // Темно-зеленый цвет для предстоящих сеансов
-      }
+      borderColors.add(getCategoryColorLib(recordsForDay[2].category));
     }
 
     return GestureDetector(
@@ -282,8 +248,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
           shape: BoxShape.circle,
           border: borderColors.isNotEmpty 
             ? Border.all(
-                color: borderColors.first, 
-                width: 2.0,
+                color: borderColors[0], 
+                width: 3.0,
               )
             : null,
         ),

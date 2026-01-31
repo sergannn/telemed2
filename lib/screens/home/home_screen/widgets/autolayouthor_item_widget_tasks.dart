@@ -137,16 +137,17 @@ class AutolayouthorItemWidgetTasks extends StatelessWidget {
 }
 
 Color getColor(dynamic record) {
-  if (record.category == 'Cat1' || record.category == 'Приемы') {
-    return Color.fromARGB(255, 138, 234, 205);
-  } else if (record.category == 'Cat2') {
-    return ColorConstant.fromHex("C8E0FF");
-  } else if (record.category == 'Cat3') {
-    return ColorConstant.fromHex("FFFCBB");
+  // Цвета: голубоватый, желтоватый, нежно-розовый
+  if (record.category == 'Cat1' || record.category == 'Приемы' || record.category == 'Предстоящие сеансы') {
+    return ColorConstant.fromHex("C8E0FF"); // голубоватый
+  } else if (record.category == 'Cat2' || record.category == 'Лекарства') {
+    return ColorConstant.fromHex("FFFCBB"); // желтоватый
+  } else if (record.category == 'Cat3' || record.category == 'Упражнения') {
+    return ColorConstant.fromHex("FFD6E0"); // нежно-розовый
   } else if (record.category == 'Пусто') {
-    return ColorConstant.fromHex("FFFCBB");
+    return ColorConstant.fromHex("C8E0FF"); // голубоватый по умолчанию
   } else {
-    return Color.fromARGB(255, 138, 234, 205);
+    return ColorConstant.fromHex("C8E0FF"); // голубоватый по умолчанию
   }
 }
 

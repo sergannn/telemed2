@@ -219,6 +219,30 @@ enum RecordCategory {
   Cat3,
 }
 
+// Цвета категорий (голубоватый, желтоватый, нежно-розовый)
+class CategoryColors {
+  static const Color blue = Color(0xFFC8E0FF);    // Приемы
+  static const Color yellow = Color(0xFFFFFCBB);  // Лекарства
+  static const Color pink = Color(0xFFFFD6E0);    // Упражнения
+}
+
+Color getCategoryColorLib(String? category) {
+  switch (category) {
+    case 'Cat1':
+    case 'Приемы':
+    case 'Предстоящие сеансы':
+      return CategoryColors.blue;
+    case 'Cat2':
+    case 'Лекарства':
+      return CategoryColors.yellow;
+    case 'Cat3':
+    case 'Упражнения':
+      return CategoryColors.pink;
+    default:
+      return CategoryColors.blue;
+  }
+}
+
 enum DeleteRecord {
   all,
   current,

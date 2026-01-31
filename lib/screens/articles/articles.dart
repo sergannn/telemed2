@@ -195,6 +195,7 @@ class _MedCardScreenState extends State<MedCardScreen>
 
           // Третья вкладка - дневник
           TableCalendar(
+            availableCalendarFormats: const { CalendarFormat.month: 'Month',},
             locale: 'ru_RU',
             focusedDay: DateTime.now(),
             firstDay: DateTime.utc(2010, 10, 16),

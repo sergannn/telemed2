@@ -181,7 +181,7 @@ class _EventPageState extends State<EventPage>
         children: [
           _buildReceiptContent(), // Пересоздаем каждый раз
           _buildMedicinesContent(), // Пересоздаем каждый раз
-          _buildExercisesContent(), // Обсуждение с врачами (пока пусто)
+        //  _buildExercisesContent(), // Обсуждение с врачами (пока пусто)
         ],
       ),
     );

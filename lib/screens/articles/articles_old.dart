@@ -195,6 +195,7 @@ class _MedCardScreenState extends State<MedCardScreen>
 
           // Третья вкладка - дневник
           TableCalendar(
+            availableCalendarFormats: const { CalendarFormat.month: 'Month',},
             onCalendarCreated: (controller) {
               // controller.
             },

@@ -20,7 +20,7 @@ import 'package:doctorq/widgets/custom_button.dart';
 import 'package:doctorq/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 
-import 'package:doctorq/screens/appointments/AppointmentsScreen.dart';
+import 'package:doctorq/screens/main_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomButtonWidget extends StatelessWidget {
@@ -457,11 +457,10 @@ context.loaderOverlay.show();
                   snackBar(context, message: 'Ошибка');
                 }
                 Future.delayed(Duration(seconds: 2), () {
-                  Navigator.pop(context);
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => AppointmentsScreen()));
+                  // Возвращаемся на главный экран с нижним меню
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (context) => Main()),
+                      (route) => false);
                 });
               },
             ),
