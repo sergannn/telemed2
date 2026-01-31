@@ -23,6 +23,29 @@ class PopularPatientsScreen extends StatefulWidget {
 class _PopularPatientsScreenState extends State<PopularPatientsScreen> {
   bool _isLoading = true;
   List<Map<String, dynamic>> _patients = [];
+  List<Map<String, dynamic>> _filteredPatients = [];
+  final TextEditingController _searchController = TextEditingController();
+  
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+  
+  void _filterPatients(String query) {
+    setState(() {
+      if (query.isEmpty) {
+        _filteredPatients = _patients;
+      } else {
+        _filteredPatients = _patients.where((patient) {
+          final fullName = (patient['full_name'] ?? '').toLowerCase();
+          final firstName = (patient['first_name'] ?? '').toLowerCase();
+          final searchLower = query.toLowerCase();
+          return fullName.contains(searchLower) || firstName.contains(searchLower);
+        }).toList();
+      }
+    });
+  }
 
   @override
   void initState() {
@@ -47,18 +70,21 @@ class _PopularPatientsScreenState extends State<PopularPatientsScreen> {
         print('Doctors store has ${storeDoctorsStore.doctorsDataList.length} items');
         setState(() {
           _patients = List<Map<String, dynamic>>.from(storeDoctorsStore.doctorsDataList);
+          _filteredPatients = _patients;
           _isLoading = false;
         });
         print('Loaded ${_patients.length} patients');
       } else {
         print('Failed to load patients');
         setState(() {
+          _filteredPatients = [];
           _isLoading = false;
         });
       }
     } else {
       print('No current user or doctor ID');
       setState(() {
+        _filteredPatients = [];
         _isLoading = false;
       });
     }
@@ -99,20 +125,26 @@ class _PopularPatientsScreenState extends State<PopularPatientsScreen> {
                       ),
                       child: Row(
                         children: [
-                          IconButton(
-                            icon: const Icon(Icons.search,
-                                color: Color.fromARGB(255, 131, 131, 131),
-                                size: 24),
-                            onPressed: () => Navigator.pop(context),
-                          ),
-                          const Text(
-                            'Найти пациента',
-                            style: TextStyle(
-                              fontSize: 14,
+                          const Icon(Icons.search,
                               color: Color.fromARGB(255, 131, 131, 131),
+                              size: 24),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: TextField(
+                              controller: _searchController,
+                              onChanged: _filterPatients,
+                              decoration: const InputDecoration(
+                                hintText: 'Найти пациента',
+                                hintStyle: TextStyle(
+                                  fontSize: 14,
+                                  color: Color.fromARGB(255, 131, 131, 131),
+                                ),
+                                border: InputBorder.none,
+                                isDense: true,
+                                contentPadding: EdgeInsets.symmetric(vertical: 8),
+                              ),
                             ),
                           ),
-                          const Spacer(), // раздвигает элементы
                           IconButton(
                             icon: const Icon(Icons.mic,
                                 color: Color.fromARGB(255, 131, 131, 131),
@@ -185,7 +217,7 @@ class _PopularPatientsScreenState extends State<PopularPatientsScreen> {
                                       ),
                                     ),
                                   )
-                                : PatientsSilder(patients: _patients),
+                                : PatientsSilder(patients: _filteredPatients),
                       ],
                     ),
                   ),

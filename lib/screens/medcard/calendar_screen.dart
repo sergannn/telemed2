@@ -158,6 +158,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
     return Scaffold(
       body: Column(children: [
         TableCalendar(
+          availableCalendarFormats: const { CalendarFormat.month: 'Month',},
+          weekNumbersVisible: false,
           onCalendarCreated: (pageController) {},
           calendarBuilders: CalendarBuilders(
             defaultBuilder: dayBuilder,
@@ -209,57 +211,26 @@ class _CalendarScreenState extends State<CalendarScreen> {
     ).toList();
 
     // Определяем основной цвет фона (первая категория)
+    // Цвета: голубоватый (Приемы), желтоватый (Лекарства), нежно-розовый (Упражнения)
     Color? backgroundColor;
     if (recordsForDay.isNotEmpty) {
-      final firstCategory = recordsForDay.first.category;
-      if (firstCategory == 'Cat1') {
-        backgroundColor = Colors.red;
-      } else if (firstCategory == 'Cat2') {
-        backgroundColor = Colors.yellow;
-      } else if (firstCategory == 'Cat3') {
-        backgroundColor = Colors.green;
-      } else if (firstCategory == 'Приемы') {
-        backgroundColor = Color(0xFF90EE90); // Зеленый цвет для ручных записей приемов
-      } else if (firstCategory == 'Предстоящие сеансы') {
-        backgroundColor = Color(0xFF4CAF50); // Темно-зеленый цвет для предстоящих сеансов
-      } else {
-        backgroundColor = Color.fromARGB(255, 255, 255, 255);
-      }
+      
+      backgroundColor = getCategoryColor(recordsForDay.first.category);
     } else {
       backgroundColor = Color.fromARGB(255, 255, 255, 255);
     }
 
     // Определяем цвета контуров для дополнительных категорий
+    
     List<Color> borderColors = [];
     if (recordsForDay.length >= 2) {
-      final secondCategory = recordsForDay[1].category;
-      if (secondCategory == 'Cat1') {
-        borderColors.add(Colors.red);
-      } else if (secondCategory == 'Cat2') {
-        borderColors.add(Colors.yellow);
-      } else if (secondCategory == 'Cat3') {
-        borderColors.add(Colors.green);
-      } else if (secondCategory == 'Приемы') {
-        borderColors.add(Color(0xFF90EE90)); // Зеленый цвет для ручных записей приемов
-      } else if (secondCategory == 'Предстоящие сеансы') {
-        borderColors.add(Color(0xFF4CAF50)); // Темно-зеленый цвет для предстоящих сеансов
-      }
+      borderColors.add(getCategoryColor(recordsForDay[1].category));
     }
     if (recordsForDay.length >= 3) {
-      final thirdCategory = recordsForDay[2].category;
-      if (thirdCategory == 'Cat1') {
-        borderColors.add(Colors.red);
-      } else if (thirdCategory == 'Cat2') {
-        borderColors.add(Colors.yellow);
-      } else if (thirdCategory == 'Cat3') {
-        borderColors.add(Colors.green);
-      } else if (thirdCategory == 'Приемы') {
-        borderColors.add(Color(0xFF90EE90)); // Зеленый цвет для ручных записей приемов
-      } else if (thirdCategory == 'Предстоящие сеансы') {
-        borderColors.add(Color(0xFF4CAF50)); // Темно-зеленый цвет для предстоящих сеансов
-      }
+      borderColors.add(getCategoryColor(recordsForDay[2].category));
     }
-
+    print("its boreders");
+    print(borderColors);
     return GestureDetector(
       onDoubleTap: () {
         if (recordsForDay.isNotEmpty) {
@@ -275,8 +246,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
           shape: BoxShape.circle,
           border: borderColors.isNotEmpty 
             ? Border.all(
-                color: borderColors.first, 
-                width: 2.0,
+                color: borderColors[1], 
+                width: 3.0,
               )
             : null,
         ),
@@ -285,30 +256,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           children: [
             Text('${day.day}', style: selectedTextStyle),
             // Дополнительные контуры
-            if (borderColors.length >= 2)
-              Positioned.fill(
-                child: Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: borderColors[1],
-                      width: 1.5,
-                    ),
-                  ),
-                ),
-              ),
-            if (borderColors.length >= 3)
-              Positioned.fill(
-                child: Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: borderColors[2],
-                      width: 1.0,
-                    ),
-                  ),
-                ),
-              ),
+          
           ],
         ),
       ),

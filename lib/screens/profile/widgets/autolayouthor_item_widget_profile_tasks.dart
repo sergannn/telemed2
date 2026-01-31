@@ -60,9 +60,7 @@ class AutolayouthorItemWidgetProfileTasks extends StatelessWidget {
             16.00,
           ),
         ),
-        color: index % 2 == 0
-            ? ColorConstant.fromHex("C8E0FF")
-            : ColorConstant.fromHex("FFFCBB"),
+        color: getCategoryColor(item.category),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -91,7 +89,7 @@ class AutolayouthorItemWidgetProfileTasks extends StatelessWidget {
                   ),
                   children: <TextSpan>[
                     TextSpan(
-                      text: item.category ?? '2 записи',
+                      text: '\n'+getCategoryName(item.category),
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.black,

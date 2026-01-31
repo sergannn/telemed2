@@ -769,7 +769,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               printLog('Direction $direction'),
                           child: SizedBox(
                             height: getVerticalSize(
-                              200.00,
+                              230.00,
                             ),
                             width: getHorizontalSize(
                               528.00,
@@ -1221,11 +1221,11 @@ class DoctorsSliderHeader extends StatelessWidget {
 
 Widget recommendationsList(List<RecommendationModel> recommendations) {
   return SizedBox(
-    height: getVerticalSize(120.00),
+    height: getVerticalSize(307.00),
     width: getHorizontalSize(528.00),
     child: ListView.separated(
       padding: getPadding(
-        left: 20,
+      //  left: 20,
         right: 20,
         top: 17,
       ),
@@ -1254,7 +1254,7 @@ Widget fourThingsArticles(BuildContext context, List<dynamic> articles) {
     width: getHorizontalSize(528.00),
     child: ListView.separated(
       padding: getPadding(
-        left: 20,
+        //left: 20,
         right: 20,
         top: 17,
       ),
@@ -1285,6 +1285,7 @@ Widget fourThingsArticles(BuildContext context, List<dynamic> articles) {
               );
             },
             child: Container(
+              width: getHorizontalSize(160),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
                 color: Colors.white,
@@ -1301,9 +1302,12 @@ Widget fourThingsArticles(BuildContext context, List<dynamic> articles) {
                 children: [
                   Expanded(
                     child: Container(
-                      width: getHorizontalSize(160),
+                      width: double.infinity,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(16),
+                          topRight: Radius.circular(16),
+                        ),
                         image: imageUrl != null
                             ? DecorationImage(
                                 image: NetworkImage(imageUrl),
@@ -1322,10 +1326,10 @@ Widget fourThingsArticles(BuildContext context, List<dynamic> articles) {
                   ),
                   Padding(
                     padding: getPadding(
-                      left: 16,
+                      left: 12,
                       top: 12,
                       bottom: 16,
-                      right: 16,
+                      right: 12,
                     ),
                     child: Text(
                       title,
@@ -1360,7 +1364,7 @@ class DoctorsSilder extends StatelessWidget {
     return FadeInUp(
       child: SizedBox(
         height: getVerticalSize(
-          266.00,
+          276.00,
         ),
         width: getHorizontalSize(
           512.00,

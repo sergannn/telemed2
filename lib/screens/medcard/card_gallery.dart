@@ -48,8 +48,8 @@ class _MedCardScreenState extends State<MedCardScreen> with SingleTickerProvider
          ...topBack(
                 text: "Статьи",
                 context: context,
-                back: false,
-                icon: Icon(Icons.favorite)),
+                back: false),
+              //  icon: null),//Icon(Icons.favorite)),
                SpecsTabBar(['Документы', 'Анкета', 'Дневник'], tabController),
      
       

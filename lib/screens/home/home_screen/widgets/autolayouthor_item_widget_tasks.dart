@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:doctorq/app_export.dart';
 import 'package:doctorq/data_files/specialist_list.dart';
+import 'package:doctorq/screens/medcard/create_record_page_lib.dart';
 import 'package:doctorq/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:doctorq/screens/appointments/AppointmentsScreen.dart';
@@ -54,9 +55,7 @@ class AutolayouthorItemWidgetTasks extends StatelessWidget {
             16.00,
           ),
         ),
-        color: index % 2 == 0
-            ? ColorConstant.fromHex("C8E0FF")
-            : ColorConstant.fromHex("FFFCBB"),
+        color: getCategoryColor(item['category']),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -94,7 +93,7 @@ class AutolayouthorItemWidgetTasks extends StatelessWidget {
                   ),
                   children: <TextSpan>[
                     TextSpan(
-                      text: item['category'] ?? 'Врач аллерголог',
+                      text: getCategoryName(item['category']),
                       style: TextStyle(
                         fontSize: 10,
                         color: Colors.black,

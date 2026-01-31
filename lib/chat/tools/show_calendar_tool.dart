@@ -178,6 +178,8 @@ class _ShowCalendarToolWidgetState extends State<ShowCalendarToolWidget> {
           mainAxisSize: MainAxisSize.min,
           children: [
             TableCalendar(
+              availableCalendarFormats: const { CalendarFormat.month: 'Month',},
+              weekNumbersVisible: false,
               firstDay: DateTime.utc(2010, 1, 1),
               lastDay: DateTime.utc(2030, 12, 31),
               focusedDay: _focusedDay,

@@ -1,19 +1,10 @@
-import 'dart:math';
-
-import 'package:animate_do/animate_do.dart';
-import 'package:doctorq/data_files/doctors_list.dart';
-import 'package:doctorq/extensions.dart';
-import 'package:doctorq/screens/home/home_screen/widgets/autolayouthor_item_widget.dart';
 import 'package:doctorq/screens/home/top_doctor_screen/top_doctor_screen_step_2.dart';
-import 'package:doctorq/utils/utility.dart';
-import 'package:doctorq/widgets/bkBtn.dart';
-import 'package:doctorq/widgets/custom_search_view.dart';
 import 'package:doctorq/widgets/spacing.dart';
 import 'package:doctorq/widgets/top_back.dart';
-import 'widgets/listfullname3_item_widget.dart';
 import 'package:doctorq/app_export.dart';
 import 'package:flutter/material.dart';
-import 'package:doctorq/services/api_service.dart';
+import 'package:doctorq/stores/appointments_store.dart';
+import 'package:get_it/get_it.dart';
 
 class ChooseSpecsScreen extends StatefulWidget {
   const ChooseSpecsScreen({Key? key,}) : super(key: key);
@@ -22,56 +13,117 @@ class ChooseSpecsScreen extends StatefulWidget {
   State<ChooseSpecsScreen> createState() => _TopDoctorScreenState();
 }
 
-class _TopDoctorScreenState extends State<ChooseSpecsScreen>
-    with SingleTickerProviderStateMixin {
-  TabController? tabController;
+class _TopDoctorScreenState extends State<ChooseSpecsScreen> {
+  List<Map<String, dynamic>> _patientsOnTreatment = [];
+  List<Map<String, dynamic>> _filteredPatients = [];
+  final TextEditingController _searchController = TextEditingController();
+  bool _isLoading = true;
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    // getSpecs();
-    tabController =
-        TabController(length: context.specsData.length, vsync: this);
+    _loadPatientsFromUpcomingAppointments();
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
+    _searchController.dispose();
     super.dispose();
-    tabController!.dispose();
   }
 
-  final List<Color?> _darkBackgroundColors = [
-    Colors.red[800], // Deep Orange
-    Colors.pink[800], // Deep Pink
-    Colors.purple[800], // Deep Purple
-    Colors.indigo[800], // Deep Indigo
-    Colors.blue[800], // Deep Blue
+  void _loadPatientsFromUpcomingAppointments() {
+    try {
+      final AppointmentsStore store = GetIt.instance.get<AppointmentsStore>();
+      final List<Map<dynamic, dynamic>> appointments = store.appointmentsDataList;
+      
+      final DateTime today = DateTime.now();
+      final DateTime todayStart = DateTime(today.year, today.month, today.day);
+      
+      // Собираем уникальных пациентов из upcoming appointments
+      final Map<String, Map<String, dynamic>> uniquePatients = {};
+      
+      for (var appointment in appointments) {
+        // Проверяем дату - берем только upcoming (сегодня или позже)
+        final String dateStr = appointment['date']?.toString() ?? '';
+        if (dateStr.isEmpty) continue;
+        
+        try {
+         // final DateTime appointmentDate = DateTime.parse(dateStr);
+         // if (appointmentDate.isBefore(todayStart)) continue; // Пропускаем прошедшие
+          
+          // Извлекаем данные пациента
+          final patient = appointment['patient'];
+          if (patient == null) continue;
+          
+          String? patientId;
+          String? fullName;
+          String? firstName;
+          String? photo;
+          
+          if (patient is Map) {
+            // Пробуем разные варианты структуры данных
+            patientId = patient['user_id']?.toString() ?? 
+                        patient['id']?.toString() ??
+                        patient['patientUser']?['id']?.toString();
+            fullName = patient['full_name']?.toString() ?? 
+                       patient['username']?.toString() ??
+                       patient['patientUser']?['full_name']?.toString();
+            firstName = patient['first_name']?.toString() ??
+                        patient['patientUser']?['first_name']?.toString();
+            photo = patient['profile_image']?.toString() ?? 
+                    patient['photo']?.toString() ??
+                    patient['patientUser']?['profile_image']?.toString();
+          }
+          
+          if (patientId != null && patientId.isNotEmpty && patientId != 'null') {
+            // Добавляем или обновляем пациента
+            if (!uniquePatients.containsKey(patientId)) {
+              uniquePatients[patientId] = {
+                'id': patientId,
+                'full_name': fullName ?? firstName ?? 'Пациент',
+                'first_name': firstName ?? '',
+                'photo': photo ?? '',
+                'next_appointment': dateStr,
+              };
+            }
+          }
+        } catch (e) {
+          print('Error parsing appointment date: $e');
+        }
+      }
+      
+      setState(() {
+        _patientsOnTreatment = uniquePatients.values.toList();
+        _filteredPatients = _patientsOnTreatment;
+        _isLoading = false;
+      });
+      
+      print('Loaded ${_patientsOnTreatment.length} patients from upcoming appointments');
+    } catch (e) {
+      print('Error loading patients: $e');
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
-    Colors.teal[800], // Deep Teal
-    Colors.green[800], // Deep Green
-    Colors.amber[800], // Deep Amber
-    Colors.orange[800], // Deep Orange
-    Colors.brown[800], // Deep Brown
-    Colors.blueGrey[800], // Deep Blue Grey
-    Colors.grey[800], // Deep Grey
-  ];
-
-  Color? getRandomDarkBackgroundColor() {
-    final random = Random();
-    return _darkBackgroundColors[random.nextInt(_darkBackgroundColors.length)];
+  void _filterPatients(String query) {
+    setState(() {
+      if (query.isEmpty) {
+        _filteredPatients = _patientsOnTreatment;
+      } else {
+        _filteredPatients = _patientsOnTreatment.where((patient) {
+          final fullName = (patient['full_name'] ?? '').toLowerCase();
+          final firstName = (patient['first_name'] ?? '').toLowerCase();
+          return fullName.contains(query.toLowerCase()) || 
+                 firstName.contains(query.toLowerCase());
+        }).toList();
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    print(context.doctorsData[0]);
-    print("its the first doctor");
-    print("of ");
-    print(context.doctorsData.length);
-    print(context.doctorsData);
-    print("and the specs:");
-    print(context.specsData.length);
-
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -83,13 +135,15 @@ class _TopDoctorScreenState extends State<ChooseSpecsScreen>
 
             VerticalSpace(height: 24),
             Container(
-              width: double.infinity, // Makes the container full width
-              margin: EdgeInsets.symmetric(horizontal: 16), // Adds side margins
+              width: double.infinity,
+              margin: EdgeInsets.symmetric(horizontal: 16),
               child: TextField(
+                controller: _searchController,
+                onChanged: _filterPatients,
                 decoration: InputDecoration(
                   contentPadding:
                       EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                  hintText: 'Search...',
+                  hintText: 'Поиск пациента...',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                     borderSide: BorderSide(color: Colors.grey.shade300),
@@ -106,28 +160,44 @@ class _TopDoctorScreenState extends State<ChooseSpecsScreen>
             Padding(
               padding: EdgeInsets.only(left: 16),
               child: Text(
-                'Пациенты на лечении врача',
+                'Пациенты на лечении (${_filteredPatients.length})',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-            specsList(),
-            //Text(context.specsData.length.toString()),
-            //SpecsTabBar(context.specsData, tabController),
-            //CatDoctorsList(context.specsData, tabController,
-            //     MediaQuery.of(context).size.height),
-            // VerticalSpace(height: 24),
+            _buildPatientsList(),
           ],
         ),
       ),
     );
   }
 
-  Widget specsList() {
+  Widget _buildPatientsList() {
+    if (_isLoading) {
+      return Padding(
+        padding: EdgeInsets.all(32),
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
+    
+    if (_filteredPatients.isEmpty) {
+      return Padding(
+        padding: EdgeInsets.all(32),
+        child: Center(
+          child: Text(
+            'Нет пациентов с предстоящими записями',
+            style: TextStyle(
+              color: Colors.grey[600],
+              fontSize: 16,
+            ),
+          ),
+        ),
+      );
+    }
+    
     return SizedBox(
-      // height: getVerticalSize(240),
       child: ListView.builder(
         padding: getPadding(
           left: 20,
@@ -136,22 +206,24 @@ class _TopDoctorScreenState extends State<ChooseSpecsScreen>
         ),
         physics: const BouncingScrollPhysics(),
         shrinkWrap: true,
-        itemCount: 9, // availableTimesList.length,
+        itemCount: _filteredPatients.length,
         itemBuilder: (context, index) {
-          Random random = new Random();
-          int randomNumber = random.nextInt(context.doctorsData.length);
+          final patient = _filteredPatients[index];
           return InkWell(
             onTap: () {
-              print("1");
               Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => const ChooseSpecScreen2()),
               );
-              tabController!.animateTo(index);
             },
             child: Container(
               margin: EdgeInsets.only(bottom: 10),
+              padding: EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(12),
+              ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -162,15 +234,23 @@ class _TopDoctorScreenState extends State<ChooseSpecsScreen>
                     margin: EdgeInsets.only(right: 16),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      //   border: Border.all(color: ColorConstant.blueA400),
                     ),
                     child: ClipOval(
-                      child: Image.network(
-                        // Replace with actual avatar URL
-                        context.doctorsData[randomNumber]['photo'],
-                        // 'https://placehold.co/60x60',
-                        fit: BoxFit.cover,
-                      ),
+                      child: patient['photo'] != null && patient['photo'].isNotEmpty
+                          ? Image.network(
+                              patient['photo'],
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Container(
+                                  color: Colors.blue[100],
+                                  child: Icon(Icons.person, color: Colors.blue),
+                                );
+                              },
+                            )
+                          : Container(
+                              color: Colors.blue[100],
+                              child: Icon(Icons.person, color: Colors.blue),
+                            ),
                     ),
                   ),
 
@@ -180,7 +260,7 @@ class _TopDoctorScreenState extends State<ChooseSpecsScreen>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          context.specsData[index].name,
+                          patient['full_name'] ?? 'Пациент',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
@@ -190,18 +270,14 @@ class _TopDoctorScreenState extends State<ChooseSpecsScreen>
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        /*SizedBox(height: 4),
-                        Text(
-                          'Doctor Description', // Add actual description
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: ColorConstant.blueA400,
-                            fontSize: getFontSize(14),
-                            fontFamily: 'Source Sans Pro',
-                            fontWeight: FontWeight.normal,
+                        if (patient['next_appointment'] != null)
+                          Text(
+                            'прием: ${_formatDate(patient['next_appointment'])}',
+                            style: TextStyle(
+                              color: Colors.grey[600],
+                              fontSize: 12,
+                            ),
                           ),
-                        )*/
                       ],
                     ),
                   ),
@@ -209,7 +285,7 @@ class _TopDoctorScreenState extends State<ChooseSpecsScreen>
                   // Arrow section
                   Icon(
                     Icons.arrow_forward_ios,
-                    size: 24,
+                    size: 20,
                     color: ColorConstant.blueA400,
                   ),
                 ],
@@ -220,73 +296,13 @@ class _TopDoctorScreenState extends State<ChooseSpecsScreen>
       ),
     );
   }
-
-  Widget CatDoctorsList(doctorData, tabController, height) {
-    return SizedBox(
-      height: height,
-
-      ///Media(), //size.height - getVerticalSize(192),
-      child: TabBarView(
-        controller: tabController,
-        children: [
-          ...doctorData.map((spec) => ListView.builder(
-                padding: getPadding(
-                  left: 20,
-                  right: 20,
-                  top: 24,
-                  bottom: 34,
-                ),
-                physics: const BouncingScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: doctorData.length, // doctorList.length,
-                itemBuilder: (context, index) {
-                  if (context.doctorsData[index] != null) {
-                    if (context.doctorsData[index]['specializations']
-                        .map((e) => e['name'])
-                        .toList()
-                        .contains(spec.name)) {
-                      return Listfullname3ItemWidget(index: index);
-                    }
-                  } else {
-                    print(context.doctorsData[index]['specializations']
-                        .map((e) => e['name'])
-                        .toList());
-                    return Container();
-                  }
-                },
-              )),
-        ],
-      ),
-    );
-  }
-
-  Widget SpecsTabBar(specData, tabController) {
-    return TabBar(
-      controller: tabController,
-      tabs: [
-        //  Row(children: [
-        ...specData.map((tab) => Tab(text: tab.name)),
-        //    ]),
-        //   Row(children: [
-        /* Tab(
-                    text: 'Все',
-                  )*/
-      ],
-      isScrollable: true,
-      padding: getPadding(left: 25, right: 25),
-      indicator: BoxDecoration(
-          borderRadius: BorderRadius.circular(50),
-          color: ColorConstant.blueA400),
-      unselectedLabelColor: ColorConstant.blueA400,
-      unselectedLabelStyle: TextStyle(
-          fontSize: getFontSize(16),
-          fontWeight: FontWeight.w600,
-          fontFamily: 'Source Sans Pro'),
-      labelColor: Colors.white,
-      labelStyle: TextStyle(
-          fontSize: getFontSize(16),
-          fontWeight: FontWeight.w600,
-          fontFamily: 'Source Sans Pro'),
-    );
+  
+  String _formatDate(String dateStr) {
+    try {
+      final date = DateTime.parse(dateStr);
+      return '${date.day.toString().padLeft(2, '0')}.${date.month.toString().padLeft(2, '0')}.${date.year}';
+    } catch (e) {
+      return dateStr;
+    }
   }
 }

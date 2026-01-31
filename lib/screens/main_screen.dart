@@ -118,22 +118,19 @@ class Main extends StatelessWidget {
             title: ("Мои статьи"),
             activeColorSecondary: ColorConstant.blueA400,
           )),
-      PersistentTabConfig(
+     PersistentTabConfig(
           screen: _buildScreens()[0],
           item: ItemConfig(
-            icon: FigmaIcon(
-              imagePath: ImageConstant.iconAdd,
-              isActive: true,
-              size: 28,
-              activeColor: const Color.fromARGB(255, 36, 36, 36),
+            icon: Icon(
+              Icons.house_siding_outlined,
+              color: const Color.fromARGB(255, 36, 36, 36),
             ),
             title: ("Главная"),
             activeColorSecondary: ColorConstant.blueA400,
-            inactiveIcon: FigmaIcon(
-              imagePath: ImageConstant.iconAdd,
-              isActive: false,
+            inactiveIcon: Icon(
+              Icons.house_siding_outlined,
               size: 28,
-              inactiveColor: const Color.fromARGB(255, 92, 92, 92),
+              color: const Color.fromARGB(255, 92, 92, 92),
             ),
           )),
       PersistentTabConfig(

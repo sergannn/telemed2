@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:doctorq/app_export.dart';
 import 'package:doctorq/stores/doctors_store.dart';
 import 'package:flutter/material.dart';
@@ -163,14 +164,6 @@ class _AutolayouthorItemWidgetZapisiState
     return 'Медицинский консультант';
   }
 
-  ImageProvider _avatarFor(Map<dynamic, dynamic> doctor) {
-    final photo = doctor['photo'] as String?;
-    if (photo != null && photo.isNotEmpty) {
-      return NetworkImage(photo);
-    }
-    return const AssetImage('assets/images/11.png');
-  }
-
   Widget _buildPlaceholder(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width / 1.4,
@@ -219,7 +212,7 @@ class _AutolayouthorItemWidgetZapisiState
             : ColorConstant.fromHex("FFFCBB"),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 14),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -271,6 +264,17 @@ class _AutolayouthorItemWidgetZapisiState
   Widget _buildHeaderRow(List<Map<dynamic, dynamic>> avatars) {
     final stackWidth =
         avatars.isEmpty ? 40.0 : 40.0 + (avatars.length - 1) * 18.0;
+    
+    // Порядок рендеринга: сначала крайние, потом центральный (чтобы он был поверх)
+    List<int> renderOrder;
+    if (avatars.length >= 3) {
+      renderOrder = [0, 2, 1]; // левый, правый, центральный (сверху)
+    } else if (avatars.length == 2) {
+      renderOrder = [0, 1];
+    } else {
+      renderOrder = avatars.isNotEmpty ? [0] : [];
+    }
+    
     return Row(
       children: [
         SizedBox(
@@ -278,15 +282,42 @@ class _AutolayouthorItemWidgetZapisiState
           width: stackWidth,
           child: Stack(
             clipBehavior: Clip.none,
-            children: avatars.asMap().entries.map((entry) {
-              final index = entry.key;
-              final doctor = entry.value;
+            children: renderOrder.map((index) {
+              final doctor = avatars[index];
+              final isCenter = index == 1 && avatars.length >= 3;
+              final photo = doctor['photo'] as String?;
               return Positioned(
                 left: index * 18.0,
-                child: CircleAvatar(
-                  radius: 20,
-                  backgroundImage: _avatarFor(doctor),
-                  onBackgroundImageError: (_, __) {},
+                child: Opacity(
+                  opacity: isCenter ? 1.0 : 0.5,
+                  child: ClipOval(
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      color: Colors.grey[200],
+                      child: photo != null && photo.isNotEmpty
+                          ? CachedNetworkImage(
+                              imageUrl: photo,
+                              fit: BoxFit.cover,
+                              width: 40,
+                              height: 40,
+                              memCacheWidth: 80,
+                              memCacheHeight: 80,
+                              placeholder: (context, url) => Container(
+                                color: Colors.grey[300],
+                                child: const Icon(Icons.person, size: 20, color: Colors.grey),
+                              ),
+                              errorWidget: (context, url, error) => Image.asset(
+                                'assets/images/11.png',
+                                fit: BoxFit.cover,
+                              ),
+                            )
+                          : Image.asset(
+                              'assets/images/11.png',
+                              fit: BoxFit.cover,
+                            ),
+                    ),
+                  ),
                 ),
               );
             }).toList(),
@@ -315,11 +346,13 @@ class _AutolayouthorItemWidgetZapisiState
     required String reviews,
   }) {
     return Container(
+      
       //height:100,
-      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+   //   padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
       decoration: BoxDecoration(
+      //  color:Colors.red,
 //        color: const Color(0xFFEFF5FF),
-        borderRadius: BorderRadius.circular(20),
+   //     borderRadius: BorderRadius.circular(20),
       ),
       child: Column(
         //crossAxisAlignment: CrossAxisAlignment.start,
@@ -331,27 +364,25 @@ class _AutolayouthorItemWidgetZapisiState
                   icon: Icons.star_rate_rounded,
                   value: rating,
                   label: 'Рейтинг',
-              
+                  iconColor: const Color(0xFFFFBA55), // Желтая звездочка
               ),
 
               _buildStatItem(
                   icon: Icons.school_outlined,
                   value: experience,
                   label: 'Стаж',
-              
               ),
             
- _buildStatItem(
+              _buildStatItem(
                   icon: Icons.people_alt_outlined,
                   value: patients,
                   label: 'Пациенты',
-                ),
+              ),
 
- _buildStatItem(
+              _buildStatItem(
                   icon: Icons.rate_review_outlined,
                   value: reviews,
                   label: 'Отзывы',
-
               ),
                     
         ])]),
@@ -363,53 +394,56 @@ class _AutolayouthorItemWidgetZapisiState
     required IconData icon,
     required String value,
     required String label,
+    Color? iconColor,
   }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(children: [
-          Container(
-            //width: 36,
-            //height: 36,
-            decoration: BoxDecoration(
-        //      color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.9),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 4,
+            offset: const Offset(0, 1),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                icon,
+                size: 16,
+                color: iconColor ?? ColorConstant.blueA400,
+              ),
+              const SizedBox(width: 4),
+              Text(
+                value,
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: Color(0xFF101623),
+                  fontFamily: 'Source Sans Pro',
+                  fontWeight: FontWeight.w600,
                 ),
-              ],
-            ),
-            child: Icon(
-              icon,
-              size: 20,
-              color: ColorConstant.blueA400,
-            ),
+              ),
+            ],
           ),
+          const SizedBox(height: 2),
           Text(
-            value,
-            style: const TextStyle(
-              fontSize: 16,
-              color: Color(0xFF101623),
+            label,
+            style: TextStyle(
+              fontSize: 10,
+              color: ColorConstant.bluegray400,
               fontFamily: 'Source Sans Pro',
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.w500,
             ),
           ),
-        ]),
-        // const SizedBox(width: 12),
-
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 11,
-            color: ColorConstant.bluegray400,
-            fontFamily: 'Source Sans Pro',
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

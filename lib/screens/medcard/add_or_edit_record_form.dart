@@ -191,7 +191,7 @@ class _AddOrEditRecordFormState extends State<AddOrEditRecordForm> {
           ),
           SizedBox(height: 30),
           ElevatedButton(
-            onPressed: widget.event == null ? _createEvent : null,
+            onPressed: _createEvent,
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color.fromARGB(255, 96, 159, 222),
               shape: RoundedRectangleBorder(
