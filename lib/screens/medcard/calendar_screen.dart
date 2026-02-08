@@ -67,20 +67,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
           // Парсим дату сеанса
           String dateStr = appointment['date'] ?? '';
           String fromTime = appointment['from_time'] ?? '';
-          String fromTimeType = appointment['from_time_type'] ?? '';
           
           if (dateStr.isNotEmpty) {
             DateTime appointmentDate = DateTime.parse(dateStr);
             
-            // Создаем время
+            // Показываем время как пришло с бэкенда (уже 24h)
             String timeStr = fromTime;
-            if (fromTimeType == 'PM' && fromTime != '12:00') {
-              // Конвертируем PM время
-              List<String> timeParts = fromTime.split(':');
-              int hour = int.parse(timeParts[0]);
-              if (hour != 12) hour += 12;
-              timeStr = '${hour.toString().padLeft(2, '0')}:${timeParts[1]}';
-            }
             
             // Улучшаем отображение типа приема
             String appointmentType = _getAppointmentTypeDisplay(appointment['description']);
@@ -264,7 +256,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: borderColors[1],
+                      color: borderColors.length >= 2 ? borderColors[1] : backgroundColor,
                       width: 1.5,
                     ),
                   ),
@@ -276,7 +268,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: borderColors[2],
+                      color: borderColors.length >= 3 ? borderColors[2] : backgroundColor,
                       width: 1.0,
                     ),
                   ),
