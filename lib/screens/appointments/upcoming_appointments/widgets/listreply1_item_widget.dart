@@ -406,22 +406,10 @@ class AppointmentListItem extends StatelessWidget {
   }
 
   getAppointmentTime(item) {
-    String fromTime = item['from_time'];
-    String toTime = item['to_time'];
-
-    // Convert to 24-hour format
-    String from24Hour = convertTo24Hour(fromTime, item['from_time_type']);
-    String to24Hour = convertTo24Hour(toTime, item['to_time_type']);
-
-    // Return in Russian format (00-00 - 24-00)
-    return '$from24Hour - $to24Hour';
-    return item['from_time'] +
-        ' ' +
-        item['from_time_type'] +
-        " - " +
-        item['to_time'] +
-        ' ' +
-        item['to_time_type'];
+    // Показываем ровно то, что пришло с бэкенда (уже 24h формат)
+    final from = item['from_time']?.toString() ?? '--:--';
+    final to = item['to_time']?.toString() ?? '--:--';
+    return '$from - $to';
   }
 }
 

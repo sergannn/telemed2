@@ -264,6 +264,12 @@ Future<bool> getAppointmentsD({required String doctorId}) async {
         print("DEBUG: Room data type: ${firstAppointment['room_data']?.runtimeType}");
       }
       
+      // Логирование сырых полей времени с бэкенда (для проверки 28:00 / 72 часа)
+      for (int i = 0; i < appointments.length; i++) {
+        final a = appointments[i];
+        print("DEBUG BACKEND TIME [doctor] appointment id=${a['id']} date=${a['date']} | from_time=${a['from_time']} (${a['from_time']?.runtimeType}) | from_time_type=${a['from_time_type']} | to_time=${a['to_time']} | to_time_type=${a['to_time_type']}");
+      }
+      
       appointments.forEach((appointment) {
         print("DEBUG: Processing appointment: ${appointment['id']}");
         try {
@@ -449,6 +455,12 @@ Future<bool> getAppointments({required String patientId}) async {
     if (result.data != null && result.data!['appointmentsbypatient'] != null) {
       List<dynamic> appointments = result.data!['appointmentsbypatient'];
       print("DEBUG: Found ${appointments.length} appointments");
+      
+      // Логирование сырых полей времени с бэкенда (для проверки 28:00 / 72 часа)
+      for (int i = 0; i < appointments.length; i++) {
+        final a = appointments[i];
+        print("DEBUG BACKEND TIME [patient] appointment id=${a['id']} date=${a['date']} | from_time=${a['from_time']} (${a['from_time']?.runtimeType}) | from_time_type=${a['from_time_type']} | to_time=${a['to_time']} | to_time_type=${a['to_time_type']}");
+      }
       
       appointments.forEach((appointment) {
         AppointmentModel appointmentModel = AppointmentModel.fromJson(appointment);

@@ -30,12 +30,25 @@ class _CalendarScreenState extends State<CalendarScreen> {
     final prefs = await SharedPreferences.getInstance();
     final recordsString = prefs.getString('calendar_records');
     
+    // Печатаем сырые данные из SharedPreferences (для отладки)
+    print('=== SHARED PREFS calendar_records ===');
+    print('raw length: ${recordsString?.length ?? 0}');
+    if (recordsString != null && recordsString.isNotEmpty) {
+      print('raw (first 500 chars): ${recordsString.length > 500 ? recordsString.substring(0, 500) + "..." : recordsString}');
+    } else {
+      print('raw: null или пусто');
+    }
+    
     // Загружаем записи из дневника
     List<CalendarRecordData> diaryRecords = [];
     if (recordsString != null) {
       try {
         final List<dynamic> jsonList = jsonDecode(recordsString);
         diaryRecords = jsonList.map((item) => CalendarRecordData.fromJson(item)).toList();
+        print('Дневник: загружено ${diaryRecords.length} записей из prefs');
+        for (var r in diaryRecords) {
+          print('  ${r.date.toString().substring(0, 10)} | ${r.category} | ${r.title}');
+        }
       } catch (e) {
         print('Error decoding calendar records: $e');
       }
@@ -50,6 +63,32 @@ class _CalendarScreenState extends State<CalendarScreen> {
     setState(() {
       printLog('_calendarRecords after load: ${_calendarRecords.map((e) => e.toJson()).toList()}');
     });
+    
+    // Итог по датам (события на каждую дату)
+    final byDate = <String, List<CalendarRecordData>>{};
+    for (var r in _calendarRecords) {
+      final key = r.date.toString().substring(0, 10);
+      byDate.putIfAbsent(key, () => []).add(r);
+    }
+    print('=== СОБЫТИЯ ПО ДАТАМ (дневник) ===');
+    final sortedDates = byDate.keys.toList()..sort();
+    for (var d in sortedDates) {
+      print('$d: ${byDate[d]!.length} заметок — ${byDate[d]!.map((e) => e.title).join("; ")}');
+    }
+    // Вторник 3 февраля (текущий и следующий год)
+    final feb3Keys = ['2025-02-03', '2026-02-03'];
+    for (var key in feb3Keys) {
+      if (byDate.containsKey(key)) {
+        final list = byDate[key]!;
+        print('>>> ВТОРНИК 3 ФЕВРАЛЯ ($key): ${list.length} заметок');
+        for (var i = 0; i < list.length; i++) {
+          print('    ${i + 1}. [${list[i].category}] ${list[i].title}');
+        }
+      } else {
+        print('>>> ВТОРНИК 3 ФЕВРАЛЯ ($key): 0 заметок');
+      }
+    }
+    print('===================================');
   }
   
   Future<void> _loadAppointmentsToCalendar() async {
@@ -65,20 +104,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
           // Парсим дату сеанса
           String dateStr = appointment['date'] ?? '';
           String fromTime = appointment['from_time'] ?? '';
-          String fromTimeType = appointment['from_time_type'] ?? '';
           
           if (dateStr.isNotEmpty) {
             DateTime appointmentDate = DateTime.parse(dateStr);
             
-            // Создаем время
+            // Показываем время как пришло с бэкенда (уже 24h)
             String timeStr = fromTime;
-            if (fromTimeType == 'PM' && fromTime != '12:00') {
-              // Конвертируем PM время
-              List<String> timeParts = fromTime.split(':');
-              int hour = int.parse(timeParts[0]);
-              if (hour != 12) hour += 12;
-              timeStr = '${hour.toString().padLeft(2, '0')}:${timeParts[1]}';
-            }
             
             // Улучшаем отображение типа приема
             String appointmentType = _getAppointmentTypeDisplay(appointment['description']);
@@ -246,7 +277,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           shape: BoxShape.circle,
           border: borderColors.isNotEmpty 
             ? Border.all(
-                color: borderColors[1], 
+                color: borderColors.length >= 2 ? borderColors[1] : backgroundColor,
                 width: 3.0,
               )
             : null,

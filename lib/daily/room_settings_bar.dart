@@ -18,6 +18,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:doctorq/utils/utility.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
+import 'package:doctorq/test_daily_connection.dart';
 
 class OnlineController extends GetxController {
   var cats = [].obs; // Reactive list to store fetched items
@@ -94,6 +95,8 @@ class _RoomSettingsBarState extends State<RoomSettingsBar> {
   })();*/
   String? _token;
   final OnlineController onlineController = Get.put(OnlineController());
+  int _joinAttempt = 0;
+  static const int _maxJoinAttempts = 3;
 
   // Методы для определения статуса подключения
   Color _getStatusColor(CallState callState) {
@@ -312,6 +315,13 @@ class _RoomSettingsBarState extends State<RoomSettingsBar> {
     print("Room URL starts with https: ${widget.room.startsWith('https://')}");
     print("Is test room: ${widget.room.contains('lFxg9A2Hi3PLrMdYKF81')}");
     
+    // === ЗАПУСК ДИАГНОСТИКИ ПЕРЕД ПОДКЛЮЧЕНИЕМ ===
+    if (canJoin) {
+      print("\n=== RUNNING PRE-JOIN DIAGNOSTICS ===");
+      await DailyConnectionTest.runAllTests();
+      print("=== DIAGNOSTICS COMPLETE ===\n");
+    }
+    
     // Проверяем истечение комнаты перед подключением
     if (canJoin) {
       var appointment = context.selectedAppointment;
@@ -385,20 +395,67 @@ class _RoomSettingsBarState extends State<RoomSettingsBar> {
         print("=== ATTEMPTING TO JOIN ROOM ===");
         print("Room URL: ${widget.room}");
         print("Token: $_token");
+        print("Attempt: ${_joinAttempt + 1}/$_maxJoinAttempts");
         
-        try {
-          if (_token != null && _token!.isNotEmpty) {
-            print("Joining with token: $_token");
-            await widget.client.join(url: Uri.parse(widget.room), token: _token);
-          } else {
-            print("Joining without token (test room)");
-            await widget.client.join(url: Uri.parse(widget.room));
+        // Retry logic with exponential backoff
+        bool joined = false;
+        Exception? lastError;
+        
+        while (!joined && _joinAttempt < _maxJoinAttempts) {
+          try {
+            _joinAttempt++;
+            print("=== JOIN ATTEMPT $_joinAttempt ===");
+            
+            if (_token != null && _token!.isNotEmpty) {
+              print("Joining with token: $_token");
+              await widget.client.join(url: Uri.parse(widget.room), token: _token);
+            } else {
+              print("Joining without token (test room)");
+              await widget.client.join(url: Uri.parse(widget.room));
+            }
+            
+            joined = true;
+            _joinAttempt = 0; // Reset for next time
+            print("=== JOIN COMMAND COMPLETED ===");
+            
+          } catch (joinError) {
+            print("=== JOIN ATTEMPT $_joinAttempt FAILED ===");
+            print("Join error: $joinError");
+            lastError = joinError is Exception ? joinError : Exception(joinError.toString());
+            
+            // Check if it's a timeout/transport error - worth retrying
+            final errorStr = joinError.toString().toLowerCase();
+            final isRetryable = errorStr.contains('timeout') || 
+                               errorStr.contains('transport') ||
+                               errorStr.contains('canceled') ||
+                               errorStr.contains('mediasoup');
+            
+            if (isRetryable && _joinAttempt < _maxJoinAttempts) {
+              final delay = Duration(seconds: _joinAttempt * 2); // 2s, 4s, 6s
+              print("Retryable error. Waiting ${delay.inSeconds}s before retry...");
+              
+              if (mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Попытка $_joinAttempt/$_maxJoinAttempts не удалась. Повторяю через ${delay.inSeconds}с...'),
+                    backgroundColor: Colors.orange,
+                    duration: delay,
+                  ),
+                );
+              }
+              
+              await Future.delayed(delay);
+            } else {
+              // Non-retryable error or max attempts reached
+              _joinAttempt = 0;
+              rethrow;
+            }
           }
-          print("=== JOIN COMMAND COMPLETED ===");
-        } catch (joinError) {
-          print("=== JOIN COMMAND FAILED ===");
-          print("Join error: $joinError");
-          rethrow; // Перебрасываем ошибку для обработки в catch блоке
+        }
+        
+        if (!joined && lastError != null) {
+          _joinAttempt = 0;
+          throw lastError;
         }
       } else {
         print("User requested LEAVE - disconnecting from room");
@@ -429,17 +486,15 @@ class _RoomSettingsBarState extends State<RoomSettingsBar> {
       print("Error details: $trace");
       print("Call state: ${widget.client.callState}");
       
+      final errorStr = error.toString().toLowerCase();
+      final isTimeoutError = errorStr.contains('timeout') || errorStr.contains('transport') || errorStr.contains('mediasoup');
+      
       // Если это ошибка подключения к основной комнате, предлагаем тестовую
       if (canJoin && !widget.room.contains('lFxg9A2Hi3PLrMdYKF81')) {
         print("=== SUGGESTING TEST ROOM ===");
         _showRoomUnavailableDialog(context, error.toString());
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Ошибка подключения: $error'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        _showConnectionErrorDialog(context, error.toString(), isTimeoutError);
       }
       logger.severe(
           'Failed to ${canJoin ? 'join' : 'leave'} call', error, trace);
@@ -450,13 +505,116 @@ class _RoomSettingsBarState extends State<RoomSettingsBar> {
       print("Token: $_token");
       print("Call state: ${widget.client.callState}");
       
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Неожиданная ошибка: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      final errorStr = e.toString().toLowerCase();
+      final isTimeoutError = errorStr.contains('timeout') || errorStr.contains('transport') || errorStr.contains('mediasoup');
+      
+      _showConnectionErrorDialog(context, e.toString(), isTimeoutError);
     }
+  }
+  
+  void _showConnectionErrorDialog(BuildContext context, String error, bool isNetworkError) {
+    showDialog(
+      context: context,
+      builder: (BuildContext ctx) {
+        return AlertDialog(
+          title: Row(
+            children: [
+              Icon(
+                isNetworkError ? Icons.wifi_off : Icons.error,
+                color: Colors.red,
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  isNetworkError ? 'Проблема с сетью' : 'Ошибка подключения',
+                  style: const TextStyle(fontSize: 18),
+                ),
+              ),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (isNetworkError) ...[
+                  const Text(
+                    'Не удалось установить WebRTC соединение.\n\nВозможные причины:',
+                    style: TextStyle(fontWeight: FontWeight.w500),
+                  ),
+                  const SizedBox(height: 12),
+                  _buildBulletPoint('Нестабильное интернет-соединение'),
+                  _buildBulletPoint('Firewall блокирует порты UDP'),
+                  _buildBulletPoint('VPN мешает соединению'),
+                  _buildBulletPoint('Слишком высокая задержка сети'),
+                  const SizedBox(height: 12),
+                  const Text(
+                    'Рекомендации:',
+                    style: TextStyle(fontWeight: FontWeight.w500),
+                  ),
+                  const SizedBox(height: 8),
+                  _buildBulletPoint('Переключитесь между Wi-Fi и мобильными данными'),
+                  _buildBulletPoint('Отключите VPN (если используете)'),
+                  _buildBulletPoint('Подойдите ближе к роутеру'),
+                  _buildBulletPoint('Запустите диагностику подключения'),
+                ] else ...[
+                  Text(
+                    'Ошибка: $error',
+                    style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                  ),
+                ],
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(ctx).pop(),
+              child: const Text('Закрыть'),
+            ),
+            if (isNetworkError)
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(ctx).pop();
+                  _openDiagnostics(context);
+                },
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+                child: const Text('Диагностика', style: TextStyle(color: Colors.white)),
+              ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(ctx).pop();
+                serJoin(true); // Retry
+              },
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+              child: const Text('Повторить', style: TextStyle(color: Colors.white)),
+            ),
+          ],
+        );
+      },
+    );
+  }
+  
+  Widget _buildBulletPoint(String text) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 8, bottom: 4),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('• ', style: TextStyle(fontSize: 14)),
+          Expanded(child: Text(text, style: const TextStyle(fontSize: 14))),
+        ],
+      ),
+    );
+  }
+  
+  void _openDiagnostics(BuildContext context) {
+    // Импортируем и открываем экран диагностики
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => const _DiagnosticsPlaceholder(),
+      ),
+    );
   }
 
   @override
@@ -651,6 +809,65 @@ class _RoomSettingsBarState extends State<RoomSettingsBar> {
             ),
             const SizedBox(width: 4),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+// Простой placeholder для диагностики - замените на DailyConnectionTestScreen
+class _DiagnosticsPlaceholder extends StatelessWidget {
+  const _DiagnosticsPlaceholder();
+  
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Диагностика Daily.co'),
+        backgroundColor: Colors.blueGrey,
+      ),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.network_check, size: 64, color: Colors.blue),
+              const SizedBox(height: 24),
+              const Text(
+                'Диагностика подключения',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'Для полной диагностики используйте:\nDailyConnectionTestScreen',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.grey),
+              ),
+              const SizedBox(height: 24),
+              const Card(
+                child: Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Проверьте:', style: TextStyle(fontWeight: FontWeight.bold)),
+                      SizedBox(height: 8),
+                      Text('• Интернет-соединение'),
+                      Text('• Wi-Fi сигнал'),
+                      Text('• VPN отключен'),
+                      Text('• Firewall настройки'),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Назад'),
+              ),
+            ],
+          ),
         ),
       ),
     );

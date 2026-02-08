@@ -122,20 +122,12 @@ class ItemController extends GetxController {
           // Парсим дату сеанса
           String dateStr = appointment['date'] ?? '';
           String fromTime = appointment['from_time'] ?? '';
-          String fromTimeType = appointment['from_time_type'] ?? '';
           
           if (dateStr.isNotEmpty) {
             DateTime appointmentDate = DateTime.parse(dateStr);
             
-            // Создаем время
+            // Показываем время как пришло с бэкенда (уже 24h)
             String timeStr = fromTime;
-            if (fromTimeType == 'PM' && fromTime != '12:00') {
-              // Конвертируем PM время
-              List<String> timeParts = fromTime.split(':');
-              int hour = int.parse(timeParts[0]);
-              if (hour != 12) hour += 12;
-              timeStr = '${hour.toString().padLeft(2, '0')}:${timeParts[1]}';
-            }
 
             final counterpartName = _extractCounterpartName(appointment, isDoctor);
             final contactLabel = _mapContactMethodToLabel(appointment['description']);
