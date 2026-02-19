@@ -18,6 +18,7 @@ class AddOrEditRecordForm extends StatefulWidget {
 class _AddOrEditRecordFormState extends State<AddOrEditRecordForm> {
   late DateTime _startDate = DateTime.now().withoutTime;
   late DateTime _endDate = DateTime.now().withoutTime;
+  late TimeOfDay _selectedTime = TimeOfDay.now();
   String? _selectedCategory = 'Cat1';
   final _form = GlobalKey<FormState>();
   late final _descriptionController = TextEditingController();
@@ -98,6 +99,32 @@ class _AddOrEditRecordFormState extends State<AddOrEditRecordForm> {
                   onSave: (date) => _startDate = date ?? _startDate,
                 ),
               ),
+              SizedBox(width: 12),
+              Expanded(
+                child: GestureDetector(
+                  onTap: () async {
+                    final time = await showTimePicker(
+                      context: context,
+                      initialTime: _selectedTime,
+                    );
+                    if (time != null && mounted) {
+                      setState(() => _selectedTime = time);
+                    }
+                  },
+                  child: InputDecorator(
+                    decoration: AppConstants.inputDecoration.copyWith(
+                      labelText: "Время записи",
+                    ),
+                    child: Text(
+                      '${_selectedTime.hour.toString().padLeft(2, '0')}:${_selectedTime.minute.toString().padLeft(2, '0')}',
+                      style: TextStyle(
+                        color: AppColors.black,
+                        fontSize: 17.0,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
           SizedBox(height: 15),
@@ -144,6 +171,15 @@ class _AddOrEditRecordFormState extends State<AddOrEditRecordForm> {
                   setState(() => _selectedCategory = value);
                 },
               ),
+              Container(
+                width: 12,
+                height: 12,
+                margin: const EdgeInsets.only(right: 8),
+                decoration: BoxDecoration(
+                  color: getCategoryColor('Cat1'),
+                  shape: BoxShape.circle,
+                ),
+              ),
               Text(
                 getCategoryName('Cat1'),
                 style: TextStyle(
@@ -162,6 +198,15 @@ class _AddOrEditRecordFormState extends State<AddOrEditRecordForm> {
                   setState(() => _selectedCategory = value);
                 },
               ),
+              Container(
+                width: 12,
+                height: 12,
+                margin: const EdgeInsets.only(right: 8),
+                decoration: BoxDecoration(
+                  color: getCategoryColor('Cat2'),
+                  shape: BoxShape.circle,
+                ),
+              ),
               Text(
                 getCategoryName('Cat2'),
                 style: TextStyle(
@@ -179,6 +224,15 @@ class _AddOrEditRecordFormState extends State<AddOrEditRecordForm> {
                 onChanged: (value) {
                   setState(() => _selectedCategory = value);
                 },
+              ),
+              Container(
+                width: 12,
+                height: 12,
+                margin: const EdgeInsets.only(right: 8),
+                decoration: BoxDecoration(
+                  color: getCategoryColor('Cat3'),
+                  shape: BoxShape.circle,
+                ),
               ),
               Text(
                 getCategoryName('Cat3'),
@@ -217,8 +271,15 @@ class _AddOrEditRecordFormState extends State<AddOrEditRecordForm> {
     if (!(_form.currentState?.validate() ?? true)) return;
     _form.currentState?.save();
 
+    final dateWithTime = DateTime(
+      _startDate.year,
+      _startDate.month,
+      _startDate.day,
+      _selectedTime.hour,
+      _selectedTime.minute,
+    );
     final event = CalendarRecordData(
-      date: _startDate,
+      date: dateWithTime,
       title: _titleController.text.trim(),
       description: _descriptionController.text.trim(),
       category: _selectedCategory,
@@ -232,16 +293,18 @@ class _AddOrEditRecordFormState extends State<AddOrEditRecordForm> {
       return;
     }
     final event = widget.event!;
-    _startDate = event.date;
+    _startDate = event.date.withoutTime;
+    _selectedTime = TimeOfDay(hour: event.date.hour, minute: event.date.minute);
     _titleController.text = event.title;
     _selectedCategory = event.category ?? 'Cat1';
     _descriptionController.text = event.description ?? '';
   }
 
-  void _resetForm() {
+  void     _resetForm() {
     _form.currentState?.reset();
     _startDate = DateTime.now().withoutTime;
     _endDate = DateTime.now().withoutTime;
+    _selectedTime = TimeOfDay.now();
     _selectedCategory = 'Cat1';
     if (mounted) {
       setState(() {});

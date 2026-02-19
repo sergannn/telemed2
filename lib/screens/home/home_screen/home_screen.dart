@@ -49,24 +49,95 @@ class ItemController extends GetxController {
   var recommendations = <RecommendationModel>[].obs; // Reactive list for recommendations
   var filteredRecords = <CalendarRecordData>[].obs;
 
+  DateTime _selectedDate = DateTime.now();
+
   void filterRecordsByDate(DateTime date) {
-    filteredRecords.value = _calendarRecords.where((record) {
+    _selectedDate = date;
+    debugPrint('>>> DELETE filterRecordsByDate: date=$date, _calendarRecords.length=${_calendarRecords.length}');
+    final list = _calendarRecords.where((record) {
       return record.date.year == date.year &&
           record.date.month == date.month &&
           record.date.day == date.day;
     }).toList();
+    debugPrint('>>> DELETE filterRecordsByDate: list.length=${list.length} for date');
+    filteredRecords.assignAll(list);
     if (filteredRecords.isEmpty) {
       filteredRecords.add(CalendarRecordData(
           date: date,
-          title: "На этот день заметки отсутствуют",
+          title: kEmptyDayPlaceholderTitle,
           category: ""));
     }
+    debugPrint('>>> DELETE filterRecordsByDate: filteredRecords.length=${filteredRecords.length} after assign');
+    filteredRecords.refresh();
+    update();
   }
 
   var _calendarRecords = <CalendarRecordData>[].obs;
+
+  Future<void> _saveCalendarRecords() async {
+    final prefs = await SharedPreferences.getInstance();
+    final recordsString = jsonEncode(_calendarRecords.map((r) => r.toJson()).toList());
+    await prefs.setString('calendar_records', recordsString);
+  }
+
+  /// После добавления/редактирования: при обновлении удаляем старую запись, затем всегда добавляем текущую (новую или изменённую).
+  Future<void> addOrUpdateRecordFromCreate(CalendarRecordData record, {CalendarRecordData? oldRecord}) async {
+    if (oldRecord != null) {
+      final before = _calendarRecords.length;
+      _calendarRecords.removeWhere((r) => identical(r, oldRecord));
+      if (_calendarRecords.length == before) {
+        _calendarRecords.removeWhere((r) =>
+            r.date.compareWithoutTime(oldRecord.date) == 0 &&
+            r.title == oldRecord.title &&
+            (r.category ?? '') == (oldRecord.category ?? ''));
+      }
+    }
+    _calendarRecords.add(record);
+    _calendarRecords.refresh();
+    await _saveCalendarRecords();
+    filterRecordsByDate(_selectedDate);
+  }
+
+  /// Удалить запись (по долгому нажатию). Приёмы не удаляются (isAppointmentCategory из create_record_page_lib).
+  Future<void> deleteRecord(CalendarRecordData record) async {
+    debugPrint('>>> DELETE deleteRecord CALLED: "${record.title}" date=${record.date} category=${record.category}');
+    if (isAppointmentCategory(record.category)) {
+      debugPrint('>>> DELETE deleteRecord: SKIP (appointment)');
+      return;
+    }
+    final beforeCount = _calendarRecords.length;
+    // Сначала по ссылке (item из filteredRecords — тот же объект из _calendarRecords)
+    int removed = _calendarRecords.where((r) => identical(r, record)).length;
+    if (removed > 0) {
+      _calendarRecords.removeWhere((r) => identical(r, record));
+    } else {
+      _calendarRecords.removeWhere((r) =>
+          !isAppointmentCategory(r.category) &&
+          r.date.compareWithoutTime(record.date) == 0 &&
+          r.title == record.title &&
+          (r.category ?? '') == (record.category ?? ''));
+    }
+    final afterCount = _calendarRecords.length;
+    debugPrint('>>> DELETE deleteRecord: _calendarRecords $beforeCount -> $afterCount (removed ${beforeCount - afterCount}, byRef=$removed)');
+    _calendarRecords.refresh();
+    await _saveCalendarRecords();
+    debugPrint('>>> DELETE deleteRecord: calling filterRecordsByDate($_selectedDate)');
+    filterRecordsByDate(_selectedDate);
+    debugPrint('>>> DELETE deleteRecord: DONE filteredRecords.length=${filteredRecords.length}');
+    filteredRecords.refresh();
+    update();
+  }
   
   // Геттер для доступа к записям календаря
   List<CalendarRecordData> get calendarRecords => _calendarRecords;
+
+  /// Перезагрузить записи из дневника и обновить список по текущей дате (после возврата из дневника).
+  Future<void> refreshCalendarAndFilter() async {
+    await Future.delayed(const Duration(milliseconds: 150));
+    await _loadCalendarRecords();
+    filterRecordsByDate(_selectedDate);
+  }
+
   final storyItems = <StoryItem>[].obs;
   @override
   void onInit() {
@@ -100,8 +171,9 @@ class ItemController extends GetxController {
       ...diaryRecords,
       ...appointmentRecords,
     ]);
-    
-    // Initialize with today's records
+    _calendarRecords.refresh();
+
+    // Initialize with today's records (при вызове из refreshCalendarAndFilter фильтр по _selectedDate сделает вызывающий код)
     filterRecordsByDate(DateTime.now());
   }
 
@@ -651,6 +723,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             //  child: NotificationListener<ScrollNotification>(
 
                             child: ListView.separated(
+                              key: ValueKey('tasks_${itemController.filteredRecords.length}'),
                               padding: getPadding(
                                 left: 20,
                                 right: 20,
@@ -664,8 +737,13 @@ class _HomeScreenState extends State<HomeScreen> {
                               },
                               itemBuilder: (context, index) {
                                 return AutolayouthorItemWidgetTasks(
-                                  item: itemController.filteredRecords[index].toJson(),
+                                  item: itemController.filteredRecords[index],
                                   index: index,
+                                  onRecordSaved: (record, {oldRecord}) =>
+                                      itemController.addOrUpdateRecordFromCreate(record, oldRecord: oldRecord),
+                                  onRecordDelete: (record) =>
+                                      itemController.deleteRecord(record),
+                                  onReturnFromDiary: () => itemController.refreshCalendarAndFilter(),
                                 );
                               },
                             ),

@@ -219,6 +219,9 @@ enum RecordCategory {
   Cat3,
 }
 
+// Заголовок-заглушка для дня без записей (тап открывает создание, а не редактирование)
+const String kEmptyDayPlaceholderTitle = 'На этот день заметки отсутствуют';
+
 // Цвета категорий (голубоватый, желтоватый, нежно-розовый)
 class CategoryColors {
   static const Color blue = Color(0xFFC8E0FF);    // Приемы
@@ -244,6 +247,12 @@ String getCategoryName(String? category) {
       return category ?? 'Запись';
   }
 }
+
+/// Категории, которые считаются приёмами (то же, что даёт синий цвет в getCategoryColor).
+const Set<String> _appointmentCategoryIds = {'Cat1', 'Приемы', 'Предстоящие сеансы'};
+
+bool isAppointmentCategory(String? category) =>
+    category != null && _appointmentCategoryIds.contains(category);
 
 Color getCategoryColor(String? category) {
   switch (category) {

@@ -204,7 +204,7 @@ class _AutolayouthorItemWidgetZapisiState
     final specialization = _doctorSpecialization(doctor);
 
     return Container(
-      width: MediaQuery.of(context).size.width / 1.4,
+      width: MediaQuery.of(context).size.width / 1.3,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(getHorizontalSize(16.0)),
         color: widget.index % 2 == 0

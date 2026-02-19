@@ -23,11 +23,14 @@
 		<key>CFBundleSignature</key>
 		<string>????</string>
 		<key>CFBundleVersion</key>
-		<string>9</string>
+		<string>14</string>
 		<key>LSRequiresIPhoneOS</key>
 		<true/>
 		<key>NSAppTransportSecurity</key>
-		<string>need video...</string>
+		<dict>
+			<key>NSAllowsArbitraryLoads</key>
+			<true/>
+		</dict>
 		<key>NSCameraUsageDescription</key>
 		<string>Приложению требуется доступ к камере для проведения видеоконсультаций с врачами</string>
 		<key>NSMicrophoneUsageDescription</key>
