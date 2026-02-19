@@ -226,6 +226,31 @@ class CategoryColors {
   static const Color pink = Color(0xFFFFD6E0);    // Упражнения
 }
 
+String getCategoryName(String? category) {
+  switch (category) {
+    case 'Cat1':
+      return 'Приемы';
+    case 'Cat2':
+      return 'Лекарства';
+    case 'Cat3':
+      return 'Упражнения';
+    case 'Приемы':
+      return 'Приемы';
+    case 'Лекарства':
+      return 'Лекарства';
+    case 'Упражнения':
+      return 'Упражнения';
+    default:
+      return category ?? 'Запись';
+  }
+}
+
+/// Категории приёмов (то же, что даёт синий цвет в getCategoryColorLib).
+const Set<String> _appointmentCategoryIds = {'Cat1', 'Приемы', 'Предстоящие сеансы'};
+
+bool isAppointmentCategory(String? category) =>
+    category != null && _appointmentCategoryIds.contains(category);
+
 Color getCategoryColorLib(String? category) {
   switch (category) {
     case 'Cat1':

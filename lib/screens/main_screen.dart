@@ -11,6 +11,7 @@ import 'package:doctorq/theme/image_constant.dart';
 import 'package:doctorq/theme/svg_constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 
 // Виджет для отображения иконок из Figma с поддержкой активного/неактивного состояния
 class FigmaIcon extends StatelessWidget {
@@ -63,7 +64,14 @@ class FigmaIcon extends StatelessWidget {
 }
 
 // ignore: must_be_immutable
-class Main extends StatelessWidget {
+class Main extends StatefulWidget {
+  Main({Key? key}) : super(key: key);
+
+  @override
+  State<Main> createState() => _MainState();
+}
+
+class _MainState extends State<Main> {
   List<Widget> _buildScreens() {
     return [
       HomeScreen(),
@@ -299,7 +307,26 @@ class Main extends StatelessWidget {
   final PersistentTabController _controller =
       PersistentTabController(initialIndex: 2);
 
-  Main({Key? key}) : super(key: key);
+  @override
+  void initState() {
+    super.initState();
+    _controller.addListener(_onTabIndexChanged);
+  }
+
+  @override
+  void dispose() {
+    _controller.removeListener(_onTabIndexChanged);
+    super.dispose();
+  }
+
+  void _onTabIndexChanged() {
+    final index = _controller.index;
+    if (index == 2 || index == 4) {
+      try {
+        Get.find<ItemController>().refreshCalendarAndFilter();
+      } catch (_) {}
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

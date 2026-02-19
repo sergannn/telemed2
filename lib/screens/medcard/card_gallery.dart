@@ -15,7 +15,10 @@ import 'package:http/http.dart' as http;
 import 'package:table_calendar/table_calendar.dart';
 
 class MedCardScreen extends StatefulWidget {
-  const MedCardScreen({Key? key}) : super(key: key);
+  /// Начальная вкладка: 0 — Документы, 1 — Анкета, 2 — Дневник.
+  final int initialTabIndex;
+
+  const MedCardScreen({Key? key, this.initialTabIndex = 0}) : super(key: key);
 
   @override
   State<MedCardScreen> createState() => _MedCardScreenState();
@@ -26,10 +29,9 @@ class _MedCardScreenState extends State<MedCardScreen> with SingleTickerProvider
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    // getSpecs();
-    tabController = TabController(length: 3, vsync: this);
+    final initialIndex = widget.initialTabIndex.clamp(0, 2);
+    tabController = TabController(length: 3, vsync: this, initialIndex: initialIndex);
   }
 
   @override

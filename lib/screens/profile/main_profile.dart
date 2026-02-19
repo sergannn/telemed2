@@ -270,6 +270,7 @@ class _MainProfileScreenState extends State<MainProfileScreen> {
                             //  child: NotificationListener<ScrollNotification>(
 
                             child: ListView.separated(
+                              key: ValueKey('profile_tasks_${itemController.filteredRecords.length}'),
                               padding: getPadding(
                                 left: 20,
                                 right: 20,
@@ -288,6 +289,11 @@ class _MainProfileScreenState extends State<MainProfileScreen> {
                                 return AutolayouthorItemWidgetProfileTasks(
                                   item: cats[index],
                                   index: index,
+                                  onRecordSaved: (record, {oldRecord}) =>
+                                      itemController.addOrUpdateRecordFromCreate(record, oldRecord: oldRecord),
+                                  onRecordDelete: (record) =>
+                                      itemController.deleteRecord(record),
+                                  onReturnFromDiary: () => itemController.refreshCalendarAndFilter(),
                                 );
                               },
                             ),

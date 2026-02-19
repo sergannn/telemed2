@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:doctorq/screens/medcard/full_screen_image_viewer.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -33,28 +34,34 @@ class _DocumentsGalleryState extends State<DocumentsGallery> {
 
   Future<void> _deleteImage(int index) async {
     final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _folderImages[_selectedFolder]!.removeAt(index);
-      prefs.setStringList(_selectedFolder, _folderImages[_selectedFolder]!);
-      _selectedImageIndex = null; // Reset selection after deletion
-    });
+    _folderImages[_selectedFolder]!.removeAt(index);
+    await prefs.setStringList(_selectedFolder, _folderImages[_selectedFolder]!);
+    if (mounted) {
+      setState(() {
+        _selectedImageIndex = null;
+      });
+    }
   }
 
   Future<void> _loadData() async {
     final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      // Load all folders
-      _folders = prefs.getStringList('folders') ??
-          ['Рецепты', 'Обследования', 'Выписки'];
+    _folders = prefs.getStringList('folders') ??
+        ['Рецепты', 'Обследования', 'Выписки'];
 
-      // Initialize folder images map
-      _folderImages = {};
-      for (var folder in _folders) {
-        _folderImages[folder] = prefs.getStringList(folder) ?? [];
+    _folderImages = {};
+    for (var folder in _folders) {
+      var paths = prefs.getStringList(folder) ?? [];
+      // Убираем пустые и несуществующие пути (битые/временные файлы) — из-за них были «белые» документы
+      var validPaths = paths
+          .where((p) => p.toString().trim().isNotEmpty && File(p).existsSync())
+          .toList();
+      if (validPaths.length != paths.length) {
+        await prefs.setStringList(folder, validPaths);
       }
-
-      _selectedFolder = _folders.isNotEmpty ? _folders[0] : '';
-    });
+      _folderImages[folder] = validPaths;
+    }
+    _selectedFolder = _folders.isNotEmpty ? _folders[0] : '';
+    if (mounted) setState(() {});
   }
 
   Future<void> _saveFolders() async {
@@ -190,6 +197,7 @@ class _DocumentsGalleryState extends State<DocumentsGallery> {
                   );
                 }
                 final imageIndex = index - 1;
+                final imagePath = _folderImages[_selectedFolder]![imageIndex];
                 return GestureDetector(
                   onTap: () {
                     setState(() {
@@ -202,8 +210,35 @@ class _DocumentsGalleryState extends State<DocumentsGallery> {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(12),
                         child: Image.file(
-                          File(_folderImages[_selectedFolder]![imageIndex]),
+                          File(imagePath),
                           fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) => Container(
+                            color: Colors.grey[300],
+                            child: Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.broken_image_outlined, size: 40, color: Colors.grey[600]),
+                                  SizedBox(height: 4),
+                                  Text('Файл недоступен', style: TextStyle(fontSize: 12, color: Colors.grey[700])),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Center(
+                        child: GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () => openFullScreenImageViewer(context, imagePath),
+                          child: Container(
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: Colors.black.withOpacity(0.4),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(Icons.search, color: Colors.white, size: 28),
+                          ),
                         ),
                       ),
                       if (_selectedImageIndex == imageIndex)
@@ -223,11 +258,16 @@ class _DocumentsGalleryState extends State<DocumentsGallery> {
                           ),
                         ),
                       if (_selectedImageIndex == imageIndex)
-                        Container(
-                            decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          color: Colors.black.withOpacity(0.4),
-                        )),
+                        Positioned.fill(
+                          child: IgnorePointer(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                                color: Colors.black.withOpacity(0.4),
+                              ),
+                            ),
+                          ),
+                        ),
                     ],
                   ),
                 );

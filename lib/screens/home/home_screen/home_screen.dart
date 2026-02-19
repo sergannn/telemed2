@@ -57,35 +57,89 @@ class ItemController extends GetxController {
   var recommendations = <RecommendationModel>[].obs; // Reactive list for recommendations
   var filteredRecords = <CalendarRecordData>[].obs;
 
+  DateTime _selectedDate = DateTime.now();
+
   void filterRecordsByDate(DateTime date) {
-    print("DEBUG: Filtering records for date: ${date.toString()}");
-    print("DEBUG: Total calendar records: ${_calendarRecords.length}");
-    
-    filteredRecords.value = _calendarRecords.where((record) {
-      bool matches = record.date.year == date.year &&
+    _selectedDate = date;
+    print('DEBUG filterRecordsByDate: date=$date, _calendarRecords.length=${_calendarRecords.length}');
+    final list = _calendarRecords.where((record) {
+      return record.date.year == date.year &&
           record.date.month == date.month &&
           record.date.day == date.day;
-      if (matches) {
-        print("DEBUG: Found matching record: ${record.title} on ${record.date}");
-      }
-      return matches;
     }).toList();
-    
-    print("DEBUG: Filtered records count: ${filteredRecords.length}");
-    
-    // Показываем сообщение только если нет никаких записей
+    print('DEBUG filterRecordsByDate: list.length=${list.length} for date');
+    filteredRecords.assignAll(list);
     if (filteredRecords.isEmpty) {
       filteredRecords.add(CalendarRecordData(
           date: date,
           title: "Попробуйте воспользоваться дневником",
           category: "Пусто"));
     }
+    print('DEBUG filterRecordsByDate: filteredRecords.length=${filteredRecords.length} after assign');
+    filteredRecords.refresh();
+    update();
   }
 
   var _calendarRecords = <CalendarRecordData>[].obs;
+
+  Future<void> _saveCalendarRecords() async {
+    final prefs = await SharedPreferences.getInstance();
+    final recordsString = jsonEncode(_calendarRecords.map((r) => r.toJson()).toList());
+    await prefs.setString('calendar_records', recordsString);
+  }
+
+  /// После добавления/редактирования: при обновлении удаляем старую запись, затем всегда добавляем текущую (новую или изменённую).
+  Future<void> addOrUpdateRecordFromCreate(CalendarRecordData record, {CalendarRecordData? oldRecord}) async {
+    if (oldRecord != null) {
+      final before = _calendarRecords.length;
+      _calendarRecords.removeWhere((r) => identical(r, oldRecord));
+      if (_calendarRecords.length == before) {
+        _calendarRecords.removeWhere((r) =>
+            r.date.compareWithoutTime(oldRecord.date) == 0 &&
+            r.title == oldRecord.title &&
+            (r.category ?? '') == (oldRecord.category ?? ''));
+      }
+    }
+    _calendarRecords.add(record);
+    _calendarRecords.refresh();
+    await _saveCalendarRecords();
+    filterRecordsByDate(_selectedDate);
+  }
+
+  /// Удалить запись (по долгому нажатию). Приёмы не удаляются (isAppointmentCategory из create_record_page_lib).
+  Future<void> deleteRecord(CalendarRecordData record) async {
+    if (isAppointmentCategory(record.category)) return;
+    final beforeCount = _calendarRecords.length;
+    int byRef = _calendarRecords.where((r) => identical(r, record)).length;
+    if (byRef > 0) {
+      _calendarRecords.removeWhere((r) => identical(r, record));
+    } else {
+      _calendarRecords.removeWhere((r) =>
+          !isAppointmentCategory(r.category) &&
+          r.date.compareWithoutTime(record.date) == 0 &&
+          r.title == record.title &&
+          (r.category ?? '') == (record.category ?? ''));
+    }
+    final afterCount = _calendarRecords.length;
+    _calendarRecords.refresh();
+    await _saveCalendarRecords();
+    print('DEBUG deleteRecord: calling filterRecordsByDate($_selectedDate)');
+    filterRecordsByDate(_selectedDate);
+    print('DEBUG deleteRecord: DONE filteredRecords.length=${filteredRecords.length}');
+    filteredRecords.refresh();
+    update();
+  }
   
   // Геттер для доступа к записям календаря
   List<CalendarRecordData> get calendarRecords => _calendarRecords;
+
+  /// Перезагрузить записи из дневника и обновить список по текущей дате (после возврата из дневника/формы записи).
+  Future<void> refreshCalendarAndFilter() async {
+    await Future.delayed(const Duration(milliseconds: 150));
+    await _loadCalendarRecords();
+    filterRecordsByDate(_selectedDate);
+  }
+
   final storyItems = <StoryItem>[].obs;
   @override
   void onInit() {
@@ -605,6 +659,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             height: getVerticalSize(160.00),
                             width: getHorizontalSize(528.00),
                             child: ListView.separated(
+                              key: ValueKey('tasks_${itemController.filteredRecords.length}'),
                               padding: getPadding(left: 20, right: 20, top: 10),
                               scrollDirection: Axis.horizontal,
                               physics: const BouncingScrollPhysics(),
@@ -615,6 +670,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                 return AutolayouthorItemWidgetTasks(
                                   item: itemController.filteredRecords[index],
                                   index: index,
+                                  onRecordSaved: (record, {oldRecord}) =>
+                                      itemController.addOrUpdateRecordFromCreate(record, oldRecord: oldRecord),
+                                  onRecordDelete: (record) =>
+                                      itemController.deleteRecord(record),
+                                  onReturnFromDiary: () => itemController.refreshCalendarAndFilter(),
                                 );
                               },
                             ),

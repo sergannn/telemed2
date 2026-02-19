@@ -6,36 +6,82 @@ import 'package:doctorq/widgets/custom_button.dart';
 import 'package:doctorq/screens/appointments/AppointmentsScreen.dart';
 import 'package:doctorq/screens/medcard/create_record_page.dart';
 import 'package:doctorq/screens/medcard/create_record_page_lib.dart';
+import 'package:doctorq/screens/medcard/card_gallery.dart';
 import 'package:flutter/material.dart';
+
+// Заглушка для дня без записей (тап открывает создание, а не редактирование)
+const String _kEmptyDayPlaceholderTitle = 'Попробуйте воспользоваться дневником';
 
 // ignore: must_be_immutable
 class AutolayouthorItemWidgetTasks extends StatelessWidget {
   int index;
-//  Map<String, dynamic> item;
-  dynamic item;
-  AutolayouthorItemWidgetTasks(
-      {Key? key, required this.index, required this.item})
-      : super(key: key);
+  CalendarRecordData item;
+  final void Function(CalendarRecordData record, {CalendarRecordData? oldRecord})? onRecordSaved;
+  final void Function(CalendarRecordData record)? onRecordDelete;
+  final VoidCallback? onReturnFromDiary;
+
+  AutolayouthorItemWidgetTasks({
+    Key? key,
+    required this.index,
+    required this.item,
+    this.onRecordSaved,
+    this.onRecordDelete,
+    this.onReturnFromDiary,
+  }) : super(key: key);
+
+  bool get _isPlaceholder => item.title == _kEmptyDayPlaceholderTitle;
+  bool get _isAppointment => isAppointmentCategory(item.category);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onLongPress: _isPlaceholder || _isAppointment
+          ? null
+          : () async {
+              final confirm = await showDialog<bool>(
+                context: context,
+                builder: (ctx) => AlertDialog(
+                  title: const Text('Удалить?'),
+                  content: Text('Удалить запись «${item.title}»?'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(ctx, false),
+                      child: const Text('Отмена'),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.pop(ctx, true),
+                      child: const Text('Удалить'),
+                    ),
+                  ],
+                ),
+              );
+              if (confirm == true && context.mounted) {
+                print('DEBUG AutolayouthorItemWidgetTasks: onRecordDelete called for "${item.title}"');
+                onRecordDelete?.call(item);
+              }
+            },
       onTap: () {
-        // Если это прием, переходим к экрану приема
-        if ((item.category == 'Приемы' || item.category == 'Предстоящие сеансы') && item.description != null && item.description.contains('ID:')) {
-          // Извлекаем ID приема из description
-          String appointmentId = item.description.replaceAll('ID: ', '');
-          print("DEBUG: Navigating to appointment with ID: $appointmentId");
-          
-          // Навигация к экрану приемов
+        if (_isPlaceholder) {
+          print("DEBUG: Navigating to diary (MedCardScreen, tab Дневник)");
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => AppointmentsScreen(), // Убираем mode: 'old' для предстоящих сеансов
+              builder: (context) => const MedCardScreen(initialTabIndex: 2),
+            ),
+          ).then((_) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              onReturnFromDiary?.call();
+            });
+          });
+        } else if ((item.category == 'Приемы' || item.category == 'Предстоящие сеансы') && item.description != null && item.description!.contains('ID:')) {
+          print("DEBUG: Navigating to appointment with ID: ${item.description!.replaceAll('ID: ', '')}");
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AppointmentsScreen(),
             ),
           );
         } else {
-          // Если это запись дневника, переходим к редактированию
           print("DEBUG: Navigating to edit record screen");
           Navigator.push(
             context,
@@ -43,11 +89,16 @@ class AutolayouthorItemWidgetTasks extends StatelessWidget {
               builder: (context) => CreateRecordPage(
                 event: item,
                 onRecordAdd: (record) {
+                  onRecordSaved?.call(record, oldRecord: item);
                   print("DEBUG: Record updated: ${record.title}");
                 },
               ),
             ),
-          );
+          ).then((_) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              onReturnFromDiary?.call();
+            });
+          });
         }
       },
       child: Container(
@@ -93,7 +144,7 @@ class AutolayouthorItemWidgetTasks extends StatelessWidget {
               child: RichText(
                 text: TextSpan(
                   //item['name'] +
-                  text: '${getCategoryName(item.category)}\n',
+                  text: '${getCategoryName(item.category ?? '')}\n',
                   style: TextStyle(
                     fontSize: 10,
                     color: Colors.black,

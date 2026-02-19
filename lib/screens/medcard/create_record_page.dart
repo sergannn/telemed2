@@ -6,9 +6,15 @@ import 'package:doctorq/utils/utility.dart';
 import 'package:flutter/material.dart';
 
 class CreateRecordPage extends StatefulWidget {
-  const CreateRecordPage({super.key, this.event, required this.onRecordAdd});
+  const CreateRecordPage({
+    super.key,
+    this.event,
+    required this.onRecordAdd,
+    this.onRecordDelete,
+  });
   final CalendarRecordData? event;
   final Function(CalendarRecordData) onRecordAdd;
+  final void Function()? onRecordDelete;
 
   @override
   State<CreateRecordPage> createState() => _CreateRecordPageState();
@@ -42,13 +48,55 @@ class _CreateRecordPageState extends State<CreateRecordPage> {
         physics: ClampingScrollPhysics(),
         child: Padding(
           padding: EdgeInsets.all(20.0),
-          child: AddOrEditRecordForm(
-            // TODO: Populate the form fields with widget.event data if widget.event != null
-            onRecordAdd: (newEvent) {
-              widget.onRecordAdd(newEvent);
-              Navigator.pop(context, newEvent);
-            },
-            event: widget.event,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              AddOrEditRecordForm(
+                onRecordAdd: (newEvent) {
+                  widget.onRecordAdd(newEvent);
+                  Navigator.pop(context, newEvent);
+                },
+                event: widget.event,
+              ),
+              if (widget.event != null && widget.onRecordDelete != null) ...[
+                const SizedBox(height: 16),
+                TextButton.icon(
+                  onPressed: () async {
+                    final confirm = await showDialog<bool>(
+                      context: context,
+                      builder: (ctx) => AlertDialog(
+                        title: const Text('Удалить запись?'),
+                        content: Text(
+                          'Удалить запись «${widget.event!.title}»?',
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(ctx, false),
+                            child: const Text('Отмена'),
+                          ),
+                          TextButton(
+                            onPressed: () => Navigator.pop(ctx, true),
+                            style: TextButton.styleFrom(
+                              foregroundColor: Colors.red,
+                            ),
+                            child: const Text('Удалить'),
+                          ),
+                        ],
+                      ),
+                    );
+                    if (confirm == true && mounted) {
+                      widget.onRecordDelete?.call();
+                      Navigator.pop(context);
+                    }
+                  },
+                  icon: const Icon(Icons.delete_outline, size: 20),
+                  label: const Text('Удалить запись'),
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.red,
+                  ),
+                ),
+              ],
+            ],
           ),
         ),
       ),

@@ -1,7 +1,7 @@
 import 'package:doctorq/extensions.dart';
 import 'package:doctorq/screens/medcard/create_record_page.dart';
 import 'package:doctorq/screens/medcard/create_record_page_lib.dart';
-import 'package:doctorq/screens/medcard/event_page.dart';
+import 'package:doctorq/screens/appointments/AppointmentsScreen.dart' hide getIt;
 import 'package:doctorq/utils/utility.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +10,7 @@ import 'dart:convert';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:doctorq/stores/appointments_store.dart';
 import 'package:get_it/get_it.dart';
+import 'package:intl/intl.dart';
 
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({super.key});
@@ -127,24 +128,146 @@ class _CalendarScreenState extends State<CalendarScreen> {
     _saveCalendarRecords();
   }
 
-  void _updateRecord(CalendarRecordData updatedRecord) {
-    final index = _calendarRecords
-        .indexWhere((r) => r.date.compareWithoutTime(updatedRecord.date));
-    if (index != -1) {
-      setState(() {
-        _calendarRecords[index] = updatedRecord;
-      });
-      _saveCalendarRecords();
-    }
+  bool _sameRecord(CalendarRecordData r, CalendarRecordData old) {
+    return r.date.year == old.date.year &&
+        r.date.month == old.date.month &&
+        r.date.day == old.date.day &&
+        r.date.hour == old.date.hour &&
+        r.date.minute == old.date.minute &&
+        r.title == old.title &&
+        (r.category ?? '') == (old.category ?? '');
+  }
+
+  void _updateRecord(CalendarRecordData updatedRecord, {CalendarRecordData? oldRecord}) {
+    setState(() {
+      if (oldRecord != null) {
+        _calendarRecords.removeWhere((r) => _sameRecord(r, oldRecord));
+      }
+      _calendarRecords.add(updatedRecord);
+    });
+    _saveCalendarRecords();
+  }
+
+  void _deleteRecord(CalendarRecordData record) {
+    setState(() {
+      _calendarRecords.removeWhere((r) => _sameRecord(r, record));
+    });
+    _saveCalendarRecords();
   }
 
   void _editRecord(BuildContext context, CalendarRecordData record) async {
-    final updatedRecord = await Navigator.push<CalendarRecordData>(
+    await Navigator.push<CalendarRecordData>(
       context,
       MaterialPageRoute(
         builder: (context) => CreateRecordPage(
           event: record,
-          onRecordAdd: _updateRecord,
+          onRecordAdd: (updated) => _updateRecord(updated, oldRecord: record),
+          onRecordDelete: () => _deleteRecord(record),
+        ),
+      ),
+    );
+  }
+
+  bool _isAppointmentRecord(CalendarRecordData record) {
+    return (record.category == 'Приемы' || record.category == 'Предстоящие сеансы') &&
+        (record.description != null && record.description!.contains('ID:'));
+  }
+
+  void _openRecord(BuildContext context, CalendarRecordData record) {
+    if (_isAppointmentRecord(record)) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => AppointmentsScreen()),
+      );
+    } else {
+      _editRecord(context, record);
+    }
+  }
+
+  void _onDaySelected(DateTime selectedDay) {
+    final recordsForDay = _calendarRecords
+        .where((r) => r.date.compareWithoutTime(selectedDay))
+        .toList();
+
+    if (recordsForDay.isEmpty) return;
+
+    if (recordsForDay.length == 1) {
+      _openRecord(context, recordsForDay.first);
+      return;
+    }
+
+    showModalBottomSheet<void>(
+      context: context,
+      builder: (ctx) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+              child: Text(
+                'Записи на ${DateFormat('d MMMM', 'ru').format(selectedDay)}',
+                style: Theme.of(ctx).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+              ),
+            ),
+            const Divider(height: 1),
+            ...recordsForDay.map((record) {
+              final isTimeSet = record.date.hour != 0 || record.date.minute != 0;
+              final timeStr = isTimeSet
+                  ? DateFormat('HH:mm').format(record.date)
+                  : 'Без времени';
+              final canDelete = !_isAppointmentRecord(record);
+              return ListTile(
+                leading: Container(
+                  width: 8,
+                  height: 8,
+                  decoration: BoxDecoration(
+                    color: getCategoryColorLib(record.category),
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                title: Text(record.title),
+                subtitle: Text(
+                  '${getCategoryName(record.category)} · $timeStr',
+                  style: Theme.of(ctx).textTheme.bodySmall,
+                ),
+                trailing: canDelete
+                    ? IconButton(
+                        icon: const Icon(Icons.close, size: 22),
+                        onPressed: () async {
+                          final confirm = await showDialog<bool>(
+                            context: ctx,
+                            builder: (dialogCtx) => AlertDialog(
+                              title: const Text('Удалить запись?'),
+                              content: Text('Удалить «${record.title}»?'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(dialogCtx, false),
+                                  child: const Text('Отмена'),
+                                ),
+                                TextButton(
+                                  onPressed: () => Navigator.pop(dialogCtx, true),
+                                  child: const Text('Удалить'),
+                                ),
+                              ],
+                            ),
+                          );
+                          if (confirm == true && ctx.mounted) {
+                            Navigator.pop(ctx);
+                            _deleteRecord(record);
+                          }
+                        },
+                      )
+                    : null,
+                onTap: () {
+                  Navigator.pop(ctx);
+                  _openRecord(context, record);
+                },
+              );
+            }),
+          ],
         ),
       ),
     );
@@ -166,7 +289,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           firstDay: DateTime.utc(2010, 10, 16),
           lastDay: DateTime.utc(2030, 3, 14),
           onDaySelected: (selectedDay, focusedDay) {
-            printLog('Selected day: $selectedDay');
+            _onDaySelected(selectedDay);
           },
         ),
         FloatingActionButton(
@@ -216,67 +339,47 @@ class _CalendarScreenState extends State<CalendarScreen> {
       backgroundColor = Color.fromARGB(255, 255, 255, 255);
     }
 
-    // Определяем цвета контуров для дополнительных категорий
-    List<Color> borderColors = [];
+    // Цвета обводок: вторая и третья категория (первая — фон)
+    List<Color> ringColors = [];
     if (recordsForDay.length >= 2) {
-      borderColors.add(getCategoryColorLib(recordsForDay[1].category));
+      ringColors.add(getCategoryColorLib(recordsForDay[1].category));
     }
     if (recordsForDay.length >= 3) {
-      borderColors.add(getCategoryColorLib(recordsForDay[2].category));
+      ringColors.add(getCategoryColorLib(recordsForDay[2].category));
     }
 
-    return GestureDetector(
-      onDoubleTap: () {
-        if (recordsForDay.isNotEmpty) {
-          _editRecord(context, recordsForDay.first);
-        }
-      },
-      child: AnimatedContainer(
-        duration: duration,
-        margin: margin,
-        padding: padding,
-        decoration: BoxDecoration(
-          color: backgroundColor,
-          shape: BoxShape.circle,
-          border: borderColors.isNotEmpty 
+    // Внешний круг: фон + первая обводка (вторая категория)
+    Widget cell = AnimatedContainer(
+      duration: duration,
+      margin: margin,
+      padding: padding,
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        shape: BoxShape.circle,
+        border: ringColors.isNotEmpty
             ? Border.all(
-                color: borderColors[0], 
+                color: ringColors.first,
                 width: 3.0,
               )
             : null,
-        ),
-        alignment: alignment,
-        child: Stack(
-          children: [
-            Text('${day.day}', style: selectedTextStyle),
-            // Дополнительные контуры
-            if (borderColors.length >= 2)
-              Positioned.fill(
-                child: Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: borderColors.length >= 2 ? borderColors[1] : backgroundColor,
-                      width: 1.5,
-                    ),
-                  ),
-                ),
-              ),
-            if (borderColors.length >= 3)
-              Positioned.fill(
-                child: Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: borderColors.length >= 3 ? borderColors[2] : backgroundColor,
-                      width: 1.0,
-                    ),
-                  ),
-                ),
-              ),
-          ],
-        ),
       ),
+      alignment: alignment,
+      child: ringColors.length == 2
+          ? Container(
+              margin: const EdgeInsets.all(0),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: ringColors[1],
+                  width: 2.5,
+                ),
+              ),
+              child: Center(
+                child: Text('${day.day}', style: selectedTextStyle),
+              ),
+            )
+          : Center(child: Text('${day.day}', style: selectedTextStyle)),
     );
+    return GestureDetector(child: cell);
   }
 }
