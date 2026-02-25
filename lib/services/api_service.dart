@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
@@ -28,18 +29,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 GetIt getIt = GetIt.instance;
 
-// GraphQL client for API calls
-GraphQLClient client = GraphQLClient(
-  link: HttpLink('https://admin.onlinedoctor.su/graphql'),
-  cache: GraphQLCache(),
-);
+// Timeout configuration for GraphQL requests
+const Duration defaultTimeout = Duration(seconds: 30);
+const int maxRetries = 3;
+const Duration retryDelay = Duration(seconds: 2);
 
 Future<bool> getSpecs() async {
   printLog('Getting doctors');
   print("get specs");
 
   final response =
-      await http.get(Uri.parse('https://onlinedoctor.su/api/specializations'));
+      await http.get(Uri.parse('https://admin.onlinedoctor.su/api/specializations'));
 
   if (response.statusCode == 200) {
     List jsonResponse = json.decode(response.body)['data'];
@@ -204,6 +204,62 @@ Future<bool> setAppointment(
   return true;
 }
 
+/// Execute GraphQL query with retry logic
+Future<QueryResult> _executeQueryWithRetry({
+  required QueryOptions options,
+  bool authenticated = false,
+}) async {
+  int attempt = 0;
+  Exception? lastException;
+  
+  while (attempt < maxRetries) {
+    try {
+      final GraphQLClient graphqlClient = authenticated 
+          ? await graphqlAPI.authClient() 
+          : await graphqlAPI.noauthClient();
+      
+      // Execute with timeout
+      return await graphqlClient.query(options).timeout(defaultTimeout);
+    } on TimeoutException {
+      attempt++;
+      lastException = Exception('Request timeout (attempt $attempt/$maxRetries)');
+      printLog('GraphQL request timeout, attempt $attempt/$maxRetries');
+      
+      if (attempt < maxRetries) {
+        await Future.delayed(retryDelay * attempt); // Exponential backoff
+      }
+    } on ServerException catch (e) {
+      attempt++;
+      lastException = e;
+      printLog('GraphQL server error: ${e.originalException}, attempt $attempt/$maxRetries');
+      
+      // Check if it's a connection error that might benefit from retry
+      final errorStr = e.originalException.toString();
+      if (errorStr.contains('Connection closed') || 
+          errorStr.contains('Connection refused') ||
+          errorStr.contains('SocketException')) {
+        if (attempt < maxRetries) {
+          await Future.delayed(retryDelay * attempt);
+        }
+      } else {
+        // For other server errors, don't retry
+        rethrow;
+      }
+    } catch (e) {
+      attempt++;
+      lastException = Exception('GraphQL request failed: $e');
+      printLog('GraphQL request error: $e, attempt $attempt/$maxRetries');
+      
+      if (attempt < maxRetries) {
+        await Future.delayed(retryDelay * attempt);
+      }
+    }
+  }
+  
+  // After all retries failed, throw the last exception
+  throw lastException ?? Exception('Max retries exceeded for GraphQL request');
+}
+
 Future<bool> getAppointmentsD({required String doctorId}) async {
   print("DEBUG: Getting appointments for doctor: $doctorId");
   
@@ -211,7 +267,7 @@ Future<bool> getAppointmentsD({required String doctorId}) async {
   storeAppointmentsStore.clearAppointmentsData();
 
   try {
-    final result = await client.query(QueryOptions(
+    final QueryOptions options = QueryOptions(
       document: gql('''
         query appointments {
           appointmentsbydoctor(doctor_id: "$doctorId") {
@@ -242,7 +298,9 @@ Future<bool> getAppointmentsD({required String doctorId}) async {
           }
         }
       '''),
-    ));
+    );
+
+    final result = await _executeQueryWithRetry(options: options);
 
     if (result.hasException) {
       print("DEBUG: GraphQL error: ${result.exception}");
@@ -302,7 +360,7 @@ Future<bool> getSessionsD({required String doctorId}) async {
   storeDoctorSessionsStore.clearDoctorSessionsData();
 
   try {
-    final result = await client.query(QueryOptions(
+    final QueryOptions options = QueryOptions(
       document: gql('''
         query sessions {
           sessionsBydoctorId(doctor_id: $doctorId) {
@@ -322,7 +380,9 @@ Future<bool> getSessionsD({required String doctorId}) async {
         }
       '''),
       variables: {'doctorId': doctorId},
-    ));
+    );
+
+    final result = await _executeQueryWithRetry(options: options);
 
     if (result.hasException) {
       print("DEBUG: GraphQL error: ${result.exception}");
@@ -412,7 +472,7 @@ Future<bool> getAppointments({required String patientId}) async {
   storeAppointmentsStore.clearAppointmentsData();
 
   try {
-    final result = await client.query(QueryOptions(
+    final QueryOptions options = QueryOptions(
       document: gql('''
         query appointments {
           appointmentsbypatient(patient_id: "$patientId") {
@@ -443,7 +503,9 @@ Future<bool> getAppointments({required String patientId}) async {
           }
         }
       '''),
-    ));
+    );
+
+    final result = await _executeQueryWithRetry(options: options);
 
     if (result.hasException) {
       print("DEBUG: GraphQL error: ${result.exception}");

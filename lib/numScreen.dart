@@ -58,6 +58,9 @@ class _MyHomePageState extends State<NumState> {
                 Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: TextFormField(
+                    onTapOutside: (_) {
+                      FocusManager.instance.primaryFocus?.unfocus();
+                    },
                     controller: _textController,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),

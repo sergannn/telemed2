@@ -378,6 +378,9 @@ class SurveyState extends State<SurveyScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TextField(
+          onTapOutside: (_) {
+            FocusManager.instance.primaryFocus?.unfocus();
+          },
           controller:
               TextEditingController(text: bodyParams[index]?.weight ?? ''),
           decoration: InputDecoration(
@@ -398,6 +401,9 @@ class SurveyState extends State<SurveyScreen> {
         ),
         SizedBox(height: 12),
         TextField(
+          onTapOutside: (_) {
+            FocusManager.instance.primaryFocus?.unfocus();
+          },
           controller:
               TextEditingController(text: bodyParams[index]?.height ?? ''),
           decoration: InputDecoration(
@@ -418,6 +424,9 @@ class SurveyState extends State<SurveyScreen> {
         ),
         SizedBox(height: 12),
         TextField(
+          onTapOutside: (_) {
+            FocusManager.instance.primaryFocus?.unfocus();
+          },
           controller: TextEditingController(
               text: bodyParams[index]?.circumference ?? ''),
           decoration: InputDecoration(

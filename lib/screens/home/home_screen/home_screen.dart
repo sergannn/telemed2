@@ -65,7 +65,15 @@ class ItemController extends GetxController {
       filteredRecords.add(CalendarRecordData(
           date: date,
           title: kEmptyDayPlaceholderTitle,
-          category: ""));
+          category: "Пусто"));
+      filteredRecords.add(CalendarRecordData(
+          date: date,
+          title: kEmptyDayPlaceholderTitle,
+          category: "Пусто2"));
+      filteredRecords.add(CalendarRecordData(
+          date: date,
+          title: kEmptyDayPlaceholderTitle,
+          category: "Пусто3"));
     }
     debugPrint('>>> DELETE filterRecordsByDate: filteredRecords.length=${filteredRecords.length} after assign');
     filteredRecords.refresh();
@@ -831,8 +839,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                       ),
+                      
                       Obx(() {
-                        //print(itemController.storyItems.length);
+                        print(itemController.storyItems.length);
                         return FadeInUp(
                           delay: const Duration(milliseconds: 300),
                           onFinish: (direction) =>

@@ -180,6 +180,9 @@ color: Color.fromARGB(255, 91, 91, 91),
             Container(
   padding: const EdgeInsets.all(16),
   child: TextField(
+    onTapOutside: (_) {
+      FocusManager.instance.primaryFocus?.unfocus();
+    },
     controller: _messageController,
     decoration: InputDecoration(
       hintText: 'Введите сообщение...',

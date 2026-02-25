@@ -302,6 +302,9 @@ class _MessagesDetailScreenState extends State<MessagesDetailScreen> {
             Padding(
               padding: getPadding(top: 20, bottom: 20, left: 20, right: 20),
               child: TextFormField(
+                onTapOutside: (_) {
+                  FocusManager.instance.primaryFocus?.unfocus();
+                },
                 focusNode: myFocusNode,
                 controller: textEditingController,
                 onFieldSubmitted: (val) {

@@ -90,6 +90,14 @@ class AppointmentsStep3FilledScreen extends StatefulWidget {
 
 class _AppointmentsStep3FilledScreenState
     extends State<AppointmentsStep3FilledScreen> {
+  final FocusNode _complaintFocusNode = FocusNode();
+
+  @override
+  void dispose() {
+    _complaintFocusNode.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     bool isDark = Theme.of(context).brightness == Brightness.dark;
@@ -342,7 +350,7 @@ class _AppointmentsStep3FilledScreenState
                                     child: CustomTextFormField(
                                       isDark: isDark,
                                       width: 380,
-                                      focusNode: FocusNode(),
+                                      focusNode: _complaintFocusNode,
                                       hintText:
                                           "Сильные боли в животе. Интервал 5-10 минут, 7 дней. В том числе,  головная боль на протяжении 10 дней.",
                                       margin: getMargin(

@@ -849,6 +849,9 @@ class _ArticleCommentsScreenState extends State<ArticleCommentsScreen> {
           children: [
             Expanded(
               child: TextField(
+                onTapOutside: (_) {
+                  FocusManager.instance.primaryFocus?.unfocus();
+                },
                 controller: _textController,
                 maxLines: null,
                 decoration: InputDecoration(

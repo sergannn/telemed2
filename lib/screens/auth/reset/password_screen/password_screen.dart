@@ -17,6 +17,15 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   bool checkbox = false;
   bool obscure1 = true;
   bool obscure2 = true;
+  final FocusNode _password1FocusNode = FocusNode();
+  final FocusNode _password2FocusNode = FocusNode();
+
+  @override
+  void dispose() {
+    _password1FocusNode.dispose();
+    _password2FocusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -173,7 +182,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                                 CustomTextFormField(
                                   isDark: isDark,
                                   width: size.width,
-                                  focusNode: FocusNode(),
+                                  focusNode: _password1FocusNode,
                                   hintText: "New Password",
                                   margin: getMargin(
                                     top: 11,
@@ -294,7 +303,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                               CustomTextFormField(
                                 isDark: isDark,
                                 width: size.width,
-                                focusNode: FocusNode(),
+                                focusNode: _password2FocusNode,
                                 hintText: "Confirm New Password",
                                 margin: getMargin(
                                   top: 11,

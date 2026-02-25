@@ -152,6 +152,9 @@ class _AddCalendarToolWidgetState extends State<AddCalendarToolWidget> {
           ),
           SizedBox(height: 8.0),
           TextField(
+            onTapOutside: (_) {
+              FocusManager.instance.primaryFocus?.unfocus();
+            },
             controller: _titleController,
             decoration: InputDecoration(
               labelText: 'Title',
@@ -160,6 +163,9 @@ class _AddCalendarToolWidgetState extends State<AddCalendarToolWidget> {
           ),
           SizedBox(height: 8.0),
           TextField(
+            onTapOutside: (_) {
+              FocusManager.instance.primaryFocus?.unfocus();
+            },
             controller: _dateController,
             decoration: InputDecoration(
               labelText: 'Date',
@@ -168,6 +174,8 @@ class _AddCalendarToolWidgetState extends State<AddCalendarToolWidget> {
                 icon: Icon(Icons.calendar_today),
                 onPressed: () async {
                   DateTime? pickedDate = await showDatePicker(
+                   
+                    locale: Locale('ru','RU'),
                     context: context,
                     initialDate: DateTime.now(),
                     firstDate: DateTime(2000),

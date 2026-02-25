@@ -80,6 +80,9 @@ class _HomeScreenState extends State<FigmaToCodeApp> {
             ),
             // Search Bar
             TextField(
+              onTapOutside: (_) {
+                FocusManager.instance.primaryFocus?.unfocus();
+              },
               decoration: InputDecoration(
                 labelText: 'Найти врача',
                 prefixIcon: Icon(Icons.search),

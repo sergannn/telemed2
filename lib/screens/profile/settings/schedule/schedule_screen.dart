@@ -100,6 +100,8 @@ class _ProfileSettingsAppearanceScreenState
 
   TextEditingController sessionMeetingTime = TextEditingController();
   TextEditingController sessionGap = TextEditingController();
+  final FocusNode _sessionMeetingTimeFocusNode = FocusNode();
+  final FocusNode _sessionGapFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -153,6 +155,15 @@ class _ProfileSettingsAppearanceScreenState
     printLog(' Doctor Sessions loaded');
 
 //    MyOverlay.hide();
+  }
+
+  @override
+  void dispose() {
+    _sessionMeetingTimeFocusNode.dispose();
+    _sessionGapFocusNode.dispose();
+    sessionMeetingTime.dispose();
+    sessionGap.dispose();
+    super.dispose();
   }
 
   DateTime selectedDate = DateTime.now();
@@ -245,7 +256,7 @@ class _ProfileSettingsAppearanceScreenState
                               controller: sessionMeetingTime,
                               isDark: isDark,
                               width: 380,
-                              focusNode: FocusNode(),
+                              focusNode: _sessionMeetingTimeFocusNode,
                               hintText:
                                   "Сколько будет длиться каждый прием пациента",
                               margin: getMargin(
@@ -318,7 +329,7 @@ class _ProfileSettingsAppearanceScreenState
                               controller: sessionGap,
                               isDark: isDark,
                               width: 380,
-                              focusNode: FocusNode(),
+                              focusNode: _sessionGapFocusNode,
                               hintText: "Промежуток между сеансами",
                               margin: getMargin(
                                 top: 11,

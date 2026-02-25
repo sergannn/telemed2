@@ -243,6 +243,10 @@ String getCategoryName(String? category) {
       return 'Лекарства';
     case 'Упражнения':
       return 'Упражнения';
+    case 'Пусто':
+    case 'Пусто2':
+    case 'Пусто3':
+      return 'Дневник';
     default:
       return category ?? 'Запись';
   }
@@ -262,10 +266,14 @@ Color getCategoryColor(String? category) {
       return CategoryColors.blue;
     case 'Cat2':
     case 'Лекарства':
+    case 'Пусто2':
       return CategoryColors.yellow;
     case 'Cat3':
     case 'Упражнения':
+    case 'Пусто3':
       return CategoryColors.pink;
+    case 'Пусто':
+    case '':
     default:
       return CategoryColors.blue;
   }

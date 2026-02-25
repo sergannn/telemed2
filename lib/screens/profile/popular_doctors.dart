@@ -131,6 +131,9 @@ class _PopularPatientsScreenState extends State<PopularPatientsScreen> {
                           const SizedBox(width: 8),
                           Expanded(
                             child: TextField(
+                              onTapOutside: (_) {
+                                FocusManager.instance.primaryFocus?.unfocus();
+                              },
                               controller: _searchController,
                               onChanged: _filterPatients,
                               decoration: const InputDecoration(

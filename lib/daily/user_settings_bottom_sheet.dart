@@ -62,6 +62,9 @@ class _UserSettingsBottomSheetState extends State<UserSettingsBottomSheet> {
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
+                onTapOutside: (_) {
+                  FocusManager.instance.primaryFocus?.unfocus();
+                },
                 decoration: const InputDecoration(
                   label: Text('Name'),
                   floatingLabelBehavior: FloatingLabelBehavior.always,

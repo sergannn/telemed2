@@ -79,6 +79,9 @@ class _TopDoctorScreenState extends State<ChooseSpecScreen2>
               width: double.infinity, // Makes the container full width
               margin: EdgeInsets.symmetric(horizontal: 16), // Adds side margins
               child: TextField(
+                onTapOutside: (_) {
+                  FocusManager.instance.primaryFocus?.unfocus();
+                },
                 decoration: InputDecoration(
                   contentPadding:
                       EdgeInsets.symmetric(vertical: 12, horizontal: 16),

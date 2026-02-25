@@ -159,6 +159,9 @@ class _WeatherToolWidgetState extends State<WeatherToolWidget> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             TextField(
+              onTapOutside: (_) {
+                FocusManager.instance.primaryFocus?.unfocus();
+              },
               controller: _locationController,
               decoration: InputDecoration(
                 labelText: 'Город',

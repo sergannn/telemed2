@@ -468,6 +468,9 @@ const SizedBox(width: 8),
                       ),
                       padding: EdgeInsets.all(16),
                       child: TextField(
+                        onTapOutside: (_) {
+                          FocusManager.instance.primaryFocus?.unfocus();
+                        },
                         controller: _reviewController,
                         maxLines: 4,
                         maxLength: 250,

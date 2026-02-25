@@ -138,6 +138,9 @@ class _TopDoctorScreenState extends State<ChooseSpecsScreen> {
               width: double.infinity,
               margin: EdgeInsets.symmetric(horizontal: 16),
               child: TextField(
+                onTapOutside: (_) {
+                  FocusManager.instance.primaryFocus?.unfocus();
+                },
                 controller: _searchController,
                 onChanged: _filterPatients,
                 decoration: InputDecoration(

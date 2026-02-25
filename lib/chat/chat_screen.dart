@@ -480,6 +480,9 @@ class _ChatScreenState extends State<ChatScreen> {
                   child: _isVoiceMode
                       ? Container()
                       : TextField(
+                          onTapOutside: (_) {
+                            FocusManager.instance.primaryFocus?.unfocus();
+                          },
                           controller: _textController,
                           onSubmitted: _handleSubmitted,
                           decoration: InputDecoration.collapsed(

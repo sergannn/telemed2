@@ -23,8 +23,15 @@ class AppointmentsListWriteReviewFilledScreen extends StatefulWidget {
 
 class _AppointmentsListWriteReviewFilledScreenState extends State<AppointmentsListWriteReviewFilledScreen> {
   String radioGroup = "";
+  final FocusNode _reviewFocusNode = FocusNode();
 
   List<String> radioList = ["yes", "no"];
+
+  @override
+  void dispose() {
+    _reviewFocusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -238,7 +245,7 @@ class _AppointmentsListWriteReviewFilledScreenState extends State<AppointmentsLi
                 ),
                 CustomTextFormField(isDark: isDark,
                   width: size.width,
-                  focusNode: FocusNode(),
+                  focusNode: _reviewFocusNode,
                   hintText:
                       "Tell people about your experience",
                   margin: getMargin(

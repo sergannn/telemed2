@@ -9,12 +9,34 @@ import '../../../../widgets/boxshadow.dart';
 import '../../../../widgets/spacing.dart';
 
 // ignore: must_be_immutable
-class AppointmentsStep4FilledScreen extends StatelessWidget {
+class AppointmentsStep4FilledScreen extends StatefulWidget {
   ContactMethods contactMethod;
   AppointmentsStep4FilledScreen({Key? key, required this.contactMethod}) : super(key: key);
-  TextEditingController autoLayoutHorOneController = TextEditingController();
 
+  @override
+  State<AppointmentsStep4FilledScreen> createState() =>
+      _AppointmentsStep4FilledScreenState();
+}
+
+class _AppointmentsStep4FilledScreenState
+    extends State<AppointmentsStep4FilledScreen> {
+  TextEditingController autoLayoutHorOneController = TextEditingController();
   TextEditingController autoLayoutHorTwoController = TextEditingController();
+  final FocusNode _cardHolderFocusNode = FocusNode();
+  final FocusNode _cardNumberFocusNode = FocusNode();
+  final FocusNode _expiryFocusNode = FocusNode();
+  final FocusNode _cvvFocusNode = FocusNode();
+
+  @override
+  void dispose() {
+    autoLayoutHorOneController.dispose();
+    autoLayoutHorTwoController.dispose();
+    _cardHolderFocusNode.dispose();
+    _cardNumberFocusNode.dispose();
+    _expiryFocusNode.dispose();
+    _cvvFocusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -490,7 +512,7 @@ class AppointmentsStep4FilledScreen extends StatelessWidget {
                                 child: CustomTextFormField(
                                   isDark: isDark,
                                   width: size.width,
-                                  focusNode: FocusNode(),
+                                  focusNode: _cardHolderFocusNode,
                                   hintText: "Adam Smith",
                                   margin: getMargin(
                                     top: 11,
@@ -599,7 +621,7 @@ class AppointmentsStep4FilledScreen extends StatelessWidget {
                                 child: CustomTextFormField(
                                   isDark: isDark,
                                   width: size.width,
-                                  focusNode: FocusNode(),
+                                  focusNode: _cardNumberFocusNode,
                                   hintText: "Country",
                                   margin: getMargin(
                                     top: 11,
@@ -716,7 +738,7 @@ class AppointmentsStep4FilledScreen extends StatelessWidget {
                                       child: CustomTextFormField(
                                         isDark: isDark,
                                         width: 264,
-                                        focusNode: FocusNode(),
+                                        focusNode: _expiryFocusNode,
                                         hintText: "Expiary date",
                                         margin: getMargin(
                                           top: 11,
@@ -827,7 +849,7 @@ class AppointmentsStep4FilledScreen extends StatelessWidget {
                                       child: CustomTextFormField(
                                         isDark: isDark,
                                         width: 100,
-                                        focusNode: FocusNode(),
+                                        focusNode: _cvvFocusNode,
                                         hintText: "CVV",
                                         margin: getMargin(
                                           top: 11,
@@ -864,7 +886,7 @@ class AppointmentsStep4FilledScreen extends StatelessWidget {
                       context: context,
                       builder: (context) {
                         return LightAppointmentsFailedMessagingDialog(
-                          contactMethod: contactMethod,
+                          contactMethod: widget.contactMethod,
                         );
                       },
                     );
