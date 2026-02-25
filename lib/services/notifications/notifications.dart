@@ -891,6 +891,9 @@ class _HomePageState extends State<HomePage> {
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
                       child: TextField(
+                        onTapOutside: (_) { print("tap outside");
+                          FocusManager.instance.primaryFocus?.unfocus();
+                        },
                         controller: _linuxIconPathController,
                         decoration: InputDecoration(
                           hintText: 'Enter the icon path',

@@ -17,6 +17,7 @@ import 'package:doctorq/constant/constants.dart' show withSentry, forceSentry;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart'; // ADD THIS IMPORT
 //import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:number_pad_keyboard/number_pad_keyboard.dart';
@@ -25,7 +26,7 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 import 'theme/theme_constants.dart';
 import 'theme/theme_manager.dart';
 import 'package:doctorq/screens/main_screen.dart';
-
+import 'widgets/keyboard_dismisser.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() async {
@@ -39,7 +40,6 @@ void main() async {
         options.dsn = 'https://bzpz5xodp1zvlkllus7rf1toh8@o4506802011537408.ingest.de.sentry.io/4506802011537408';
         options.tracesSampleRate = 1.0;
         options.environment = 'production';
-        // Дополнительные настройки можно добавить здесь
       },
       appRunner: () => _runApp(),
     );
@@ -52,54 +52,19 @@ void main() async {
 
 Future<void> _runApp() async {
   WidgetsFlutterBinding.ensureInitialized();
-//  WidgetsFlutterBinding.ensureInitialized();
-/*
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
 
-  const AndroidInitializationSettings initializationSettingsAndroid =
-      AndroidInitializationSettings('@mipmap/ic_launcher');
-
-  final InitializationSettings initializationSettings = InitializationSettings(
-    android: initializationSettingsAndroid,
-    iOS: DarwinInitializationSettings(),
-  );
-
-  await flutterLocalNotificationsPlugin.initialize(
-    initializationSettings,
-  ); */
   await EasyLocalization.ensureInitialized();
 
   SystemChrome.setPreferredOrientations([
-//    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitUp,
   ]);
+  
   await Session.init();
-
   initStores();
   await Future.delayed(Duration(milliseconds: 1000));
-  runApp(MaterialApp(
-      navigatorKey: navigatorKey,
-      routes: {
-        // When navigating to the "/" route, build the FirstScreen widget.
-        //'/': (context) => const FirstScreen(),
-        // When navigating to the "/second" route, build the SecondScreen widget.
-        '/webview': (context) => const SomeWebView(),
-      },
-      title: "App",
-      theme: ThemeData(
-        scaffoldBackgroundColor: Colors.white,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.blue,
-          surface: Colors.white,
-          background: Colors.white,
-        ),
-      ),
-      home: EasyLocalization(
-          supportedLocales: const [Locale("en"), Locale("ar")],
-          path: "assets/translations",
-          assetLoader: const CodegenLoader(),
-          fallbackLocale: const Locale('en'),
-          child: MyApp())));
+  
+  // REMOVED THE MATERIALAPP HERE - just run MyApp directly
+  runApp(MyApp());
 }
 
 Future<void> onSelectNotification(String? payload) async {
@@ -127,11 +92,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     switch (state) {
       case AppLifecycleState.resumed:
         debugPrint("App resumed");
-        /*    Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => Numscreen()),
-        );
-*/
         print('resumed');
         break;
       case AppLifecycleState.paused:
@@ -145,34 +105,20 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         break;
       case AppLifecycleState.hidden:
         print("hidden");
-      // TODO: Handle this case.
-      //throw UnimplementedError();
     }
   }
 
   @override
   void initState() {
-// TODO: implement initState
     super.initState();
     print('Context available: ${context != null}');
     themeManager.addListener(themeListener);
-
     WidgetsBinding.instance.addObserver(this);
-    // _requestPermissions();
-    // _configureDidReceiveLocalNotificationSubject();
-    // _configureSelectNotificationSubject();
-    // _handleIncomingLinks();
   }
 
   @override
   void dispose() {
-// TODO: implement dispose
-
     themeManager.removeListener(themeListener);
-
-    // didReceiveLocalNotificationSubject.close();
-    // selectNotificationSubject.close();
-
     super.dispose();
   }
 
@@ -182,40 +128,58 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
-      designSize: const Size(360, 800),
-      builder: (context, child) {
-        return GlobalLoaderOverlay(child: MaterialApp(
-          theme: ThemeData(
-            scaffoldBackgroundColor: Colors.white,
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: Colors.blue,
-              surface: Colors.white,
-              background: Colors.white,
+    return EasyLocalization(
+      supportedLocales: const [Locale("en"), Locale("ru")],
+      path: "assets/translations",
+      assetLoader: const CodegenLoader(),
+      fallbackLocale: const Locale('ru'),
+      child: ScreenUtilInit(
+        designSize: const Size(360, 800),
+        builder: (context, child) {
+          return KeyboardDismisser(
+            child: GlobalLoaderOverlay(
+              child: MaterialApp(
+                navigatorKey: navigatorKey, // MOVED NAVIGATOR KEY HERE
+                title: 'Телемедицина',
+                debugShowCheckedModeBanner: false,
+                theme: ThemeData(
+                  scaffoldBackgroundColor: Colors.white,
+                  colorScheme: ColorScheme.fromSeed(
+                    seedColor: Colors.blue,
+                    surface: Colors.white,
+                    background: Colors.white,
+                  ),
+                ),
+                // MOVED ROUTES HERE
+                routes: {
+                  '/webview': (context) => const SomeWebView(),
+                },
+                // IMPORTANT: Add all localization delegates
+                localizationsDelegates: const [
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                ],
+                supportedLocales: const [
+                  Locale('en'),
+                  Locale('ru'),
+                ],
+                locale: context.locale,
+                home: FutureBuilder(
+                  future: getStartupData(),
+                  builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done &&
+                        snapshot.data == true) {
+                      return Main();
+                    }
+                    return firstScreen();
+                  },
+                ),
+              ),
             ),
-          ),
-          //color: Colors.red,
-          title: 'Телемедицина',
-          debugShowCheckedModeBanner: false,
-          //
-          // theme: lightTheme,
-          //  darkTheme: darkTheme,
-          //  themeMode: themeManager.themeMode,
-          localizationsDelegates: context.localizationDelegates,
-          supportedLocales: context.supportedLocales,
-          locale: context.locale,
-          home: FutureBuilder(
-            future: getStartupData(),
-            builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-              if (snapshot.connectionState == ConnectionState.done &&
-                  snapshot.data == true) {
-                return Main();
-              }
-              return firstScreen();
-            },
-          ),
-        ));
-      },
+          );
+        },
+      ),
     );
   }
 }

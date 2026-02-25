@@ -60,6 +60,9 @@ class _PasswordDialogState extends State<PasswordDialog> {
             ],
             VerticalSpace(height: 16),
             TextFormField(
+              onTapOutside: (_) { print("tap outside");
+                FocusManager.instance.primaryFocus?.unfocus();
+              },
               controller: _passwordController,
               obscureText: _obscurePassword,
               decoration: InputDecoration(
@@ -79,6 +82,9 @@ class _PasswordDialogState extends State<PasswordDialog> {
             ),
             VerticalSpace(height: 16),
             TextFormField(
+              onTapOutside: (_) { print("tap outside");
+                FocusManager.instance.primaryFocus?.unfocus();
+              },
               controller: _confirmPasswordController,
               obscureText: _obscureConfirm,
               decoration: InputDecoration(

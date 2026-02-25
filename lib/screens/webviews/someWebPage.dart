@@ -203,11 +203,17 @@ Page resource error:
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 TextField(
+                  onTapOutside: (_) { print("tap outside");
+                    FocusManager.instance.primaryFocus?.unfocus();
+                  },
                   decoration: const InputDecoration(labelText: 'Username'),
                   autofocus: true,
                   controller: usernameTextController,
                 ),
                 TextField(
+                  onTapOutside: (_) { print("tap outside");
+                    FocusManager.instance.primaryFocus?.unfocus();
+                  },
                   decoration: const InputDecoration(labelText: 'Password'),
                   controller: passwordTextController,
                 ),

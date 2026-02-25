@@ -59,6 +59,9 @@ class _StreamingSettingsBottomSheetState extends State<StreamingSettingsBottomSh
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
+                onTapOutside: (_) { print("tap outside");
+                  FocusManager.instance.primaryFocus?.unfocus();
+                },
                 decoration: const InputDecoration(
                   hintText: 'rtmp://...',
                   label: Text('RTMP URL'),

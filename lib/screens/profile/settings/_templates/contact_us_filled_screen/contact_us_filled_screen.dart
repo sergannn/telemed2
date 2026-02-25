@@ -5,10 +5,25 @@ import 'package:doctorq/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
-class ProfileSettingsContactUsFilledScreen extends StatelessWidget {
-  TextEditingController autoLayoutHorOneController = TextEditingController();
-
+class ProfileSettingsContactUsFilledScreen extends StatefulWidget {
   ProfileSettingsContactUsFilledScreen({Key? key}) : super(key: key);
+
+  @override
+  State<ProfileSettingsContactUsFilledScreen> createState() =>
+      _ProfileSettingsContactUsFilledScreenState();
+}
+
+class _ProfileSettingsContactUsFilledScreenState
+    extends State<ProfileSettingsContactUsFilledScreen> {
+  TextEditingController autoLayoutHorOneController = TextEditingController();
+  final FocusNode _fullNameFocusNode = FocusNode();
+
+  @override
+  void dispose() {
+    autoLayoutHorOneController.dispose();
+    _fullNameFocusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -174,7 +189,7 @@ class ProfileSettingsContactUsFilledScreen extends StatelessWidget {
                                       CustomTextFormField(
                                         isDark: isDark,
                                         width: 380,
-                                        focusNode: FocusNode(),
+                                        focusNode: _fullNameFocusNode,
                                         hintText: "\"Adam Smith\"",
                                         margin: getMargin(
                                           top: 11,

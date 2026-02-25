@@ -93,6 +93,9 @@ class _RoomParametersBottomSheetState extends State<RoomParametersBottomSheet> {
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
+                onTapOutside: (_) { print("tap outside");
+                  FocusManager.instance.primaryFocus?.unfocus();
+                },
                 decoration: InputDecoration(
                   hintText: 'https://example.daily.co/room',
                   label: const Text('Room URL'),
@@ -115,6 +118,9 @@ class _RoomParametersBottomSheetState extends State<RoomParametersBottomSheet> {
                 focusNode: _urlFocusNode,
               ),
               TextField(
+                onTapOutside: (_) { print("tap outside");
+                  FocusManager.instance.primaryFocus?.unfocus();
+                },
                 decoration: const InputDecoration(
                   label: Text('Token for private rooms'),
                   floatingLabelBehavior: FloatingLabelBehavior.always,

@@ -29,6 +29,17 @@ class ProfileBlankScreen extends StatefulWidget {
 
 class _ProfileBlankScreenState extends State<ProfileBlankScreen> {
   File? _image;
+  final FocusNode _fullNameFocusNode = FocusNode();
+  final FocusNode _emailFocusNode = FocusNode();
+  final FocusNode _addressFocusNode = FocusNode();
+
+  @override
+  void dispose() {
+    _fullNameFocusNode.dispose();
+    _emailFocusNode.dispose();
+    _addressFocusNode.dispose();
+    super.dispose();
+  }
 
   Future pickImage() async {
     var pr = await SharedPreferences.getInstance();
@@ -332,7 +343,7 @@ class _ProfileBlankScreenState extends State<ProfileBlankScreen> {
                         child: CustomTextFormField(
                           isDark: isDark,
                           width: size.width,
-                          focusNode: FocusNode(),
+                          focusNode: _fullNameFocusNode,
                           hintText: "Full Name",
                           margin: getMargin(
                             top: 11,
@@ -403,7 +414,7 @@ class _ProfileBlankScreenState extends State<ProfileBlankScreen> {
                         child: CustomTextFormField(
                           isDark: isDark,
                           width: size.width,
-                          focusNode: FocusNode(),
+                          focusNode: _emailFocusNode,
                           hintText: "Email",
                           margin: getMargin(
                             top: 11,
@@ -691,7 +702,7 @@ class _ProfileBlankScreenState extends State<ProfileBlankScreen> {
                                 child: CustomTextFormField(
                                   isDark: isDark,
                                   width: size.width,
-                                  focusNode: FocusNode(),
+                                  focusNode: _addressFocusNode,
                                   hintText: "Address",
                                   margin: getMargin(
                                     top: 11,
@@ -736,6 +747,7 @@ class _ProfileBlankScreenState extends State<ProfileBlankScreen> {
   DateTime? selectedDate;
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
+        locale: Locale('ru','RU'),
         context: context,
         initialDate: DateTime(1997, 1, 1),
         firstDate: DateTime(1900, 1),

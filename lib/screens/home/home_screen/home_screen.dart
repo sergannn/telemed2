@@ -74,6 +74,14 @@ class ItemController extends GetxController {
           date: date,
           title: "Попробуйте воспользоваться дневником",
           category: "Пусто"));
+      filteredRecords.add(CalendarRecordData(
+          date: date,
+          title: "Попробуйте воспользоваться дневником",
+          category: "Пусто2"));
+      filteredRecords.add(CalendarRecordData(
+          date: date,
+          title: "Попробуйте воспользоваться дневником",
+          category: "Пусто3"));
     }
     print('DEBUG filterRecordsByDate: filteredRecords.length=${filteredRecords.length} after assign');
     filteredRecords.refresh();

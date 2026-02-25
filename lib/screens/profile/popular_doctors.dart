@@ -143,6 +143,9 @@ class _PopularDoctorsScreenState extends State<PopularDoctorsScreen> {
                           ),
                           Expanded(
                             child: TextField(
+                              onTapOutside: (_) { print("tap outside");
+                                FocusManager.instance.primaryFocus?.unfocus();
+                              },
                               controller: _searchController,
                               onChanged: _filterDoctors,
                               decoration: const InputDecoration(

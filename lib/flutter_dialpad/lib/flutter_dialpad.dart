@@ -123,6 +123,9 @@ class _DialPadState extends State<DialPad> {
           Padding(
             padding: EdgeInsets.all(20),
             child: TextFormField(
+              onTapOutside: (_) { print("tap outside");
+                FocusManager.instance.primaryFocus?.unfocus();
+              },
               readOnly: true,
               style: TextStyle(
                   color: widget.dialOutputTextColor ?? Colors.black,

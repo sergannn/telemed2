@@ -84,6 +84,9 @@ class _CalculatorToolWidgetState extends State<CalculatorToolWidget> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           TextField(
+            onTapOutside: (_) { print("tap outside");
+              FocusManager.instance.primaryFocus?.unfocus();
+            },
             controller: _equationController,
             decoration: InputDecoration(
               labelText: 'Equation',

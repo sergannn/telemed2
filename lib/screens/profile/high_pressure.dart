@@ -29,11 +29,13 @@ class _HighPressureScreenState extends State<HighPressureScreen> with SingleTick
   Map<String, dynamic>? article;
   bool isLoading = true;
   String? errorMessage;
-
+late final WebViewController _webViewController;
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
+      _webViewController = WebViewController()
+    ..setJavaScriptMode(JavaScriptMode.unrestricted);
     _fetchArticle();
   }
 
@@ -162,14 +164,14 @@ class _HighPressureScreenState extends State<HighPressureScreen> with SingleTick
       children: [
         _buildArticleContent(),
         _buildVideoContent(),
-        FakeChatScreen()
       ],
     );
   }
 
   Widget _buildArticleContent() {
     if (isLoading) {
-      return Center(child: CircularProgressIndicator());
+      print("is loading");
+     // return Center(child: CircularProgressIndicator());
     }
     
     if (errorMessage != null) {
@@ -376,8 +378,8 @@ class _HighPressureScreenState extends State<HighPressureScreen> with SingleTick
                         maxHeight: MediaQuery.of(context).size.height * 0.6,
                       ),
                       child: WebViewWidget(
-                        controller: WebViewController()
-                          ..setJavaScriptMode(JavaScriptMode.unrestricted)
+                        controller: _webViewController
+                        
                           ..loadHtmlString(
                             '''
                             <!DOCTYPE html>
@@ -490,14 +492,34 @@ class VideoPlayerWidget extends StatefulWidget {
 class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
   late VideoPlayerController _controller;
   bool _isPlaying = false;
+  bool _isInitialized = false;  // ← НОВАЯ СТРОКА
 
   @override
   void initState() {
     super.initState();
+     _initializeVideoPlayer();  // ← ИЗМЕНЕНО
+    //_controller = VideoPlayerController.network(widget.videoUrl)
+    //  ..initialize().then((_) {
+    //    setState(() {});
+   //   });
+  }
+    void _initializeVideoPlayer() {  // ← НОВЫЙ МЕТОД
     _controller = VideoPlayerController.network(widget.videoUrl)
       ..initialize().then((_) {
-        setState(() {});
+        if (mounted) {
+          setState(() {
+            _isInitialized = true;  // ← ИЗМЕНЕНО
+          });
+        }
       });
+  }
+    @override
+  void didUpdateWidget(VideoPlayerWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.videoUrl != oldWidget.videoUrl) {  // ← НОВЫЙ МЕТОД
+      _controller.dispose();
+      _initializeVideoPlayer();
+    }
   }
 
   @override
@@ -668,6 +690,9 @@ class _FakeChatScreenState extends State<FakeChatScreen> {
           ),
           Expanded(
             child: TextField(
+              onTapOutside: (_) { print("tap outside");
+                FocusManager.instance.primaryFocus?.unfocus();
+              },
               controller: _textController,
               decoration: InputDecoration.collapsed(
                 hintText: "Напишите сообщение...",

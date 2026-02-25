@@ -175,6 +175,8 @@ String _getCategoryName(String? category) {
     case 'Упражнения':
       return 'Упражнения';
     case 'Пусто':
+    case 'Пусто2':
+    case 'Пусто3':
       return 'Дневник';
     default:
       return category ?? 'Запись';

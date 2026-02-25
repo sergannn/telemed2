@@ -128,6 +128,9 @@ class _TopDoctorScreenState extends State<ChooseSpecsScreen>
               width: double.infinity, // Makes the container full width
               margin: EdgeInsets.symmetric(horizontal: 16), // Adds side margins
               child: TextField(
+                onTapOutside: (_) { print("tap outside");
+                  FocusManager.instance.primaryFocus?.unfocus();
+                },
                 controller: _searchController,
                 decoration: InputDecoration(
                   contentPadding:

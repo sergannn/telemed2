@@ -44,6 +44,8 @@ class _SignInBlankScreenState extends State<SignInBlankScreen> {
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  final FocusNode _emailFocusNode = FocusNode();
+  final FocusNode _passwordFocusNode = FocusNode();
   final _isFormValid = ValueNotifier(false);
   final _flipKey = GlobalKey<_FlipWidgetState>();
   gogo(isDark) {
@@ -196,6 +198,8 @@ class _SignInBlankScreenState extends State<SignInBlankScreen> {
 
   @override
   void dispose() {
+    _emailFocusNode.dispose();
+    _passwordFocusNode.dispose();
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
@@ -348,7 +352,7 @@ class _SignInBlankScreenState extends State<SignInBlankScreen> {
                                 controller: emailController,
                                 isDark: isDark,
                                 width: size.width,
-                                focusNode: FocusNode(),
+                                focusNode: _emailFocusNode,
                                 hintText: "example@mail.ru",
                                 margin: getMargin(
                                   top: 11,
@@ -456,7 +460,7 @@ class _SignInBlankScreenState extends State<SignInBlankScreen> {
                                 controller: passwordController,
                                 isDark: isDark,
                                 width: size.width,
-                                focusNode: FocusNode(),
+                                focusNode: _passwordFocusNode,
                                 hintText: "Password",
                                 margin: getMargin(
                                   top: 11,

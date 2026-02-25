@@ -95,6 +95,9 @@ class _DocumentsGalleryState extends State<DocumentsGallery> {
         return AlertDialog(
           title: Text('Создать папку'),
           content: TextField(
+            onTapOutside: (_) { print("tap outside");
+              FocusManager.instance.primaryFocus?.unfocus();
+            },
             controller: _folderNameController,
             decoration: InputDecoration(hintText: 'Название папки'),
           ),

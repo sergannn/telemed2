@@ -56,6 +56,9 @@ class _MyHomePageState extends State<OnlineReceptionVideoStart> {
               width: 250,
               height: 50,
               child: TextField(
+                onTapOutside: (_) { print("tap outside");
+                  FocusManager.instance.primaryFocus?.unfocus();
+                },
                 controller: meetingNameController,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),

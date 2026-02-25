@@ -79,13 +79,19 @@ class CustomTextFormField extends StatelessWidget {
   }
 
   _buildTextFormFieldWidget() {
+    print("building textfield");
     return Container(
+     // color:Colors.red,
       width: getHorizontalSize(width ?? 0),
       margin: margin,
       child: TextFormField(
         onFieldSubmitted: (_) {
           FocusManager.instance.primaryFocus?.unfocus();
         },
+        onTapOutside: (_) { print("tap outside");
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
+      //  onTap: () => focusNode?.requestFocus(),
         initialValue: initialValue,
         keyboardType: keyboardType,
         controller: controller,

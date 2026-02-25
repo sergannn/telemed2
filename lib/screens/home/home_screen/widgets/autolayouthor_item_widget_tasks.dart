@@ -197,6 +197,10 @@ Color getColor(dynamic record) {
     return ColorConstant.fromHex("FFD6E0"); // нежно-розовый
   } else if (record.category == 'Пусто') {
     return ColorConstant.fromHex("C8E0FF"); // голубоватый по умолчанию
+  } else if (record.category == 'Пусто2') {
+    return ColorConstant.fromHex("FFFCBB"); // желтоватый
+  } else if (record.category == 'Пусто3') {
+    return ColorConstant.fromHex("FFD6E0"); // нежно-розовый
   } else {
     return ColorConstant.fromHex("C8E0FF"); // голубоватый по умолчанию
   }
@@ -213,6 +217,8 @@ String getCategoryName(String category) {
     case 'Приемы':
       return 'Приемы';
     case 'Пусто':
+    case 'Пусто2':
+    case 'Пусто3':
       return 'Дневник';
     default:
       return 'Дневник';

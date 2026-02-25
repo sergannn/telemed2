@@ -33,7 +33,7 @@ class SpecialistModel {
 
 Future<List<SpecialistModel>> fetchSpecialists() async {
   final response =
-      await http.get(Uri.parse('https://onlinedoctor.su/api/specializations'));
+      await http.get(Uri.parse('https://admin.onlinedoctor.su/api/specializations'));
 
   if (response.statusCode == 200) {
     List jsonResponse = json.decode(response.body)['data'];

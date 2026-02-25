@@ -5,10 +5,27 @@ import 'package:doctorq/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
-class ProfileSettingsContactUsBlankScreen extends StatelessWidget {
-  TextEditingController autoLayoutHorOneController = TextEditingController();
-
+class ProfileSettingsContactUsBlankScreen extends StatefulWidget {
   ProfileSettingsContactUsBlankScreen({Key? key}) : super(key: key);
+
+  @override
+  State<ProfileSettingsContactUsBlankScreen> createState() =>
+      _ProfileSettingsContactUsBlankScreenState();
+}
+
+class _ProfileSettingsContactUsBlankScreenState
+    extends State<ProfileSettingsContactUsBlankScreen> {
+  TextEditingController autoLayoutHorOneController = TextEditingController();
+  final FocusNode _fullNameFocusNode = FocusNode();
+  final FocusNode _messageFocusNode = FocusNode();
+
+  @override
+  void dispose() {
+    autoLayoutHorOneController.dispose();
+    _fullNameFocusNode.dispose();
+    _messageFocusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -174,7 +191,7 @@ class ProfileSettingsContactUsBlankScreen extends StatelessWidget {
                                       CustomTextFormField(
                                         isDark: isDark,
                                         width: 380,
-                                        focusNode: FocusNode(),
+                                        focusNode: _fullNameFocusNode,
                                         hintText: "\"Full Name\"",
                                         margin: getMargin(
                                           top: 11,
@@ -427,7 +444,7 @@ class ProfileSettingsContactUsBlankScreen extends StatelessWidget {
                               CustomTextFormField(
                                 isDark: isDark,
                                 width: 380,
-                                focusNode: FocusNode(),
+                                focusNode: _messageFocusNode,
                                 hintText: "\"Message\"",
                                 margin: getMargin(
                                   top: 12,

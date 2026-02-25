@@ -159,6 +159,9 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                 children: [
                   Expanded(
                     child: TextField(
+                      onTapOutside: (_) { print("tap outside");
+                        FocusManager.instance.primaryFocus?.unfocus();
+                      },
                       decoration: const InputDecoration(
                           hintText: 'Your message here...'),
                       controller: _textController,

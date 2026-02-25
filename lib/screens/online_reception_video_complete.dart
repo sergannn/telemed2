@@ -455,6 +455,9 @@ color: Color.fromARGB(255, 91, 91, 91),
                       ),
                       padding: EdgeInsets.all(16),
                       child: TextField(
+                        onTapOutside: (_) { print("tap outside");
+                          FocusManager.instance.primaryFocus?.unfocus();
+                        },
                         controller: _reviewController,
                         maxLines: 4,
                         maxLength: 250,

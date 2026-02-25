@@ -389,6 +389,9 @@ class _AkkInfoScreenState extends State<AkkEditScreen> {
               borderRadius: BorderRadius.circular(20.0),
             ),
             child: TextField(
+              onTapOutside: (_) { print("tap outside");
+                FocusManager.instance.primaryFocus?.unfocus();
+              },
               controller: controller,
               keyboardType: keyboardType,
               readOnly: readOnly,

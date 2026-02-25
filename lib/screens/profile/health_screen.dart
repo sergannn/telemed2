@@ -175,7 +175,6 @@ class _HealthScreenState extends State<HealthScreen>
       children: articlesByCategory.entries.map((entry) {
         final categoryName = entry.key;
         final categoryArticles = entry.value;
-        
         return ArticleSection(
           title: categoryName,
           articles: categoryArticles,

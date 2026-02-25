@@ -50,6 +50,9 @@ class _AddOrEditRecordFormState extends State<AddOrEditRecordForm> {
         children: [
           SizedBox(height: 15),
           TextFormField(
+            onTapOutside: (_) { print("tap outside");
+              FocusManager.instance.primaryFocus?.unfocus();
+            },
             controller: _titleController,
             decoration: AppConstants.inputDecoration.copyWith(
               labelText: "Заголовок записи",
@@ -130,6 +133,9 @@ class _AddOrEditRecordFormState extends State<AddOrEditRecordForm> {
           ),
           SizedBox(height: 15),
           TextFormField(
+            onTapOutside: (_) { print("tap outside");
+              FocusManager.instance.primaryFocus?.unfocus();
+            },
             controller: _descriptionController,
             focusNode: _descriptionNode,
             style: TextStyle(
@@ -419,6 +425,9 @@ class _DateTimeSelectorFormFieldState extends State<DateTimeSelectorFormField> {
     return GestureDetector(
       onTap: _showSelector,
       child: TextFormField(
+        onTapOutside: (_) { print("tap outside");
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
         focusNode: _focusNode,
         style: widget.textStyle,
         controller: _textEditingController,
@@ -453,6 +462,7 @@ class _DateTimeSelectorFormFieldState extends State<DateTimeSelectorFormField> {
 
   Future<DateTime?> _showDateSelector() async {
     final date = await showDatePicker(
+        locale: Locale('ru','RU'),
       context: context,
       initialDate: _selectedDate ?? DateTime.now(),
       firstDate: widget.minimumDateTime ?? CalendarConstants.minDate,

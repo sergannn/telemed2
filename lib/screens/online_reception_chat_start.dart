@@ -226,6 +226,9 @@ class _OnlineReceptionChatStartState extends State<OnlineReceptionChatStart> {
             Container(
               padding: const EdgeInsets.all(16),
               child: TextField(
+                onTapOutside: (_) { print("tap outside");
+                  FocusManager.instance.primaryFocus?.unfocus();
+                },
                 controller: _messageController,
                 decoration: InputDecoration(
                   hintText: 'Введите сообщение...',
