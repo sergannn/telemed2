@@ -18,7 +18,7 @@ bool forceUserLogin = debugMode;
 String testUserLogin = "doctor@infycare.com";
 String testUserPassword = "123456";
 
-const String kApiDomain = 'https://onlinedoctor.su';
+const String kApiDomain = 'https://admin.onlinedoctor.su';
 const String kApiDomain2 = 'https://admin.onlinedoctor.su';
 //https://graph.free-dharma.ru/public';
 

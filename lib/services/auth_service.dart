@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
@@ -185,7 +186,18 @@ Future<bool> authUser(
 
   debugPrintTransactionStart('mutation login');
 
-  final QueryResult result = await graphqlClient.mutate(options);
+  late QueryResult result;
+  try {
+    result = await graphqlClient.mutate(options).timeout(
+      const Duration(seconds: 10),
+    );
+  } on TimeoutException {
+    snackBar(context, message: "Нет ответа от сервера. Проверьте подключение.", color: Colors.red);
+    return false;
+  } catch (e) {
+    snackBar(context, message: "Ошибка соединения. Попробуйте позже.", color: Colors.red);
+    return false;
+  }
   debugPrintTransactionEnd('mutation login');
   print("\nResponse Details:");
   print("Status: ${result.hasException ? "Error" : "Success"}");

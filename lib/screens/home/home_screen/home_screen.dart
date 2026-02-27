@@ -374,7 +374,7 @@ class ItemController extends GetxController {
     // Simulating fetching data from an API
     var response = await safeHttpRequest(
       null,
-      () => http.get(Uri.parse('https://www.admin.onlinedoctor.su/api/specializations')),
+      () => http.get(Uri.parse('$kApiDomain/api/specializations')),
       errorMessage: 'Нет подключения к интернету. Не удалось загрузить специализации.',
     );
 
