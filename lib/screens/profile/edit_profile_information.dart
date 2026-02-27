@@ -8,6 +8,7 @@ import 'package:graphql/client.dart';
 import 'package:doctorq/constant/constants.dart';
 import 'package:get_it/get_it.dart';
 import 'package:doctorq/stores/user_store.dart';
+import 'dart:async';
 
 class AkkEditScreen extends StatefulWidget {
   const AkkEditScreen({Key? key}) : super(key: key);
@@ -27,11 +28,12 @@ class _AkkInfoScreenState extends State<AkkEditScreen> {
   late TextEditingController _birthDateController;
   late TextEditingController _emailController;
   late TextEditingController _snilsController;
+  late TextEditingController _experienceController;
 
   @override
   void initState() {
     super.initState();
-    
+
     // Initialize controllers with current user data
     final userData = context.userData;
     _firstNameController = TextEditingController(text: userData['first_name'] ?? '');
@@ -40,6 +42,49 @@ class _AkkInfoScreenState extends State<AkkEditScreen> {
     _birthDateController = TextEditingController(text: userData['birth_date'] ?? '');
     _emailController = TextEditingController(text: userData['email'] ?? '');
     _snilsController = TextEditingController(text: userData['snils'] ?? '');
+    _experienceController = TextEditingController(text: userData['experience']?.toString() ?? '');
+
+    // Fetch current experience from server if doctor_id is available
+    final doctorId = userData['doctor_id']?.toString();
+    if (doctorId != null && doctorId.isNotEmpty && _experienceController.text.isEmpty) {
+      _fetchDoctorExperience(doctorId);
+    }
+  }
+
+  Future<void> _fetchDoctorExperience(String doctorId) async {
+    try {
+      const query = '''
+        query GetDoctor(\$id: ID!) {
+          doctor(id: \$id) {
+            experience
+          }
+        }
+      ''';
+
+      final QueryOptions options = QueryOptions(
+        document: gql(query),
+        variables: {'id': doctorId},
+      );
+
+      GraphQLClient graphqlClient = await graphqlAPI2.authClient();
+      final QueryResult result = await graphqlClient.query(options);
+
+      if (!result.hasException && result.data != null) {
+        final exp = result.data!['doctor']?['experience'];
+        if (exp != null && mounted) {
+          setState(() {
+            _experienceController.text = exp.toString();
+          });
+          // Cache in user store
+          final userStore = GetIt.instance<UserStore>();
+          final updatedData = Map<String, dynamic>.from(context.userData);
+          updatedData['experience'] = exp.toString();
+          userStore.setUserData(updatedData);
+        }
+      }
+    } catch (_) {
+      // silently ignore — user can still type manually
+    }
   }
 
   @override
@@ -50,6 +95,7 @@ class _AkkInfoScreenState extends State<AkkEditScreen> {
     _birthDateController.dispose();
     _emailController.dispose();
     _snilsController.dispose();
+    _experienceController.dispose();
     super.dispose();
   }
 
@@ -85,6 +131,8 @@ class _AkkInfoScreenState extends State<AkkEditScreen> {
           'phone': _phoneController.text,
           'birth_date': _birthDateController.text,
           'snils': _snilsController.text,
+          if (_experienceController.text.isNotEmpty)
+            'experience': double.tryParse(_experienceController.text) ?? 0,
         }
       };
 
@@ -226,21 +274,20 @@ class _AkkInfoScreenState extends State<AkkEditScreen> {
                     keyboardType: TextInputType.datetime,
                   ),
 
-                  // Email Field (readonly)
-                  _buildEditableField(
-                    label: 'Почта',
-                    controller: _emailController,
-                    hintText: 'Введите email',
-                    keyboardType: TextInputType.emailAddress,
-                    readOnly: true,
-                  ),
-
                   // SNILS Field
                   _buildEditableField(
                     label: 'СНИЛС',
                     controller: _snilsController,
                     hintText: 'Введите номер СНИЛС',
                     keyboardType: TextInputType.text,
+                  ),
+
+                  // Experience Field
+                  _buildEditableField(
+                    label: 'Стаж (лет)',
+                    controller: _experienceController,
+                    hintText: 'Введите стаж работы',
+                    keyboardType: TextInputType.numberWithOptions(decimal: true),
                   ),
 
                   // Privacy Agreement

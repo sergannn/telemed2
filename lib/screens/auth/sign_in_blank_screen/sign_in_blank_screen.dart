@@ -89,10 +89,9 @@ class _SignInBlankScreenState extends State<SignInBlankScreen> {
   forceLog(isDark) async {
     showDialog(
       barrierColor: Colors.black.withOpacity(0.5),
-      barrierDismissible: true,
+      barrierDismissible: false,
       context: context,
       builder: (context) {
-        Future.delayed(const Duration(milliseconds: 600), () {});
         return Dialog(
             backgroundColor: Colors.transparent,
             shape: const RoundedRectangleBorder(
@@ -119,9 +118,14 @@ class _SignInBlankScreenState extends State<SignInBlankScreen> {
             ));
       },
     );
-    var authRes = await authUser(context, "haus@haus.ru", "123123123");
-    if (authRes == true) {
-      gogo(false);
+    try {
+      var authRes = await authUser(context, "haus@haus.ru", "123123123");
+      Navigator.of(context, rootNavigator: true).pop();
+      if (authRes == true) {
+        gogo(false);
+      }
+    } catch (e) {
+      Navigator.of(context, rootNavigator: true).pop();
     }
   }
 
@@ -530,13 +534,12 @@ class _SignInBlankScreenState extends State<SignInBlankScreen> {
                       alignment: Alignment.center,
                       onTap: () async {
                         print("tap");
-                        
+
                         setState(() {
                           _showValidationErrors = true;
                         });
-                        
+
                         if (!_validateForm()) {
-                          // Показываем первую ошибку
                           if (_emailError != null) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text(_emailError!)),
@@ -548,17 +551,46 @@ class _SignInBlankScreenState extends State<SignInBlankScreen> {
                           }
                           return;
                         }
-                        
-                        /*if (forceUserLogin) {
-                      emailController.text = testUserLogin;
-                      passwordController.text = testUserPassword;
-                    }*/
-                        var authRes = await authUser(context,
-                            emailController.text, passwordController.text);
-                        if (authRes == true) {
-                          gogo(isDark);
+
+                        showDialog(
+                          barrierColor: Colors.black.withOpacity(0.5),
+                          barrierDismissible: false,
+                          context: context,
+                          builder: (ctx) => Dialog(
+                            backgroundColor: Colors.transparent,
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                            ),
+                            elevation: 0.0,
+                            child: Center(
+                              child: Container(
+                                width: getHorizontalSize(124),
+                                height: getVerticalSize(124),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: isDark ? ColorConstant.darkBg : ColorConstant.whiteA700,
+                                ),
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                    color: ColorConstant.blueA400,
+                                    backgroundColor: ColorConstant.blueA400.withOpacity(.3),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+
+                        try {
+                          var authRes = await authUser(context,
+                              emailController.text, passwordController.text);
+                          Navigator.of(context, rootNavigator: true).pop();
+                          if (authRes == true) {
+                            gogo(isDark);
+                          }
+                        } catch (e) {
+                          Navigator.of(context, rootNavigator: true).pop();
                         }
-                        
                       });
                 }),
             Align(

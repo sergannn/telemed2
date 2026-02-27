@@ -30,11 +30,31 @@ class _HighPressureScreenState extends State<HighPressureScreen> with SingleTick
   Map<String, dynamic>? article;
   bool isLoading = true;
   String? errorMessage;
+  String? videoError;
+  late final WebViewController _webViewController;
+  late final WebViewController _videoWebViewController;
+  VideoPlayerController? _videoController;
+  bool _isYouTubeVideo = false;
+
+  static bool _isYouTubeUrl(String url) {
+    return url.contains('youtube.com') || url.contains('youtu.be');
+  }
+
+  static String? _extractYouTubeId(String url) {
+    final uri = Uri.tryParse(url);
+    if (uri == null) return null;
+    if (uri.host.contains('youtu.be')) return uri.pathSegments.isNotEmpty ? uri.pathSegments.first : null;
+    return uri.queryParameters['v'];
+  }
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    _webViewController = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted);
+    _videoWebViewController = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted);
     _fetchArticle();
   }
 
@@ -46,6 +66,42 @@ class _HighPressureScreenState extends State<HighPressureScreen> with SingleTick
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> articleData = json.decode(response.body)['data'];
+        final videoUrl = articleData['video_url']?.toString() ?? '';
+        if (videoUrl.isNotEmpty) {
+          if (_isYouTubeUrl(videoUrl)) {
+            _isYouTubeVideo = true;
+            final videoId = _extractYouTubeId(videoUrl);
+            if (videoId != null) {
+              _videoWebViewController.loadHtmlString('''
+                <!DOCTYPE html>
+                <html>
+                <head>
+                  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                  <style>
+                    * { margin: 0; padding: 0; box-sizing: border-box; }
+                    body { background: #000; }
+                    .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; }
+                    .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+                  </style>
+                </head>
+                <body>
+                  <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/$videoId?playsinline=1" allowfullscreen></iframe>
+                  </div>
+                </body>
+                </html>
+              ''');
+            }
+          } else {
+            try {
+              final controller = VideoPlayerController.networkUrl(Uri.parse(videoUrl));
+              await controller.initialize();
+              _videoController = controller;
+            } catch (e) {
+              videoError = 'Не удалось загрузить видео';
+            }
+          }
+        }
         setState(() {
           article = articleData;
           isLoading = false;
@@ -67,6 +123,7 @@ class _HighPressureScreenState extends State<HighPressureScreen> with SingleTick
   @override
   void dispose() {
     _tabController.dispose();
+    _videoController?.dispose();
     super.dispose();
   }
 
@@ -184,7 +241,12 @@ class _HighPressureScreenState extends State<HighPressureScreen> with SingleTick
     return SingleChildScrollView(
       physics: AlwaysScrollableScrollPhysics(),
       padding: EdgeInsets.all(16),
-      child: _buildArticleDetail(article!),
+      child: Column(
+        children: [
+          _buildArticleDetail(article!),
+          SizedBox(height: 100),
+        ],
+      ),
     );
   }
 /*
@@ -270,20 +332,16 @@ class _HighPressureScreenState extends State<HighPressureScreen> with SingleTick
     if (isLoading) {
       return Center(child: CircularProgressIndicator());
     }
-    
-    if (errorMessage != null) {
-      return Center(child: Text(errorMessage!));
-    }
 
     if (article == null || article!['video_url'] == null || article!['video_url'].toString().isEmpty) {
-      return Center(child: Text('Нет видео для этой статьи'));//+article.toString()));
+      return Center(child: Text('Нет видео для этой статьи'));
     }
 
-    return SingleChildScrollView(
-      physics: AlwaysScrollableScrollPhysics(),
-      padding: EdgeInsets.all(16),
-      child: _buildVideoItem(article!),
-    );
+    if (videoError != null) {
+      return Center(child: Text(videoError!));
+    }
+
+    return _buildVideoItem(article!);
   }
 
   Widget _buildArticleDetail(Map<String, dynamic> article) {
@@ -377,8 +435,7 @@ class _HighPressureScreenState extends State<HighPressureScreen> with SingleTick
                         maxHeight: MediaQuery.of(context).size.height * 0.6,
                       ),
                       child: WebViewWidget(
-                        controller: WebViewController()
-                          ..setJavaScriptMode(JavaScriptMode.unrestricted)
+                        controller: _webViewController
                           ..loadHtmlString(
                             '''
                             <!DOCTYPE html>
@@ -419,91 +476,74 @@ class _HighPressureScreenState extends State<HighPressureScreen> with SingleTick
   }
 
   Widget _buildVideoItem(Map<String, dynamic> article) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 8,
-            offset: Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (article['category'] != null && article['category']['title'] != null)
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.blue[50],
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Text(
-                      article['category']['title'],
-                      style: TextStyle(
-                        fontSize: getFontSize(12),
-                        color: Colors.blue[700],
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (article['category'] != null && article['category']['title'] != null)
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.blue[50],
+                    borderRadius: BorderRadius.circular(4),
                   ),
-                SizedBox(height: 8),
-                Text(
-                  article['title'] ?? 'Без названия',
-                  style: TextStyle(
-                    fontSize: getFontSize(18),
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'SourceSansPro',
+                  child: Text(
+                    article['category']['title'],
+                    style: TextStyle(
+                      fontSize: getFontSize(12),
+                      color: Colors.blue[700],
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
-              ],
-            ),
+              SizedBox(height: 8),
+              Text(
+                article['title'] ?? 'Без названия',
+                style: TextStyle(
+                  fontSize: getFontSize(18),
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'SourceSansPro',
+                ),
+              ),
+            ],
           ),
-          if (article['video_url'] != null)
-            Container(
-              padding: EdgeInsets.all(16),
-              child: VideoPlayerWidget(videoUrl: article['video_url']),
-            ),
-        ],
-      ),
+        ),
+        if (_isYouTubeVideo)
+          AspectRatio(
+            aspectRatio: 16 / 9,
+            child: WebViewWidget(controller: _videoWebViewController),
+          )
+        else if (_videoController != null)
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: VideoPlayerWidget(controller: _videoController!),
+          ),
+      ],
     );
   }
 }
 
 class VideoPlayerWidget extends StatefulWidget {
-  final String videoUrl;
+  final VideoPlayerController controller;
 
-  const VideoPlayerWidget({Key? key, required this.videoUrl}) : super(key: key);
+  const VideoPlayerWidget({Key? key, required this.controller}) : super(key: key);
 
   @override
   _VideoPlayerWidgetState createState() => _VideoPlayerWidgetState();
 }
 
 class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
-  late VideoPlayerController _controller;
   bool _isPlaying = false;
 
-  @override
-  void initState() {
-    super.initState();
-    _controller = VideoPlayerController.network(widget.videoUrl)
-      ..initialize().then((_) {
-        setState(() {});
-      });
-  }
+  VideoPlayerController get _controller => widget.controller;
 
   @override
   void dispose() {
-    _controller.dispose();
+    // контроллер управляется родителем, здесь не dispose
     super.dispose();
   }
 

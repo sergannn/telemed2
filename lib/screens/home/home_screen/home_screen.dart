@@ -366,7 +366,7 @@ class ItemController extends GetxController {
     });
     // Simulating fetching data from an API
     var response = await http.get(Uri.parse(
-      'https://www.admin.onlinedoctor.su/api/specializations',
+      '$kApiDomain/api/specializations',
     ));
 
     if (response.statusCode == 200) {
@@ -445,7 +445,7 @@ class ItemControllerDoctorOld extends GetxController {
     getDoctors();
     // Simulating fetching data from an API
     var response = await http.get(Uri.parse(
-      'https://www.onlinedoctor.su/api/specializations',
+      '$kApiDomain/api/specializations',
     ));
 
     if (response.statusCode == 200) {

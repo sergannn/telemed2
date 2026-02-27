@@ -22,9 +22,9 @@ class UserModel {
     firstName = json['user']['first_name'];
     email = json['user']['email'];
     gender = json['user']['gender']?.toString();
-
     lastName = json['user']['last_name'];
     photo = json['user']['photo'];
+    experience = json['user']['experience']?.toString();
 
     // if (json['user']['role'] != null &&
     //     !json['user']["role"]['nodes'].isEmpty) {
@@ -45,6 +45,7 @@ class UserModel {
   String? photo;
   String? authToken;
   String? gender; // 1 = MALE, 2 = FEMALE
+  String? experience;
 
   // List<String>? role;
 
@@ -66,6 +67,7 @@ class UserModel {
       'last_name': lastName,
       'photo': photo,
       'gender': gender,
+      'experience': experience,
     };
   }
 }
