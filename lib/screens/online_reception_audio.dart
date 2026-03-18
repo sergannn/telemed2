@@ -1,10 +1,11 @@
+import 'dart:convert';
+
 import 'package:doctorq/extensions.dart';
-import 'package:doctorq/daily/main.dart';
 import 'package:doctorq/screens/articles/articles.dart';
 import 'package:doctorq/services/api_service.dart';
-import 'package:doctorq/utils/daily_call_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:loader_overlay/loader_overlay.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class OnlineReceptionAudio extends StatelessWidget {
   @override
@@ -354,33 +355,35 @@ Container(
 Row(
   mainAxisAlignment: MainAxisAlignment.spaceBetween,
   children: [
-    // Основная кнопка слева
-    ElevatedButton(
+    // Кнопка Яндекс Телемост
+    ElevatedButton.icon(
       onPressed: () async {
-        final navigator = Navigator.of(context);
-        await launchDailyCall(context, DailyCallMode.audio);
-        if (!navigator.mounted) return;
-        if (navigator.canPop()) {
-          navigator.pop();
+        final roomData = context.selectedAppointment['room_data']?.toString() ?? '';
+        String? url;
+        if (roomData.startsWith('https://')) {
+          url = roomData;
+        } else {
+          try {
+            final decoded = jsonDecode(roomData);
+            url = decoded['join_url'] ?? decoded['url'];
+          } catch (_) {}
+        }
+        if (url != null) {
+          await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
         }
       },
+      icon: const Icon(Icons.headset_mic, color: Colors.white, size: 18),
+      label: const Text(
+        'Яндекс Телемост',
+        style: TextStyle(color: Colors.white, fontSize: 12),
+      ),
       style: ElevatedButton.styleFrom(
         backgroundColor: const Color.fromARGB(255, 96, 159, 222),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(32),
         ),
-        padding: EdgeInsets.symmetric(
-          horizontal: 24,
-          vertical: 8,
-        ),
-        minimumSize: Size(180, 51),
-      ),
-      child: Text(
-        'Начать прием',
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 12,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        minimumSize: const Size(180, 51),
       ),
     ),
     // Круглая кнопка справа

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:doctorq/models/doctor_model.dart';
@@ -29,6 +30,19 @@ class AppointmentModel {
   String? toTime;
   String? toTimeType;
   String? room_data;
+
+  /// Возвращает URL для Яндекс Телемост.
+  /// room_data может быть: просто URL (новый формат) или JSON с полем join_url/url (старый Daily.co).
+  String? get telemostUrl {
+    if (room_data == null || room_data!.isEmpty) return null;
+    if (room_data!.startsWith('https://')) return room_data;
+    try {
+      final decoded = jsonDecode(room_data!);
+      return decoded['join_url'] ?? decoded['url'];
+    } catch (_) {
+      return null;
+    }
+  }
 
   AppointmentModel.fromJson(Map json) {
     appointmentId = json['id'];

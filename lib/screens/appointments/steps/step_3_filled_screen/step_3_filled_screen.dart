@@ -454,18 +454,14 @@ context.loaderOverlay.show();
                     payment_type: "1",
                     payable_amount: "500");
                 if (result) {
-                  //добавили комнату
-                  //endpoint в graph ---
                   snackBar(context, message: 'Вы успешно записались на прием');
-                  
-                  // Обновляем данные записей
                   await getAppointments(patientId: patientId);
                 } else {
                   print(result);
                   snackBar(context, message: 'Ошибка');
                 }
+                context.loaderOverlay.hide();
                 Future.delayed(Duration(seconds: 2), () {
-                  // Возвращаемся на главный экран с нижним меню
                   Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(builder: (context) => Main()),
                       (route) => false);

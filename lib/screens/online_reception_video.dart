@@ -1,11 +1,12 @@
-import 'package:doctorq/daily/main.dart';
+import 'dart:convert';
+
 import 'package:doctorq/extensions.dart';
 import 'package:doctorq/screens/articles/articles.dart';
 import 'package:doctorq/services/api_service.dart';
-import 'package:doctorq/utils/daily_call_helper.dart';
 import 'package:doctorq/widgets/loading_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:loader_overlay/loader_overlay.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class OnlineReceptionVideo extends StatelessWidget {
   @override
@@ -367,31 +368,35 @@ class OnlineReceptionVideo extends StatelessWidget {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      // Основная кнопка слева
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          launchDailyCall(
-                                              context, DailyCallMode.video);
+                                      // Кнопка Яндекс Телемост
+                                      ElevatedButton.icon(
+                                        onPressed: () async {
+                                          final roomData = context.selectedAppointment['room_data']?.toString() ?? '';
+                                          String? url;
+                                          if (roomData.startsWith('https://')) {
+                                            url = roomData;
+                                          } else {
+                                            try {
+                                              final decoded = jsonDecode(roomData);
+                                              url = decoded['join_url'] ?? decoded['url'];
+                                            } catch (_) {}
+                                          }
+                                          if (url != null) {
+                                            await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+                                          }
                                         },
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: const Color.fromARGB(
-                                              255, 96, 159, 222),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(32),
-                                          ),
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: 24,
-                                            vertical: 8,
-                                          ),
-                                          minimumSize: Size(180, 51),
+                                        icon: const Icon(Icons.video_call, color: Colors.white, size: 18),
+                                        label: const Text(
+                                          'Яндекс Телемост',
+                                          style: TextStyle(color: Colors.white, fontSize: 12),
                                         ),
-                                        child: Text(
-                                          'Начать прием',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 12,
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: const Color.fromARGB(255, 96, 159, 222),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(32),
                                           ),
+                                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                          minimumSize: const Size(180, 51),
                                         ),
                                       ),
                                       // Круглая кнопка справа
