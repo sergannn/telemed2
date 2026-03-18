@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:doctorq/services/fcm_service.dart';
 //import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 class Session {
@@ -123,6 +124,10 @@ class Session {
     data.setString("gender", user.gender ?? '');
     print(data);
     print(user.photo);
+
+    // Сохраняем FCM токен после успешного входа
+    FcmService().saveTokenAfterLogin();
+
     return true;
   }
 

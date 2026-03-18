@@ -96,9 +96,18 @@ class AppointmentListItem extends StatelessWidget {
         var roomUrl = jsonDecode(roomData.toString())['url'];
         print('Room URL: $roomUrl');
 
+        // Telemost — открываем в браузере
+        if (roomUrl != null && roomUrl.toString().contains('telemost.yandex.ru')) {
+          final uri = Uri.parse(roomUrl.toString());
+          if (await canLaunchUrl(uri)) {
+            await launchUrl(uri, mode: LaunchMode.externalApplication);
+          }
+          return;
+        }
+
         var prefs = await SharedPreferences.getInstance();
         final client = await CallClient.create();
-        
+
         Navigator.push(
           context,
           MaterialPageRoute(

@@ -1,4 +1,6 @@
 import 'package:doctorq/numScreen.dart';
+import 'package:doctorq/services/fcm_service.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:doctorq/screens/first/figmasample.dart';
 import 'package:doctorq/screens/first/first.dart';
 import 'package:doctorq/screens/webviews/someWebPage.dart';
@@ -28,6 +30,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp();
+  await FcmService().initialize();
 
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();

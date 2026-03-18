@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:daily_flutter/daily_flutter.dart' if (dart.library.html) 'package:doctorq/daily/daily_flutter_stub.dart';
 import 'dart:convert';
 import 'package:doctorq/config/daily_config.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 // Утилитная функция для проверки истечения комнаты
 bool _isRoomExpired(dynamic roomData) {
@@ -564,30 +565,36 @@ class _OnlineReceptionVideoState extends State<OnlineReceptionVideo> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      // Основная кнопка слева
-                                      ElevatedButton(
+                                      // Кнопка Яндекс Телемост
+                                      ElevatedButton.icon(
                                         onPressed: () async {
-                                          await _startVideoCall(context);
+                                          final appointment = context.selectedAppointment;
+                                          final roomData = appointment['room_data']?.toString() ?? '';
+                                          String? url;
+                                          if (roomData.startsWith('https://')) {
+                                            url = roomData;
+                                          } else {
+                                            try {
+                                              final decoded = jsonDecode(roomData);
+                                              url = decoded['join_url'] ?? decoded['url'];
+                                            } catch (_) {}
+                                          }
+                                          if (url != null) {
+                                            await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+                                          }
                                         },
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: const Color.fromARGB(
-                                              255, 96, 159, 222),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(32),
-                                          ),
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: 24,
-                                            vertical: 8,
-                                          ),
-                                          minimumSize: Size(180, 51),
+                                        icon: const Icon(Icons.video_call, color: Colors.white, size: 18),
+                                        label: const Text(
+                                          'Яндекс Телемост',
+                                          style: TextStyle(color: Colors.white, fontSize: 12),
                                         ),
-                                        child: Text(
-                                          'Начать прием',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 12,
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: const Color.fromARGB(255, 96, 159, 222),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(32),
                                           ),
+                                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                          minimumSize: const Size(180, 51),
                                         ),
                                       ),
                                       // Круглая кнопка справа
