@@ -1,5 +1,4 @@
 import 'package:doctorq/screens/articles/articles.dart';
-import 'package:doctorq/screens/online_reception_video_start.dart';
 import 'package:doctorq/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:doctorq/daily/daily_app.dart';
@@ -104,6 +103,25 @@ class _OnlineReceptionVideoState extends State<OnlineReceptionVideo> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Ошибка запуска видеозвонка: $e')),
       );
+    }
+  }
+
+  String? _extractRoomUrl(BuildContext context) {
+    final appointment = context.selectedAppointment;
+    final roomData = appointment['room_data'];
+
+    if (roomData == null) return null;
+
+    final raw = roomData.toString();
+    if (raw.isEmpty || raw == 'null') return null;
+    if (raw.startsWith('https://')) return raw;
+
+    try {
+      final roomInfo = jsonDecode(raw);
+      return (roomInfo['join_url'] ?? roomInfo['url'])?.toString();
+    } catch (e) {
+      print('Error extracting room url: $e');
+      return null;
     }
   }
 
@@ -565,36 +583,51 @@ class _OnlineReceptionVideoState extends State<OnlineReceptionVideo> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      // Кнопка Яндекс Телемост
+                                      // Основная кнопка слева
                                       ElevatedButton.icon(
                                         onPressed: () async {
-                                          final appointment = context.selectedAppointment;
-                                          final roomData = appointment['room_data']?.toString() ?? '';
-                                          String? url;
-                                          if (roomData.startsWith('https://')) {
-                                            url = roomData;
-                                          } else {
-                                            try {
-                                              final decoded = jsonDecode(roomData);
-                                              url = decoded['join_url'] ?? decoded['url'];
-                                            } catch (_) {}
-                                          }
+                                          final url = _extractRoomUrl(context);
                                           if (url != null) {
-                                            await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+                                            await launchUrl(
+                                              Uri.parse(url),
+                                              mode:
+                                                  LaunchMode.externalApplication,
+                                            );
+                                          } else {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              const SnackBar(
+                                                content: Text(
+                                                  'Ссылка на Телемост пока не готова',
+                                                ),
+                                              ),
+                                            );
                                           }
                                         },
-                                        icon: const Icon(Icons.video_call, color: Colors.white, size: 18),
-                                        label: const Text(
-                                          'Яндекс Телемост',
-                                          style: TextStyle(color: Colors.white, fontSize: 12),
+                                        icon: const Icon(
+                                          Icons.video_call,
+                                          color: Colors.white,
+                                          size: 18,
                                         ),
                                         style: ElevatedButton.styleFrom(
-                                          backgroundColor: const Color.fromARGB(255, 96, 159, 222),
+                                          backgroundColor: const Color.fromARGB(
+                                              255, 96, 159, 222),
                                           shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(32),
+                                            borderRadius:
+                                                BorderRadius.circular(32),
                                           ),
-                                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                          minimumSize: const Size(180, 51),
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 24,
+                                            vertical: 8,
+                                          ),
+                                          minimumSize: Size(180, 51),
+                                        ),
+                                        label: Text(
+                                          'Яндекс Телемост',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12,
+                                          ),
                                         ),
                                       ),
                                       // Круглая кнопка справа

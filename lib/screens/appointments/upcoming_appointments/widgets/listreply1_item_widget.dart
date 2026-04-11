@@ -13,6 +13,9 @@ import 'package:doctorq/screens/appointments/list/voice_call_ringing_screen/voic
 import 'package:doctorq/screens/appointments/list/voice_call_screen/voice_call_screen.dart';
 import 'package:doctorq/screens/audio_resolution.dart';
 import 'package:doctorq/screens/chat_resolution.dart';
+import 'package:doctorq/screens/online_reception_audio.dart';
+import 'package:doctorq/screens/online_reception_chat.dart';
+import 'package:doctorq/screens/online_reception_video.dart';
 import 'package:doctorq/screens/ser_view.dart';
 import 'package:doctorq/screens/video_resolution.dart';
 import 'package:doctorq/widgets/custom_icon_button.dart';
@@ -164,13 +167,19 @@ class AppointmentListItem extends StatelessWidget {
         return;
       }
 
-      String description = item["description"];
+      String description = "ContactMethods.videoCall";//item["description"];
+      print(description);
 
       switch (description) {
         case "ContactMethods.message": 
           print("message");
           if (!isPast) {
-            await navigateToScreen(context, DailyCallMode.chat);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => OnlineReceptionChat(),
+              ),
+            );
           } else {
             Navigator.push(
                 context,
@@ -182,7 +191,12 @@ class AppointmentListItem extends StatelessWidget {
           break;
         case "ContactMethods.voiceCall":
           if (!isPast) {
-            await navigateToScreen(context, DailyCallMode.audio);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => OnlineReceptionAudio(),
+              ),
+            );
           } else {
             Navigator.push(
                 context,
@@ -208,7 +222,12 @@ class AppointmentListItem extends StatelessWidget {
           break;
         case "ContactMethods.videoCall":
           if (!isPast) {
-            await navigateToScreen(context, DailyCallMode.video);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => OnlineReceptionVideo(),
+              ),
+            );
           } else {
             Navigator.push(
                 context,

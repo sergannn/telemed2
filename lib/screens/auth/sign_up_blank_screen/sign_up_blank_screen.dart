@@ -277,19 +277,27 @@ class _SignUpBlankScreenState extends State<SignUpBlankScreen> {
                           MyOverlay.show(context);
                     await RegFields.saveFields();
 
-                      var regRes = await regUser(context, emailController.text,
-                          password, "doctor", 
-                         RegFields.getAll()['full_name']['controller'].text,
-                        "");
+                      var regRes = await regUser(
+                        context,
+                        emailController.text,
+                        password,
+                        "doctor",
+                        RegFields.getAll()['full_name']['controller'].text,
+                        RegFields.getAll()['snils']['controller'].text,
+                        phone: RegFields.getAll()['phone']['controller'].text,
+                        birthDate:
+                            RegFields.getAll()['birthday']['controller'].text,
+                      );
                     if (regRes) {
                       MyOverlay.hide();
                       //authRes == true) {
                       print("ok");
                       var code = generateRandomCode();
-               //       var smsRes = await sendSMS(phoneController.text, code);
-                      var emailRes =
-                          await sendEmail(emailController.text, code);
-               //       print(smsRes?['code']);
+                      final emailRes = {
+                        'response': 'skipped',
+                        'code': code,
+                        'email': emailController.text,
+                      };
                       print(emailRes?['code']);
                       showDialog(
                         barrierColor: Colors.black.withOpacity(0.5),

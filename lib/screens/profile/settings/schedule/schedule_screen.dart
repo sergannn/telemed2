@@ -30,6 +30,8 @@ class _ProfileSettingsAppearanceScreenState
   late Map<dynamic, dynamic> doctor;
   late List<dynamic> availableTimesList = ['...'];
   late String formattedDate = '...';
+  bool _isLoading = true;
+  String? _loadError;
   bool switchVal2 = true;
   bool switchVal3 = true;
   int selectedTime = 0;
@@ -124,33 +126,54 @@ class _ProfileSettingsAppearanceScreenState
     doctor = context.userData;
     printLog(doctor);
 
-    // пример того как грузить много данных
-    await getSessionsD(doctorId: doctor['doctor_id']);
-    var sessionWeekDays;
-    if (context.doctorSessionsData.length == 0) {
-      await getSessionsD(doctorId: '1');
-    }
-    sessionMeetingTime.text =
-        context.doctorSessionsData[0]['session_meeting_time'];
-    sessionGap.text = context.doctorSessionsData[0]['session_gap'];
+    try {
+      final doctorId = doctor['doctor_id']?.toString();
+      if (doctorId == null || doctorId.isEmpty) {
+        throw Exception('doctor_id is missing in userData');
+      }
 
-    sessionWeekDays = context.doctorSessionsData[0]['sessionWeekDays'];
-    for (var i = 0; i < sessionWeekDays.length; i++) {
-      Map<String, dynamic> item = sessionWeekDays[i];
-      for (var j = 1; j < daysOfWeek.length; j++) {
-        if (item['day_of_week'] == j) {
-          daysOfWeekActive[j - 1] = 1;
-          daysOfWeekStartTime[j - 1] = item['start_time'];
-          daysOfWeekStartTimeType[j - 1] = item['start_time_type'];
-          daysOfWeekEndTime[j - 1] = item['end_time'];
-          daysOfWeekEndTimeType[j - 1] = item['end_time_type'];
+      await getSessionsD(doctorId: doctorId);
+
+      if (context.doctorSessionsData.isNotEmpty) {
+        var sessionWeekDays;
+        sessionMeetingTime.text =
+            context.doctorSessionsData[0]['session_meeting_time'];
+        sessionGap.text = context.doctorSessionsData[0]['session_gap'];
+
+        sessionWeekDays = context.doctorSessionsData[0]['sessionWeekDays'];
+        for (var i = 0; i < sessionWeekDays.length; i++) {
+          Map<String, dynamic> item = sessionWeekDays[i];
+          for (var j = 1; j < daysOfWeek.length; j++) {
+            if (item['day_of_week'] == j) {
+              daysOfWeekActive[j - 1] = 1;
+              daysOfWeekStartTime[j - 1] = item['start_time'];
+              daysOfWeekStartTimeType[j - 1] = item['start_time_type'];
+              daysOfWeekEndTime[j - 1] = item['end_time'];
+              daysOfWeekEndTimeType[j - 1] = item['end_time_type'];
+            }
+          }
         }
+      } else {
+        sessionMeetingTime.text = '30';
+        sessionGap.text = '15';
+      }
+
+      setState(() {
+        myDoctorSessions = context.doctorSessionsData;
+        _loadError = null;
+      });
+    } catch (e) {
+      printLog('Schedule screen load failed: $e');
+      setState(() {
+        _loadError = e.toString();
+      });
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
       }
     }
-
-    setState(() {
-      myDoctorSessions = context.doctorSessionsData;
-    });
 
     printLog(' Doctor Sessions loaded');
 
@@ -171,13 +194,54 @@ class _ProfileSettingsAppearanceScreenState
   Widget build(BuildContext context) {
     bool isDark = Theme.of(context).brightness == Brightness.dark;
 
-    if (myDoctorSessions.isEmpty) {
-      return const Text('Loading...');
-    }
-
     return Scaffold(
         body: SafeArea(
-      child: SingleChildScrollView(
+      child: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : _loadError != null
+              ? Center(
+                  child: Padding(
+                    padding: getPadding(left: 24, right: 24),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Не удалось загрузить расписание',
+                          style: TextStyle(
+                            fontSize: getFontSize(20),
+                            fontFamily: 'Source Sans Pro',
+                            fontWeight: FontWeight.w600,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        VerticalSpace(height: 12),
+                        Text(
+                          _loadError!,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: getFontSize(14),
+                            color: isDark ? Colors.white70 : Colors.black54,
+                          ),
+                        ),
+                        VerticalSpace(height: 20),
+                        CustomButton(
+                          variant: ButtonVariant.FillBlueA400,
+                          isDark: isDark,
+                          width: 220,
+                          text: "Повторить",
+                          onTap: () {
+                            setState(() {
+                              _isLoading = true;
+                              _loadError = null;
+                            });
+                            _loadData();
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              : SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -441,8 +505,6 @@ class _ProfileSettingsAppearanceScreenState
                 bottom: 20,
               ),
               onTap: () async {
-                printLog(context.doctorSessionsData[0]);
-
                 Map<String, dynamic> newDoctorSessionData = {
                   "session_meeting_time": sessionMeetingTime.text,
                   "session_gap": sessionGap.text,
@@ -462,8 +524,19 @@ class _ProfileSettingsAppearanceScreenState
                 }
 
                 context.setdoctorSessionsData(newDoctorSessionData);
-                await setSessionsD(doctorId: doctor['doctor_id']);
-                snackBar(context, message: 'Изменения сохранены');
+                final saved = await setSessionsD(
+                  doctorId: doctor['doctor_id'].toString(),
+                );
+                if (!context.mounted) return;
+                if (saved) {
+                  snackBar(context, message: 'Изменения сохранены');
+                } else {
+                  snackBar(
+                    context,
+                    message: 'Не удалось сохранить расписание',
+                    color: Colors.red,
+                  );
+                }
               },
               fontStyle: ButtonFontStyle.SourceSansProSemiBold18,
             ),

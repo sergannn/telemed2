@@ -392,8 +392,14 @@ Future<bool> getSessionsD({required String doctorId}) async {
     print("DEBUG: GraphQL result: ${result.data}");
     
     if (result.data != null && result.data!['sessionsBydoctorId'] != null) {
-      List<dynamic> sessions = result.data!['sessionsBydoctorId'];
+      List<dynamic> sessions = List<dynamic>.from(result.data!['sessionsBydoctorId']);
       print("DEBUG: Found ${sessions.length} sessions");
+
+      sessions.sort((a, b) {
+        final aId = int.tryParse(a['id'].toString()) ?? 0;
+        final bId = int.tryParse(b['id'].toString()) ?? 0;
+        return bId.compareTo(aId);
+      });
       
       sessions.forEach((session) {
         DoctorSessionModel doctorSessionModel = DoctorSessionModel.fromJson(session);
@@ -417,6 +423,11 @@ Future<bool> setSessionsD({required String doctorId}) async {
 
   DoctorSessionsStore storeDoctorSessionsStore =
       getIt.get<DoctorSessionsStore>();
+
+  if (storeDoctorSessionsStore.doctorSessionsDataList.isEmpty) {
+    printLog('No doctor sessions data in store');
+    return false;
+  }
 
   Map<dynamic, dynamic> data =
       storeDoctorSessionsStore.doctorSessionsDataList[0];
@@ -442,14 +453,14 @@ Future<bool> setSessionsD({required String doctorId}) async {
   printLog(setDoctorSessions);
   print(setDoctorSessions);
 
-  final QueryOptions options = QueryOptions(
+  final MutationOptions options = MutationOptions(
     document: gql(setDoctorSessions),
   );
 
   GraphQLClient graphqlClient = await graphqlAPI.noauthClient();
 
   debugPrintTransactionStart('mutation upsertSessionsCustom');
-  final QueryResult result = await graphqlClient.query(options);
+  final QueryResult result = await graphqlClient.mutate(options);
   debugPrintTransactionEnd('mutation upsertSessionsCustom');
 
   if (result.hasException) {
