@@ -3,12 +3,103 @@ import 'dart:convert';
 import 'package:doctorq/extensions.dart';
 import 'package:doctorq/screens/articles/articles.dart';
 import 'package:doctorq/services/api_service.dart';
-import 'package:doctorq/widgets/loading_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+bool _hasRoomData(dynamic roomData) {
+  if (roomData == null) return false;
+  final value = roomData.toString();
+  return value.isNotEmpty && value != 'null';
+}
+
+String? _extractRoomUrl(dynamic roomData) {
+  if (!_hasRoomData(roomData)) return null;
+
+  final raw = roomData.toString();
+  if (raw.startsWith('https://')) {
+    return raw;
+  }
+
+  try {
+    final decoded = jsonDecode(raw);
+    final url = decoded['join_url'] ?? decoded['url'];
+    return url?.toString();
+  } catch (_) {
+    return null;
+  }
+}
+
 class OnlineReceptionVideo extends StatelessWidget {
+  Widget _buildRoomInfo(BuildContext context) {
+    final appointment = context.selectedAppointment;
+    final roomUrl = _extractRoomUrl(appointment['room_data']);
+    final hasRealRoom = roomUrl != null;
+
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: hasRealRoom
+            ? Colors.green.withOpacity(0.1)
+            : Colors.orange.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: hasRealRoom ? Colors.green : Colors.orange,
+          width: 1,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                hasRealRoom ? Icons.check_circle : Icons.warning,
+                color: hasRealRoom ? Colors.green : Colors.orange,
+                size: 16,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                hasRealRoom ? 'Комната готова' : 'Ссылка пока не готова',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: hasRealRoom ? Colors.green : Colors.orange,
+                  fontSize: 12,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'ID записи: ${appointment['appointment_unique_id'] ?? 'Неизвестно'}',
+            style: const TextStyle(fontSize: 11, color: Colors.grey),
+          ),
+          if (hasRealRoom) ...[
+            const SizedBox(height: 4),
+            const Text(
+              'Ссылка:',
+              style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 2),
+            Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                color: Colors.grey.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Text(
+                roomUrl,
+                style: const TextStyle(fontSize: 10, fontFamily: 'monospace'),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -82,6 +173,8 @@ class OnlineReceptionVideo extends StatelessWidget {
                                 ),
                               ],
                             ),
+                            const SizedBox(height: 16),
+                            _buildRoomInfo(context),
                             const SizedBox(height: 26),
 
                             Container(
@@ -371,18 +464,23 @@ class OnlineReceptionVideo extends StatelessWidget {
                                       // Кнопка Яндекс Телемост
                                       ElevatedButton.icon(
                                         onPressed: () async {
-                                          final roomData = context.selectedAppointment['room_data']?.toString() ?? '';
-                                          String? url;
-                                          if (roomData.startsWith('https://')) {
-                                            url = roomData;
-                                          } else {
-                                            try {
-                                              final decoded = jsonDecode(roomData);
-                                              url = decoded['join_url'] ?? decoded['url'];
-                                            } catch (_) {}
-                                          }
+                                          final url = _extractRoomUrl(
+                                            context.selectedAppointment['room_data'],
+                                          );
                                           if (url != null) {
-                                            await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+                                            await launchUrl(
+                                              Uri.parse(url),
+                                              mode: LaunchMode.externalApplication,
+                                            );
+                                          } else {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              const SnackBar(
+                                                content: Text(
+                                                  'Ссылка на Телемост пока не готова',
+                                                ),
+                                              ),
+                                            );
                                           }
                                         },
                                         icon: const Icon(Icons.video_call, color: Colors.white, size: 18),

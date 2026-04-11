@@ -124,7 +124,7 @@ print(context.selectedAppointment);
         return;
       }
 
-      String description = item["description"];
+      String description = "ContactMethods.videoCall"; //item["description"];
 
       switch (description) {
         case "ContactMethods.message": 

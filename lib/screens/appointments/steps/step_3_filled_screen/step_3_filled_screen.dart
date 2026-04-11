@@ -181,7 +181,10 @@ class _AppointmentsStep3FilledScreenState
                                               color: Color.fromARGB(
                                                   255, 16, 16, 16),
                                             ),
-                                            Text(context.selectedDoctor['price'] ?? 1000,
+                                            Text(
+                                                (context.selectedDoctor['price'] ??
+                                                        1000)
+                                                    .toString(),
                                                 style: TextStyle(
                                                     color: Color.fromARGB(
                                                         255, 16, 16, 16),

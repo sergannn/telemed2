@@ -587,9 +587,15 @@ class _AkkInfoScreenState extends State<AkkInfoScreen> {
                       SizedBox(
                         width: MediaQuery.of(context).size.width * 0.35,
                         child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                            // Здесь добавьте логику выхода из приложения
+                          onPressed: () async {
+                            await logOut();
+                            if (!context.mounted) return;
+                            Navigator.of(context, rootNavigator: true)
+                                .pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                  builder: (context) => SignInBlankScreen()),
+                              (Route<dynamic> route) => false,
+                            );
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor:

@@ -175,7 +175,10 @@ List<DateTime> _generateInactiveDates(daysOfWeek) {
                                       size: 12,
                                       color: Color.fromARGB(255, 16, 16, 16),
                                     ),
-                                    Text(context.selectedDoctor['price'] ?? '1000',
+                                    Text(
+                                        (context.selectedDoctor['price'] ??
+                                                '1000')
+                                            .toString(),
                                         style: TextStyle(
                                             color:
                                                 Color.fromARGB(255, 16, 16, 16),

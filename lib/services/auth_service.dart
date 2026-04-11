@@ -16,9 +16,16 @@ import 'package:http/http.dart' as http;
 
 GetIt getIt = GetIt.instance;
 
-Future<bool> regUser(BuildContext context, String email, String password,
-    String role, String fullName, String snils) async {
-  // try {
+Future<bool> regUser(
+  BuildContext context,
+  String email,
+  String password,
+  String role,
+  String fullName,
+  String snils, {
+  String? phone,
+  String? birthDate,
+}) async {
   printLog(email);
   printLog(password);
 
@@ -39,6 +46,8 @@ Future<bool> regUser(BuildContext context, String email, String password,
         password: "$password"
         password_confirmation: "$password"
         role: "$role"
+        phone: "${phone ?? ''}"
+        birth_date: "${birthDate ?? ''}"
         snils: "$snils"
         verification_url: {
           url: "https://onlinedoctor.su/api/verify-email?id=__ID__&token=__HASH__&expires=__EXPIRES__&signature=__SIGNATURE__"
@@ -57,7 +66,27 @@ Future<bool> regUser(BuildContext context, String email, String password,
   GraphQLClient graphqlClient = await graphqlAPI2.noauthClient();
   debugPrintTransactionStart('mutation login');
 
-  final QueryResult result = await graphqlClient.mutate(options);
+  late QueryResult result;
+  try {
+    result = await graphqlClient.mutate(options).timeout(
+      const Duration(seconds: 10),
+    );
+  } on TimeoutException {
+    snackBar(
+      context,
+      message: "Нет ответа от сервера. Попробуйте еще раз.",
+      color: Colors.red,
+    );
+    return false;
+  } catch (e) {
+    printLog('Registration request failed: $e');
+    snackBar(
+      context,
+      message: "Ошибка соединения. Попробуйте позже.",
+      color: Colors.red,
+    );
+    return false;
+  }
   debugPrintTransactionEnd('mutation login');
   /* print("Request Details:");
   print("Query: ${options.document}");
@@ -74,6 +103,11 @@ Future<bool> regUser(BuildContext context, String email, String password,
   if (result.exception.toString().contains("already been") //&&email.contains("pan_")
       ) {
     print("already");
+    snackBar(
+      context,
+      message: "Этот email уже зарегистрирован.",
+      color: Colors.red,
+    );
     return false;
   }
   print("Data: ${jsonEncode(result.data)}");
@@ -82,40 +116,44 @@ Future<bool> regUser(BuildContext context, String email, String password,
   print(result);
 
   printLog(result.toString());
-  if (result.data!["registerUser"]["status"] == 'MUST_VERIFY_EMAIL') {
-    await authUser(context, email, password);
-    return true;
-  }
   if (result.hasException) {
     printLog(result.exception.toString());
-    //УДАЛЕНИЕ ТУТ И ТАМ и проверить что всякое такое как популярные категории удалилось
-    final errorMessages = {
-      'incorrect_password': 'Неверный пароль.',
-      'invalid_email': 'Неверный email.',
-      'Internal server error': 'Ошибка сети или сервера.',
-    };
+
+    final graphqlMessage = result.exception?.graphqlErrors.isNotEmpty == true
+        ? result.exception!.graphqlErrors.first.message
+        : null;
+    final linkException = result.exception?.linkException;
+
+    String message = "Ошибка регистрации. Попробуйте позже.";
+    if (graphqlMessage != null && graphqlMessage.isNotEmpty) {
+      if (graphqlMessage.contains('Internal server error')) {
+        message = "Ошибка на сервере при регистрации.";
+      } else {
+        message = graphqlMessage;
+      }
+    } else if (linkException != null) {
+      message = "Ошибка соединения с сервером.";
+    }
+
     print(result.exception.toString());
-    snackBar(context,
-        message: "error",
-//        message: errorMessages[result.exception] as String,
-//            errorMessages[result.exception?.graphqlErrors[0].message] as String,
-        color: Colors.red);
+    snackBar(context, message: message, color: Colors.red);
     return false;
   }
 
-  Map<String, dynamic> json = result.data!["loginwithuserresult"];
-  print(json);
-  UserModel user = UserModel.fromJson(json);
+  final registerStatus = result.data?["registerUser"]?["status"]?.toString();
+  if (registerStatus == 'MUST_VERIFY_EMAIL' || registerStatus == 'SUCCESS') {
+    if (registerStatus == 'MUST_VERIFY_EMAIL') {
+      await authUser(context, email, password);
+    }
+    return true;
+  }
 
-  await Session().saveUser(user);
-
-  final userStore = getIt<UserStore>();
-  userStore.setUserData(user.toJson());
-  //  {access_token: 7|XCLsXEtFXjCjOAglILNyxmsNDsKT9LDC6xCteAKEddaa9eda, user_id: 3, username: patient@infycare.com, photo: https://cdn.profi.ru/xfiles/pfiles/10c8fcca7d424731bd1c38eba954501b.jpg-profi_a34-320.jpg, name: null}
-  // // inputDeviceToken(); // future for push notifications need token
-  // Session.data.setString("user_json", jsonEncode(user.toJson()));
-
-  return true;
+  snackBar(
+    context,
+    message: "Не удалось завершить регистрацию.",
+    color: Colors.red,
+  );
+  return false;
 }
 
 Future<dynamic> fetchYaUserData(_token) async {
@@ -247,14 +285,19 @@ String generateRandomCode() {
 Future<Map<String, dynamic>?> sendEmail(email, code) async {
   final url = Uri.parse('https://derevni-i-syola.ru/test-mail/$email/$code');
   print(url);
-  final response = await http.get(url);
+  try {
+    final response = await http.get(url).timeout(
+      const Duration(seconds: 8),
+    );
 
-  print(response.body);
-  if (response.statusCode == 200) {
-    print({'response': response.body, 'code': code});
+    print(response.body);
     return {'response': response.body, 'code': code, 'email': email};
-  } else {
-    return {'response': response.body, 'code': code, 'email': email};
+  } on TimeoutException {
+    print('sendEmail timeout');
+    return {'response': 'timeout', 'code': code, 'email': email};
+  } catch (e) {
+    print('sendEmail error: $e');
+    return {'response': 'error', 'code': code, 'email': email};
   }
 }
 
