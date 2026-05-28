@@ -53,8 +53,12 @@ class GregorianDateWidget extends StatelessWidget {
     final monthName = _getMonthName(date, currentLocale);
     
     return InkWell(
-      customBorder: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(8.0))),
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
+      hoverColor: Colors.transparent,
+      focusColor: Colors.transparent,
+      overlayColor: WidgetStateProperty.all(Colors.transparent),
+      customBorder: const CircleBorder(),
       child: Container(
         width: width,
         margin: const EdgeInsets.all(3.0),
