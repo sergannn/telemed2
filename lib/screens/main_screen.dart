@@ -4,9 +4,11 @@ import 'package:doctorq/screens/appointments/AppointmentsScreen.dart';
 //import 'package:doctorq/screens/appointments/AppointmentsScreenDoctor.dart';
 import 'package:doctorq/screens/home/home_screen/home_screen.dart';
 import 'package:doctorq/screens/home/home_screen/home_screen_forFuture.dart';
+import 'package:doctorq/screens/live_video/live_video_join_screen.dart';
 import 'package:doctorq/screens/medcard/card_gallery.dart';
 import 'package:doctorq/screens/profile/health_screen.dart';
 import 'package:doctorq/screens/profile/main_profile.dart';
+import 'package:doctorq/services/consultation_provider_service.dart';
 import 'package:doctorq/stores/user_store.dart';
 import 'package:doctorq/theme/image_constant.dart';
 import 'package:flutter/material.dart';
@@ -72,6 +74,8 @@ class Main extends StatefulWidget {
 }
 
 class _MainState extends State<Main> {
+  ConsultationProvider _consultationProvider = ConsultationProvider.yandex;
+
   List<Widget> _buildScreens() {
     return [
       HomeScreen(),
@@ -187,6 +191,17 @@ class _MainState extends State<Main> {
   void initState() {
     super.initState();
     _controller.addListener(_onTabIndexChanged);
+    _loadConsultationProvider();
+  }
+
+  Future<void> _loadConsultationProvider() async {
+    final provider = await ConsultationProviderService.getProvider();
+    if (mounted) setState(() => _consultationProvider = provider);
+  }
+
+  Future<void> _setConsultationProvider(ConsultationProvider provider) async {
+    await ConsultationProviderService.setProvider(provider);
+    if (mounted) setState(() => _consultationProvider = provider);
   }
 
   @override
@@ -202,6 +217,73 @@ class _MainState extends State<Main> {
         Get.find<ItemController>().refreshCalendarAndFilter();
       } catch (_) {}
     }
+  }
+
+  Widget _buildLiveVideoDrawer(BuildContext context) {
+    return Drawer(
+      child: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const DrawerHeader(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Icon(Icons.video_call_rounded, size: 40, color: Color(0xff1e88e5)),
+                  SizedBox(height: 12),
+                  Text(
+                    'Видео консультация',
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800),
+                  ),
+                ],
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.login_rounded),
+              title: const Text('Войти как врач'),
+              subtitle: const Text('LiveKit тестовая комната'),
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => const LiveVideoJoinScreen(role: 'doctor'),
+                  ),
+                );
+              },
+            ),
+            const Divider(),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
+              child: Text(
+                'Провайдер сеансов',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
+              ),
+            ),
+            RadioListTile<ConsultationProvider>(
+              value: ConsultationProvider.yandex,
+              groupValue: _consultationProvider,
+              title: const Text('Yandex мост'),
+              subtitle: const Text('Открывать существующую ссылку Телемоста'),
+              onChanged: (value) {
+                if (value != null) _setConsultationProvider(value);
+              },
+            ),
+            RadioListTile<ConsultationProvider>(
+              value: ConsultationProvider.server,
+              groupValue: _consultationProvider,
+              title: const Text('Сервер'),
+              subtitle: const Text('Видео, аудио и текст через livevideo.postagents.ru'),
+              onChanged: (value) {
+                if (value != null) _setConsultationProvider(value);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -228,6 +310,8 @@ class _MainState extends State<Main> {
 
           //context,
           controller: _controller,
+          drawer: _buildLiveVideoDrawer(context),
+          drawerEdgeDragWidth: 80,
           //screens: _buildScreens(),
           tabs: tabs,
           navBarBuilder: (navBarConfig) => CustomBottomNavBar(

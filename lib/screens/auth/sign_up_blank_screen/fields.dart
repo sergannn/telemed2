@@ -62,6 +62,13 @@ class RegFields {
       'obscure': false,
       'validator': (value) => validateName(value) as String?,
     },
+    'city': {
+      'controller': TextEditingController(text: 'Москва'),
+      'label': 'Город',
+      'hint': 'Москва',
+      'obscure': false,
+      'validator': (value) => validateName(value) as String?,
+    },
     'snils': {
       'controller': TextEditingController(),
       'label': 'Снилс',

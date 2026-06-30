@@ -406,7 +406,7 @@ class _AkkInfoScreenState extends State<AkkInfoScreen> {
                       ],
                     ),
                   ),
-                  Column(children: [
+                 /*Column(children: [
                     Container(
                       width: double.infinity,
                       padding: const EdgeInsets.only(bottom: 12),
@@ -417,7 +417,8 @@ class _AkkInfoScreenState extends State<AkkInfoScreen> {
                       child: GestureDetector(
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => GuessCodeScreen()));
+                               // builder: (context) => GuessCodeScreen()));
+                                    builder: (context) => const NewPasswordScreen()));
                           },
                           child: Row(
                             children: [
@@ -455,7 +456,7 @@ class _AkkInfoScreenState extends State<AkkInfoScreen> {
                             ],
                           )),
                     ),
-                  ]),
+                  ]),*/
                   Container(
                       width: double.infinity,
                       padding: const EdgeInsets.only(bottom: 12),

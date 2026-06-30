@@ -826,6 +826,44 @@ Future<bool> updateProfileWithDocument(BuildContext context, String imagePath,
   }
 }
 
+Future<Map<String, dynamic>?> fetchPatientMedcard(String userId) async {
+  final client = await graphqlAPI.authClient();
+  final options = QueryOptions(
+    document: gql(r'''
+      query PatientMedcard($userId: ID!) {
+        patientMedcard(user_id: $userId) {
+          id
+          patient_unique_id
+          questionnaire_data
+          document_urls
+          document_items {
+            id
+            url
+            name
+            category
+            created_at
+          }
+          patientUser {
+            id
+            full_name
+            profile_image
+          }
+        }
+      }
+    '''),
+    variables: {'userId': userId},
+    fetchPolicy: FetchPolicy.networkOnly,
+  );
+
+  final result = await client.query(options);
+  if (result.hasException) {
+    print('fetchPatientMedcard error: ${result.exception}');
+    return null;
+  }
+
+  return result.data?['patientMedcard'] as Map<String, dynamic>?;
+}
+
 Future<bool> createDoctorReview({required String patientId, required int rating, required String review}) async {
   printLog('Creating doctor review for patient: $patientId');
   

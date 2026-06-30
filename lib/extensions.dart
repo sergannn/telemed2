@@ -78,6 +78,10 @@ extension BuildContextExt on BuildContext {
         storeAppointmentsStore.appointmentsDataList[index]);
   }
 
+  void setSelectedAppointmentData(Map<dynamic, dynamic> data) {
+    storeAppointmentsStore.setSelectedAppointment(data);
+  }
+
   Map<dynamic, dynamic> get selectedAppointment {
     return storeAppointmentsStore.selectedAppointment;
   }
@@ -104,19 +108,19 @@ extension BuildContextExt on BuildContext {
   // Calculate duration between two time strings in format "HH:MM"
   int calculateDuration(String? fromTime, String? toTime) {
     if (fromTime == null || toTime == null) return 45;
-    
+
     try {
       final fromParts = fromTime.split(':');
       final toParts = toTime.split(':');
-      
+
       final fromHour = int.parse(fromParts[0]);
       final fromMinute = int.parse(fromParts[1]);
       final toHour = int.parse(toParts[0]);
       final toMinute = int.parse(toParts[1]);
-      
+
       final fromTotalMinutes = fromHour * 60 + fromMinute;
       final toTotalMinutes = toHour * 60 + toMinute;
-      
+
       return toTotalMinutes - fromTotalMinutes;
     } catch (e) {
       return 45; // Default duration if parsing fails

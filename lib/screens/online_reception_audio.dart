@@ -1,5 +1,5 @@
-import 'package:doctorq/screens/articles/articles.dart';
-import 'package:doctorq/screens/online_reception_audio_start.dart';
+import 'package:doctorq/screens/medcard/patient_medcard_viewer.dart';
+import 'package:doctorq/services/consultation_provider_service.dart';
 import 'package:flutter/material.dart';
 import 'package:doctorq/extensions.dart';
 
@@ -350,10 +350,11 @@ Row(
     // Основная кнопка слева
     ElevatedButton(
       onPressed: () {
-         Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => OnlineReceptionAudioStart()),
-    );
+        ConsultationProviderService.openAppointment(
+          context,
+          role: 'doctor',
+          mode: ConsultationMode.audio,
+        );
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: const Color.fromARGB(255, 96, 159, 222),
@@ -392,9 +393,18 @@ Row(
             padding: EdgeInsets.zero,
             iconSize: 20,
             onPressed: () {
+              final patient = context.selectedAppointment['patient'] ?? {};
+              final patientUserId =
+                  (patient['user_id'] ?? patient['patient_id'] ?? '').toString();
+              final patientName = patient['username']?.toString();
+              if (patientUserId.isEmpty) return;
               Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => MedCardScreen()),
+      MaterialPageRoute(
+          builder: (context) => PatientMedcardViewer(
+                patientUserId: patientUserId,
+                patientName: patientName,
+              )),
     );
             },
           ),

@@ -130,7 +130,9 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                               if (widget.isRepeatPassword) {
                                 if (repeatedPassword == newPassword) {
                                   print("...");
-
+                                  print(repeatedPassword);
+                                  print(newPassword);
+                                  print('__');
                                   showDialog(
                                       context: context,
                                       builder: (dcontext) => Dialog(

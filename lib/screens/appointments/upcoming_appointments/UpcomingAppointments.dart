@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:animate_do/animate_do.dart';
 
 import 'package:doctorq/extensions.dart';
@@ -10,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:basic_utils/basic_utils.dart';
 import 'package:get_it/get_it.dart';
+import 'package:flutter/foundation.dart';
 
 GetIt getIt = GetIt.instance;
 
@@ -25,13 +28,20 @@ class UpcomingAppointments extends StatelessWidget {
     // loadData();
     bool isDark = Theme.of(context).brightness == Brightness.dark;
 
-    List<Map<dynamic, dynamic>> appointmentsList = context.appointmentsData;
+    List<Map<dynamic, dynamic>> appointmentsList =
+        List<Map<dynamic, dynamic>>.from(context.appointmentsData);
+    if (kDebugMode) {
+      appointmentsList = [
+        _buildDebugUpcomingAppointment(),
+        ...appointmentsList
+      ];
+    }
     print("DEBUG: Total appointments from store: ${appointmentsList.length}");
 
     if (appointmentsList.isEmpty) {
       return _buildEmptyState(isDark, title: 'Сеансы не найдены');
     }
-    
+
     // Группировка по дате
     Map<String, List<Map<dynamic, dynamic>>> groupedAppointments = {};
     final formatter = DateFormat('EEEE', 'ru_RU');
@@ -48,24 +58,26 @@ class UpcomingAppointments extends StatelessWidget {
           "Is ${DateFormat('yyyy-MM-dd HH:mm').format(appDateTime)} past? ${isPast ? 'Yes' : 'No'}");
 
       if (!isPast) {
-        print("DEBUG: Adding appointment ${appointment['id']} to upcoming - date: ${appointment['date']}");
+        print(
+            "DEBUG: Adding appointment ${appointment['id']} to upcoming - date: ${appointment['date']}");
         String date = appointment['date'];
         if (!groupedAppointments.containsKey(date)) {
           groupedAppointments[date] = [];
         }
         groupedAppointments[date]!.add(appointment);
       } else {
-        print("DEBUG: Skipping appointment ${appointment['id']} - it's in the past");
+        print(
+            "DEBUG: Skipping appointment ${appointment['id']} - it's in the past");
       }
     }
     print("grouped:");
     print(groupedAppointments);
-    
+
     // Если нет предстоящих сеансов, показываем сообщение
     if (groupedAppointments.isEmpty) {
       return _buildEmptyState(isDark, title: 'Нет предстоящих сеансов');
     }
-    
+
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       child: Column(
@@ -128,9 +140,12 @@ class UpcomingAppointments extends StatelessWidget {
                                     // Используем уже обработанные данные из groupedAppointments
                                     // НЕ дублируем логику определения времени
                                     if (groupedAppointments.containsKey(date) &&
-                                        groupedAppointments[date]!.any((app) => app['id'] == appointmentsList[index]['id'])) {
+                                        groupedAppointments[date]!.any((app) =>
+                                            app['id'] ==
+                                            appointmentsList[index]['id'])) {
                                       return AppointmentListItem(
-                                        isPast: false, // Все записи в upcoming уже проверены как не прошедшие
+                                        isPast:
+                                            false, // Все записи в upcoming уже проверены как не прошедшие
                                         index: index,
                                         item: appointmentsList[index],
                                       );
@@ -147,6 +162,43 @@ class UpcomingAppointments extends StatelessWidget {
       ),
     );
   }
+}
+
+Map<dynamic, dynamic> _buildDebugUpcomingAppointment() {
+  final now = DateTime.now();
+  final date = now.add(const Duration(days: 1));
+  const roomUrl = 'https://telemost.yandex.ru/j/29489307265062';
+
+  return {
+    'id': 'debug_upcoming_yandex_room',
+    'appointment_unique_id': 'debug-yandex-appointment',
+    'status': '1',
+    'date': DateFormat('yyyy-MM-dd').format(date),
+    'from_time': '12:00',
+    'to_time': '12:30',
+    'from_time_type': 'PM',
+    'to_time_type': 'PM',
+    'description': 'ContactMethods.videoCall',
+    'appointment_type': 'VIDEO',
+    'room_data': jsonEncode({
+      'url': roomUrl,
+      'join_url': roomUrl,
+      'provider': 'yandex_telemost',
+    }),
+    'patient': {
+      'username': 'Debug Patient',
+      'photo': 'https://via.placeholder.com/160',
+    },
+    'doctor': {
+      'first_name': 'Debug',
+      'last_name': 'Doctor',
+      'specialization': 'Тестовая консультация',
+      'specializations': [
+        {'name': 'Тестовая консультация'}
+      ],
+      'profile_image': 'https://via.placeholder.com/160',
+    },
+  };
 }
 
 Widget _buildEmptyState(bool isDark, {required String title}) {

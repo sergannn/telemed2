@@ -1,4 +1,5 @@
 import 'package:doctorq/screens/articles/articles.dart';
+import 'package:doctorq/screens/medcard/patient_medcard_viewer.dart';
 import 'package:doctorq/screens/online_reception_video_complete.dart';
 import 'package:doctorq/extensions.dart';
 import 'package:flutter/material.dart';
@@ -200,7 +201,24 @@ class _OnlineReceptionVideoStartTwoState
                                 child: IconButton(
                                   icon: Icon(Icons.man,
                                       color: Colors.black87),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    final patient = context.selectedAppointment['patient'] ?? {};
+                                    final patientUserId = (patient['user_id'] ??
+                                            patient['patient_id'] ??
+                                            '')
+                                        .toString();
+                                    final patientName = patient['username']?.toString();
+                                    if (patientUserId.isEmpty) return;
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => PatientMedcardViewer(
+                                          patientUserId: patientUserId,
+                                          patientName: patientName,
+                                        ),
+                                      ),
+                                    );
+                                  },
                                 ),
                               ),
                               const SizedBox(height: 4),

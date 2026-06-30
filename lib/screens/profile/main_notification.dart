@@ -1,55 +1,78 @@
 import 'dart:convert';
-//import 'package:date_picker_timeline /date_picker_widget.dart';
-import 'package:doctorq/date_picker_timeline-1.2.6/lib/date_picker_widget.dart';
-import 'package:doctorq/screens/home/home_screen/home_screen.dart';
-import 'package:doctorq/screens/home/home_screen/widgets/autolayouthor_item_widget_tasks.dart';
-import 'package:doctorq/screens/home/home_screen/widgets/autolayouthor_item_widget_zapisi.dart';
-import 'package:doctorq/screens/home/home_screen/widgets/story_item_widget.dart';
-import 'package:doctorq/screens/profile/main_notification_support.dart';
-import 'package:doctorq/screens/profile/settings/appearance_screen/appearance_screen.dart';
-import 'package:doctorq/screens/profile/widgets/autolayouthor_item_widget_profile_tasks.dart';
-import 'package:doctorq/screens/stories/story_scren.dart';
-import "package:story_view/story_view.dart";
-import 'package:animate_do/animate_do.dart';
-import 'package:doctorq/extensions.dart';
-import 'package:doctorq/screens/home/favorite_doctor_screen/favorite_doctor_screen.dart';
-import 'package:doctorq/screens/home/notification_screen/notification_screen.dart';
-import 'package:doctorq/screens/home/search_doctor_screen/search_doctor_screen.dart';
-import 'package:doctorq/screens/home/specialist_doctor_screen/specialist_doctor_screen.dart';
-import 'package:doctorq/screens/home/top_doctor_screen/choose_specs_screen_step_1.dart';
-import 'package:doctorq/services/api_service.dart';
-import 'package:doctorq/utils/utility.dart';
-import 'package:doctorq/widgets/spacing.dart';
-//import 'widgets/autolayouthor1_item_widget.dart';
-//import 'widgets/autolayouthor_item_widget.dart';
-import 'package:doctorq/app_export.dart';
-import 'package:doctorq/widgets/custom_search_view.dart';
+
+import 'package:doctorq/services/session.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
-import 'package:doctorq/data_files/specialist_list.dart';
-import 'package:story_view/story_view.dart';
-//import 'package:random_text_reveal/random_text_reveal.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_animate/flutter_animate.dart';
-//final GlobalKey<RandomTextRevealState> globalKey = GlobalKey();
+class MainNotificationsScreen extends StatefulWidget {
+  const MainNotificationsScreen({super.key});
 
-class MainNotificationsScreen extends StatelessWidget {
-  const MainNotificationsScreen({Key? key}) : super(key: key);
+  @override
+  State<MainNotificationsScreen> createState() =>
+      _MainNotificationsScreenState();
+}
+
+class _MainNotificationsScreenState extends State<MainNotificationsScreen> {
+  late Future<List<DoctorNotificationItem>> _notificationsFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _notificationsFuture = _fetchNotifications();
+  }
+
+  Future<List<DoctorNotificationItem>> _fetchNotifications() async {
+    final currentUser = await Session.getCurrentUser();
+    final authToken = currentUser?.authToken;
+
+    if (authToken == null || authToken.isEmpty) {
+      throw Exception('Не найден токен авторизации');
+    }
+
+    final response = await http.get(
+      Uri.parse('https://admin.onlinedoctor.su/api/notifications'),
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $authToken',
+      },
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception(
+          'Не удалось загрузить уведомления (${response.statusCode})');
+    }
+
+    final body = jsonDecode(response.body);
+    final data = body['data'];
+    if (data is! List) {
+      return [];
+    }
+
+    return data
+        .whereType<Map<String, dynamic>>()
+        .map(DoctorNotificationItem.fromJson)
+        .toList();
+  }
+
+  Future<void> _reload() async {
+    setState(() {
+      _notificationsFuture = _fetchNotifications();
+    });
+    await _notificationsFuture;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
         children: [
-          const SizedBox(height: 40), // фиксированный отступ
-          // Верхняя панель с заголовком
+          const SizedBox(height: 40),
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.8),
+              color: Colors.white.withValues(alpha: 0.8),
               border: Border(bottom: BorderSide(color: Colors.grey.shade300)),
             ),
             child: Row(
@@ -64,29 +87,53 @@ class MainNotificationsScreen extends StatelessWidget {
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.notifications_outlined),
-                  onPressed: () {},
+                  icon: const Icon(Icons.refresh_rounded),
+                  onPressed: _reload,
                 ),
               ],
             ),
           ),
-
-          // Список уведомлений
           Expanded(
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.95),
+                color: Colors.white.withValues(alpha: 0.95),
                 border: Border(top: BorderSide(color: Colors.grey.shade300)),
               ),
-              child: ListView.builder(
-                itemCount: 5,
-                itemBuilder: (context, index) {
-                  return NotificationItem(
-                    isFirst: index == 0,
-                    isSecond: index == 1,
-                    isThree: index == 2,
-                    isFourth: index == 3,
-                    isFifth: index == 4,
+              child: FutureBuilder<List<DoctorNotificationItem>>(
+                future: _notificationsFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  if (snapshot.hasError) {
+                    return _NotificationsPlaceholder(
+                      icon: Icons.error_outline_rounded,
+                      title: 'Не удалось загрузить уведомления',
+                      subtitle: snapshot.error.toString(),
+                    );
+                  }
+
+                  final items =
+                      snapshot.data ?? const <DoctorNotificationItem>[];
+                  if (items.isEmpty) {
+                    return const _NotificationsPlaceholder(
+                      icon: Icons.notifications_off_outlined,
+                      title: 'Уведомлений пока нет',
+                      subtitle:
+                          'Когда для врача появятся уведомления, они будут показаны здесь.',
+                    );
+                  }
+
+                  return RefreshIndicator(
+                    onRefresh: _reload,
+                    child: ListView.builder(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      itemCount: items.length,
+                      itemBuilder: (context, index) {
+                        return NotificationItem(item: items[index]);
+                      },
+                    ),
                   );
                 },
               ),
@@ -99,23 +146,17 @@ class MainNotificationsScreen extends StatelessWidget {
 }
 
 class NotificationItem extends StatelessWidget {
-  final bool isFirst;
-  final bool isSecond;
-  final bool isThree;
-  final bool isFourth;
-  final bool isFifth;
+  const NotificationItem({super.key, required this.item});
 
-  const NotificationItem({
-    Key? key,
-    required this.isFirst,
-    required this.isSecond,
-    required this.isThree,
-    required this.isFourth,
-    required this.isFifth,
-  }) : super(key: key);
+  final DoctorNotificationItem item;
 
   @override
   Widget build(BuildContext context) {
+    final createdAt = item.createdAt;
+    final timeLabel = createdAt == null
+        ? ''
+        : DateFormat('dd.MM HH:mm').format(createdAt.toLocal());
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       padding: const EdgeInsets.all(16),
@@ -123,243 +164,167 @@ class NotificationItem extends StatelessWidget {
         color: const Color.fromARGB(255, 240, 247, 252),
         borderRadius: BorderRadius.circular(22),
       ),
-      child: isFirst
-          ? GestureDetector(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => SupportNotification())
-                    //HomeNotificationScreen()
-                    //),
-                    );
-              },
-              child: _buildSupportNotification())
-          : isSecond
-              ? _buildTwoNotification()
-              : isThree
-                  ? _buildThreeNotification()
-                  : isFourth
-                      ? _buildFourNotification()
-                      : _buildFiveNotification(),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 40,
+            height: 40,
+            alignment: Alignment.center,
+            child: Icon(
+              _iconForType(item.type),
+              size: 26,
+              color: const Color.fromARGB(255, 142, 191, 231),
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  item.title?.trim().isNotEmpty == true
+                      ? item.title!
+                      : 'Уведомление',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                if (item.description?.trim().isNotEmpty == true) ...[
+                  const SizedBox(height: 4),
+                  Text(item.description!),
+                ],
+                if (item.type?.trim().isNotEmpty == true) ...[
+                  const SizedBox(height: 8),
+                  Text(
+                    item.type!,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Colors.black54,
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+          const SizedBox(width: 12),
+          Text(
+            timeLabel,
+            style: const TextStyle(fontSize: 12, color: Colors.black54),
+          ),
+        ],
+      ),
     );
   }
 
-  Widget _buildSupportNotification() {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          width: 40, // фиксированная ширина
-          height: 40, // фиксированная высота
-          alignment: Alignment.center,
-          child: Icon(
-            Icons.support_agent,
-            size: 26,
-            color: const Color.fromARGB(255, 142, 191, 231),
-          ),
-        ),
-        const SizedBox(width: 16),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Поддержка',
-                style: TextStyle(fontWeight: FontWeight.bold)),
-            const Text('Новое сообщение'),
-          ],
-        ),
-        const Spacer(),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: const Color.fromARGB(255, 176, 214, 254),
-              ),
-              child: const Text('3',
-                  style: TextStyle(color: Color.fromARGB(255, 16, 16, 16))),
-            ),
-            const SizedBox(height: 4),
-            const Text('10:45', style: TextStyle(fontSize: 12)),
-          ],
-        ),
-      ],
+  IconData _iconForType(String? type) {
+    switch (type) {
+      case 'booked':
+        return Icons.calendar_today;
+      case 'canceled':
+        return Icons.event_busy;
+      case 'checkout':
+        return Icons.check_circle_outline;
+      case 'payment_done':
+        return Icons.payments_outlined;
+      case 'review':
+        return Icons.rate_review_outlined;
+      case 'live_consultation':
+        return Icons.video_call_outlined;
+      default:
+        return Icons.notifications_outlined;
+    }
+  }
+}
+
+class DoctorNotificationItem {
+  const DoctorNotificationItem({
+    required this.id,
+    required this.title,
+    required this.type,
+    required this.description,
+    required this.readAt,
+    required this.createdAt,
+  });
+
+  final int id;
+  final String? title;
+  final String? type;
+  final String? description;
+  final DateTime? readAt;
+  final DateTime? createdAt;
+
+  factory DoctorNotificationItem.fromJson(Map<String, dynamic> json) {
+    final dataPayload = _extractPayload(json['data']);
+
+    return DoctorNotificationItem(
+      id: json['id'] is int
+          ? json['id'] as int
+          : int.tryParse(json['id']?.toString() ?? '') ?? 0,
+      title: json['title']?.toString() ?? dataPayload['title']?.toString(),
+      type: json['type']?.toString(),
+      description: json['description']?.toString() ??
+          dataPayload['description']?.toString() ??
+          dataPayload['body']?.toString() ??
+          dataPayload['message']?.toString(),
+      readAt: DateTime.tryParse(json['read_at']?.toString() ?? ''),
+      createdAt: DateTime.tryParse(json['created_at']?.toString() ?? ''),
     );
   }
 
-  Widget _buildTwoNotification() {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          width: 40,
-          height: 40,
-          alignment: Alignment.center,
-          child: Icon(
-            Icons.message,
-            size: 26,
-            color: const Color.fromARGB(255, 142, 191, 231),
-          ),
-        ),
-        const SizedBox(width: 16),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Запись к врачам',
-                style: TextStyle(fontWeight: FontWeight.bold)),
-            const Text('Назначена новая запись'),
-          ],
-        ),
-        const Spacer(),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: const Color.fromARGB(255, 176, 214, 254),
-              ),
-              child: const Text('2',
-                  style: TextStyle(color: Color.fromARGB(255, 16, 16, 16))),
-            ),
-            const SizedBox(height: 4),
-            const Text('09:30', style: TextStyle(fontSize: 12)),
-          ],
-        ),
-      ],
-    );
-  }
+  static Map<String, dynamic> _extractPayload(dynamic rawData) {
+    if (rawData is Map<String, dynamic>) {
+      return rawData;
+    }
 
-  Widget _buildThreeNotification() {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          width: 40,
-          height: 40,
-          alignment: Alignment.center,
-          child: Icon(
-            Icons.calendar_today,
-            size: 26,
-            color: const Color.fromARGB(255, 142, 191, 231),
-          ),
-        ),
-        const SizedBox(width: 16),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Оплата', style: TextStyle(fontWeight: FontWeight.bold)),
-            const Text('Уведомнение об оплате'),
-          ],
-        ),
-        const Spacer(),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: const Color.fromARGB(255, 249, 194, 196),
-              ),
-              child: const Text('1',
-                  style: TextStyle(color: Color.fromARGB(255, 16, 16, 16))),
-            ),
-            const SizedBox(height: 4),
-            const Text('08:15', style: TextStyle(fontSize: 12)),
-          ],
-        ),
-      ],
-    );
-  }
+    if (rawData is String && rawData.trim().isNotEmpty) {
+      try {
+        final decoded = jsonDecode(rawData);
+        if (decoded is Map<String, dynamic>) {
+          return decoded;
+        }
+      } catch (_) {
+        return {'message': rawData};
+      }
+    }
 
-  Widget _buildFourNotification() {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          width: 40,
-          height: 40,
-          alignment: Alignment.center,
-          child: Icon(
-            Icons.settings,
-            size: 26,
-            color: const Color.fromARGB(255, 142, 191, 231),
-          ),
-        ),
-        const SizedBox(width: 16),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Настройки',
-                style: TextStyle(fontWeight: FontWeight.bold)),
-            const Text('Обновление доступно'),
-          ],
-        ),
-        const Spacer(),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: const Color.fromARGB(255, 249, 194, 196),
-              ),
-              child: const Text('3',
-                  style: TextStyle(color: Color.fromARGB(255, 16, 16, 16))),
-            ),
-            const SizedBox(height: 4),
-            const Text('Вчера', style: TextStyle(fontSize: 12)),
-          ],
-        ),
-      ],
-    );
+    return const {};
   }
+}
 
-  Widget _buildFiveNotification() {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          width: 40,
-          height: 40,
-          alignment: Alignment.center,
-          child: Icon(
-            Icons.settings,
-            size: 26,
-            color: const Color.fromARGB(255, 142, 191, 231),
-          ),
-        ),
-        const SizedBox(width: 16),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+class _NotificationsPlaceholder extends StatelessWidget {
+  const _NotificationsPlaceholder({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+  });
+
+  final IconData icon;
+  final String title;
+  final String subtitle;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('Баллы', style: TextStyle(fontWeight: FontWeight.bold)),
-            const Text('У вас новый промокод'),
-          ],
-        ),
-        const Spacer(),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: const Color.fromARGB(255, 249, 194, 196),
-              ),
-              child: const Text('1',
-                  style: TextStyle(color: Color.fromARGB(255, 16, 16, 16))),
+            Icon(icon, size: 42, color: Colors.black38),
+            const SizedBox(height: 12),
+            Text(
+              title,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
-            const SizedBox(height: 4),
-            const Text('Позже', style: TextStyle(fontSize: 12)),
+            const SizedBox(height: 8),
+            Text(
+              subtitle,
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: Colors.black54),
+            ),
           ],
         ),
-      ],
+      ),
     );
   }
 }

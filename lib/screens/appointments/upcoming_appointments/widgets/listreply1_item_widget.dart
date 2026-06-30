@@ -28,34 +28,38 @@ import 'package:doctorq/daily/daily_app.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:daily_flutter/daily_flutter.dart' if (dart.library.html) 'package:doctorq/daily/daily_flutter_stub.dart';
+import 'package:daily_flutter/daily_flutter.dart'
+    if (dart.library.html) 'package:doctorq/daily/daily_flutter_stub.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:date_count_down/date_count_down.dart';
 
 // Утилитная функция для проверки истечения комнаты
 bool _isRoomExpired(dynamic roomData) {
-  if (roomData == null || roomData.toString().isEmpty || roomData.toString() == 'null') {
+  if (roomData == null ||
+      roomData.toString().isEmpty ||
+      roomData.toString() == 'null') {
     return false; // Нет данных о комнате - не истекла
   }
-  
+
   try {
     var roomInfo = jsonDecode(roomData.toString());
     if (roomInfo['config'] != null && roomInfo['config']['exp'] != null) {
       int expTimestamp = roomInfo['config']['exp'];
-      DateTime expDate = DateTime.fromMillisecondsSinceEpoch(expTimestamp * 1000);
+      DateTime expDate =
+          DateTime.fromMillisecondsSinceEpoch(expTimestamp * 1000);
       DateTime now = DateTime.now();
-      
+
       print('Room expiration check:');
       print('  Expiration date: ${expDate.toString()}');
       print('  Current date: ${now.toString()}');
       print('  Is expired: ${expDate.isBefore(now)}');
-      
+
       return expDate.isBefore(now);
     }
   } catch (e) {
     print('Error checking room expiration: $e');
   }
-  
+
   return false; // Не удалось проверить - считаем не истекшей
 }
 
@@ -84,23 +88,26 @@ class AppointmentListItem extends StatelessWidget {
     print(item);
     print(item['room_data']);
     dynamic roomData = item['room_data'];
-    
+
     // Проверяем, что room_data не null и не пустая строка
-    if (roomData != null && roomData.toString().isNotEmpty && roomData.toString() != 'null') {
+    if (roomData != null &&
+        roomData.toString().isNotEmpty &&
+        roomData.toString() != 'null') {
       // СНАЧАЛА проверяем истечение комнаты
       if (_isRoomExpired(roomData)) {
         print('DEBUG: Room has expired, using test room instead');
         _navigateToTestRoom(context, mode);
         return;
       }
-      
+
       try {
         // Room data exists, proceed with navigation
         var roomUrl = jsonDecode(roomData.toString())['url'];
         print('Room URL: $roomUrl');
 
         // Telemost — открываем в браузере
-        if (roomUrl != null && roomUrl.toString().contains('telemost.yandex.ru')) {
+        if (roomUrl != null &&
+            roomUrl.toString().contains('telemost.yandex.ru')) {
           final uri = Uri.parse(roomUrl.toString());
           if (await canLaunchUrl(uri)) {
             await launchUrl(uri, mode: LaunchMode.externalApplication);
@@ -154,7 +161,7 @@ class AppointmentListItem extends StatelessWidget {
     print("Using test room as fallback");
   }
 
-  void navigateToScreenWithTypes(BuildContext context,bool isPast) async {
+  void navigateToScreenWithTypes(BuildContext context, bool isPast) async {
     print("Navigating...");
     context.setSelectedAppointmentByIndex(index);
     print(item['id']);
@@ -167,11 +174,11 @@ class AppointmentListItem extends StatelessWidget {
         return;
       }
 
-      String description = "ContactMethods.videoCall";//item["description"];
+      String description = "ContactMethods.videoCall"; //item["description"];
       print(description);
 
       switch (description) {
-        case "ContactMethods.message": 
+        case "ContactMethods.message":
           print("message");
           if (!isPast) {
             Navigator.push(
@@ -181,13 +188,10 @@ class AppointmentListItem extends StatelessWidget {
               ),
             );
           } else {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => ChatResolution()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => ChatResolution()));
           }
-      
-      
+
           break;
         case "ContactMethods.voiceCall":
           if (!isPast) {
@@ -198,12 +202,9 @@ class AppointmentListItem extends StatelessWidget {
               ),
             );
           } else {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => AudioResolution()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => AudioResolution()));
           }
-      
 
           /*
           Navigator.push(
@@ -229,10 +230,8 @@ class AppointmentListItem extends StatelessWidget {
               ),
             );
           } else {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => VideoResolution()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => VideoResolution()));
           }
           break;
         default:
@@ -292,7 +291,8 @@ class AppointmentListItem extends StatelessWidget {
                             ),
                           ),
                           child: Image.network(
-                            item["patient"]["photo"] ?? 'https://via.placeholder.com/160',
+                            item["patient"]["photo"] ??
+                                'https://via.placeholder.com/160',
                             fit: BoxFit.contain,
                             width: getSize(160),
                             height: getSize(160),
@@ -301,7 +301,8 @@ class AppointmentListItem extends StatelessWidget {
                                 width: getSize(160),
                                 height: getSize(160),
                                 color: Colors.grey[300],
-                                child: Icon(Icons.person, size: 80, color: Colors.grey[600]),
+                                child: Icon(Icons.person,
+                                    size: 80, color: Colors.grey[600]),
                               );
                             },
                           ),
@@ -331,7 +332,7 @@ class AppointmentListItem extends StatelessWidget {
                           Text(
 //                            item["doctor"]["username"],
 
-                                item['patient']['username'] ?? "Patient",
+                            item['patient']['username'] ?? "Patient",
                             overflow: TextOverflow.ellipsis,
                             textAlign: TextAlign.start,
                             style: TextStyle(
@@ -342,7 +343,8 @@ class AppointmentListItem extends StatelessWidget {
                               fontWeight: FontWeight.w600,
                             ),
                           ),
-                       if(item['doctor']['specializations'].isNotEmpty) Text(item['doctor']['specializations'][0]['name']),
+                          if (item['doctor']['specializations'].isNotEmpty)
+                            Text(item['doctor']['specializations'][0]['name']),
                           Row(
                             children: [
                               Text(getContactMethod(item)),
@@ -359,22 +361,22 @@ class AppointmentListItem extends StatelessWidget {
                             longDateName: false,
                             style: TextStyle(color: Colors.blue),
                           ),*/
-                            Container(
-                        child: Text(  getAppointmentTime(item),
-//                    
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                        fontSize: getFontSize(14),
-                        fontFamily: 'Source Sans Pro',
-                        fontWeight: FontWeight.w400,
-                      ),
-                    )),
+                          Container(
+                              child: Text(
+                            getAppointmentTime(item),
+//
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                              fontSize: getFontSize(14),
+                              fontFamily: 'Source Sans Pro',
+                              fontWeight: FontWeight.w400,
+                            ),
+                          )),
                         ],
                       ),
                     ),
                     //      Text(item['date']),
-                  
                   ],
                 ),
               ),
@@ -386,6 +388,7 @@ class AppointmentListItem extends StatelessWidget {
   }
 
   ser(context, isPast) async {
+    context.setSelectedAppointmentData(item);
     navigateToScreenWithTypes(context, isPast);
     return;
   }
@@ -457,86 +460,88 @@ getImagePathByContactMethod(Map<dynamic, dynamic> item) {
   return Icons.calendar_today;
 }
 
-  // Метод для создания индикатора статуса записи
-  Widget _buildAppointmentStatusIndicator(Map<dynamic, dynamic> item) {
-    // Проверяем статус записи
-    bool isAppointmentValid = item['status'] != null && item['status'].toString() == '1';
-    bool hasRoomData = item['room_data'] != null && item['room_data'].toString().isNotEmpty;
-    
-    if (isAppointmentValid && hasRoomData) {
-      // Запись валидна и комната создана
-      return Container(
-        padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-        decoration: BoxDecoration(
-          color: Colors.green[100],
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.green[300]!, width: 1),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.check_circle, size: 12, color: Colors.green[700]),
-            SizedBox(width: 4),
-            Text(
-              'Готово',
-              style: TextStyle(
-                fontSize: 10,
-                color: Colors.green[700],
-                fontWeight: FontWeight.w500,
-              ),
+// Метод для создания индикатора статуса записи
+Widget _buildAppointmentStatusIndicator(Map<dynamic, dynamic> item) {
+  // Проверяем статус записи
+  bool isAppointmentValid =
+      item['status'] != null && item['status'].toString() == '1';
+  bool hasRoomData =
+      item['room_data'] != null && item['room_data'].toString().isNotEmpty;
+
+  if (isAppointmentValid && hasRoomData) {
+    // Запись валидна и комната создана
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      decoration: BoxDecoration(
+        color: Colors.green[100],
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.green[300]!, width: 1),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.check_circle, size: 12, color: Colors.green[700]),
+          SizedBox(width: 4),
+          Text(
+            'Готово',
+            style: TextStyle(
+              fontSize: 10,
+              color: Colors.green[700],
+              fontWeight: FontWeight.w500,
             ),
-          ],
-        ),
-      );
-    } else if (isAppointmentValid && !hasRoomData) {
-      // Запись валидна, но комната не создана
-      return Container(
-        padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-        decoration: BoxDecoration(
-          color: Colors.orange[100],
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.orange[300]!, width: 1),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.warning, size: 12, color: Colors.orange[700]),
-            SizedBox(width: 4),
-            Text(
-              'Без комнаты',
-              style: TextStyle(
-                fontSize: 10,
-                color: Colors.orange[700],
-                fontWeight: FontWeight.w500,
-              ),
+          ),
+        ],
+      ),
+    );
+  } else if (isAppointmentValid && !hasRoomData) {
+    // Запись валидна, но комната не создана
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      decoration: BoxDecoration(
+        color: Colors.orange[100],
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.orange[300]!, width: 1),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.warning, size: 12, color: Colors.orange[700]),
+          SizedBox(width: 4),
+          Text(
+            'Без комнаты',
+            style: TextStyle(
+              fontSize: 10,
+              color: Colors.orange[700],
+              fontWeight: FontWeight.w500,
             ),
-          ],
-        ),
-      );
-    } else {
-      // Запись невалидна
-      return Container(
-        padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-        decoration: BoxDecoration(
-          color: Colors.grey[100],
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.grey[300]!, width: 1),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.cancel, size: 12, color: Colors.grey[700]),
-            SizedBox(width: 4),
-            Text(
-              'Неактивна',
-              style: TextStyle(
-                fontSize: 10,
-                color: Colors.grey[700],
-                fontWeight: FontWeight.w500,
-              ),
+          ),
+        ],
+      ),
+    );
+  } else {
+    // Запись невалидна
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      decoration: BoxDecoration(
+        color: Colors.grey[100],
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey[300]!, width: 1),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.cancel, size: 12, color: Colors.grey[700]),
+          SizedBox(width: 4),
+          Text(
+            'Неактивна',
+            style: TextStyle(
+              fontSize: 10,
+              color: Colors.grey[700],
+              fontWeight: FontWeight.w500,
             ),
-          ],
-        ),
-      );
-    }
+          ),
+        ],
+      ),
+    );
   }
+}

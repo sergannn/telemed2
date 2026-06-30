@@ -1,4 +1,3 @@
-import 'package:doctorq/screens/home/top_doctor_screen/top_doctor_screen_step_2.dart';
 import 'package:doctorq/widgets/spacing.dart';
 import 'package:doctorq/widgets/top_back.dart';
 import 'package:doctorq/app_export.dart';
@@ -212,87 +211,71 @@ class _TopDoctorScreenState extends State<ChooseSpecsScreen> {
         itemCount: _filteredPatients.length,
         itemBuilder: (context, index) {
           final patient = _filteredPatients[index];
-          return InkWell(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const ChooseSpecScreen2()),
-              );
-            },
-            child: Container(
-              margin: EdgeInsets.only(bottom: 10),
-              padding: EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.grey[100],
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  // Avatar section
-                  Container(
-                    width: MediaQuery.of(context).size.width / 8,
-                    height: MediaQuery.of(context).size.width / 8,
-                    margin: EdgeInsets.only(right: 16),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                    ),
-                    child: ClipOval(
-                      child: patient['photo'] != null && patient['photo'].isNotEmpty
-                          ? Image.network(
-                              patient['photo'],
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return Container(
-                                  color: Colors.blue[100],
-                                  child: Icon(Icons.person, color: Colors.blue),
-                                );
-                              },
-                            )
-                          : Container(
-                              color: Colors.blue[100],
-                              child: Icon(Icons.person, color: Colors.blue),
-                            ),
-                    ),
+          return Container(
+            margin: EdgeInsets.only(bottom: 10),
+            padding: EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.grey[100],
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // Avatar section
+                Container(
+                  width: MediaQuery.of(context).size.width / 8,
+                  height: MediaQuery.of(context).size.width / 8,
+                  margin: EdgeInsets.only(right: 16),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
                   ),
+                  child: ClipOval(
+                    child: patient['photo'] != null && patient['photo'].isNotEmpty
+                        ? Image.network(
+                            patient['photo'],
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                color: Colors.blue[100],
+                                child: Icon(Icons.person, color: Colors.blue),
+                              );
+                            },
+                          )
+                        : Container(
+                            color: Colors.blue[100],
+                            child: Icon(Icons.person, color: Colors.blue),
+                          ),
+                  ),
+                ),
 
-                  // Content section
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+                // Content section
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        patient['full_name'] ?? 'Пациент',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: ColorConstant.black900,
+                          fontSize: getFontSize(16),
+                          fontFamily: 'Source Sans Pro',
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      if (patient['next_appointment'] != null)
                         Text(
-                          patient['full_name'] ?? 'Пациент',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                          'прием: ${_formatDate(patient['next_appointment'])}',
                           style: TextStyle(
-                            color: ColorConstant.black900,
-                            fontSize: getFontSize(16),
-                            fontFamily: 'Source Sans Pro',
-                            fontWeight: FontWeight.w600,
+                            color: Colors.grey[600],
+                            fontSize: 12,
                           ),
                         ),
-                        if (patient['next_appointment'] != null)
-                          Text(
-                            'прием: ${_formatDate(patient['next_appointment'])}',
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                              fontSize: 12,
-                            ),
-                          ),
-                      ],
-                    ),
+                    ],
                   ),
-
-                  // Arrow section
-                  Icon(
-                    Icons.arrow_forward_ios,
-                    size: 20,
-                    color: ColorConstant.blueA400,
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           );
         },

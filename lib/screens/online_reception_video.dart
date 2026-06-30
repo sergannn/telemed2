@@ -1,4 +1,4 @@
-import 'package:doctorq/screens/articles/articles.dart';
+import 'package:doctorq/screens/medcard/patient_medcard_viewer.dart';
 import 'package:doctorq/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:doctorq/daily/daily_app.dart';
@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:daily_flutter/daily_flutter.dart' if (dart.library.html) 'package:doctorq/daily/daily_flutter_stub.dart';
 import 'dart:convert';
 import 'package:doctorq/config/daily_config.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:doctorq/services/consultation_provider_service.dart';
 
 // Утилитная функция для проверки истечения комнаты
 bool _isRoomExpired(dynamic roomData) {
@@ -586,23 +586,11 @@ class _OnlineReceptionVideoState extends State<OnlineReceptionVideo> {
                                       // Основная кнопка слева
                                       ElevatedButton.icon(
                                         onPressed: () async {
-                                          final url = _extractRoomUrl(context);
-                                          if (url != null) {
-                                            await launchUrl(
-                                              Uri.parse(url),
-                                              mode:
-                                                  LaunchMode.externalApplication,
-                                            );
-                                          } else {
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              const SnackBar(
-                                                content: Text(
-                                                  'Ссылка на Телемост пока не готова',
-                                                ),
-                                              ),
-                                            );
-                                          }
+                                          await ConsultationProviderService.openAppointment(
+                                            context,
+                                            role: 'doctor',
+                                            mode: ConsultationMode.video,
+                                          );
                                         },
                                         icon: const Icon(
                                           Icons.video_call,
@@ -652,11 +640,22 @@ class _OnlineReceptionVideoState extends State<OnlineReceptionVideo> {
                                               padding: EdgeInsets.zero,
                                               iconSize: 20,
                                               onPressed: () {
+                                                final patient = context.selectedAppointment['patient'] ?? {};
+                                                final patientUserId = (patient['user_id'] ??
+                                                        patient['patient_id'] ??
+                                                        '')
+                                                    .toString();
+                                                final patientName =
+                                                    patient['username']?.toString();
+                                                if (patientUserId.isEmpty) return;
                                                 Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
                                                       builder: (context) =>
-                                                          MedCardScreen()),
+                                                          PatientMedcardViewer(
+                                                            patientUserId: patientUserId,
+                                                            patientName: patientName,
+                                                          )),
                                                 );
                                               },
                                             ),

@@ -19,6 +19,8 @@ import 'package:http/http.dart' as http;
 
 GetIt getIt = GetIt.instance;
 
+const String _registrationPushCodeBaseUrl = 'https://admin.onlinedoctor.su/api/registration';
+
 Future<bool> regUser(
   BuildContext context,
   String email,
@@ -28,12 +30,17 @@ Future<bool> regUser(
   String snils, {
   String? phone,
   String? birthDate,
+  String? city,
+  String? timeZone,
 }) async {
   printLog(email);
   printLog(password);
 
   // Use the fullName directly as the name field
   String name = fullName;
+  final resolvedCity = (city ?? '').trim();
+  final resolvedTimeZone =
+      (timeZone ?? '').trim().isNotEmpty ? timeZone!.trim() : resolveTimezoneForCity(resolvedCity);
   print(fullName);
   // String loginString = '''
   //       mutation LoginUser {
@@ -51,6 +58,8 @@ Future<bool> regUser(
         role: "$role"
         phone: "${phone ?? ''}"
         birth_date: "${birthDate ?? ''}"
+        city: "${escapeGraphQlString(resolvedCity.isEmpty ? 'Москва' : resolvedCity)}"
+        time_zone: "$resolvedTimeZone"
         snils: "$snils"
         verification_url: {
           url: "https://onlinedoctor.su/api/verify-email?id=__ID__&token=__HASH__&expires=__EXPIRES__&signature=__SIGNATURE__"
@@ -143,9 +152,6 @@ Future<bool> regUser(
 
   final registerStatus = result.data?["registerUser"]?["status"]?.toString();
   if (registerStatus == 'MUST_VERIFY_EMAIL' || registerStatus == 'SUCCESS') {
-    if (registerStatus == 'MUST_VERIFY_EMAIL') {
-      await authUser(context, email, password);
-    }
     return true;
   }
 
@@ -155,6 +161,35 @@ Future<bool> regUser(
     color: Colors.red,
   );
   return false;
+}
+
+String resolveTimezoneForCity(String? city) {
+  final normalized = (city ?? '').trim().toLowerCase();
+  const timezoneByCity = {
+    'москва': 'Europe/Moscow',
+    'санкт-петербург': 'Europe/Moscow',
+    'петербург': 'Europe/Moscow',
+    'казань': 'Europe/Moscow',
+    'нижний новгород': 'Europe/Moscow',
+    'самара': 'Europe/Samara',
+    'екатеринбург': 'Asia/Yekaterinburg',
+    'омск': 'Asia/Omsk',
+    'красноярск': 'Asia/Krasnoyarsk',
+    'иркутск': 'Asia/Irkutsk',
+    'якутск': 'Asia/Yakutsk',
+    'владивосток': 'Asia/Vladivostok',
+    'новосибирск': 'Asia/Novosibirsk',
+    'калининград': 'Europe/Kaliningrad',
+  };
+
+  return timezoneByCity[normalized] ?? 'Europe/Moscow';
+}
+
+String escapeGraphQlString(String value) {
+  return value
+      .replaceAll('\\', r'\\')
+      .replaceAll('"', r'\"')
+      .replaceAll('\n', r'\n');
 }
 
 Future<dynamic> fetchYaUserData(_token) async {
@@ -314,6 +349,43 @@ String generateRandomCode() {
     code += random.nextInt(10).toString();
   }
   return code;
+}
+
+Future<Map<String, dynamic>> sendRegistrationPushCode(String email) async {
+  final response = await http.post(
+    Uri.parse('$_registrationPushCodeBaseUrl/send-code'),
+    headers: {'Content-Type': 'application/json'},
+    body: jsonEncode({'email': email.trim()}),
+  );
+
+  final Map<String, dynamic> payload = response.body.isNotEmpty
+      ? jsonDecode(response.body) as Map<String, dynamic>
+      : <String, dynamic>{};
+
+  if (response.statusCode >= 200 && response.statusCode < 300) {
+    return payload;
+  }
+
+  throw Exception(payload['message']?.toString() ?? 'Не удалось отправить код');
+}
+
+Future<bool> verifyRegistrationPushCode(String email, String code) async {
+  final response = await http.post(
+    Uri.parse('$_registrationPushCodeBaseUrl/verify-code'),
+    headers: {'Content-Type': 'application/json'},
+    body: jsonEncode({
+      'email': email.trim(),
+      'code': code.trim(),
+    }),
+  );
+
+  final Map<String, dynamic> payload = response.body.isNotEmpty
+      ? jsonDecode(response.body) as Map<String, dynamic>
+      : <String, dynamic>{};
+
+  return response.statusCode >= 200 &&
+      response.statusCode < 300 &&
+      payload['success'] == true;
 }
 
 Future<Map<String, dynamic>?> sendEmail(email, code) async {

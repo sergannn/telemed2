@@ -6,7 +6,9 @@ list(APPEND FLUTTER_PLUGIN_LIST
   audioplayers_linux
   file_selector_linux
   flutter_timezone
+  flutter_webrtc
   gtk
+  livekit_client
   url_launcher_linux
 )
 
