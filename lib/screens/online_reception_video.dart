@@ -1,11 +1,12 @@
 import 'dart:convert';
 
 import 'package:doctorq/extensions.dart';
-import 'package:doctorq/screens/articles/articles.dart';
+import 'package:doctorq/screens/medcard/card_gallery.dart';
+//import 'package:doctorq/screens/articles/articles.dart';
 import 'package:doctorq/services/api_service.dart';
+import 'package:doctorq/services/consultation_provider_service.dart';
 import 'package:flutter/material.dart';
 import 'package:loader_overlay/loader_overlay.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 bool _hasRoomData(dynamic roomData) {
   if (roomData == null) return false;
@@ -464,28 +465,15 @@ class OnlineReceptionVideo extends StatelessWidget {
                                       // Кнопка Яндекс Телемост
                                       ElevatedButton.icon(
                                         onPressed: () async {
-                                          final url = _extractRoomUrl(
-                                            context.selectedAppointment['room_data'],
+                                          await ConsultationProviderService.openAppointment(
+                                            context,
+                                            role: 'patient',
+                                            mode: ConsultationMode.video,
                                           );
-                                          if (url != null) {
-                                            await launchUrl(
-                                              Uri.parse(url),
-                                              mode: LaunchMode.externalApplication,
-                                            );
-                                          } else {
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              const SnackBar(
-                                                content: Text(
-                                                  'Ссылка на Телемост пока не готова',
-                                                ),
-                                              ),
-                                            );
-                                          }
                                         },
                                         icon: const Icon(Icons.video_call, color: Colors.white, size: 18),
                                         label: const Text(
-                                          'Яндекс Телемост',
+                                          'Начать прием',
                                           style: TextStyle(color: Colors.white, fontSize: 12),
                                         ),
                                         style: ElevatedButton.styleFrom(

@@ -1,11 +1,10 @@
-import 'dart:convert';
-
 import 'package:doctorq/extensions.dart';
-import 'package:doctorq/screens/articles/articles.dart';
+import 'package:doctorq/screens/medcard/card_gallery.dart';
+//import 'package:doctorq/screens/articles/articles.dart';
 import 'package:doctorq/services/api_service.dart';
+import 'package:doctorq/services/consultation_provider_service.dart';
 import 'package:flutter/material.dart';
 import 'package:loader_overlay/loader_overlay.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class OnlineReceptionAudio extends StatelessWidget {
   @override
@@ -358,23 +357,15 @@ Row(
     // Кнопка Яндекс Телемост
     ElevatedButton.icon(
       onPressed: () async {
-        final roomData = context.selectedAppointment['room_data']?.toString() ?? '';
-        String? url;
-        if (roomData.startsWith('https://')) {
-          url = roomData;
-        } else {
-          try {
-            final decoded = jsonDecode(roomData);
-            url = decoded['join_url'] ?? decoded['url'];
-          } catch (_) {}
-        }
-        if (url != null) {
-          await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
-        }
+        await ConsultationProviderService.openAppointment(
+          context,
+          role: 'patient',
+          mode: ConsultationMode.audio,
+        );
       },
       icon: const Icon(Icons.headset_mic, color: Colors.white, size: 18),
       label: const Text(
-        'Яндекс Телемост',
+        'Начать прием',
         style: TextStyle(color: Colors.white, fontSize: 12),
       ),
       style: ElevatedButton.styleFrom(

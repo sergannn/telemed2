@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:doctorq/screens/medcard/full_screen_image_viewer.dart';
+import 'package:doctorq/services/api_service.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -10,7 +12,6 @@ class DocumentsGallery extends StatefulWidget {
 }
 
 class _DocumentsGalleryState extends State<DocumentsGallery> {
-  List<String> _imagePaths = [];
   Map<String, List<String>> _folderImages = {
     'Рецепты': [],
     'Обследования': [],
@@ -23,6 +24,7 @@ class _DocumentsGalleryState extends State<DocumentsGallery> {
     'Дневник'
   ]; // Стандартные папки
   final TextEditingController _folderNameController = TextEditingController();
+  Map<String, String> _remoteDocumentUrls = {};
 
   int? _selectedImageIndex;
 
@@ -34,6 +36,27 @@ class _DocumentsGalleryState extends State<DocumentsGallery> {
 
   Future<void> _deleteImage(int index) async {
     final prefs = await SharedPreferences.getInstance();
+    final imagePath = _folderImages[_selectedFolder]![index];
+    final remoteUrl = _remoteDocumentUrls[imagePath];
+    print(remoteUrl);
+    print("<");
+    if (remoteUrl != null) {
+      final deleted = await deleteMedicalDocument(remoteUrl);
+      if (!deleted) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Не удалось удалить документ с сервера'),
+            ),
+          );
+        }
+        return;
+      }
+      _remoteDocumentUrls.remove(imagePath);
+      await prefs.setString('remote_document_urls', jsonEncode(_remoteDocumentUrls));
+    }
+    else { print('else');}
+
     _folderImages[_selectedFolder]!.removeAt(index);
     await prefs.setStringList(_selectedFolder, _folderImages[_selectedFolder]!);
     if (mounted) {
@@ -47,6 +70,18 @@ class _DocumentsGalleryState extends State<DocumentsGallery> {
     final prefs = await SharedPreferences.getInstance();
     _folders = prefs.getStringList('folders') ??
         ['Рецепты', 'Обследования', 'Выписки'];
+
+    final remoteUrlsJson = prefs.getString('remote_document_urls');
+    if (remoteUrlsJson != null && remoteUrlsJson.trim().isNotEmpty) {
+      try {
+        _remoteDocumentUrls =
+            Map<String, String>.from(jsonDecode(remoteUrlsJson) as Map);
+      } catch (_) {
+        _remoteDocumentUrls = {};
+      }
+    } else {
+      _remoteDocumentUrls = {};
+    }
 
     _folderImages = {};
     for (var folder in _folders) {
@@ -71,7 +106,12 @@ class _DocumentsGalleryState extends State<DocumentsGallery> {
 
   Future<void> _pickImage() async {
     final imagePicker = ImagePicker();
-    final pickedFile = await imagePicker.pickImage(source: ImageSource.gallery);
+    final pickedFile = await imagePicker.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 70,
+      maxWidth: 1600,
+      maxHeight: 1600,
+    );
     if (pickedFile != null) {
       _saveImage(pickedFile.path);
     }
@@ -80,12 +120,30 @@ class _DocumentsGalleryState extends State<DocumentsGallery> {
   Future<void> _saveImage(String imagePath) async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      //  _imagePaths.add(imagePath);
-//      prefs.setStringList('imagePaths', _imagePaths);
-      _folderImages[_selectedFolder] ??= []; // <- Это ключевое исправление
+      _folderImages[_selectedFolder] ??= [];
       _folderImages[_selectedFolder]!.add(imagePath);
       prefs.setStringList(_selectedFolder, _folderImages[_selectedFolder]!);
     });
+
+    final documentUrl = await uploadMedicalDocument(
+      imagePath,
+      category: _selectedFolder,
+    );
+    final uploaded = documentUrl != null && documentUrl.isNotEmpty;
+    if (uploaded) {
+      _remoteDocumentUrls[imagePath] = documentUrl;
+      await prefs.setString('remote_document_urls', jsonEncode(_remoteDocumentUrls));
+    }
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          uploaded
+              ? 'Документ сохранён и отправлен врачу на сервер'
+              : 'Документ сохранён локально, но не отправился на сервер',
+        ),
+      ),
+    );
   }
 
   void _showAddFolderDialog() {

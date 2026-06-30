@@ -7,6 +7,7 @@ import 'package:doctorq/screens/first/figmasample.dart';
 import 'package:doctorq/screens/first/first.dart';
 import 'package:doctorq/screens/webviews/someWebPage.dart';
 import 'package:doctorq/services/api_service.dart';
+import 'package:doctorq/services/fcm_service.dart';
 import 'package:doctorq/services/session.dart';
 import 'package:doctorq/services/startup_service.dart';
 import 'package:doctorq/stores/init_stores.dart';
@@ -15,6 +16,8 @@ import 'package:doctorq/translations/codegen_loader.g.dart';
 import 'package:doctorq/utils/utility.dart' show navigatorKey;
 import 'package:doctorq/constant/constants.dart' show withSentry, forceSentry;
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart'; // ADD THIS IMPORT
@@ -28,16 +31,22 @@ import 'theme/theme_manager.dart';
 import 'package:doctorq/screens/main_screen.dart';
 import 'widgets/keyboard_dismisser.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:adaptive_theme/adaptive_theme.dart';
 
 void main() async {
   // Проверяем, нужно ли включать Sentry
   final bool shouldUseSentry = forceSentry || withSentry;
+    WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  await FcmService().initialize();
+  // Ждём 2-3 секунды, пока iOS зарегистрируется в APNs
 
   if (shouldUseSentry) {
     // Инициализируем приложение с Sentry
     await SentryFlutter.init(
       (options) {
-        options.dsn = 'https://bzpz5xodp1zvlkllus7rf1toh8@o4506802011537408.ingest.de.sentry.io/4506802011537408';
+        options.dsn =
+            'https://bzpz5xodp1zvlkllus7rf1toh8@o4506802011537408.ingest.de.sentry.io/4506802011537408';
         options.tracesSampleRate = 1.0;
         options.environment = 'production';
       },
@@ -58,11 +67,16 @@ Future<void> _runApp() async {
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
-  
+
   await Session.init();
   initStores();
   await Future.delayed(Duration(milliseconds: 1000));
+  await Future.delayed(Duration(seconds: 3));
   
+  // Теперь токен должен быть доступен
+  String? token = await FirebaseMessaging.instance.getToken();
+  print('✅ FCM Token: $token');
+
   // REMOVED THE MATERIALAPP HERE - just run MyApp directly
   runApp(MyApp());
 }
@@ -138,18 +152,28 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         builder: (context, child) {
           return KeyboardDismisser(
             child: GlobalLoaderOverlay(
-              child: MaterialApp(
+                child: AdaptiveTheme(
+              light: ThemeData.light(useMaterial3: true).copyWith(
+                scaffoldBackgroundColor: Colors.white,
+                colorScheme: ColorScheme.fromSeed(
+                  seedColor: Colors.blue,
+                  brightness: Brightness.light,
+                  surface: Colors.white,
+                ),
+              ),
+              dark: ThemeData.dark(useMaterial3: true).copyWith(
+                colorScheme: ColorScheme.fromSeed(
+                  seedColor: Colors.blue,
+                  brightness: Brightness.dark,
+                ),
+              ),
+              initial: AdaptiveThemeMode.light,
+              builder: (theme, darkTheme) => MaterialApp(
                 navigatorKey: navigatorKey, // MOVED NAVIGATOR KEY HERE
                 title: 'Телемедицина',
                 debugShowCheckedModeBanner: false,
-                theme: ThemeData(
-                  scaffoldBackgroundColor: Colors.white,
-                  colorScheme: ColorScheme.fromSeed(
-                    seedColor: Colors.blue,
-                    surface: Colors.white,
-                    background: Colors.white,
-                  ),
-                ),
+                theme: theme,
+                darkTheme: darkTheme,
                 // MOVED ROUTES HERE
                 routes: {
                   '/webview': (context) => const SomeWebView(),
@@ -167,7 +191,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                 locale: context.locale,
                 home: FutureBuilder(
                   future: getStartupData(),
-                  builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                  builder:
+                      (BuildContext context, AsyncSnapshot<bool> snapshot) {
                     if (snapshot.connectionState == ConnectionState.done &&
                         snapshot.data == true) {
                       return Main();
@@ -176,7 +201,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                   },
                 ),
               ),
-            ),
+            )),
           );
         },
       ),

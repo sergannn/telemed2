@@ -16,12 +16,13 @@ import 'package:doctorq/services/auth_service.dart';
 class ForgotPasswordOtpActiveScreen extends StatelessWidget {
   final dynamic response;
   final dynamic password;
-  ForgotPasswordOtpActiveScreen({Key? key, this.response, this.password}) : super(key: key);
+  ForgotPasswordOtpActiveScreen({Key? key, this.response, this.password})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     bool isDark = Theme.of(context).brightness == Brightness.dark;
-    print(response);
+    final email = response['email']?.toString() ?? '';
     return Scaffold(
       body: SafeArea(
         child: SizedBox(
@@ -68,12 +69,7 @@ class ForgotPasswordOtpActiveScreen extends StatelessWidget {
                       top: 40,
                     ),
                     child: Text(
-                      "Код подтверждения был выслан\n на email и по sms \n" +
-                          "Временно показываем:" +
-                          response['code'].toString()
-                      //   context.userData['email']
-                      ,
-                      overflow: TextOverflow.ellipsis,
+                      "Код подтверждения был отправлен push-уведомлением.\nВведите его, чтобы завершить регистрацию.",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: getFontSize(
@@ -107,20 +103,31 @@ class ForgotPasswordOtpActiveScreen extends StatelessWidget {
                           FilteringTextInputFormatter.digitsOnly,
                         ],
                         onChanged: (value) async {
-                          print(value.length.toString());
                           if (value.length == 4) {
-                            if (value == response['code']) {
-                              var authRes =
-//                                  await authUser(context, "s@s.ru", "123456");
-                                  await authUser(
-                                      context, response['email'], password);
+                            final isValid = await verifyRegistrationPushCode(
+                              email,
+                              value,
+                            );
+                            if (isValid) {
+                              var authRes = await authUser(
+                                context,
+                                email,
+                                password,
+                              );
                               if (authRes == true) {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => Main()
-                                      //   const GuessCode()
-                                      //     const ProfileBlankScreen()
-                                      ),
+                                  MaterialPageRoute(
+                                    builder: (context) => Main(),
+                                  ),
+                                );
+                              }
+                            } else {
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Неверный код подтверждения'),
+                                  ),
                                 );
                               }
                             }

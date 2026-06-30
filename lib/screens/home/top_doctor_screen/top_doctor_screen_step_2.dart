@@ -1,9 +1,7 @@
 import 'dart:math';
 
 import 'package:doctorq/extensions.dart';
-import 'package:doctorq/screens/home/home_screen/widgets/autolayouthor1_item_widget.dart';
 import 'package:doctorq/screens/home/home_screen/widgets/doctor_item.dart';
-import 'package:doctorq/screens/profile/popular_doctors.dart';
 
 import 'package:doctorq/widgets/spacing.dart';
 import 'package:doctorq/widgets/top_back.dart';
@@ -79,163 +77,120 @@ class _TopDoctorScreenState extends State<ChooseSpecScreen2>
 
   @override
   Widget build(BuildContext context) {
-    print(context.doctorsData[0]);
-    print("its the first doctor");
-    print("of ");
-    print(context.doctorsData.length);
-    print(context.doctorsData);
-    print("and the specs:");
-    print(context.specsData.length);
-
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            ...topBack(text: "Запись к врачу", context: context),
-
-            VerticalSpace(height: 24),
-            Container(
-              width: double.infinity, // Makes the container full width
-              margin: EdgeInsets.symmetric(horizontal: 16), // Adds side margins
-              child: TextField(
-                onTapOutside: (_) { print("tap outside");
-                  FocusManager.instance.primaryFocus?.unfocus();
-                },
-                decoration: InputDecoration(
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                  hintText: 'Найти врача',
-                  border: OutlineInputBorder( 
-                    borderRadius: BorderRadius.circular(32),
-                    borderSide: BorderSide(color: Colors.grey.shade300),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ...topBack(text: "Запись к врачу", context: context),
+          VerticalSpace(height: 24),
+          Container(
+            width: double.infinity,
+            margin: EdgeInsets.symmetric(horizontal: 16),
+            child: TextField(
+              onTapOutside: (_) {
+                FocusManager.instance.primaryFocus?.unfocus();
+              },
+              decoration: InputDecoration(
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                hintText: 'Найти врача',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(32),
+                  borderSide: BorderSide(color: Colors.grey.shade300),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(32),
+                  borderSide: BorderSide(
+                    color: const Color.fromARGB(255, 96, 159, 222),
+                    width: 1,
                   ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(32),
-                    borderSide: BorderSide(color: const Color.fromARGB(255, 96, 159, 222), width: 1),
+                ),
+                prefixIcon: Icon(Icons.search, color: Colors.grey),
+              ),
+            ),
+          ),
+          SizedBox(height: 20.0),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: getPadding(
+                left: 24,
+                top: 0,
+                right: 24,
+              ),
+              child: Container(
+                height: 28,
+                margin: const EdgeInsets.only(top: 0),
+                padding: const EdgeInsets.all(2),
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 238, 238, 238)
+                      .withOpacity(0.8),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                alignment: Alignment.center,
+                child: Padding(
+                  padding: EdgeInsets.only(top: 2),
+                  child: Text(
+                    'Запись осуществляется по вашему местному времени',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: const Color.fromARGB(255, 17, 17, 17),
+                      fontSize: 10,
+                    ),
                   ),
-                  prefixIcon: Icon(Icons.search, color: Colors.grey),
                 ),
               ),
             ),
-            SizedBox(height: 20.0),
-            // Зеленый контейнер
-            Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: getPadding(
-                    left: 24,
-                    top: 0,
-                    right: 24,
-                  ),
-                  child: Container(
-                    height: 28, // Увеличенная высота
-                    margin: const EdgeInsets.only(top: 0),
-                    padding: const EdgeInsets.all(2),
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 238, 238, 238)
-                          .withOpacity(0.8),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    alignment: Alignment.center, // Центрирование содержимого
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        // Заголовок
-
-                        // Описание
-                        Padding(
-                          padding: EdgeInsets.only(top: 2),
-                          child: Text(
-                            'Запись осуществляется по вашему местному времени',
-                            textAlign: TextAlign.center, // Центрирование текста
-                            style: TextStyle(
-                              color: const Color.fromARGB(255, 17, 17, 17),
-                              fontSize: 10,
-                            ),
-                          ),
-                        ),
-
-                        // Кнопка и время
-                      ],
-                    ),
-                  ),
-                )),
-
-            VerticalSpace(height: 24),
-
-            //Text(context.specsData.length.toString()),
-            //DatePicker(height: 100, DateTime.now()),
-            Container(
-                width: double.infinity, // Makes the container full width
-                margin:
-                    EdgeInsets.symmetric(horizontal: 16), // Adds side margins
-                child: SpecsTabBar(context.specsData, tabController)),
-            CatDoctorsList(context.specsData, tabController,
-                MediaQuery.of(context).size.height),
-            VerticalSpace(height: 24),
-          ],
-        ),
+          ),
+          VerticalSpace(height: 24),
+          Container(
+            width: double.infinity,
+            margin: EdgeInsets.symmetric(horizontal: 16),
+            child: SpecsTabBar(context.specsData, tabController),
+          ),
+          Expanded(
+            child: CatDoctorsList(context.specsData, tabController),
+          ),
+          VerticalSpace(height: 24),
+        ],
       ),
     );
   }
 
-  Widget CatDoctorsList(specsData, tabController, height) {
-    return SizedBox(
-      height: height,
+  Widget CatDoctorsList(specsData, tabController) {
+    return TabBarView(
+      controller: tabController,
+      children: [
+        ...specsData.map((spec) {
+          final filteredDoctors = context.doctorsData.where((doctor) {
+            if (doctor == null || doctor['specializations'] == null) {
+              return false;
+            }
 
-      ///Media(), //size.height - getVerticalSize(192),
-      child: TabBarView(
-        controller: tabController,
-        children: [
-          ...specsData.map((spec) => ListView.builder(
-                padding: getPadding(
-                  left: 20,
-                  right: 20,
-                  top: 24,
-                  bottom: 34,
-                ),
-                physics: const BouncingScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: context.doctorsData.length, // Use actual doctors count
-                
-                itemBuilder: (context, index) {
-                  if (context.doctorsData[index] != null) {
-                    // Debug print to see what's happening
-                    print('Checking doctor ${context.doctorsData[index]['username']} for spec ${spec.name}');
-                    print('Doctor specializations: ${context.doctorsData[index]['specializations']}');
-                    
-                    if (context.doctorsData[index]['specializations']
-                        .map((e) => e['name'])
-                        .toList()
-                        .contains(spec.name)) {
-                      print('Doctor ${context.doctorsData[index]['specializations']} matches spec ${spec.name}');
-                      // return Column(
-       // children: List.generate(context.doctorsData.length, (index) {
-      return DoctorItem(
-        item: context.doctorsData[index],
-        index: index,
-      );
-    
-                      return Text(context.doctorsData[index]['username']);
-                   /*   return DoctorsSliderItem(
-                        item: context.doctorsData[index],
-                        index: index,
-                      );*/
-                    } else {
-                      print('Doctor ${context.doctorsData[index]['specializations']} does NOT match spec ${spec.name}');
-                      return Container();
-                    }
-                  } else {
-                    print('Doctor at index $index is null');
-                    return Container();
-                  }
-                },
-              )),
-        ],
-      ),
+            return doctor['specializations']
+                .map((e) => e['name'])
+                .toList()
+                .contains(spec.name);
+          }).toList();
+
+          return ListView.builder(
+            padding: getPadding(
+              left: 20,
+              right: 20,
+              top: 24,
+              bottom: 34,
+            ),
+            physics: const BouncingScrollPhysics(),
+            itemCount: filteredDoctors.length,
+            itemBuilder: (context, index) {
+              return DoctorItem(
+                item: filteredDoctors[index],
+                index: index,
+              );
+            },
+          );
+        }),
+      ],
     );
   }
 

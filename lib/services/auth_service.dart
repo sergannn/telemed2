@@ -16,6 +16,9 @@ import 'package:http/http.dart' as http;
 
 GetIt getIt = GetIt.instance;
 
+const String _registrationPushCodeBaseUrl =
+    'https://admin.onlinedoctor.su/api/registration';
+
 Future<bool> regUser(
   BuildContext context,
   String email,
@@ -25,12 +28,18 @@ Future<bool> regUser(
   String snils, {
   String? phone,
   String? birthDate,
+  String? city,
+  String? timeZone,
 }) async {
   printLog(email);
   printLog(password);
 
   // Use the fullName directly as the name field
   String name = fullName;
+  final resolvedCity = (city ?? '').trim();
+  final resolvedTimeZone = (timeZone ?? '').trim().isNotEmpty
+      ? timeZone!.trim()
+      : resolveTimezoneForCity(resolvedCity);
 
   // String loginString = '''
   //       mutation LoginUser {
@@ -48,6 +57,8 @@ Future<bool> regUser(
         role: "$role"
         phone: "${phone ?? ''}"
         birth_date: "${birthDate ?? ''}"
+        city: "${escapeGraphQlString(resolvedCity.isEmpty ? 'Москва' : resolvedCity)}"
+        time_zone: "$resolvedTimeZone"
         snils: "$snils"
         verification_url: {
           url: "https://onlinedoctor.su/api/verify-email?id=__ID__&token=__HASH__&expires=__EXPIRES__&signature=__SIGNATURE__"
@@ -69,8 +80,8 @@ Future<bool> regUser(
   late QueryResult result;
   try {
     result = await graphqlClient.mutate(options).timeout(
-      const Duration(seconds: 10),
-    );
+          const Duration(seconds: 10),
+        );
   } on TimeoutException {
     snackBar(
       context,
@@ -100,7 +111,9 @@ Future<bool> regUser(
   print("Status: ${result.hasException ? "Error" : "Success"}");
   print(result.exception.toString());
   print(result.toString());
-  if (result.exception.toString().contains("already been") //&&email.contains("pan_")
+  if (result.exception
+          .toString()
+          .contains("already been") //&&email.contains("pan_")
       ) {
     print("already");
     snackBar(
@@ -154,6 +167,35 @@ Future<bool> regUser(
     color: Colors.red,
   );
   return false;
+}
+
+String resolveTimezoneForCity(String? city) {
+  final normalized = (city ?? '').trim().toLowerCase();
+  const timezoneByCity = {
+    'москва': 'Europe/Moscow',
+    'санкт-петербург': 'Europe/Moscow',
+    'петербург': 'Europe/Moscow',
+    'казань': 'Europe/Moscow',
+    'нижний новгород': 'Europe/Moscow',
+    'самара': 'Europe/Samara',
+    'екатеринбург': 'Asia/Yekaterinburg',
+    'омск': 'Asia/Omsk',
+    'красноярск': 'Asia/Krasnoyarsk',
+    'иркутск': 'Asia/Irkutsk',
+    'якутск': 'Asia/Yakutsk',
+    'владивосток': 'Asia/Vladivostok',
+    'новосибирск': 'Asia/Novosibirsk',
+    'калининград': 'Europe/Kaliningrad',
+  };
+
+  return timezoneByCity[normalized] ?? 'Europe/Moscow';
+}
+
+String escapeGraphQlString(String value) {
+  return value
+      .replaceAll('\\', r'\\')
+      .replaceAll('"', r'\"')
+      .replaceAll('\n', r'\n');
 }
 
 Future<dynamic> fetchYaUserData(_token) async {
@@ -227,13 +269,16 @@ Future<bool> authUser(
   late QueryResult result;
   try {
     result = await graphqlClient.mutate(options).timeout(
-      const Duration(seconds: 10),
-    );
+          const Duration(seconds: 10),
+        );
   } on TimeoutException {
-    snackBar(context, message: "Нет ответа от сервера. Проверьте подключение.", color: Colors.red);
+    snackBar(context,
+        message: "Нет ответа от сервера. Проверьте подключение.",
+        color: Colors.red);
     return false;
   } catch (e) {
-    snackBar(context, message: "Ошибка соединения. Попробуйте позже.", color: Colors.red);
+    snackBar(context,
+        message: "Ошибка соединения. Попробуйте позже.", color: Colors.red);
     return false;
   }
   debugPrintTransactionEnd('mutation login');
@@ -245,12 +290,13 @@ Future<bool> authUser(
 
   if (result.hasException) {
     printLog(result.exception.toString());
-    
+
     // Проверяем наличие ошибки "The provided credentials are incorrect"
     final exceptionString = result.exception.toString();
     if (exceptionString.contains("The provided credentials are incorrect")) {
       snackBar(context,
-          message: "Неверный email или пароль. Пожалуйста, проверьте введенные данные.",
+          message:
+              "Неверный email или пароль. Пожалуйста, проверьте введенные данные.",
           color: Colors.red);
     } else {
       // Обработка других ошибок
@@ -287,8 +333,8 @@ Future<Map<String, dynamic>?> sendEmail(email, code) async {
   print(url);
   try {
     final response = await http.get(url).timeout(
-      const Duration(seconds: 8),
-    );
+          const Duration(seconds: 8),
+        );
 
     print(response.body);
     return {'response': response.body, 'code': code, 'email': email};
@@ -299,6 +345,45 @@ Future<Map<String, dynamic>?> sendEmail(email, code) async {
     print('sendEmail error: $e');
     return {'response': 'error', 'code': code, 'email': email};
   }
+}
+
+Future<Map<String, dynamic>> sendRegistrationPushCode(String email) async {
+  final response = await http.post(
+    Uri.parse('$_registrationPushCodeBaseUrl/send-code'),
+    headers: {'Content-Type': 'application/json'},
+    body: jsonEncode({'email': email.trim()}),
+  );
+
+  final Map<String, dynamic> payload = response.body.isNotEmpty
+      ? jsonDecode(response.body) as Map<String, dynamic>
+      : <String, dynamic>{};
+
+  if (response.statusCode >= 200 && response.statusCode < 300) {
+    return payload;
+  }
+
+  throw Exception(
+    payload['message']?.toString() ?? 'Не удалось отправить код',
+  );
+}
+
+Future<bool> verifyRegistrationPushCode(String email, String code) async {
+  final response = await http.post(
+    Uri.parse('$_registrationPushCodeBaseUrl/verify-code'),
+    headers: {'Content-Type': 'application/json'},
+    body: jsonEncode({
+      'email': email.trim(),
+      'code': code.trim(),
+    }),
+  );
+
+  final Map<String, dynamic> payload = response.body.isNotEmpty
+      ? jsonDecode(response.body) as Map<String, dynamic>
+      : <String, dynamic>{};
+
+  return response.statusCode >= 200 &&
+      response.statusCode < 300 &&
+      payload['success'] == true;
 }
 
 Future<Map<String, dynamic>?> sendSMS(tel, code) async {
@@ -335,6 +420,7 @@ Future<String?> logOut() async {
   printLog('Logging out');
   return 'logged out';
 }
+
 Future<bool> checkEmailExists(String email) async {
   try {
     String checkEmailQuery = '''
@@ -347,20 +433,20 @@ Future<bool> checkEmailExists(String email) async {
         }
       }
     ''';
-    
+
     final QueryOptions options = QueryOptions(
       document: gql(checkEmailQuery),
       variables: {'email': email},
     );
     GraphQLClient graphqlClient = await graphqlAPI2.noauthClient();
-    
+
     final QueryResult result = await graphqlClient.query(options);
-    
+
     if (result.hasException) {
       printLog('Email check error: ${result.exception}');
       return false; // Assume email doesn't exist if there's an error
     }
-    
+
     final users = result.data?['users']['data'] ?? [];
     return users.isNotEmpty;
   } catch (e) {

@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 import 'package:doctorq/screens/appointments/steps/step_2_filled_screen/step_2_filled_screen.dart';
 import 'package:doctorq/screens/medcard/card_gallery.dart';
+import 'package:doctorq/services/api_service.dart';
 import 'package:doctorq/utils/size_utils.dart';
 import 'package:doctorq/utils/utility.dart';
 import 'package:doctorq/widgets/custom_button.dart';
@@ -253,6 +254,45 @@ class SurveyState extends State<SurveyScreen> {
             'pain_level_$i', medicalHistories[i]?.selectedPainLevel ?? '');
       }
     }
+  }
+
+  Map<String, dynamic> _buildQuestionnairePayload() {
+    final histories = <String, dynamic>{};
+    for (int i = 0; i < 8; i++) {
+      final body = bodyParams[i];
+      final history = medicalHistories[i];
+      histories['section_$i'] = {
+        'blood_type': bloodTypes[i]?.selectedValue,
+        'rh_factor': rhFactors[i]?.selectedValue,
+        'disability': disabilities[i]?.selectedValue,
+        'physical_limitations': physicalLimitations[i]?.selectedValue,
+        'body': {
+          'weight': body?.weight,
+          'height': body?.height,
+          'circumference': body?.circumference,
+        },
+        'medical_history': {
+          'diseases': history?.selectedDiseases ?? [],
+          'traumas': history?.selectedTraumas ?? '',
+          'operations': history?.selectedOperations ?? '',
+          'medications': history?.selectedMedications ?? '',
+          'cycle_length': history?.selectedCycleLength ?? '',
+          'cycle_variation': history?.selectedCycleVariation ?? '',
+          'flow_intensity': history?.selectedFlowIntensity ?? '',
+          'pain_level': history?.selectedPainLevel ?? '',
+          'birth_type': history?.selectedBirthType ?? '',
+          'abortion_type': history?.selectedAbortionType ?? '',
+          'pregnancy_complications':
+              history?.selectedPregnancyComplications ?? '',
+        },
+      };
+    }
+
+    return {
+      'saved_at': DateTime.now().toIso8601String(),
+      'user_gender': _userGender,
+      'sections': histories,
+    };
   }
 
   Widget _buildBloodTypeButtons(int index) {
@@ -1454,7 +1494,12 @@ ListView(
                     child: ElevatedButton(
                       onPressed: () async {
                         await _saveAllValues();
+                        final synced =
+                            await savePatientQuestionnaire(_buildQuestionnairePayload());
                        snackBar(context, message: 'Данные сохранены');
+                       if (!synced) {
+                         snackBar(context, message: 'Анкета сохранена локально, но не отправилась на сервер');
+                       }
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(builder:(context)=> MedCardScreen()));
                     

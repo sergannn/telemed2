@@ -1,5 +1,6 @@
 import 'dart:convert';
 //import 'package:date_picker_timeline /date_picker_widget.dart';
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:doctorq/date_picker_timeline-1.2.6/lib/date_picker_widget.dart';
 import 'package:doctorq/screens/history/video_call_page/video_call_page.dart';
 import 'package:doctorq/screens/home/home_screen/widgets/autolayouthor_item_widget_tasks.dart';
@@ -444,6 +445,7 @@ class _HomeScreenState extends State<HomeScreen> {
     // Убрали "Путеводитель" и "Ваши симптомы" - теперь будут статьи
 
     bool isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Scaffold(
 //      backgroundColor: Colors.white,
       extendBody: true,

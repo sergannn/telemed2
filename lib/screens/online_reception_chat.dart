@@ -1,9 +1,8 @@
 import 'package:doctorq/extensions.dart';
-import 'package:doctorq/daily/main.dart';
-import 'package:doctorq/screens/articles/articles.dart';
+import 'package:doctorq/screens/medcard/card_gallery.dart';
+//import 'package:doctorq/screens/articles/articles.dart';
 import 'package:doctorq/services/api_service.dart';
-import 'package:doctorq/utils/daily_call_helper.dart';
-import 'package:doctorq/widgets/loading_overlay.dart';
+import 'package:doctorq/services/consultation_provider_service.dart';
 import 'package:flutter/material.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 
@@ -357,12 +356,11 @@ Row(
     // Основная кнопка слева
     ElevatedButton(
       onPressed: () async {
-        final navigator = Navigator.of(context);
-        await launchDailyCall(context, DailyCallMode.chat);
-        if (!navigator.mounted) return;
-        if (navigator.canPop()) {
-          navigator.pop();
-        }
+        await ConsultationProviderService.openAppointment(
+          context,
+          role: 'patient',
+          mode: ConsultationMode.chat,
+        );
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: const Color.fromARGB(255, 96, 159, 222),

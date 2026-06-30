@@ -836,6 +836,112 @@ Future<bool> updateProfileWithDocument(BuildContext context, String imagePath,
   }
 }
 
+Future<String?> uploadMedicalDocument(String imagePath, {required String category}) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String? token = prefs.getString('authToken');
+  if (token == null || token.isEmpty) {
+    return null;
+  }
+
+  const mutation = r'''
+    mutation UpdateUserDocuments($input: UpdateUserDocumentsInput!) {
+      updateUserDocuments(input: $input) {
+        status
+        document_url
+      }
+    }
+  ''';
+
+  final uri = Uri.parse('https://admin.onlinedoctor.su/graphql');
+  final request = http.MultipartRequest('POST', uri);
+  request.headers['Authorization'] = 'Bearer $token';
+  request.files.add(http.MultipartFile.fromBytes(
+    'document_image',
+    await File(imagePath).readAsBytes(),
+    filename: 'document.jpg',
+  ));
+  request.fields['operations'] = json.encode({
+    'query': mutation,
+    'variables': {
+      'input': {
+        'document_image': null,
+        'document_category': category,
+      }
+    }
+  });
+  request.fields['map'] = json.encode({
+    'document_image': ['variables.input.document_image']
+  });
+
+  final streamedResponse = await request.send();
+  final response = await http.Response.fromStream(streamedResponse);
+  if (response.statusCode != 200) {
+    print('uploadMedicalDocument error: ${response.statusCode}');
+    print(response.body);
+    return null;
+  }
+
+  final body = jsonDecode(response.body) as Map<String, dynamic>;
+  final result = body['data']?['updateUserDocuments'] as Map<String, dynamic>?;
+  if (body['errors'] != null || result?['status'] != 'SUCCESS') {
+    return null;
+  }
+
+  return result?['document_url'] as String?;
+}
+
+Future<bool> deleteMedicalDocument(String documentUrl) async {
+  final client = await graphqlAPI2.authClient();
+  final options = MutationOptions(
+    document: gql(r'''
+      mutation DeleteUserDocument($input: DeleteUserDocumentInput!) {
+        deleteUserDocument(input: $input) {
+          status
+        }
+      }
+    '''),
+    variables: {
+      'input': {
+        'document_url': documentUrl,
+      }
+    },
+  );
+
+  final result = await client.mutate(options);
+  if (result.hasException) {
+    print('deleteMedicalDocument error: ${result.exception}');
+    return false;
+  }
+
+  return result.data?['deleteUserDocument']?['status'] == 'SUCCESS';
+}
+
+Future<bool> savePatientQuestionnaire(Map<String, dynamic> questionnaire) async {
+  final client = await graphqlAPI2.authClient();
+  final options = MutationOptions(
+    document: gql(r'''
+      mutation SavePatientQuestionnaire($input: UpdatePatientQuestionnaireInput!) {
+        updatePatientQuestionnaire(input: $input) {
+          status
+        }
+      }
+    '''),
+    variables: {
+      'input': {
+        'questionnaire_data': jsonEncode(questionnaire),
+      }
+    },
+  );
+
+  final result = await client.mutate(options);
+  if (result.hasException) {
+    print('savePatientQuestionnaire error: ${result.exception}');
+    return false;
+  }
+
+  return result.data?['updatePatientQuestionnaire']?['status'] == 'SUCCESS';
+}
+
 Future<List<RecommendationModel>> fetchRecommendations() async {
   printLog('Fetching recommendations');
   
