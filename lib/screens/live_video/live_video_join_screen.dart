@@ -9,6 +9,10 @@ import 'package:doctorq/services/consultation_provider_service.dart';
 
 const _tokenEndpoint = 'https://livevideo.postagents.ru/token';
 const _defaultRoom = 'telemed-demo';
+const _sessionLimit = Duration(minutes: 1);
+const _chatTopic = 'telemed-chat';
+const _sessionTopic = 'telemed-session';
+const _sessionEndPayload = 'end';
 
 class LiveVideoJoinScreen extends StatefulWidget {
   const LiveVideoJoinScreen({
@@ -96,6 +100,7 @@ class _LiveVideoJoinScreenState extends State<LiveVideoJoinScreen> {
             roomName: roomName,
             mode: widget.mode,
             mediaWarning: mediaWarning,
+            role: widget.role,
           ),
         ),
       );
@@ -234,6 +239,7 @@ class LiveVideoCallScreen extends StatefulWidget {
     required this.title,
     required this.roomName,
     required this.mode,
+    required this.role,
     this.mediaWarning,
   });
 
@@ -243,6 +249,7 @@ class LiveVideoCallScreen extends StatefulWidget {
   final String roomName;
   final ConsultationMode mode;
   final String? mediaWarning;
+  final String role;
 
   @override
   State<LiveVideoCallScreen> createState() => _LiveVideoCallScreenState();
@@ -251,16 +258,28 @@ class LiveVideoCallScreen extends StatefulWidget {
 class _LiveVideoCallScreenState extends State<LiveVideoCallScreen> {
   final _messageController = TextEditingController();
   final _messages = <_LiveChatMessage>[];
+  Timer? _sessionTimer;
+  int _remainingSeconds = _sessionLimit.inSeconds;
+  bool _ending = false;
   EventsListener<RoomEvent> get _listener => widget.listener;
+  bool get _isDoctor => widget.role == 'doctor';
 
   @override
   void initState() {
     super.initState();
     widget.room.addListener(_refresh);
+    _startSessionTimer();
     _listener
       ..on<ParticipantEvent>((_) => _refresh())
       ..on<DataReceivedEvent>((event) {
-        if (event.topic != 'telemed-chat') return;
+        if (event.topic == _sessionTopic) {
+          final payload = utf8.decode(event.data, allowMalformed: true);
+          if (payload == _sessionEndPayload) {
+            unawaited(_completeSession());
+          }
+          return;
+        }
+        if (event.topic != _chatTopic) return;
         final text = utf8.decode(event.data, allowMalformed: true);
         setState(() {
           _messages.add(_LiveChatMessage(
@@ -279,9 +298,27 @@ class _LiveVideoCallScreenState extends State<LiveVideoCallScreen> {
 
   @override
   void dispose() {
+    _sessionTimer?.cancel();
     widget.room.removeListener(_refresh);
     unawaited(_disposeRoom());
+    _messageController.dispose();
     super.dispose();
+  }
+
+  void _startSessionTimer() {
+    _sessionTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_remainingSeconds <= 1) {
+        timer.cancel();
+        unawaited(_completeSession());
+        return;
+      }
+
+      if (mounted) {
+        setState(() => _remainingSeconds--);
+      } else {
+        _remainingSeconds--;
+      }
+    });
   }
 
   Future<void> _disposeRoom() async {
@@ -308,13 +345,36 @@ class _LiveVideoCallScreenState extends State<LiveVideoCallScreen> {
     await widget.room.localParticipant?.publishData(
       utf8.encode(text),
       reliable: true,
-      topic: 'telemed-chat',
+      topic: _chatTopic,
     );
   }
 
-  Future<void> _leave() async {
+  Future<void> _leave() => _completeSession();
+
+  Future<void> _completeSession() async {
+    if (_ending) return;
+    _ending = true;
+    _sessionTimer?.cancel();
+
+    if (_isDoctor) {
+      await _notifySessionEnded();
+    }
+
     await widget.room.disconnect();
     if (mounted) Navigator.of(context).pop();
+  }
+
+  Future<void> _notifySessionEnded() async {
+    try {
+      await widget.room.localParticipant?.publishData(
+        utf8.encode(_sessionEndPayload),
+        reliable: true,
+        topic: _sessionTopic,
+      );
+      await Future<void>.delayed(const Duration(milliseconds: 250));
+    } catch (_) {
+      // Завершение врача не должно зависеть от доставки служебного сообщения.
+    }
   }
 
   @override
@@ -328,8 +388,17 @@ class _LiveVideoCallScreenState extends State<LiveVideoCallScreen> {
       appBar: AppBar(
         title: Text('${widget.title} · ${widget.roomName}'),
         actions: [
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: Text(
+                _formatRemaining(_remainingSeconds),
+                style: const TextStyle(fontWeight: FontWeight.w700),
+              ),
+            ),
+          ),
           IconButton(
-            tooltip: 'Выйти',
+            tooltip: _isDoctor ? 'Завершить сеанс' : 'Выйти',
             onPressed: _leave,
             icon: const Icon(Icons.call_end_rounded),
           ),
@@ -377,6 +446,12 @@ class _LiveVideoCallScreenState extends State<LiveVideoCallScreen> {
             ),
     );
   }
+}
+
+String _formatRemaining(int seconds) {
+  final minutes = seconds ~/ 60;
+  final rest = seconds % 60;
+  return '$minutes:${rest.toString().padLeft(2, '0')}';
 }
 
 class _LiveChatPanel extends StatelessWidget {
